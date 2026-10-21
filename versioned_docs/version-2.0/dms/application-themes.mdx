@@ -40,6 +40,22 @@ The five `--prefer` modes need matugen 4.1 or newer and fall back to Dominant on
 
 Set it at **Settings → Theme & Colors → Source Color**.
 
+## Terminal Opacity and Colors
+
+**Settings → Wallpaper & colors → App theming → Portal & terminals** has two terminal options.
+
+**Opacity** makes the terminal background translucent while text stays opaque. DMS adds the terminal's own opacity setting to the theme file it generates. At 100 it writes nothing and your terminal config applies.
+
+| Terminal | Applies |
+|---|---|
+| kitty | Live, in windows started after Opacity was first lowered. Already open windows need a restart, unless your `kitty.conf` sets `dynamic_background_opacity yes` |
+| ghostty | Live. A `background-opacity` in your own config takes precedence |
+| alacritty | Live. A `[window] opacity` in your own config takes precedence |
+| foot | New windows only, since foot does not reload its config |
+| WezTerm | Not managed. Set `config.window_background_opacity` in `wezterm.lua` |
+
+**Colors from wallpaper** pulls the red, green and yellow terminal colors toward the wallpaper's primary color. **Intensity** sets how far: Low, Medium or High. Off keeps the standard palette. The other slots already follow the primary color, see [dank16 color slots](./cli-dank16.mdx#color-slots).
+
 ## Disabling Matugen
 
 Set the environment variable `DMS_DISABLE_MATUGEN` to `1` or `true` before launching to disable theme generation entirely.

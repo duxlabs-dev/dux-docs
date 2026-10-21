@@ -324,6 +324,23 @@ dms dank16 "#8b5cf6" --light --background "#ffffff"
 
 With `--variants` the flag sets the **dark** variant's background. The light variant is built against its own default, since a dark surface is not a sane background for a light palette. DMS passes both surfaces when it drives the generator directly.
 
+### Wallpaper Profiles
+
+`--profile` rotates slots 1-4 and 9-14 further toward the primary hue, keeping each slot's chroma and tone and the usual contrast adjustment:
+
+```bash
+dms dank16 "#8b5cf6" --profile medium
+```
+
+| Profile | Rotation toward the primary |
+|---|---|
+| `default` | none, the palette described above |
+| `low` | 25% |
+| `medium` | 50% |
+| `high` | 85% |
+
+The rotation is a share of `min(0.8 × hue distance, 100°)`. Slots 0, 5-8 and 15 never change, and a primary with almost no chroma leaves the palette as is. This is what **Colors from wallpaper** in Settings uses.
+
 ### Combining Options
 
 All options can be combined:
