@@ -82,6 +82,11 @@ not an import format; copy it into `/etc/NetworkManager/system-connections` inst
 `root` ownership and mode `600`. GlobalProtect has no config file to import, so those
 profiles are created in NetworkManager directly.
 
+A WireGuard file whose name isn't a valid interface name (longer than 15 characters, or with
+other characters) still imports. The interface name is made from it by dropping the invalid
+characters and shortening it (`wg0` if nothing is left), and the profile keeps the full file
+name.
+
 ### `openfortivpn` configs
 
 An `openfortivpn` config becomes an OpenConnect profile using the Fortinet protocol.
@@ -113,6 +118,30 @@ How the file authenticates decides what kind of profile you get:
 
 A password moves out of the plain-text config and into NetworkManager's own storage,
 which is where the rest of your saved connection secrets already live.
+
+## Editing profiles
+
+Selecting a profile in **Settings → Network → VPN** opens it in the
+[connection editor](network). **Add** on that page creates a WireGuard profile, or a profile
+for any installed VPN plugin.
+
+### WireGuard
+
+A new profile starts with a generated key pair, interface `wg0`, IPv4 set to Manual, and IPv6
+set to Ignore. **Generate** replaces the key pair, and the public key is shown with a copy
+button. Each peer takes a public key, its allowed IPs, an endpoint as `host:port`, and
+optionally a pre-shared key and a persistent keepalive.
+
+**Export** in the profile's General section saves it as a `wg-quick` config with mode `600`,
+since the file contains the private key. Plugin profiles are exported through
+`nmcli connection export`, in the plugin's own format.
+
+### Plugin profiles
+
+OpenVPN and OpenConnect profiles get a form for their common settings. Every plugin profile
+also has **Options** and **Secrets** tables with the plugin's raw `vpn.data` and `vpn.secrets`
+keys, for anything a form doesn't cover. When `nm-connection-editor` is installed, the General
+section of any saved profile has a button that opens it there.
 
 ## Fortinet gateways
 
@@ -175,6 +204,32 @@ GlobalProtect profiles that use SAML authenticate through
 [gp-saml-gui](https://github.com/dlenski/gp-saml-gui), which DMS launches to open a
 browser window and then captures the resulting cookie. See
 [System Diagnostics](cli-doctor#gp-saml-gui) for the dependency.
+
+## Tailscale
+
+**Settings → Network → Tailscale** appears while the Tailscale daemon is running. It talks to
+the daemon directly, not through NetworkManager, and each setting matches a `tailscale set`
+flag:
+
+| Setting | Flag |
+| --- | --- |
+| Exit node | `--exit-node` |
+| Allow LAN access | `--exit-node-allow-lan-access` |
+| Run as exit node | `--advertise-exit-node` |
+| Use Tailscale subnets | `--accept-routes` |
+| Use Tailscale DNS settings | `--accept-dns` |
+| Allow incoming connections | `--shields-up`, inverted |
+| Run Tailscale SSH server | `--ssh` |
+| Hostname | `--hostname` |
+| Subnet routes | `--advertise-routes` |
+
+The exit node list marks the node Tailscale suggests as recommended. **Accounts** switches
+between logged-in accounts, adds one, or logs out.
+
+Changing settings requires the user to be Tailscale's operator. Until they are, the page shows
+the command that grants it (`sudo tailscale set --operator=$USER`) and, when `pkexec` is
+available, a **Grant permission** button that runs the same command after asking for the
+administrator password.
 
 ## Troubleshooting
 
