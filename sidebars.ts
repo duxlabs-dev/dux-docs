@@ -54,6 +54,7 @@ const sidebars: SidebarsConfig = {
         'dms/vpn',
         'dms/autostart',
         'dms/network-speed-monitor',
+        'dms/system-monitor',
         'dms/reboot-to-another-os',
         {
           type: 'doc',

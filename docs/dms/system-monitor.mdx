@@ -1,0 +1,55 @@
+---
+title: System monitor
+description: Processes, performance, disks and system information in one window
+sidebar_position: 6.5
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+The system monitor opens with `dms ipc call processlist focusOrToggle` (bound to <kbd>Super</kbd>+<kbd>M</kbd> in the
+default keybinds). Its data comes from [dgop](../dgop/), so it needs dgop installed.
+
+| Page | Shows |
+|------|-------|
+| Processes | Every process with CPU, memory, GPU, disk and network use. Open a row for its overview, resources, connections and details. |
+| Performance | CPU, memory, each GPU, drive and network interface with a live chart. The charts record from the moment the window opens. |
+| Disks | Each drive's health, SMART values, read/write chart and partitions. A sleeping hard drive is not woken up here. |
+| System | Software, hardware and sensor readings. **Copy summary** copies a short overview, **Copy report** everything as Markdown. Neither includes the hostname, user name or network names. |
+
+Processes of the same program are merged into one row that shows their total. **Memory** is each process's own share
+of the memory it uses, so shared libraries aren't counted once per process. A drive's **Wear** is the share of its
+rated write endurance used up.
+
+A GPU is only read once **GPU Monitoring** is on in its Performance pane (a GPU temperature bar widget turns it on
+too). Until then a sleeping GPU is not woken up, and its per-process use and sensor readings stay empty.
+
+## Ending and restarting processes
+
+Open a process, or right-click it and choose **Quit or restart**, for **Quit**, **Force quit**, **End process tree** and
+**Restart**. Each asks for confirmation. For the compositor, the user's systemd, the session bus and DMS itself it also
+warns that this usually ends the session and offers a restart instead.
+
+| Process | Restart does |
+|---------|--------------|
+| DMS | `dms restart` |
+| Compositor | Reloads its configuration (it can't restart without ending the session) |
+| A systemd service's main process | Restarts the service |
+| Any other program | Quits it and starts it again with the same command, environment and working directory |
+| A program in a terminal | Not available, restart it from the terminal |
+
+## Unlock
+
+Linux only lets the owner or root read a process's disk and network activity, so most values of other users'
+processes show `—`. The lock button in the Processes toolbar asks for your password once and then reads every
+process as root until you lock it again or close the window. While unlocked, ending another user's process needs no
+further password, and the Disks page shows each drive's full SMART report.
