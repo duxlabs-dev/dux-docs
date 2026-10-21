@@ -482,7 +482,7 @@ Dank Island activity surface. Requires a bar instance using the Island layout an
 | `moveOn <screen> <x> <y>` | Same on a named monitor | screen name, x, y |
 | `center` / `centerOn <screen>` | Recentre a free island, useful to recover one parked off a disconnected display | screen name (for `centerOn`) |
 
-**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
+**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`), `clipboard`, `powermenu` (`power-menu`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
 
 **Free placement:** With Float on, Settings → Bar → General → Placement offers **Edge** (floats along its edge) or **Anywhere** (a draggable island you can park at any point on the display). `move` / `center` only apply to an Anywhere island and return `DANK_ISLAND_NOT_FREE` otherwise. `status` reports `free` plus the anchor `x` / `y` for free islands.
 
@@ -491,6 +491,8 @@ When Dank Island or a Dot is the sole top chrome on the focused display, or an i
 - `control-center` `open` / `toggle` / `hide` / `status`
 - `notifications` `open` / `toggle` / `close` (the notification modal is used if the island does not own the screen)
 - `dash` `open` / `toggle` with `overview` (or no tab), `media`, `wallpaper`, or `weather`, and `dash close` while those activities are open
+- `clipboard` `open` / `toggle` / `close`
+- `powermenu` `open` / `toggle` / `close`
 
 `spotlight` and `launcher` open the island launcher when **Launcher → Default Opens** is Island, and fall back to Spotlight if the focused screen has no island. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
 
@@ -503,6 +505,7 @@ dms ipc call island open controlcenter
 dms ipc call island open wallpaper
 dms ipc call island open weather
 dms ipc call island open notifications
+dms ipc call island open powermenu
 dms ipc call island show home
 dms ipc call island toggleOn media DP-1
 dms ipc call island cycle
