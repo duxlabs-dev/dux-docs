@@ -1,0 +1,74 @@
+---
+title: Config profiles
+description: Save the current settings as profiles, switch between them and share them as archives
+sidebar_position: 8
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+A config profile is a saved copy of the DMS settings with a configurable scope. Profiles are under **Settings → Wallpaper & colors**. Clicking a profile switches to it, and
+its right-click menu has Apply, Partial apply, Edit and Delete. **Manage profiles** opens the full page with New profile
+and Import.
+
+Every user starts with a **Default** profile that is kept in sync with the current settings.
+
+## What a profile includes
+
+A new profile uses the current settings for the groups picked in its editor, and switching to it only changes those
+groups.
+
+| Category | Groups |
+|----------|--------|
+| Theme & colors | Theme, Wallpaper, Dark mode, App theming, Interface style, Shadows |
+| Layout | Bar, Frame, Dock, Desktop widgets, Control Center, Dashboard, Compositor, Display assignment |
+| Appearance | Fonts & motion, Icons, Cursor |
+| Other | Time & weather, Lock screen, Launcher, Notifications, On-screen displays, Sound & media, Plugins, General |
+
+Settings that belong to the machine or the user are not included: input devices, power and battery, display
+configuration, lock screen and greeter authentication, night mode, custom commands, launcher and notification history,
+and the weather location.
+
+Only the plugins installed when a profile was last updated are included. Settings of other plugins are kept as they
+are when switching.
+
+## Sync
+
+With **Sync changes to this profile** on, changes made while the profile is active are saved into it shortly after.
+Sync is the default for new profiles. **Update from current settings** saves the current settings into any profile on
+demand, including ones that aren't active.
+
+## Partial apply
+
+**Compare** on the edit page (or **Partial apply** in the right-click menu) lists every group where the profile differs
+from the current settings. Only the groups left on are applied, and the active profile stays the same.
+
+## Export and import
+
+**Export** saves a profile as a `.tar.gz` archive that includes its wallpapers. **Import** adds an archive as a new
+profile and opens its editor to select which of its settings to keep for the new local profile. Nothing is applied
+until switching to it.
+
+For safety, imports don't contain plugin settings, plugin widgets or custom dock commands, and reject all values that
+can run commands. Cycling folders and custom theme files are not bundled but keep their paths, so they need to be
+installed separately.
+
+The same works from the command line:
+
+```bash
+dms profile list
+dms profile export <id> work.tar.gz
+dms profile import work.tar.gz
+```
+
+Profiles are stored in `~/.config/dms/profiles/`, one folder per profile, and imported wallpapers in
+`~/.local/share/dms/wallpapers/`. `dms backup` includes the profiles, but not those wallpapers.
