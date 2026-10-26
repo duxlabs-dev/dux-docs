@@ -284,6 +284,52 @@ These keys constrain DMS's own interfaces. They are not a boundary against other
 
 > Available starting with the DMS release following 2.0.0.
 
+### Managed Lock Settings
+
+The `lock_settings` object holds values for lock settings that the user cannot change. Its keys are DMS setting names:
+
+```json
+{
+  "policy_version": 1,
+  "lock_settings": {
+    "lockBeforeSuspend": true,
+    "loginctlLockIntegration": true,
+    "customPowerActionLock": "",
+    "acLockTimeout": 300,
+    "batteryLockTimeout": 300,
+    "enableFprint": true
+  }
+}
+```
+
+| Setting | Value |
+| --- | --- |
+| `customPowerActionLock` | Command run instead of the DMS lock screen; `""` uses the lock screen |
+| `lockBeforeSuspend` | `true` or `false` |
+| `loginctlLockIntegration` | `true` or `false` |
+| `lockAtStartup` | `true` or `false` |
+| `acLockTimeout`, `batteryLockTimeout` | Idle seconds before locking; `0` never locks |
+| `fadeToLockEnabled` | `true` or `false` |
+| `fadeToLockGracePeriod` | Seconds |
+| `enableFprint` | `true` or `false` |
+| `maxFprintTries` | Fingerprint attempts |
+| `enableU2f` | `true` or `false` |
+| `u2fMode` | `"or"` lets the security key unlock on its own, `"and"` requires it after the password or fingerprint |
+
+A managed setting:
+
+- wins over `settings.json` and every file in `config.d`, including edits made while DMS runs;
+- is never written to a settings file. A value the user set before stays in its file and applies again once the setting is no longer managed;
+- shows in Settings as **Managed by administrator policy**, with its control disabled;
+- makes `dms ipc call settings set` return `SETTINGS_SET_MANAGED`, whether or not `disable_settings_ipc_set` is set;
+- is left alone by the migration of a legacy `session.json`.
+
+On the DMS socket, `loginctl.setLockBeforeSuspend` refuses any value but a managed `lockBeforeSuspend`, and `loginctl.setSleepInhibitorEnabled` refuses any value but the one a managed `lockBeforeSuspend` and `loginctlLockIntegration` decide. Manage both to keep lock before suspend in force.
+
+Settings in `/usr/share/dms/cli-policy.json` apply first, and `/etc/dms/cli-policy.json` overrides them one setting at a time; `null` counts as not set. Other keys in `lock_settings` are ignored, and so is a value whose type differs from the setting's default, such as `"true"` for `lockBeforeSuspend`; both are logged as warnings. If either file exists but cannot be read or parsed, DMS logs an error and manages no setting, so the user's settings apply; the `disable_*` keys still all turn on.
+
+> Available starting with the DMS release following 2.0.0.
+
 ## Official Plugins
 
 Maintained by the Dux Shell team at [dms-plugins](https://github.com/duxlabs-dev/dux-plugins):
