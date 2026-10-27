@@ -35,7 +35,7 @@ qs -p .  # Press Ctrl+C after it starts
 mkdir -p dms-plugins/MyPlugin
 ```
 
-Shared widgets come from the [dank-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule under `quickshell/DCommon`. The submodule must be present for the QML language server to resolve them.
+Shared widgets come from the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule under `quickshell/DCommon`. The submodule must be present for the QML language server to resolve them.
 
 :::warning[DMS 2.0 widget migration]
 
@@ -119,6 +119,7 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
@@ -130,7 +131,7 @@ PluginComponent {
         Row {
             spacing: Theme.spacingS
 
-            DankIcon {
+            DIcon {
                 name: "widgets"
                 size: Theme.iconSize
                 color: Theme.primary
@@ -150,7 +151,7 @@ PluginComponent {
         Column {
             spacing: Theme.spacingXS
 
-            DankIcon {
+            DIcon {
                 name: "widgets"
                 size: Theme.iconSize
                 color: Theme.primary
@@ -213,16 +214,16 @@ PluginSettings {
 1. Open DMS Settings → Plugins
 2. Click "Scan for Plugins"
 3. Toggle your plugin on
-4. Add to DankBar widget list
+4. Add to bar widget list
 5. Restart shell: `dms restart`
 
 You now have a working plugin.
 
 ## Widget Plugins
 
-Widget plugins show up in DankBar, in docks, or in the Control Center. They use `PluginComponent` as the base.
+Widget plugins show up in the bar, in docks, or in the Control Center. They use `PluginComponent` as the base.
 
-### DankBar Widget
+### Bar Widget
 
 Here's a real color display widget:
 
@@ -355,7 +356,7 @@ PluginComponent {
                 implicitHeight: root.popoutHeight - popoutColumn.headerHeight -
                                popoutColumn.detailsHeight - Theme.spacingXL
 
-                DankGridView {
+                DGridView {
                     anchors.fill: parent
                     cellWidth: 50
                     cellHeight: 50
@@ -411,6 +412,7 @@ This audio tile uses demo data. Small tiles use the standard icon and status lay
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 import qs.Modules.ControlCenter.Widgets
 
@@ -443,7 +445,7 @@ PluginComponent {
         CcTileContent {
             id: content
 
-            DankSlider {
+            DSlider {
                 id: volumeControl
                 width: parent.width
                 size: "m"
@@ -517,12 +519,13 @@ Set `attachedContent` to give a widget a panel that opens inside the dock:
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
     id: root
     horizontalBarPill: Component {
-        DankIcon {
+        DIcon {
             name: "sticky_note_2"
             size: root.iconSize
         }
@@ -538,12 +541,12 @@ PluginComponent {
                 color: Theme.surfaceText
                 font.pixelSize: Theme.fontSizeLarge
             }
-            DankTextField {
+            DTextField {
                 width: parent.width - Theme.spacingM * 2
                 placeholderText: I18n.trFor("attachedPanelExample", "Type here…")
                 Accessible.name: I18n.trFor("attachedPanelExample", "Notes")
             }
-            DankButton {
+            DButton {
                 text: I18n.trFor("attachedPanelExample", "Close")
                 onClicked: root.surfaceContext.dismissExpansion()
             }
@@ -1108,7 +1111,7 @@ PluginSettings {
 
 ## Launcher Plugins
 
-Launcher plugins integrate with DankLauncher to provide searchable results. They use `QtObject` as their root (not `Item` or `PluginComponent`) since they don't render any UI directly.
+Launcher plugins integrate with the launcher to provide searchable results. They use `QtObject` as their root (not `Item` or `PluginComponent`) since they don't render any UI directly.
 
 ### Basic Structure
 
@@ -1518,9 +1521,10 @@ A tab is a `DashTabComponent`, an `Item` sized to the dash content area. Here's 
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
-import qs.Modules.DankDash
-import qs.Modules.DankDash.Overview
+import qs.Modules.DDash
+import qs.Modules.DDash.Overview
 
 DashTabComponent {
     id: root
@@ -1660,7 +1664,7 @@ DashTabComponent {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Theme.spacingS
 
-            DankButton {
+            DButton {
                 text: root.running ? I18n.trFor("dashTabExample", "Lap") : I18n.trFor("dashTabExample", "Reset")
                 reserveText: I18n.trFor("dashTabExample", "Reset")
                 iconName: root.running ? "flag" : "restart_alt"
@@ -1670,7 +1674,7 @@ DashTabComponent {
                 onClicked: root.running ? root.lap() : root.reset()
             }
 
-            DankButton {
+            DButton {
                 id: startButton
                 text: root.running ? I18n.trFor("dashTabExample", "Pause") : root.elapsed > 0 ? I18n.trFor("dashTabExample", "Resume") : I18n.trFor("dashTabExample", "Start")
                 reserveText: I18n.trFor("dashTabExample", "Resume")
@@ -1815,7 +1819,7 @@ import Quickshell
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
-import qs.Modules.DankDash
+import qs.Modules.DDash
 
 DashCardComponent {
     id: root
@@ -1992,6 +1996,7 @@ The card is clickable, so a click opens the tab:
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 DashCardComponent {
@@ -2017,7 +2022,7 @@ DashCardComponent {
         anchors.centerIn: parent
         spacing: Theme.spacingM
 
-        DankIcon {
+        DIcon {
             anchors.verticalCenter: parent.verticalCenter
             name: "counter_1"
             size: Theme.iconSizeLarge
@@ -2042,6 +2047,7 @@ The bar widget opens the dash on the counter tab. It works the same in a dock:
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
@@ -2057,7 +2063,7 @@ PluginComponent {
         Row {
             spacing: Theme.spacingXS
 
-            DankIcon {
+            DIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 name: "counter_1"
                 size: root.iconSize
@@ -2077,7 +2083,7 @@ PluginComponent {
         Column {
             spacing: Theme.spacingXXS
 
-            DankIcon {
+            DIcon {
                 anchors.horizontalCenter: parent.horizontalCenter
                 name: "counter_1"
                 size: root.iconSize
@@ -2166,15 +2172,15 @@ Declare `targetScreen`, `active` or `rowBudget` (rows of 96 px that fit on scree
 | `signal tabRequested(string id)` | Switch the dash to another tab, like `"overview"` or `"plugin_other"` |
 | `signal navFocusRequested` | Hand focus back to the dash navigation |
 
-For tiles inside a tab, use `Card` from `qs.Modules.DankDash.Overview`. It has the same surface colors, radius and tones as the overview cards.
+For tiles inside a tab, use `Card` from `qs.Modules.DDash.Overview`. It has the same surface colors, radius and tones as the overview cards.
 
 ### Widgets Inside a Tab
 
 Give your tab a `DashWidgetGrid` and assign it to `widgetGrid` to get the dash Edit, Add widget, Reset and Clear All actions for free:
 
 ```qml
-import qs.Modules.DankDash
-import qs.Modules.DankDash.Overview
+import qs.Modules.DDash
+import qs.Modules.DDash.Overview
 
 DashTabComponent {
     id: tab
@@ -2238,7 +2244,7 @@ definitions: [
 - `DashRegistry.toneOption(def)` is the shared Tone choice: `""` for the surface, `"primary"`, `"secondary"` or `"tertiary"`.
 - `id`, `w`, `h`, `col` and `row` are reserved keys.
 
-A `Card` takes the tone directly with `tone: widgetOptions.tone`. Anything else can follow a tone with `DankTone` from `qs.Widgets`:
+A `Card` takes the tone directly with `tone: widgetOptions.tone`. Anything else can follow a tone with `DTone` from `qs.DCommon.Widgets`:
 
 ```qml
 Rectangle {
@@ -2246,7 +2252,7 @@ Rectangle {
 
     color: toneColors.surfaceColor
 
-    DankTone {
+    DTone {
         id: toneColors
         tone: widgetOptions.tone ?? ""
     }
@@ -2258,7 +2264,7 @@ Rectangle {
 }
 ```
 
-`DankTone` exposes `surfaceColor`, `containerColor`, `contentColor`, `accentColor`, `onAccentColor`, `mutedColor`, `chipColor` and `tinted`, the same values a `Card` has. The built-in weather widgets are painted this way.
+`DTone` exposes `surfaceColor`, `containerColor`, `contentColor`, `accentColor`, `onAccentColor`, `mutedColor`, `chipColor` and `tinted`, the same values a `Card` has. The built-in weather widgets are painted this way.
 
 ### DashCardComponent Reference
 
@@ -2440,7 +2446,7 @@ rm -rf ~/.cache/dms/lyrics
 
 ## Composite Plugins
 
-A single plugin can provide **multiple surfaces at once** — for example a background daemon, a DankBar widget, and a desktop widget. Each surface has a different lifecycle (the daemon is instantiated once; bar and desktop widgets are instantiated per bar/placement, per screen), so each one is its own QML file.
+A single plugin can provide **multiple surfaces at once** — for example a background daemon, a bar widget, and a desktop widget. Each surface has a different lifecycle (the daemon is instantiated once; bar and desktop widgets are instantiated per bar/placement, per screen), so each one is its own QML file.
 
 ### Manifest
 
@@ -2611,7 +2617,7 @@ PluginSettings {
     ToggleSetting {
         settingKey: "showInBar"
         label: "Show in Bar"
-        description: "Display widget in DankBar"
+        description: "Display widget in the bar"
         defaultValue: true
     }
 
@@ -2761,7 +2767,7 @@ See `PLUGINS/QuickNotesExample/` in the DMS repo for a complete launcher plugin 
 Use `iconSize` for consistent icon sizing that adapts to bar orientation and user preferences:
 
 ```qml
-DankIcon {
+DIcon {
     name: "settings"
     size: root.iconSize
 }
@@ -2873,7 +2879,7 @@ DesktopPluginComponent {
 }
 ```
 
-For the full scrolling view with word highlights, use `LyricsOverlay` from `qs.Modules.DankDash.Media`. It subscribes by itself while visible:
+For the full scrolling view with word highlights, use `LyricsOverlay` from `qs.Modules.DDash.Media`. It subscribes by itself while visible:
 
 ```qml
 LyricsOverlay {
@@ -2978,7 +2984,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 
 ### Plugin Types
 
-- `"widget"` - DankBar or Control Center widget
+- `"widget"` - Bar or Control Center widget
 - `"daemon"` - Background service
 - `"launcher"` - Spotlight extension
 - `"desktop"` - Desktop layer widget
@@ -3084,10 +3090,10 @@ Keep your English strings stable once they're in POEditor. Renaming a term is a 
 ## Testing
 
 1. Enable plugin: Settings → Plugins → Scan → Toggle on
-2. Add to bar: Settings → DankBar → Add widget. For a dock, use the dock's edit mode. Dash tabs show up on their own; add dash cards from the dash (three-dot menu → Edit → Add widget), and open a tab directly with `dms ipc call dash open plugin_myPlugin`
+2. Add to bar: Settings → Bar → Add widget. For a dock, use the dock's edit mode. Dash tabs show up on their own; add dash cards from the dash (three-dot menu → Edit → Add widget), and open a tab directly with `dms ipc call dash open plugin_myPlugin`
 3. Check console: Look for errors in shell output
 4. Hot-reload your plugin: `dms ipc call plugins reload myPlugin`
-5. Check settings files: `~/.config/DankMaterialShell/settings.json` or `~/.config/DankMaterialShell/config.d/*.json`
+5. Check settings files: `~/.config/dms/settings.json` or `~/.config/dms/config.d/*.json`
 
 ### Hot Reloading
 

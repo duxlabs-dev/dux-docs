@@ -79,7 +79,7 @@ If you manually edit the settings, use:
 ```
 or
 ```
-~/.config/DankMaterialShell/config.d/*.json
+~/.config/dms/config.d/*.json
 ```
 
 Important keys and compatibility notes:
@@ -110,7 +110,7 @@ default, bar, dock, launcher, popout, modal, and notification surfaces use their
 documented `top` behavior. Use `overlay` only for surfaces that should appear
 above fullscreen windows.
 
-The Settings UI provides **Use Overlay Layer** toggles for DankBar, Dock, and
+The Settings UI provides **Use Overlay Layer** toggles for the bar, Dock, and
 Launcher. These toggles map directly to `top` when off and `overlay` when on.
 Environment variables are stronger overrides: if a matching `DMS_*_LAYER`
 variable is set, that value wins over the UI toggle.
@@ -125,7 +125,7 @@ and by the per-surface layer choices above.
 
 ### DMS_DANKBAR_LAYER
 
-Controls Wayland layer for DankBar panel. Valid values: `bottom`, `overlay`, `background`, or `top` (default). Useful for window stacking issues.
+Controls Wayland layer for the bar panel. Valid values: `bottom`, `overlay`, `background`, or `top` (default). Useful for window stacking issues.
 
 The Settings UI also has per-bar **Use Overlay Layer** toggles. If this
 environment variable is set, it takes precedence over the UI toggle for the bar
@@ -138,7 +138,7 @@ DMS_DANKBAR_LAYER=overlay dms run
 
 ### DMS_POPOUT_LAYER
 
-Controls Wayland layer for DankBar popout widgets. Valid values: `bottom`, `overlay`, `background`, or `top` (default). Useful for window stacking issues.
+Controls Wayland layer for bar popout widgets. Valid values: `bottom`, `overlay`, `background`, or `top` (default). Useful for window stacking issues.
 
 When this is unset, bar-launched popouts inherit the triggering bar's effective
 layer. For example, a bar with **Use Overlay Layer** enabled opens its
@@ -339,7 +339,7 @@ Clean up system tray by hiding unwanted application icons.
 ```bash
 DMS_DANKBAR_LAYER=overlay
 ```
-If DankBar appears behind windows or other issues, adjust the Wayland layer.
+If the bar appears behind windows or other issues, adjust the Wayland layer.
 
 **Dual battery laptops:**
 ```bash

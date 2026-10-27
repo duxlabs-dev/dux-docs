@@ -215,12 +215,12 @@ sudo xbps-install --repository=hostdir/binpkgs danksearch
 
 ### Gentoo
 
-`gui-apps/danksearch` is available in the official [guru](https://wiki.gentoo.org/wiki/Project:GURU) community overlay.
+`dux-desktop/dux-search` is available in the official [guru](https://wiki.gentoo.org/wiki/Project:GURU) community overlay.
 
 ```bash
 sudo eselect repository enable guru
 sudo emaint sync -r guru
-sudo emerge --ask gui-apps/danksearch
+sudo emerge --ask dux-desktop/dux-search
 ```
 
 :::note
@@ -228,7 +228,7 @@ sudo emerge --ask gui-apps/danksearch
 The guru overlay package is keyworded `~amd64`, so you may need to accept the testing keyword:
 
 ```bash
-echo "gui-apps/danksearch ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/danksearch
+echo "dux-desktop/dux-search ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dux-search
 ```
 
 :::

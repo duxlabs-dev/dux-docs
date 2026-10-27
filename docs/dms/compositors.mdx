@@ -198,13 +198,13 @@ window-rule {
 
 // Open DMS windows as floating by default (optional - DMS can manage this for you, see tip below)
 window-rule {
-    match app-id=r#"^com\.danklinux\.dms$"#
+    match app-id=r#"^dev\.duxlabs\.shell$"#
     open-floating true
 }
 ```
 
 :::tip[DMS-managed floating rule]
-DMS can manage this rule itself via **Settings → Theme & Colors → Floating Windows → Open Windows Floating** (on by default). The rule lives in a managed fragment at `~/.config/niri/dms/windowrules.kdl`; if that fragment isn't included in your config yet, a **First Time Setup** banner on the same page creates it and adds the include when you click **Setup**. DMS floating windows use app ID `com.danklinux.dms` — remove any hand-written rules targeting the old `org.quickshell` ID.
+DMS can manage this rule itself via **Settings → Theme & Colors → Floating Windows → Open Windows Floating** (on by default). The rule lives in a managed fragment at `~/.config/niri/dms/windowrules.kdl`; if that fragment isn't included in your config yet, a **First Time Setup** banner on the same page creates it and adds the include when you click **Setup**. DMS floating windows use app ID `dev.duxlabs.shell` — remove any hand-written rules targeting the old `org.quickshell` ID.
 :::
 
 ## Hyprland Configuration
@@ -417,10 +417,10 @@ hl.window_rule({ match = { class = "^(blueman-manager)$" }, float = true })
 hl.window_rule({ match = { class = "^(org\\.gnome\\.Nautilus)$" }, float = true })
 
 -- Open DMS windows as floating by default (optional — DMS can manage this for you)
-hl.window_rule({ match = { class = "^(com\\.danklinux\\.dms)$" }, float = true })
+hl.window_rule({ match = { class = "^(dev\\.duxlabs\\.shell)$" }, float = true })
 ```
 
-As on niri, **Settings → Interface style → Floating windows → Open floating** can manage this rule in `~/.config/hypr/dms/windowrules.lua` (click **Setup** on the banner if the fragment isn't included yet). DMS floating windows use app ID `com.danklinux.dms`.
+As on niri, **Settings → Interface style → Floating windows → Open floating** can manage this rule in `~/.config/hypr/dms/windowrules.lua` (click **Setup** on the banner if the fragment isn't included yet). DMS floating windows use app ID `dev.duxlabs.shell`.
 
 #### Window rule editor
 
@@ -611,7 +611,7 @@ window_rule=no_border:1,app_id:^com\.mitchellh\.ghostty$
 window_rule=no_border:1,app_id:^kitty$
 
 # Float DMS windows
-window_rule=is_floating:1,app_id:^com\.danklinux\.dms$
+window_rule=is_floating:1,app_id:^dev\.duxlabs\.shell$
 ```
 
 ## Sway Configuration

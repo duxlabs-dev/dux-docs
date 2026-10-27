@@ -90,7 +90,7 @@ The version of the shell configuration, which should match the DMS CLI version.
 
 ### DMS Configuration
 
-By default DMS installs its configuration, plugins, and themes in `$XDG_CONFIG_HOME/DankMaterialShell/`. This check verifies that the configuration directory exists. 
+By default DMS installs its configuration, plugins, and themes in `$XDG_CONFIG_HOME/dms/`. This check verifies that the configuration directory exists. 
 
 ### shell.qml
 
@@ -283,9 +283,9 @@ The NetworkManager openconnect plugin provides the tunnel in every one of those 
 Native Fortinet authentication applies to profiles with `protocol=fortinet` using either `authtype=password` or `authtype=saml`. Password profiles do not handle OTP or MFA challenge forms; with browser login, any MFA your identity provider asks for happens in the browser. Other OpenConnect protocols are not included in this flow.
 :::
 
-### danksearch
+### dsearch
 
-Used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [DankSearch documentation](../dsearch/) for more information.
+Used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
 
 ### loginctl
 
@@ -301,12 +301,12 @@ Adds fingerprint authentication support to the lock screen.
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `settings.json` | `~/.config/DankMaterialShell/` | Main settings |
-| `clsettings.json` | `~/.config/DankMaterialShell/` | Clipboard settings |
-| `plugin_settings.json` | `~/.config/DankMaterialShell/` | Plugin configuration |
-| `session.json` | `~/.local/state/DankMaterialShell/` | Session state |
-| `dms-colors.json` | `~/.cache/DankMaterialShell/` | Cached color scheme |
-| `config.d/*.json` | `~/.config/DankMaterialShell/` | Drop-in settings (optional) |
+| `settings.json` | `~/.config/dms/` | Main settings |
+| `clsettings.json` | `~/.config/dms/` | Clipboard settings |
+| `plugin_settings.json` | `~/.config/dms/` | Plugin configuration |
+| `session.json` | `~/.local/state/dms/` | Session state |
+| `dms-colors.json` | `~/.cache/dms/` | Cached color scheme |
+| `config.d/*.json` | `~/.config/dms/` | Drop-in settings (optional) |
 
 ---
 
@@ -364,7 +364,7 @@ See [Installation](installation#compositor-specific-systemd-setup) for the equiv
 
 ### greetd
 
-Required for the Dank Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
 
 ---
 

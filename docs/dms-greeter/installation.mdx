@@ -68,7 +68,7 @@ Both packages ship the `dms-greeter` binary along with the `/usr/lib/sysusers.d/
 
 ### Fedora & Enterprise Linux
 
-Dux Greeter is published to the [duxlabs/dux](https://copr.fedorainfracloud.org/coprs/duxlabs/dux/) COPR from the [dank-greeter](https://github.com/duxlabs-dev/dux-greeter) repository. On Enterprise Linux 10 the same COPR provides `greetd`, which EPEL 10 does not ship.
+Dux Greeter is published to the [duxlabs/dux](https://copr.fedorainfracloud.org/coprs/duxlabs/dux/) COPR from the [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) repository. On Enterprise Linux 10 the same COPR provides `greetd`, which EPEL 10 does not ship.
 
 <Tabs groupId="fedora-greeter-channel">
 <TabItem value="stable" label="Stable" default>
@@ -88,7 +88,7 @@ sudo dnf copr enable duxlabs/dux
 sudo dnf install dms-greeter-git
 ```
 
-Builds from the tip of `master` in dank-greeter. Conflicts with the stable `dms-greeter` package (both provide `/usr/bin/dms-greeter`).
+Builds from the tip of `master` in dux-greeter. Conflicts with the stable `dms-greeter` package (both provide `/usr/bin/dms-greeter`).
 
 To switch from stable:
 
@@ -109,7 +109,7 @@ Both RPMs install `/usr/lib/sysusers.d/dms-greeter.conf` so the `greeter` user i
 
 ### Debian & Ubuntu
 
-Dux Greeter is published from [dank-greeter](https://github.com/duxlabs-dev/dux-greeter) into the Dux OBS/PPA channels as **`dms-greeter`** (tagged releases) and **`dms-greeter-git`** (master snapshots). The two packages conflict; both install `/usr/bin/dms-greeter`.
+Dux Greeter is published from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) into the Dux OBS/PPA channels as **`dms-greeter`** (tagged releases) and **`dms-greeter-git`** (master snapshots). The two packages conflict; both install `/usr/bin/dms-greeter`.
 
 #### Debian
 
@@ -171,7 +171,7 @@ Tagged releases. Recommended for most users.
 sudo apt install dms-greeter-git
 ```
 
-Builds from the tip of `master` in dank-greeter. Conflicts with stable `dms-greeter`; both install `/usr/bin/dms-greeter`.
+Builds from the tip of `master` in dux-greeter. Conflicts with stable `dms-greeter`; both install `/usr/bin/dms-greeter`.
 
 To switch from stable → git or git → stable, install the package you want:
 
@@ -208,7 +208,7 @@ Tagged releases. Recommended for most users.
 sudo apt install dms-greeter-git
 ```
 
-Builds from the tip of `master` in dank-greeter. Conflicts with stable `dms-greeter`; both install `/usr/bin/dms-greeter`.
+Builds from the tip of `master` in dux-greeter. Conflicts with stable `dms-greeter`; both install `/usr/bin/dms-greeter`.
 
 To switch from stable → git or git → stable, install the package you want:
 
@@ -279,7 +279,7 @@ Tagged releases. Recommended for most users.
 sudo zypper install dms-greeter-git
 ```
 
-Builds from the tip of `master` in dank-greeter. Conflicts with stable `dms-greeter`
+Builds from the tip of `master` in dux-greeter. Conflicts with stable `dms-greeter`
 
 To switch:
 
@@ -329,7 +329,7 @@ Tagged releases. Recommended for most users.
 sudo xbps-install -S dms-greeter-git
 ```
 
-Builds from the `master` branch in dank-greeter. Conflicts with stable `dms-greeter`.
+Builds from the `master` branch in dux-greeter. Conflicts with stable `dms-greeter`.
 
 To switch:
 
@@ -353,9 +353,9 @@ cd void-packages
 ./xbps-src binary-bootstrap
 
 # Copy in the templates (adjust paths as needed)
-cp -R ../dank-greeter/distro/void/srcpkgs/dms-greeter srcpkgs/
+cp -R ../dux-greeter/distro/void/srcpkgs/dms-greeter srcpkgs/
 # Optional git snapshot template:
-# cp -R ../dank-greeter/distro/void/srcpkgs/dms-greeter-git srcpkgs/
+# cp -R ../dux-greeter/distro/void/srcpkgs/dms-greeter-git srcpkgs/
 
 # Build the package (use dms-greeter-git for a master snapshot)
 ./xbps-src pkg dms-greeter
@@ -486,7 +486,7 @@ make build
 sudo make install
 ```
 
-The UI is embedded in the binary, there is no quickshell config tree to install. Create the greeter user and cache directory if your setup does not already have them (see the [dank-greeter README](https://github.com/duxlabs-dev/dux-greeter)):
+The UI is embedded in the binary, there is no quickshell config tree to install. Create the greeter user and cache directory if your setup does not already have them (see the [dux-greeter README](https://github.com/duxlabs-dev/dux-greeter)):
 
 ```bash
 sudo mkdir -p /var/cache/dms-greeter

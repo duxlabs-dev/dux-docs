@@ -47,7 +47,7 @@ Notifications and credentials use XDG desktop portals. To sync [Dux Shell](../dm
 
 ```bash
 flatpak override --user \
-  --filesystem=xdg-cache/DankMaterialShell:ro \
+  --filesystem=xdg-cache/dms:ro \
   com.danklinux.dankcalendar
 ```
 
@@ -241,7 +241,7 @@ Distribution packages install:
 
 ### From Source
 
-The Quickshell UI is embedded into the `dcal` binary at build time, and part of it lives in the [dank-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule — clone with `--recurse-submodules` (or run `git submodule update --init` in an existing clone):
+The Quickshell UI is embedded into the `dcal` binary at build time, and part of it lives in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule — clone with `--recurse-submodules` (or run `git submodule update --init` in an existing clone):
 
 ```bash
 git clone --recurse-submodules https://github.com/duxlabs-dev/dux-calendar

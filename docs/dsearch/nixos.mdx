@@ -94,7 +94,7 @@ Then use the flake package with the native module:
 ```nix
 programs.dsearch = {
   enable = true;
-  package = inputs.danksearch.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  package = inputs.dsearch.packages.${pkgs.stdenv.hostPlatform.system}.default;
 };
 ```
 

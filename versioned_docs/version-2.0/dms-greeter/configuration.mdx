@@ -247,7 +247,7 @@ The root cache (`/var/cache/dms-greeter/settings.json`, etc.) remains the **defa
 
 #### Developer note: `--local`
 
-When developing from a dank-greeter checkout, only the **primary admin** should use:
+When developing from a dux-greeter checkout, only the **primary admin** should use:
 
 ```bash
 dms-greeter sync --local
@@ -294,7 +294,7 @@ If you prefer to set up syncing manually:
   sudo mkdir -p /var/cache/dms-greeter
   sudo ln -sf ~/.config/dms/settings.json /var/cache/dms-greeter/settings.json
   sudo ln -sf ~/.local/state/dms/session.json /var/cache/dms-greeter/session.json
-  sudo ln -sf ~/.cache/quickshell/dankshell/dms-colors.json /var/cache/dms-greeter/colors.json
+  sudo ln -sf ~/.cache/dms/dms-colors.json /var/cache/dms-greeter/colors.json
   ```
 
 :::note
@@ -640,7 +640,7 @@ The `settings.json` file controls the greeter's appearance and behavior. Here's 
 - `currentThemeName`: Built-in theme name (`"blue"`, `"red"`, `"green"`, etc.)
 - `customThemeFile`: Path to custom matugen JSON theme file
 - `matugenScheme`: Matugen color scheme variant
-- `iconTheme`: Icon theme name for DankIcon fallbacks
+- `iconTheme`: Icon theme name for DIcon fallbacks
 - `fontFamily`: Primary font family
 - `fontWeight`: Font weight (`400` = normal, `700` = bold)
 - `fontScale`: Font size multiplier (`1.0` = default)

@@ -91,11 +91,11 @@ If you're a plugin dev, see the [plugin development](./plugin-development.mdx#wi
 
 ## Floating Windows
 
-DMS application windows — Settings, Notepad, Polkit, Process List, the greeter, and the app/widget browsers — are regular XDG toplevel windows, not layer-shell surfaces. They share app ID `com.danklinux.dms`, so compositor **window rules** (not layer rules) apply to them.
+DMS application windows — Settings, Notepad, Polkit, Process List, the greeter, and the app/widget browsers — are regular XDG toplevel windows, not layer-shell surfaces. They share app ID `dev.duxlabs.shell`, so compositor **window rules** (not layer rules) apply to them.
 
 - **Floating vs. tiled**: **Interface style** → **Floating windows** → **Open floating** manages a compositor window rule that opens DMS windows floating (niri, Hyprland, MangoWC). The rule lives in a managed fragment (`~/.config/niri/dms/windowrules.kdl`, `~/.config/hypr/dms/windowrules.lua`, `~/.config/mango/dms/windowrules.conf`); if the fragment isn't included in your compositor config yet, a **First Time Setup** banner on the same page adds it when you click **Setup**.
 - **Transparency & blur**: floating windows follow **Interface style** → **Surfaces** by default. Turn on **Override** under **Interface style** → **Floating windows** to give them their own opacity and foreground controls.
-- **Compositor opacity**: DMS windows already draw their own translucent background, so DMS keeps a rule for `com.danklinux.dms` in its window rules fragment that stops compositor opacity from dimming them further (`opaque` on Hyprland, `opacity 1.0` on niri). Opacity rules and Hyprland's decoration opacity still apply to every other window.
+- **Compositor opacity**: DMS windows already draw their own translucent background, so DMS keeps a rule for `dev.duxlabs.shell` in its window rules fragment that stops compositor opacity from dimming them further (`opaque` on Hyprland, `opacity 1.0` on niri). Opacity rules and Hyprland's decoration opacity still apply to every other window.
 - **niri xray**: the `background-effect` xray behavior of DMS windows follows **Settings → System & integrations → niri → Layout overrides → Xray blur** and is managed in `dms/layout.kdl` — a hand-written `background-effect` block for DMS in your main niri config is redundant and can be removed.
 - **Hyprland effects**: DMS windows are ordinary windows to Hyprland, so they get its blur, glow and wobbly-window effects like any other window.
 

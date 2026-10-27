@@ -25,7 +25,7 @@ This guide covers installation of Dux Shell across different Linux distributions
 
 - [**quickshell**](https://github.com/quickshell-mirror/quickshell) (required) - The core framework
 - [**cava**](https://github.com/karlstav/cava) (optional) - Audio visualizer widget
-- [**dankcalendar**](https://github.com/duxlabs-dev/dux-calendar) (optional) - Complete desktop calendar app with native integration for DMS calendar widgets
+- [**dcal**](https://github.com/duxlabs-dev/dux-calendar) (optional) - Complete desktop calendar app with native integration for DMS calendar widgets
 - [**dgop**](https://github.com/duxlabs-dev/dux-gop) (optional) - System telemetry for resource widgets
 - [**dsearch**](https://github.com/duxlabs-dev/dux-search) (optional) - Filesystem search engine
 - [**matugen**](https://github.com/InioX/matugen) (optional) - Material Design color palette generation
@@ -307,7 +307,7 @@ Add **niri** or **niri-git** to your system to get the best experience.
 
 ### PikaOS
 
-PikaOS 4+ carries the DankLinux packages in its own repository, so no extra repository is needed.
+PikaOS 4+ carries the Dux Labs packages in its own repository, so no extra repository is needed.
 
 ```bash
 sudo apt update
@@ -439,7 +439,7 @@ These overlays are maintained by the community, not the DMS team. For issues wit
 
 Dux Shell is available on Gentoo through the GURU overlay.
 
-Enable the official [GURU](https://wiki.gentoo.org/wiki/Project:GURU) overlay, which packages DMS (`gui-apps/dankmaterialshell`) alongside companion tools `gui-apps/dgop` and `gui-apps/danksearch`.
+Enable the official [GURU](https://wiki.gentoo.org/wiki/Project:GURU) overlay, which packages DMS (`dux-desktop/dux-shell`) alongside companion tools `dux-desktop/dux-gop` and `dux-desktop/dux-search`.
 
 ```bash
 sudo eselect repository enable guru
@@ -454,7 +454,7 @@ sudo emaint sync -r guru
 The guru overlay packages are keyworded `~amd64`, so you may need to accept the testing keyword. For example:
 
 ```bash
-echo "gui-apps/dankmaterialshell ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dankmaterialshell
+echo "dux-desktop/dux-shell ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dux-shell
 ```
 
 :::
@@ -462,7 +462,7 @@ echo "gui-apps/dankmaterialshell ~amd64" | sudo tee -a /etc/portage/package.acce
 Finally emerge the package 
 
 ```bash
-sudo emerge --ask gui-apps/dankmaterialshell
+sudo emerge --ask dux-desktop/dux-shell
 ```
 
 </TabItem>
@@ -473,7 +473,7 @@ sudo emerge --ask gui-apps/dankmaterialshell
 The live packages are not keyworded , so you will need to set keywords to `**` for the package. For example:
 
 ```bash
-echo "gui-apps/dankmaterialshell **" | sudo tee -a /etc/portage/package.accept_keywords/dankmaterialshell
+echo "dux-desktop/dux-shell **" | sudo tee -a /etc/portage/package.accept_keywords/dux-shell
 ```
 
 :::
@@ -481,7 +481,7 @@ echo "gui-apps/dankmaterialshell **" | sudo tee -a /etc/portage/package.accept_k
 Finally emerge the package 
 
 ```bash
-sudo emerge --ask gui-apps/dankmaterialshell
+sudo emerge --ask dux-desktop/dux-shell
 ```
 
 </TabItem>
@@ -502,7 +502,7 @@ NixOS has dedicated documentation with two installation methods:
 Dux Shell is available from the official Solus repository. Pair it with `niri`, `hyprland`, `sway`, or `labwc` packages from the official repositories for a complete desktop stack.
 
 ```bash
-sudo eopkg install dankmaterialshell
+sudo eopkg install dux-shell
 ```
 
 :::tip
@@ -672,13 +672,13 @@ sudo emerge --ask sys-apps/accountsservice
 
 ### 2. Clone the DMS Repository
 
-Shared widgets live in the [dank-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule, so clone with `--recurse-submodules`:
+Shared widgets live in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule, so clone with `--recurse-submodules`:
 
 ```bash
 git clone --recurse-submodules https://github.com/duxlabs-dev/dux-shell.git ~/dms
 ```
 
-In an existing clone, run `git submodule update --init` instead — `make install` fails with a `DankCommon missing` error until the submodule is present.
+In an existing clone, run `git submodule update --init` instead — `make install` fails until the submodule is present.
 
 ### 3. Compile & Install the DMS Backend
 
@@ -689,7 +689,7 @@ cd ~/dms
 sudo make install
 ```
 
-The Quickshell UI is embedded into the `dms` binary at build time. The shell runs from the embedded UI unless `-c` or `DMS_SHELL_DIR` points elsewhere. The login screen is a separate binary from [dank-greeter](https://github.com/duxlabs-dev/dux-greeter) with its own embedded UI.
+The Quickshell UI is embedded into the `dms` binary at build time. The shell runs from the embedded UI unless `-c` or `DMS_SHELL_DIR` points elsewhere. The login screen is a separate binary from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) with its own embedded UI.
 
 :::note
 
@@ -705,7 +705,7 @@ Install optional components for full functionality using your distribution's pac
 - `dsearch` - Filesystem search engine
 - `matugen` - Material Design color palette generation
 - `i2c-tools` - ddc monitor backlight control
-- `dankcalendar` - Desktop calendar integration
+- `dcal` - Desktop calendar integration
 - `cava` - Audio visualizer widget
 - `qt6-multimedia` - System sound feedback
 

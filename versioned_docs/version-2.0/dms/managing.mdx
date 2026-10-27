@@ -228,7 +228,7 @@ This only affects DMS and apps it launches, whereas `90-dms.conf` applies to all
 ## Drop-in Settings Files
 By default, your DMS settings are stored in `settings.json`. You may opt to split them between multiple files. This can be useful for example, in conjunction with version control to keep your configuration synced between different machines.
 
-1. Create a `config.d/` directory alongside your `settings.json` file in the `~/.config/DankMaterialShell/` directory.
+1. Create a `config.d/` directory alongside your `settings.json` file in the `~/.config/dms/` directory.
 
 2. Restart DMS
 
@@ -370,7 +370,7 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 - Kill stuck processes: `dms kill`
 
 **Settings not applying:**
-- Backup and remove `~/.config/DankMaterialShell/settings.json` and drop-in files under `~/.config/DankMaterialShell/config.d/*.json` (if you have any).
+- Backup and remove `~/.config/dms/settings.json` and drop-in files under `~/.config/dms/config.d/*.json` (if you have any).
 - Restart DMS to regenerate defaults
 
 **Environment variables not working:**
