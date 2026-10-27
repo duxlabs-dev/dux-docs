@@ -17,11 +17,13 @@ import Hero from '@site/src/components/Hero';
 
 # Usage
 
-`dsearch` provides both a CLI and HTTP API for searching your filesystem. The API follows OpenAPI 3.1 specification with full documentation available at the `/docs` endpoint.
+`dsearch` provides a CLI and an optional HTTP API for searching your filesystem. The API follows OpenAPI 3.1 specification with full documentation available at the `/docs` endpoint.
 
 ## API Usage
 
-The `dsearch` API provides a documentation endpoint with a full OpenAPI 3.1 specification available at `http://localhost:43654/docs`.
+The HTTP API is off by default. Enable it with `dsearch serve --http` or `http_enabled = true` in the [configuration](./configuration#http_enabled). It has no authentication and loopback is shared by every local account, so leave it off unless you need it.
+
+Once enabled, the `dsearch` API provides a documentation endpoint with a full OpenAPI 3.1 specification available at `http://localhost:43654/docs`.
 
 It's guaranteed to be up to date, so it's the best way to reference API usage.
 
@@ -31,11 +33,14 @@ Dux Search provides a command-line interface for managing the search index and q
 
 ### Starting the Server
 
-Run the HTTP API server:
+Run the service:
 
 ```bash
-# Start server on default port (43654)
+# Unix socket only (default), used by the CLI and DMS
 dsearch serve
+
+# Also serve the HTTP API on the default port (43654)
+dsearch serve --http
 
 # Access OpenAPI documentation at http://localhost:43654/docs
 ```
@@ -392,6 +397,6 @@ dsearch version
 - Reduce `max_depth` for deep directory trees
 
 **Server won't start:**
-- Check if port 43654 is available: `netstat -tlnp | grep :43654`
-- Change `listen_addr` in config to use a different port
+- With `http_enabled = true`, check if port 43654 is available: `netstat -tlnp | grep :43654`
+- Change `listen_addr` in config to use a different port, or drop `http_enabled` if you only use the CLI
 - Check logs for permission errors
