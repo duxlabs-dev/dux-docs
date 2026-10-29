@@ -402,6 +402,8 @@ PluginComponent {
 
 The `PopoutComponent` helper gives you consistent header/footer and a `closePopout()` function.
 
+Hover-opened popouts close when the pointer leaves them, and an open `DDropdown` menu counts as leaving. Declare `property var parentPopout: null` on the popout content and pass `transientSurfaceTracker: parentPopout?.transientSurfaceTracker ?? null` to the dropdown so the popout stays open while its menu is up.
+
 ### Control Center Widget
 
 Tiles use square cells. The default size is 4×1; 2×2 is square. Users resize tiles and the panel within the available screen space.
