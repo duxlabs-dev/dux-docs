@@ -57,8 +57,8 @@ Thank you for contributing to the Dux Shell registry! This guide covers how to s
 |-------|----------|-------------|
 | `id` | Yes | Unique identifier in camelCase (e.g., `worldClock`). Must match your `plugin.json` |
 | `name` | Yes | Display name. Must match your `plugin.json` |
-| `capabilities` | Yes | Array like `["dankbar-widget"]` |
-| `category` | Yes | One of: `monitoring`, `utilities`, `appearance`, `system`, etc. |
+| `capabilities` | Yes | Plugin types, used by the directory's Type filter: `dankbar-widget`, `control-center`, `launcher`, `daemon`, `desktop-widget`, `dash-tab`, `dash-card`. Types declared in your `plugin.json` (`type` or `components`) are added automatically. Extra free-form entries are allowed |
+| `category` | Yes | One of: `utilities`, `monitoring`, `system`, `appearance`, `productivity`, `media`, `networking` |
 | `repo` | Yes | Full GitHub URL to your plugin repository |
 | `path` | No | Subdirectory path if plugin is in a monorepo |
 | `author` | Yes | Your name or GitHub username |

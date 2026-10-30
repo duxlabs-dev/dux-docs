@@ -60,10 +60,10 @@ func (u PluginSortOrder) Schema(r huma.Registry) *huma.Schema {
 }
 
 type ListPluginsInput struct {
-	Category      string          `query:"category" doc:"Filter by category"`
+	Category      string          `query:"category" doc:"Filter by category (utilities, monitoring, system, appearance, productivity, media, networking)"`
 	Compositor    string          `query:"compositor" doc:"Filter by compositor (niri, hyprland, any)"`
 	FirstParty    bool            `query:"firstParty" doc:"Only show first-party plugins"`
-	Capability    string          `query:"capability" doc:"Filter by capability"`
+	Capability    string          `query:"capability" doc:"Filter by capability. Plugin types: dankbar-widget, control-center, launcher, daemon, desktop-widget, dash-tab, dash-card. Types declared by the plugin manifest (type or components) are merged into each plugin's capabilities"`
 	ExcludeStatus []string        `query:"excludeStatus" doc:"Exclude plugins with these status labels (e.g. broken, deprecated)"`
 	SortBy        PluginSortBy    `query:"sortBy" doc:"Sort plugins by field"`
 	Order         PluginSortOrder `query:"order" doc:"Sort direction (asc or desc); defaults to descending, ascending for name"`

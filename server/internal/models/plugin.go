@@ -21,16 +21,18 @@ type RegistryPlugin struct {
 }
 
 type PluginMetadata struct {
-	ID          string   `json:"id"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Version     string   `json:"version"`
-	Author      string   `json:"author"`
-	Icon        string   `json:"icon"`
-	FirstParty  bool     `json:"firstParty"`
-	Component   string   `json:"component"`
-	Settings    string   `json:"settings,omitempty"`
-	Permissions []string `json:"permissions"`
+	ID          string            `json:"id"`
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	Version     string            `json:"version"`
+	Author      string            `json:"author"`
+	Icon        string            `json:"icon"`
+	FirstParty  bool              `json:"firstParty"`
+	Type        string            `json:"type,omitempty"`
+	Component   string            `json:"component"`
+	Components  map[string]string `json:"components,omitempty"`
+	Settings    string            `json:"settings,omitempty"`
+	Permissions []string          `json:"permissions"`
 }
 
 type Plugin struct {

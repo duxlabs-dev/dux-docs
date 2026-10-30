@@ -6,6 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"slices"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -223,7 +225,7 @@ func buildPlugin(regPlugin models.RegistryPlugin, metadata models.PluginMetadata
 	plugin := models.Plugin{
 		ID:           regPlugin.ID,
 		Name:         regPlugin.Name,
-		Capabilities: regPlugin.Capabilities,
+		Capabilities: withSurfaceCapabilities(regPlugin.Capabilities, metadata),
 		Category:     regPlugin.Category,
 		Repo:         regPlugin.Repo,
 		Author:       regPlugin.Author,
@@ -245,6 +247,41 @@ func buildPlugin(regPlugin models.RegistryPlugin, metadata models.PluginMetadata
 	}
 
 	return plugin
+}
+
+var surfaceCapabilities = map[string]string{
+	"launcher": "launcher",
+	"daemon":   "daemon",
+	"desktop":  "desktop-widget",
+	"dash":     "dash-tab",
+	"dashCard": "dash-card",
+}
+
+func manifestSurfaces(metadata models.PluginMetadata) []string {
+	if len(metadata.Components) > 0 {
+		surfaces := make([]string, 0, len(metadata.Components))
+		for surface := range metadata.Components {
+			surfaces = append(surfaces, surface)
+		}
+		sort.Strings(surfaces)
+		return surfaces
+	}
+	if metadata.Type == "" {
+		return nil
+	}
+	return []string{metadata.Type}
+}
+
+func withSurfaceCapabilities(capabilities []string, metadata models.PluginMetadata) []string {
+	merged := append([]string(nil), capabilities...)
+	for _, surface := range manifestSurfaces(metadata) {
+		capability, ok := surfaceCapabilities[surface]
+		if !ok || slices.Contains(merged, capability) {
+			continue
+		}
+		merged = append(merged, capability)
+	}
+	return merged
 }
 
 func parseRepoURL(repoURL string) (host, owner, repo string, err error) {

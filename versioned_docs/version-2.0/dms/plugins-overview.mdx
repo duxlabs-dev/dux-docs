@@ -31,7 +31,18 @@ The [plugin directory](https://duxlabs.dev/plugins) ranks plugins by community ð
 
 ## Plugin Types
 
-Dux Shell supports the following plugin types, defined in `plugin.json`:
+Dux Shell supports the following plugin types, defined in `plugin.json`. The [plugin directory](/plugins) filters by the registry capability of each type.
+
+| Type | `plugin.json` type | Registry capability | Directory |
+|------|--------------------|---------------------|-----------|
+| Bar widget | `widget` | `dankbar-widget` | [Browse](/plugins?type=dankbar-widget) |
+| Control center widget | `widget` | `control-center` | [Browse](/plugins?type=control-center) |
+| Launcher | `launcher` | `launcher` | [Browse](/plugins?type=launcher) |
+| Daemon | `daemon` | `daemon` | [Browse](/plugins?type=daemon) |
+| Desktop widget | `desktop` | `desktop-widget` | [Browse](/plugins?type=desktop-widget) |
+| Dash tab | `dash` | `dash-tab` | [Browse](/plugins?type=dash-tab) |
+| Dash card | `dashCard` | `dash-card` | [Browse](/plugins?type=dash-card) |
+| Composite | `composite` | one per surface | |
 
 ### 1. Bar Widget (`type: "widget"`)
 

@@ -123,22 +123,78 @@ interface ThemesResponse {
 
 type ActiveTab = 'plugins' | 'themes';
 
-const categories = [
-  { id: 'all', label: 'All Plugins' },
-  { id: 'utilities', label: 'Utilities' },
-  { id: 'appearance', label: 'Appearance' },
-  { id: 'monitoring', label: 'Monitoring' },
-];
-
-const capabilities = [
+const pluginTypes = [
   { id: 'all', label: 'All Types' },
   { id: 'dankbar-widget', label: 'Bar Widget' },
-  { id: 'desktop-widget', label: 'Desktop Widget' },
-  { id: 'launcher', label: 'Launcher' },
   { id: 'control-center', label: 'Control Center' },
-  { id: 'watch-events', label: 'Event Watcher' },
-  { id: 'set-wallpaper', label: 'Wallpaper' },
+  { id: 'launcher', label: 'Launcher' },
+  { id: 'daemon', label: 'Daemon' },
+  { id: 'desktop-widget', label: 'Desktop Widget' },
+  { id: 'dash-tab', label: 'Dash Tab' },
+  { id: 'dash-card', label: 'Dash Card' },
 ];
+
+const pluginTypeLabel = (capability: string): string =>
+  pluginTypes.find(type => type.id === capability)?.label ?? capability;
+
+const categoryLabels: Record<string, string> = {
+  utilities: 'Utilities',
+  monitoring: 'Monitoring',
+  system: 'System',
+  appearance: 'Appearance',
+  productivity: 'Productivity',
+  media: 'Media',
+  networking: 'Networking',
+  audio: 'Audio',
+};
+
+const categoryLabel = (id: string): string =>
+  categoryLabels[id] ?? id.charAt(0).toUpperCase() + id.slice(1);
+
+const minCategorySize = 2;
+
+function categoryOptions(plugins: Plugin[]): { id: string; label: string }[] {
+  const counts: Record<string, number> = {};
+  for (const plugin of plugins) {
+    if (!plugin.category) continue;
+    counts[plugin.category] = (counts[plugin.category] ?? 0) + 1;
+  }
+  const ids = Object.keys(counts)
+    .filter(id => counts[id] >= minCategorySize)
+    .sort((a, b) => counts[b] - counts[a] || a.localeCompare(b));
+  return [{ id: 'all', label: 'All Plugins' }, ...ids.map(id => ({ id, label: categoryLabel(id) }))];
+}
+
+interface UrlFilters {
+  tab: ActiveTab;
+  type: string;
+  category: string;
+  compositor: string;
+}
+
+const readUrlFilters = (search: string): UrlFilters => {
+  const params = new URLSearchParams(search);
+  return {
+    tab: params.get('tab') === 'themes' ? 'themes' : 'plugins',
+    type: params.get('type') ?? 'all',
+    category: params.get('category') ?? 'all',
+    compositor: params.get('compositor') ?? 'all',
+  };
+};
+
+const urlFilterDefaults: UrlFilters = { tab: 'plugins', type: 'all', category: 'all', compositor: 'all' };
+
+const writeUrlFilters = (search: string, filters: UrlFilters): string => {
+  const params = new URLSearchParams(search);
+  for (const key of Object.keys(filters) as (keyof UrlFilters)[]) {
+    if (filters[key] === urlFilterDefaults[key]) {
+      params.delete(key);
+      continue;
+    }
+    params.set(key, filters[key]);
+  }
+  return params.toString();
+};
 
 const compositors = [
   { id: 'all', label: 'All Compositors' },
@@ -330,22 +386,18 @@ export default function Plugins() {
   const location = useLocation();
   const history = useHistory();
 
-  const getTabFromUrl = (): ActiveTab => {
-    const params = new URLSearchParams(location.search);
-    const tab = params.get('tab');
-    return tab === 'themes' ? 'themes' : 'plugins';
-  };
+  const initialFilters = readUrlFilters(location.search);
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>(getTabFromUrl);
+  const [activeTab, setActiveTab] = useState<ActiveTab>(initialFilters.tab);
   const [plugins, setPlugins] = useState<Plugin[]>([]);
   const [filteredPlugins, setFilteredPlugins] = useState<Plugin[]>([]);
   const [themes, setThemes] = useState<Theme[]>([]);
   const [filteredThemes, setFilteredThemes] = useState<Theme[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedCapability, setSelectedCapability] = useState('all');
-  const [selectedCompositor, setSelectedCompositor] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(initialFilters.category);
+  const [selectedType, setSelectedType] = useState(initialFilters.type);
+  const [selectedCompositor, setSelectedCompositor] = useState(initialFilters.compositor);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFirstPartyOnly, setShowFirstPartyOnly] = useState(false);
   const [showReviewedOnly, setShowReviewedOnly] = useState(false);
@@ -366,23 +418,26 @@ export default function Plugins() {
     return map;
   }, [plugins]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const currentTab = params.get('tab');
-    const expectedTab = activeTab === 'themes' ? 'themes' : null;
+  const categories = React.useMemo(() => categoryOptions(plugins), [plugins]);
 
-    if (currentTab !== expectedTab) {
-      if (expectedTab) {
-        params.set('tab', expectedTab);
-      } else {
-        params.delete('tab');
-      }
-      history.replace({ search: params.toString() });
+  useEffect(() => {
+    const next = writeUrlFilters(location.search, {
+      tab: activeTab,
+      type: selectedType,
+      category: selectedCategory,
+      compositor: selectedCompositor,
+    });
+    if (next !== new URLSearchParams(location.search).toString()) {
+      history.replace({ search: next });
     }
-  }, [activeTab]);
+  }, [activeTab, selectedType, selectedCategory, selectedCompositor]);
 
   useEffect(() => {
-    setActiveTab(getTabFromUrl());
+    const filters = readUrlFilters(location.search);
+    setActiveTab(filters.tab);
+    setSelectedType(filters.type);
+    setSelectedCategory(filters.category);
+    setSelectedCompositor(filters.compositor);
   }, [location.search]);
 
   useEffect(() => {
@@ -397,7 +452,7 @@ export default function Plugins() {
 
   useEffect(() => {
     filterPlugins();
-  }, [plugins, selectedCategory, selectedCapability, selectedCompositor, searchQuery, showFirstPartyOnly, showReviewedOnly, hideBroken]);
+  }, [plugins, selectedCategory, selectedType, selectedCompositor, searchQuery, showFirstPartyOnly, showReviewedOnly, hideBroken]);
 
   useEffect(() => {
     filterThemes();
@@ -434,8 +489,8 @@ export default function Plugins() {
       filtered = filtered.filter(p => p.category === selectedCategory);
     }
 
-    if (selectedCapability !== 'all') {
-      filtered = filtered.filter(p => p.capabilities.includes(selectedCapability));
+    if (selectedType !== 'all') {
+      filtered = filtered.filter(p => p.capabilities.includes(selectedType));
     }
 
     if (selectedCompositor !== 'all') {
@@ -762,14 +817,14 @@ export default function Plugins() {
                 <div className={styles.filterGroup}>
                   <label className={styles.filterLabel}>Type</label>
                   <div className={styles.filterButtons}>
-                    {capabilities.map(cap => (
+                    {pluginTypes.map(type => (
                       <button
-                        key={cap.id}
-                        className={`${styles.filterButton} ${selectedCapability === cap.id ? styles.active : ''}`}
-                        aria-pressed={selectedCapability === cap.id}
-                        onClick={() => setSelectedCapability(cap.id)}
+                        key={type.id}
+                        className={`${styles.filterButton} ${selectedType === type.id ? styles.active : ''}`}
+                        aria-pressed={selectedType === type.id}
+                        onClick={() => setSelectedType(type.id)}
                       >
-                        {cap.label}
+                        {type.label}
                       </button>
                     ))}
                   </div>
@@ -868,7 +923,7 @@ export default function Plugins() {
                             {STATUS_LABELS[s] || s}
                           </span>
                         ))}
-                        <span className={styles.tag}>{plugin.category}</span>
+                        <span className={styles.tag}>{categoryLabel(plugin.category)}</span>
                         {viewMode === 'grid' && plugin.version && (
                           <span className={styles.tag}>v{plugin.version}</span>
                         )}
@@ -880,7 +935,7 @@ export default function Plugins() {
                       <div className={styles.pluginCapabilities}>
                         {plugin.capabilities.slice(0, 2).map(cap => (
                           <span key={cap} className={styles.capability}>
-                            {cap}
+                            {pluginTypeLabel(cap)}
                           </span>
                         ))}
                         {plugin.capabilities.length > 2 && (
@@ -1135,7 +1190,7 @@ export default function Plugins() {
               <button
                 onClick={() => {
                   setSelectedCategory('all');
-                  setSelectedCapability('all');
+                  setSelectedType('all');
                   setSelectedCompositor('all');
                   setSearchQuery('');
                   setShowFirstPartyOnly(false);
