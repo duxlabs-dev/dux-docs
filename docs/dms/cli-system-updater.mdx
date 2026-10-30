@@ -15,7 +15,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-The `dms system update` command checks for pending updates and optionally upgrades your system using the package managers actually installed on the machine. It talks to **APT**, **DNF** / **DNF5**, **Pacman**, **Paru**, **Yay**, **Zypper**, **rpm-ostree** (Atomic / Silverblue-style deployments), and **Flatpak** — whichever combination is available — without going through the DMS compositor daemon for normal check and upgrade flows.
+The `dms system update` command checks for pending updates and optionally upgrades your system using the package managers actually installed on the machine. It talks to **APT**, **DNF** / **DNF5**, **Pacman**, **Paru**, **Yay**, **Zypper**, **rpm-ostree** (Atomic / Silverblue-style deployments), **Flatpak**, and **Homebrew** — whichever combination is available — without going through the DMS compositor daemon for normal check and upgrade flows.
 
 :::info
 Listing and applying updates runs **locally** against those tools. You do **not** need `dms` running as a server for `dms system update` or `dms system update --check`. The optional `--interval` flag is the exception: it configures how often a **running** DMS server polls for updates.
@@ -26,11 +26,15 @@ Listing and applying updates runs **locally** against those tools. You do **not*
 DMS picks **one primary system backend** (the first candidate that reports itself as available) plus **overlay** backends:
 
 - **System**: one of APT, DNF5/DNF (skipped when `rpm-ostree` indicates an ostree-booted system so the transactional backend can take over), Pacman, Paru, Yay, Zypper, or rpm-ostree, depending on what is installed and what the environment reports.
-- **Overlays**: **Flatpak** is included when the `flatpak` CLI is present.
+- **Overlays**:
+  - **Flatpak**, included when the `flatpak` CLI is present.
+  - **Homebrew**, included when `brew` is on `PATH` or at the default Linux prefix `/home/linuxbrew/.linuxbrew`, since the shell is often started without brew's shellenv.
 
 On image-based systems (rpm-ostree, bootc, transactional-update) this is also how Dux Shell itself gets updated: `dms update` refuses to run there and points to `dms system update` or the image tooling.
 
 On Arch-based systems, **Paru** or **Yay** is preferred when installed so both repository and **AUR** updates can be discovered and upgraded in one flow. Plain **Pacman** covers official repos only.
+
+Homebrew checks run `brew update` and then `brew outdated`; pinned formulae are left out because `brew upgrade` skips them. Homebrew always runs as your user, without privilege escalation.
 
 Updates from each backend are merged into a single list; upgrades run **per backend** in sequence, only for packages that belong to that backend.
 
@@ -43,6 +47,7 @@ dms system update --noconfirm          # upgrade without a prompt (also -y)
 dms system update --dry                # simulation only (no persistent changes)
 dms system update --check --json       # machine-readable listing
 dms system update --no-flatpak         # skip Flatpak overlay
+dms system update --no-homebrew        # skip Homebrew overlay
 dms system update --no-aur             # skip AUR targets when using Paru/Yay
 dms system update --ignore nvidia,docker  # skip specific packages for this run
 dms system update --interval 3600      # set server poll interval to 3600 seconds (needs running server)
@@ -57,6 +62,7 @@ dms system update --interval 3600      # set server poll interval to 3600 second
 | `--dry` | Run upgrade commands in a non-destructive / dry-run mode where supported. |
 | `--json` | With `--check`, print JSON (`backends`, `packages`, `count`, `error`). |
 | `--no-flatpak` | Omit Flatpak from both discovery and upgrades. |
+| `--no-homebrew` | Omit Homebrew from both discovery and upgrades. |
 | `--no-aur` | When using Paru or Yay, drop AUR-only packages from the plan (repo updates still apply). |
 | `--ignore <names>` | Skip specific packages by name (repeatable, or comma-separated). Excluded from both the listing and the upgrade. |
 | `--interval <seconds>` | Call the running server’s `sysupdate.setInterval` RPC and exit; does not upgrade locally by itself. |
@@ -72,6 +78,7 @@ Use `--ignore` (or the **Ignored packages** list in the shell's System Updater s
 | APT | The packages are placed on a transient `apt-mark hold` for the duration of the upgrade and released afterward (holds you set yourself are left untouched) |
 | Zypper | A transient package lock (`zypper al`) is added for the upgrade and removed afterward (locks you set yourself are left untouched) |
 | Flatpak | Only the remaining refs are passed to `flatpak update` explicitly |
+| Homebrew | Only the remaining packages are passed to `brew upgrade` explicitly |
 
 Package names entered in the shell settings are validated as letters, digits, and `@._+:-`. CLI values are passed as command arguments where possible; backends that require shell command construction discard unsafe names.
 
@@ -94,6 +101,7 @@ When the compositor-side server is running, it exposes IPC such as `sysupdate.ge
 | Param | Type | Effect |
 |-------|------|--------|
 | `includeFlatpak` | bool (default `true`) | Include the Flatpak overlay in the upgrade. |
+| `includeHomebrew` | bool (default `true`) | Include the Homebrew overlay in the upgrade. |
 | `includeAUR` | bool (default `true`) | Include AUR targets when using Paru/Yay. |
 | `ignored` | string array | Package names to skip; excluded from the plan and from each backend's upgrade command using its native mechanism (see [Ignoring packages](#ignoring-packages)). |
 | `dry` | bool (default `false`) | Run a non-destructive dry run where supported. |
