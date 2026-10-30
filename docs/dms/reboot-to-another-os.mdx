@@ -1,6 +1,6 @@
 ---
-title: Reboot to Another OS
-description: Reboot straight into Windows or another installed system from the power menu
+title: Reboot Targets
+description: Reboot straight into firmware setup, Windows, or another installed system from the power menu
 sidebar_position: 6
 ---
 
@@ -16,21 +16,47 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-On a UEFI machine with more than one OS, DMS can reboot straight into another one from the
-power menu. It sets the firmware's one-time `BootNext` entry, so the boot after that follows
-your usual order. It needs `efibootmgr`.
+On a UEFI machine, DMS can reboot straight into firmware setup or into another installed OS
+from the power menu. Either one applies to the next boot only. The boot after that follows
+your usual order.
 
-## Using it
+Set both up under **Settings → Power & Sleep → Reboot targets**.
 
-Add entries under **Settings → Power & Sleep → Reboot to another OS**. Each one shows up in
+## Firmware setup
+
+Turn on **Firmware setup** to add **Reboot to firmware setup** to the power menu and the
+launcher. In the power menu, press `F` to pick it.
+
+DMS asks logind to open firmware setup on the next boot, the same as
+`systemctl reboot --firmware-setup`. This works with systemd and with elogind, so OpenRC and
+other setups that run elogind are covered. No password is needed from an active local session.
+
+The toggle only appears when your firmware supports this. It stays hidden on legacy BIOS boots,
+on firmware that doesn't offer it, and on systems with neither systemd-logind nor elogind.
+
+This action skips your custom reboot command, if you set one, because logind sets the firmware
+flag and reboots in one step.
+
+If something blocks the reboot after the flag is set, your next normal reboot opens firmware
+setup instead. To clear the flag:
+
+```sh
+busctl call org.freedesktop.login1 /org/freedesktop/login1 org.freedesktop.login1.Manager SetRebootToFirmwareSetup b false
+```
+
+## Another OS
+
+When your machine has more than one OS, add entries with **Add entry**. Each one shows up in
 the power menu and the launcher as **Reboot to** followed by its name. In the power menu,
 keys `1` to `9` pick them in the order you added them.
+
+DMS sets the firmware's one-time `BootNext` entry, which needs `efibootmgr`.
 
 DMS asks for your password before it reboots, since only root can set `BootNext`. If a toast
 says the boot entry changed, your firmware renumbered its entries. Remove the entry and add
 it again.
 
-## Skipping the password
+### Skipping the password
 
 Save this as `/etc/polkit-1/rules.d/50-dms-bootnext.rules`:
 
