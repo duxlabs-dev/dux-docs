@@ -50,7 +50,7 @@ Each Dux repository ships two packages: `dux-files` follows tagged releases, and
 ### Fedora & CentOS
 
 ```bash
-sudo dnf copr enable duxlabs/dux
+sudo dnf copr enable duxlabs/dux-repo
 sudo dnf install dux-files        # or dux-files-git for the latest development build
 ```
 
@@ -106,7 +106,7 @@ sudo apt install dux-files        # or dux-files-git for the latest development 
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
 sudo apt install dux-files        # or dux-files-git for the latest development build
 ```
@@ -168,7 +168,7 @@ Install Dux Files from our R2-backed XBPS repository or build it from source. Vo
 <TabItem value="repo" label="Dux Repository" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 sudo xbps-install -S dux-files
 ```

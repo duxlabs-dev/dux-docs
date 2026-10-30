@@ -1,0 +1,81 @@
+---
+title: Migrate repositories
+description: Move DMS package repositories from the legacy avengemedia owner to duxlabs with dms migrate dux
+---
+
+`dms migrate dux` moves the package-manager repositories for DMS from the legacy `avengemedia` owner to `duxlabs`. Only the repository changes. The package renames (`dgop` to `dux-gop` and the others) are separate and happen on the next upgrade; see [Renamed packages](../repo).
+
+## Usage
+
+```bash
+dms migrate dux              # list the moves, ask, then run them
+dms migrate dux --dry-run    # print the commands without running anything
+dms migrate dux -y           # no prompt
+```
+
+| Flag | Effect |
+|---|---|
+| `--dry-run` | Print the commands it would run and change nothing |
+| `-y`, `--yes` | Skip the confirmation prompt |
+
+## What moves
+
+| Distribution | From | To |
+|---|---|---|
+| Fedora, EL 10 (COPR) | `avengemedia/dms`, `avengemedia/dms-git`, `avengemedia/danklinux` | `duxlabs/dms`, `duxlabs/dms-git`, `duxlabs/dux-repo` |
+| Ubuntu (PPA) | `ppa:avengemedia/dms`, `ppa:avengemedia/dms-git`, `ppa:avengemedia/danklinux` | `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git`, `ppa:duxlabs/dux-repo` |
+| Void (XBPS) | `https://void.danklinux.com/dms/current`, `https://void.danklinux.com/danklinux/current` | `https://void.duxlabs.dev/dms/current`, `https://void.duxlabs.dev/dux-repo/current` |
+
+Only repositories that are enabled on your system are moved. The short-lived `duxlabs/dux` dependency repository (used by the 2.0 release docs before it was renamed) is also treated as legacy and replaced by `duxlabs/dux-repo`. The `dms-git` repositories appear only if you use the development builds.
+
+## What you will see
+
+- **`Nothing to migrate on <distro>.`** Your distribution has no repositories to move.
+- **`Already migrated.`** Your DMS repositories already come from `duxlabs`.
+- Otherwise, a table of the moves, followed by a confirmation prompt.
+
+The command is idempotent: running it again skips repositories that already moved, so it is safe to repeat.
+
+## Commands it runs
+
+The commands run with `sudo`, so you may be asked for your password. `--dry-run` prints the same lines.
+
+**Fedora, EL 10:**
+
+```bash
+sudo dnf copr enable -y duxlabs/dms
+sudo dnf copr enable -y duxlabs/dux-repo
+sudo dnf copr remove -y avengemedia/dms
+sudo dnf copr remove -y avengemedia/danklinux
+```
+
+With the development builds installed, `duxlabs/dms-git` is enabled and `avengemedia/dms-git` is removed as well.
+
+**Ubuntu**, for each PPA that moves:
+
+```bash
+sudo add-apt-repository -y ppa:duxlabs/<ppa>
+sudo add-apt-repository -r -y ppa:avengemedia/<ppa>
+```
+
+`ppa:avengemedia/danklinux` is replaced by `ppa:duxlabs/dux-repo`.
+
+**Void**, for each `/etc/xbps.d/*.conf` file with a legacy `repository=` line, whatever the file is called:
+
+
+```bash
+sudo sed -i 's|repository=https://void.danklinux.com/dms/current|repository=https://void.duxlabs.dev/dms/current|' /etc/xbps.d/dms.conf
+sudo xbps-install -S
+```
+
+
+`danklinux/current` is replaced by `dux-repo/current`. If you only had `dms/current` (greeter-only installs), `dux-repo/current` is added to `/etc/xbps.d/dux.conf`, since the greeter now lives there. The packages are signed with the same key as before, so XBPS does not ask you to import a new one.
+
+**Fedora Atomic** (Silverblue, Kinoite, Bazzite): there is no `dnf copr`, so the command prints a `curl` for the new `.repo` file and an `rm -f` for the old one and leaves them for you to run.
+
+## Other distributions
+
+- **Arch, NixOS, Gentoo:** nothing to migrate.
+- **Debian, openSUSE (OBS):** migration will be added once the new `duxlabs` OBS projects exist. Until then the `home:AvengeMedia` repositories stay in place and keep working.
+
+[`dms doctor`](./cli-doctor#package-repos) shows whether any legacy repositories are left.

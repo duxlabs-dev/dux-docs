@@ -94,6 +94,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'dms/cli-migrate',
+              label: 'Migrate repositories',
+            },
+            {
+              type: 'doc',
               id: 'dms/cli-systemd',
               label: 'Systemd service',
             },

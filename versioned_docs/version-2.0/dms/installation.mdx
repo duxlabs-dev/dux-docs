@@ -87,7 +87,7 @@ sudo dnf install dms
 </TabItem>
 </Tabs>
 
-The COPR repositories also provide companion packages such as `quickshell-git`, `dankcalendar`, `matugen`, and other utilities used by the default configuration.
+The COPR repositories also provide companion packages such as `quickshell-git`, `dux-calendar`, `matugen`, and other utilities used by the default configuration.
 
 ### Fedora Atomic & bootc images
 
@@ -279,7 +279,7 @@ Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo add-apt-repository ppa:duxlabs/dms
 sudo apt update
 sudo apt install dms
@@ -289,7 +289,7 @@ sudo apt install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo add-apt-repository ppa:duxlabs/dms-git
 sudo apt update
 sudo apt install dms-git
@@ -526,8 +526,8 @@ Install DMS from our R2-backed XBPS repositories or build it from source.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/dms/current" | sudo tee /etc/xbps.d/dms.conf
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 sudo xbps-install -S dms
 ```
@@ -536,8 +536,8 @@ sudo xbps-install -S dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-echo "repository=https://void.danklinux.com/dms/current" | sudo tee /etc/xbps.d/dms.conf
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 sudo xbps-install -S dms-git
 ```
@@ -566,13 +566,13 @@ cd void-packages
 cp -R ../dux-repo/distro/void/srcpkgs/* srcpkgs/
 cp -R ../dux-shell/distro/void/srcpkgs/* srcpkgs/
 
-# Build the packages (dms requires dgop)
-./xbps-src pkg dgop
-./xbps-src pkg danksearch
+# Build the packages (dms requires dux-gop)
+./xbps-src pkg dux-gop
+./xbps-src pkg dux-search
 ./xbps-src pkg dms
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs dms dgop
+sudo xbps-install --repository=hostdir/binpkgs dms dux-gop
 ```
 
 </TabItem>

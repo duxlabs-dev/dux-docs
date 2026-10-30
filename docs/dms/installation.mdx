@@ -69,6 +69,12 @@ Dux Shell is available through COPR repositories for Fedora 43/44/45, Rawhide, a
 
 On Enterprise Linux, enable EPEL first (`sudo dnf install epel-release`, or the [EPEL release RPM](https://docs.fedoraproject.org/en-US/epel/getting-started/) on RHEL). EL support is in testing and covers niri only.
 
+:::note[Existing installs]
+
+The COPR repositories moved from `avengemedia` to `duxlabs`: `duxlabs/dms`, `duxlabs/dms-git` and `duxlabs/dux-repo` (formerly `avengemedia/danklinux`). If you installed from the `avengemedia` COPRs, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
 <Tabs groupId="dms-channel">
 <TabItem value="stable" label="Stable Release" default>
 
@@ -87,7 +93,7 @@ sudo dnf install dms
 </TabItem>
 </Tabs>
 
-The COPR repositories also provide companion packages such as `quickshell-git`, `dankcalendar`, `matugen`, and other utilities used by the default configuration.
+The COPR repositories also provide companion packages such as `quickshell-git`, `dux-calendar`, `matugen`, and other utilities used by the default configuration.
 
 ### Fedora Atomic & bootc images
 
@@ -102,8 +108,8 @@ Headless works the same way: `duxinstall -c niri -t ghostty -y` prints the layer
 To layer the packages yourself instead (niri and ghostty shown):
 
 ```bash
-sudo curl -fsSLo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:avengemedia:dms.repo \
-  https://copr.fedorainfracloud.org/coprs/avengemedia/dms/repo/fedora-$(rpm -E %fedora)/avengemedia-dms-fedora-$(rpm -E %fedora).repo
+sudo curl -fsSLo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:duxlabs:dms.repo \
+  https://copr.fedorainfracloud.org/coprs/duxlabs/dms/repo/fedora-$(rpm -E %fedora)/duxlabs-dms-fedora-$(rpm -E %fedora).repo
 sudo rpm-ostree install dms niri ghostty quickshell matugen xwayland-satellite
 systemctl reboot
 ```
@@ -275,11 +281,17 @@ sudo apt install dms-git
 
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
+:::note[Existing installs]
+
+The PPAs moved from `avengemedia` to `duxlabs`: `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git` and `ppa:duxlabs/dux-repo` (formerly `ppa:avengemedia/danklinux`). If you added the `avengemedia` PPAs, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
 <Tabs groupId="dms-channel">
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo add-apt-repository ppa:duxlabs/dms
 sudo apt update
 sudo apt install dms
@@ -289,7 +301,7 @@ sudo apt install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo add-apt-repository ppa:duxlabs/dms-git
 sudo apt update
 sudo apt install dms-git
@@ -519,6 +531,12 @@ Install DMS from our R2-backed XBPS repositories or build it from source.
 
 :::
 
+:::note[Existing installs]
+
+The XBPS repositories moved to `void.duxlabs.dev`, and `danklinux/current` is now `dux-repo/current`. If you configured `void.danklinux.com`, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
 <Tabs groupId="void-install-method">
 <TabItem value="repo" label="Dux Repositories" default>
 
@@ -526,8 +544,8 @@ Install DMS from our R2-backed XBPS repositories or build it from source.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/dms/current" | sudo tee /etc/xbps.d/dms.conf
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 sudo xbps-install -S dms
 ```
@@ -536,8 +554,8 @@ sudo xbps-install -S dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-echo "repository=https://void.danklinux.com/dms/current" | sudo tee /etc/xbps.d/dms.conf
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 sudo xbps-install -S dms-git
 ```
@@ -566,13 +584,13 @@ cd void-packages
 cp -R ../dux-repo/distro/void/srcpkgs/* srcpkgs/
 cp -R ../dux-shell/distro/void/srcpkgs/* srcpkgs/
 
-# Build the packages (dms requires dgop)
-./xbps-src pkg dgop
-./xbps-src pkg danksearch
+# Build the packages (dms requires dux-gop)
+./xbps-src pkg dux-gop
+./xbps-src pkg dux-search
 ./xbps-src pkg dms
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs dms dgop
+sudo xbps-install --repository=hostdir/binpkgs dms dux-gop
 ```
 
 </TabItem>

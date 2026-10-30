@@ -123,12 +123,12 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 
 ### Hyprland Lua config
 
-On Hyprland, doctor adds a **Hyprland Lua config** warning in two cases:
+On Hyprland, doctor warns when:
 
 - **Hyprland `<version>` is older than 0.55**: DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer. Upgrade Hyprland.
-- **Hyprland config is hyprland.conf**: `~/.config/hypr/hyprland.conf` exists and `hyprland.lua` doesn't. DMS keybinds, window rules and displays are read-only until you run `dms setup` to migrate to Lua. Hyprland 0.57 drops `.conf` support.
 
-When both files exist, `hyprland.lua` wins and there is no warning.
+- **Quickshell is older than 0.3.2 on Hyprland 0.57+**: Hyprland 0.57 sends workspace addresses instead of ids, and older Quickshell collapses named and special workspaces. Upgrade Quickshell.
+- **Deprecated config options**: `hyprctl -j deprecated-config` lists options your config still uses that Hyprland has deprecated. Update or remove them.
 
 ### Mango config
 
@@ -365,6 +365,8 @@ See [Installation](installation#compositor-specific-systemd-setup) for the equiv
 ### greetd
 
 Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+
+Doctor also warns when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua.
 
 ---
 

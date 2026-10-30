@@ -60,7 +60,7 @@ paru -S dux-search-git
 ### Fedora & CentOS
 
 ```bash
-sudo dnf copr enable duxlabs/dux
+sudo dnf copr enable duxlabs/dux-repo
 sudo dnf install dsearch
 ```
 
@@ -116,7 +116,7 @@ sudo apt install dsearch
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
 sudo apt install dsearch
 ```
@@ -178,9 +178,9 @@ Install Dux Search from our R2-backed XBPS repository or build it from source.
 <TabItem value="repo" label="Dux Repository" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
-sudo xbps-install -S danksearch
+sudo xbps-install -S dux-search
 ```
 
 :::note
@@ -201,13 +201,13 @@ cd void-packages
 ./xbps-src binary-bootstrap
 
 # Copy in the templates (adjust paths as needed)
-cp -R ../Dux/distro/void/srcpkgs/danksearch* srcpkgs/
+cp -R ../Dux/distro/void/srcpkgs/dux-search* srcpkgs/
 
 # Build the package
-./xbps-src pkg danksearch
+./xbps-src pkg dux-search
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs danksearch
+sudo xbps-install --repository=hostdir/binpkgs dux-search
 ```
 
 </TabItem>

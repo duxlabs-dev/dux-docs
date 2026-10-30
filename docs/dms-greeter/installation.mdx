@@ -23,7 +23,7 @@ import TabItem from '@theme/TabItem';
 
 :::note[How installation works]
 
-Install the `dms-greeter` package for your distro (sections below), then run:
+Install the `dux-greeter` package for your distro (sections below), then run:
 
 ```bash
 dms-greeter install
@@ -66,16 +66,28 @@ paru -S dux-greeter-git
 
 Both packages ship the `dms-greeter` binary along with the `/usr/lib/sysusers.d/dms-greeter.conf` and `/usr/lib/tmpfiles.d/dms-greeter.conf` declarations described in [Greeter system user](#greeter-system-user-rpm-deb-and-immutable-systems). After installing, either run `dms-greeter install` (see the note at the top) or continue with [Completing Setup](#completing-setup).
 
+:::note[Migrating from `greetd-dms-greeter`]
+
+The `greetd-dms-greeter-bin` and `greetd-dms-greeter-git` AUR packages are retired. Remove them, install `dux-greeter-bin`, then run `dms-greeter install`:
+
+```bash
+paru -Rns greetd-dms-greeter-bin   # or greetd-dms-greeter-git
+paru -S dux-greeter-bin
+dms-greeter install
+```
+
+:::
+
 ### Fedora & Enterprise Linux
 
-Dux Greeter is published to the [duxlabs/dux](https://copr.fedorainfracloud.org/coprs/duxlabs/dux/) COPR from the [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) repository. On Enterprise Linux 10 the same COPR provides `greetd`, which EPEL 10 does not ship.
+Dux Greeter is published to the [duxlabs/dux-repo](https://copr.fedorainfracloud.org/coprs/duxlabs/dux-repo/) COPR from the [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) repository. On Enterprise Linux 10 the same COPR provides `greetd`, which EPEL 10 does not ship.
 
 <Tabs groupId="fedora-greeter-channel">
 <TabItem value="stable" label="Stable" default>
 
 ```bash
-sudo dnf copr enable duxlabs/dux
-sudo dnf install dms-greeter
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-greeter
 ```
 
 Tagged releases. Recommended for most users.
@@ -84,22 +96,22 @@ Tagged releases. Recommended for most users.
 <TabItem value="git" label="Git (development)">
 
 ```bash
-sudo dnf copr enable duxlabs/dux
-sudo dnf install dms-greeter-git
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-greeter-git
 ```
 
-Builds from the tip of `master` in dux-greeter. Conflicts with the stable `dms-greeter` package (both provide `/usr/bin/dms-greeter`).
+Builds from the tip of `master` in dux-greeter. Conflicts with the stable `dux-greeter` package (both provide `/usr/bin/dms-greeter`).
 
 To switch from stable:
 
 ```bash
-sudo dnf swap dms-greeter dms-greeter-git
+sudo dnf swap dux-greeter dux-greeter-git
 ```
 
 To switch back:
 
 ```bash
-sudo dnf swap dms-greeter-git dms-greeter
+sudo dnf swap dux-greeter-git dux-greeter
 ```
 
 </TabItem>
@@ -109,7 +121,7 @@ Both RPMs install `/usr/lib/sysusers.d/dms-greeter.conf` so the `greeter` user i
 
 ### Debian & Ubuntu
 
-Dux Greeter is published from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) into the Dux OBS/PPA channels as **`dms-greeter`** (tagged releases) and **`dms-greeter-git`** (master snapshots). The two packages conflict; both install `/usr/bin/dms-greeter`.
+Dux Greeter is published from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) into the Dux OBS/PPA channels as **`dux-greeter`** (tagged releases) and **`dux-greeter-git`** (master snapshots). The two packages conflict; both install `/usr/bin/dms-greeter`.
 
 #### Debian
 
@@ -159,7 +171,7 @@ Then install:
 <TabItem value="stable" label="Stable" default>
 
 ```bash
-sudo apt install dms-greeter
+sudo apt install dux-greeter
 ```
 
 Tagged releases. Recommended for most users.
@@ -168,16 +180,16 @@ Tagged releases. Recommended for most users.
 <TabItem value="git" label="Git (development)">
 
 ```bash
-sudo apt install dms-greeter-git
+sudo apt install dux-greeter-git
 ```
 
-Builds from the tip of `master` in dux-greeter. Conflicts with stable `dms-greeter`; both install `/usr/bin/dms-greeter`.
+Builds from the tip of `master` in dux-greeter. Conflicts with stable `dux-greeter`; both install `/usr/bin/dms-greeter`.
 
 To switch from stable → git or git → stable, install the package you want:
 
 ```bash
-sudo apt install dms-greeter-git   # replaces dms-greeter
-sudo apt install dms-greeter       # replaces dms-greeter-git
+sudo apt install dux-greeter-git   # replaces dux-greeter
+sudo apt install dux-greeter       # replaces dux-greeter-git
 ```
 
 </TabItem>
@@ -188,7 +200,7 @@ sudo apt install dms-greeter       # replaces dms-greeter-git
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
 ```
 
@@ -196,7 +208,7 @@ sudo apt update
 <TabItem value="stable" label="Stable" default>
 
 ```bash
-sudo apt install dms-greeter
+sudo apt install dux-greeter
 ```
 
 Tagged releases. Recommended for most users.
@@ -205,16 +217,16 @@ Tagged releases. Recommended for most users.
 <TabItem value="git" label="Git (development)">
 
 ```bash
-sudo apt install dms-greeter-git
+sudo apt install dux-greeter-git
 ```
 
-Builds from the tip of `master` in dux-greeter. Conflicts with stable `dms-greeter`; both install `/usr/bin/dms-greeter`.
+Builds from the tip of `master` in dux-greeter. Conflicts with stable `dux-greeter`; both install `/usr/bin/dms-greeter`.
 
 To switch from stable → git or git → stable, install the package you want:
 
 ```bash
-sudo apt install dms-greeter-git   # replaces dms-greeter
-sudo apt install dms-greeter       # replaces dms-greeter-git
+sudo apt install dux-greeter-git   # replaces dux-greeter
+sudo apt install dux-greeter       # replaces dux-greeter-git
 ```
 
 </TabItem>
@@ -222,7 +234,7 @@ sudo apt install dms-greeter       # replaces dms-greeter-git
 
 ### openSUSE & Derivatives
 
-Dux Greeter is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll. Both **`dms-greeter`** and **`dms-greeter-git`** ship from the same danklinux project and conflict with each other.
+Dux Greeter is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll. Both **`dux-greeter`** and **`dux-greeter-git`** ship from the same danklinux project and conflict with each other.
 
 Select your distribution (add the repository):
 
@@ -267,7 +279,7 @@ Then install:
 <TabItem value="stable" label="Stable" default>
 
 ```bash
-sudo zypper install dms-greeter
+sudo zypper install dux-greeter
 ```
 
 Tagged releases. Recommended for most users.
@@ -276,16 +288,16 @@ Tagged releases. Recommended for most users.
 <TabItem value="git" label="Git (development)">
 
 ```bash
-sudo zypper install dms-greeter-git
+sudo zypper install dux-greeter-git
 ```
 
-Builds from the tip of `master` in dux-greeter. Conflicts with stable `dms-greeter`
+Builds from the tip of `master` in dux-greeter. Conflicts with stable `dux-greeter`
 
 To switch:
 
 ```bash
-sudo zypper remove dms-greeter && sudo zypper install dms-greeter-git
-sudo zypper remove dms-greeter-git && sudo zypper install dms-greeter
+sudo zypper remove dux-greeter && sudo zypper install dux-greeter-git
+sudo zypper remove dux-greeter-git && sudo zypper install dux-greeter
 ```
 
 </TabItem>
@@ -295,15 +307,15 @@ sudo zypper remove dms-greeter-git && sudo zypper install dms-greeter
 
 :::note
 
-Install Dux Greeter from our R2-backed DMS XBPS repository or build it from source. Stable and git packages conflict; both provide `/usr/bin/dms-greeter`.
+Install Dux Greeter from our R2-backed Dux Labs XBPS repository or build it from source. Stable and git packages conflict; both provide `/usr/bin/dms-greeter`.
 
 :::
 
 <Tabs groupId="void-install-method">
-<TabItem value="repo" label="DMS Repository" default>
+<TabItem value="repo" label="Dux Repository" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 ```
 
@@ -317,7 +329,7 @@ On the first sync, `xbps-install` will output our signing key fingerprint and as
 <TabItem value="stable" label="Stable" default>
 
 ```bash
-sudo xbps-install -S dms-greeter
+sudo xbps-install -S dux-greeter
 ```
 
 Tagged releases. Recommended for most users.
@@ -326,16 +338,16 @@ Tagged releases. Recommended for most users.
 <TabItem value="git" label="Git (development)">
 
 ```bash
-sudo xbps-install -S dms-greeter-git
+sudo xbps-install -S dux-greeter-git
 ```
 
-Builds from the `master` branch in dux-greeter. Conflicts with stable `dms-greeter`.
+Builds from the `master` branch in dux-greeter. Conflicts with stable `dux-greeter`.
 
 To switch:
 
 ```bash
-sudo xbps-remove dms-greeter && sudo xbps-install -S dms-greeter-git
-sudo xbps-remove dms-greeter-git && sudo xbps-install -S dms-greeter
+sudo xbps-remove dux-greeter && sudo xbps-install -S dux-greeter-git
+sudo xbps-remove dux-greeter-git && sudo xbps-install -S dux-greeter
 ```
 
 </TabItem>
@@ -353,17 +365,17 @@ cd void-packages
 ./xbps-src binary-bootstrap
 
 # Copy in the templates (adjust paths as needed)
-cp -R ../dux-greeter/distro/void/srcpkgs/dms-greeter srcpkgs/
+cp -R ../dux-greeter/distro/void/srcpkgs/dux-greeter srcpkgs/
 # Optional git snapshot template:
-# cp -R ../dux-greeter/distro/void/srcpkgs/dms-greeter-git srcpkgs/
+# cp -R ../dux-greeter/distro/void/srcpkgs/dux-greeter-git srcpkgs/
 
-# Build the package (use dms-greeter-git for a master snapshot)
-./xbps-src pkg dms-greeter
-# ./xbps-src pkg dms-greeter-git
+# Build the package (use dux-greeter-git for a master snapshot)
+./xbps-src pkg dux-greeter
+# ./xbps-src pkg dux-greeter-git
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs dms-greeter
-# sudo xbps-install --repository=hostdir/binpkgs dms-greeter-git
+sudo xbps-install --repository=hostdir/binpkgs dux-greeter
+# sudo xbps-install --repository=hostdir/binpkgs dux-greeter-git
 ```
 
 </TabItem>
@@ -373,7 +385,7 @@ After installation, proceed to [Completing Setup](#completing-setup) below.
 
 ## Greeter system user (RPM, DEB, and immutable systems)
 
-Official `dms-greeter` / `dms-greeter-git` packages (Arch AUR, Fedora, Debian, Ubuntu, openSUSE) ship two systemd declarations under `/usr`:
+Official `dux-greeter` / `dux-greeter-git` packages (Arch AUR, Fedora, Debian, Ubuntu, openSUSE) ship two systemd declarations under `/usr`:
 
 | File | Purpose |
 |------|---------|
@@ -386,12 +398,12 @@ Official `dms-greeter` / `dms-greeter-git` packages (Arch AUR, Fedora, Debian, U
 
 On Fedora Atomic, Universal Blue, bootc, and similar rpm-ostree systems the greeter package is layered onto the image and configured after a reboot:
 
-1. Layer the package: `sudo rpm-ostree install dms-greeter` (or `dms-greeter-git`). It pulls in greetd.
+1. Layer the package: `sudo rpm-ostree install dux-greeter` (or `dux-greeter-git`). It pulls in greetd.
 2. **Reboot** so the new deployment and the sysusers `greeter` account are active (`getent passwd greeter` is empty until then).
 3. Run `dms-greeter install --yes` as your normal user, **without sudo**. The command escalates itself where needed and refuses to run under sudo, because the group membership, ACLs, and theme sync would otherwise land on root.
 4. Reboot again to land on the Dux greeter.
 
-The installer writes only `/etc/greetd/config.toml`, `/etc/pam.d/greetd`, your group membership, `/var/cache/dms-greeter`, the SELinux context, and the greetd service symlink. On rpm-ostree the `greeter` group lives in `/usr/lib/group`; the installer copies it into `/etc/group` so `usermod` works. `dms-greeter enable`, `uninstall`, and `sync` work the same way. To remove the greeter, run `dms-greeter uninstall`, then `sudo rpm-ostree uninstall dms-greeter`.
+The installer writes only `/etc/greetd/config.toml`, `/etc/pam.d/greetd`, your group membership, `/var/cache/dms-greeter`, the SELinux context, and the greetd service symlink. On rpm-ostree the `greeter` group lives in `/usr/lib/group`; the installer copies it into `/etc/group` so `usermod` works. `dms-greeter enable`, `uninstall`, and `sync` work the same way. To remove the greeter, run `dms-greeter uninstall`, then `sudo rpm-ostree uninstall dux-greeter` (or `dux-greeter-git`).
 
 Images that ship their own `/usr/share/dms/cli-policy.json`, such as [Zirconium](https://github.com/zirconium-dev/zirconium/), may still block these commands. Follow that repos documentation instead.
 
@@ -435,7 +447,7 @@ NixOS has dedicated documentation with two installation methods:
 
 ### Void Linux
 
-After installing **`dms-greeter`** or **`dms-greeter-git`** (see [Void Linux](#void-linux) under Distro Installation above), enable and optionally sync theming:
+After installing **`dux-greeter`** or **`dux-greeter-git`** (see [Void Linux](#void-linux) under Distro Installation above), enable and optionally sync theming:
 
 ```bash
 dms-greeter enable
@@ -470,7 +482,7 @@ Enabling `dms-greeter` will replace your current display manager.
 
 ### Manual installation (no package)
 
-Prefer your distro package when available (see the sections above). If your distro has no `dms-greeter` package, install `greetd` and `quickshell`, then grab the prebuilt binary from the latest release:
+Prefer your distro package when available (see the sections above). If your distro has no `dux-greeter` package, install `greetd` and `quickshell`, then grab the prebuilt binary from the latest release:
 
 ```bash
 curl -fsSL https://github.com/duxlabs-dev/dux-greeter/releases/latest/download/dms-greeter-linux-amd64.tar.gz | tar -xz
@@ -601,7 +613,7 @@ If you prefer to set up the greeter manually, follow these steps:
   user = "greeter"
   command = "dms-greeter --command niri"
   ### Uncomment the below line to run the greeter on Hyprland
-  # command = "dms-greeter --command Hyprland"
+  # command = "dms-greeter --command hyprland"
   ### Uncomment to run the greeter on sway
   # command = "dms-greeter --command sway"
   ### Uncomment to run the greeter on Miracle WM

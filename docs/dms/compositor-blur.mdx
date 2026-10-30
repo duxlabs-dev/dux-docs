@@ -46,16 +46,17 @@ Hyprland's own default (size 8, 1 pass) only reaches about 16px and looks like p
 These are global compositor options. Changing the slider changes the blur of every window on that compositor, not just the shell.
 :::
 
-Use the slider instead of hand-editing `size`/`passes`; DMS rewrites `dms/layout.lua` whenever a setting changes. To try a value live on Hyprland, use `hyprctl eval` (0.55+), for example `hyprctl eval 'hl.config({ decoration = { blur = { passes = 3 } } })'`, or edit and `hyprctl reload`. `hyprctl keyword` is removed on Hyprland main.
+Use the slider instead of hand-editing `size`/`passes`; DMS rewrites `dms/layout.lua` whenever a setting changes. To try a value live on Hyprland, use `hyprctl eval` (0.55+), for example `hyprctl eval 'hl.config({ decoration = { blur = { passes = 3 } } })'`, or edit and `hyprctl reload`. Hyprland 0.57 removed `hyprctl keyword`.
 
 ## Hyprland Blur Styles
 
-On Hyprland main (the future 0.57), **Settings → System & integrations → Hyprland → Visual effects** has a **Blur** dropdown with these styles: Default, Frost, Ripple, Drops, Water, Fluid jar, Prism, Heat shimmer, Acrylic, Aurora, and Haze. Some styles show their own sliders:
+On Hyprland 0.57 and newer, **Settings → System & integrations → Hyprland → Visual effects** has a **Blur** dropdown with these styles: Default, Frost, Ripple, Drops, Water, Fluid jar, Prism, Heat shimmer, Acrylic, Aurora, and Haze. Some styles show their own sliders:
 
 | Style | Sliders |
 | --- | --- |
 | Ripple, Water | Refraction |
 | Acrylic | Clarity |
+| Drops, Heat shimmer | Speed (0 stops the animation and saves GPU) |
 | Aurora | Intensity, Speed (0 stops the animation) |
 | Haze | Intensity, Iridescence |
 

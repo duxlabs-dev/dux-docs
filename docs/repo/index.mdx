@@ -62,6 +62,21 @@ For complete DMS installation instructions including repository setup, see the [
 
 :::
 
+:::note[Renamed packages]
+
+Existing installs move to the new names automatically on the next upgrade, because the old names are kept as obsoleted or transitional packages. The commands themselves (`dgop`, `dsearch`, `dcal`, `dms-greeter`) do not change.
+
+| Old package | New package |
+| --- | --- |
+| `dankcalendar` | `dux-calendar` |
+| `dankcalendar-git` | `dux-calendar-git` |
+| `danksearch` | `dux-search` |
+| `dgop` | `dux-gop` |
+| `dms-greeter` | `dux-greeter` |
+| `dms-greeter-git` | `dux-greeter-git` |
+
+:::
+
 ### Installing Standalone Packages
 
 All packages in the Dux Labs repository can be installed independently. First, add the Dux Labs repository for your distribution, then install the packages you need.
@@ -193,7 +208,7 @@ sudo apt install quickshell-git niri-git
 #### Step 1: Add the Dux Labs PPA
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
 ```
 
@@ -222,12 +237,12 @@ Add the Dux Labs XBPS repository, synchronize it, and install whichever
 standalone packages you need:
 
 ```bash
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -S
-sudo xbps-install -S dgop danksearch dankcalendar dux-files
+sudo xbps-install -S dux-gop dux-search dux-calendar dux-files
 ```
 
-The package names are `dgop`, `danksearch`, `dankcalendar`, and `dux-files`; they install
+The package names are `dux-gop`, `dux-search`, `dux-calendar`, and `dux-files`; they install
 the `dgop`, `dsearch`, `dcal`, and `dfiles` commands respectively. To install DMS itself,
 also configure the separate repository in the [Void Linux DMS installation
 guide](../dms/installation#void-linux).
@@ -343,7 +358,7 @@ The COPR repositories provide packages for Fedora 43/44/45, Rawhide, and Enterpr
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo dnf copr enable duxlabs/dux
+sudo dnf copr enable duxlabs/dux-repo
 sudo dnf install quickshell niri
 ```
 
@@ -351,7 +366,7 @@ sudo dnf install quickshell niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo dnf copr enable duxlabs/dux
+sudo dnf copr enable duxlabs/dux-repo
 sudo dnf install quickshell-git niri-git
 ```
 
@@ -376,9 +391,9 @@ Niri packages are available in both stable and development variants. Supported o
 
 ### Fedora COPR
 
-The COPR provides packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10. On EL the `dux` COPR also carries packages missing from EPEL 10: `greetd`, `xwayland-satellite`, `alacritty`, `gtk4-layer-shell`, `cava`, and `ghostty` (x86_64 only).
+The COPR provides packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10. On EL the `dux-repo` COPR also carries packages missing from EPEL 10: `greetd`, `xwayland-satellite`, `alacritty`, `gtk4-layer-shell`, `cava`, and `ghostty` (x86_64 only).
 
-- **Dux Core Repository**: [duxlabs/dux](https://copr.fedorainfracloud.org/coprs/duxlabs/dux/)
+- **Dux Core Repository**: [duxlabs/dux-repo](https://copr.fedorainfracloud.org/coprs/duxlabs/dux-repo/)
 - **DMS Stable**: [duxlabs/dms](https://copr.fedorainfracloud.org/coprs/duxlabs/dms/)
 - **DMS Development**: [duxlabs/dms-git](https://copr.fedorainfracloud.org/coprs/duxlabs/dms-git/)
 
@@ -395,7 +410,7 @@ The OBS provides packages for OpenSUSE and Debian based distributions:
 The Launchpad PPAs provide packages for Ubuntu distributions:
 
 - **Dux Labs Team Page**: [~duxlabs](https://launchpad.net/~duxlabs)
-- **Dux Core PPA**: [ppa:duxlabs/dux](https://launchpad.net/~duxlabs/+archive/ubuntu/dux)
+- **Dux Core PPA**: [ppa:duxlabs/dux-repo](https://launchpad.net/~duxlabs/+archive/ubuntu/dux-repo)
 - **DMS Stable PPA**: [ppa:duxlabs/dms](https://launchpad.net/~duxlabs/+archive/ubuntu/dms)
 - **DMS Development PPA**: [ppa:duxlabs/dms-git](https://launchpad.net/~duxlabs/+archive/ubuntu/dms-git)
 
@@ -407,7 +422,7 @@ The packaging configurations and build scripts are maintained in the official Du
 
 :::note
 
-**Official Dux Labs packages**: `dms`, `dms-cli`, `dgop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dms-greeter`, `dms-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
+**Official Dux Labs packages**: `dms`, `dms-cli`, `dux-gop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dux-greeter`, `dux-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
 Packages retain their upstream licenses: Niri (GPL-3.0), Quickshell (LGPL-3.0), Matugen (GPL-2.0), Cliphist (GPL-3.0).
 
 :::

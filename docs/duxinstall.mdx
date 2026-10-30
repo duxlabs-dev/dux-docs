@@ -118,7 +118,7 @@ If you're using archinstall, the `minimal` profile with `NetworkManager` for net
 
 **Supported:** Fedora, Nobara, Fedora Asahi Remix
 
-Almost everything comes from official repos or COPR repositories (`avengemedia/danklinux`, `avengemedia/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `niri-wm/niri`). Only dgop needs to be built from source with Go.
+Almost everything comes from official repos or COPR repositories (`duxlabs/dux-repo`, `duxlabs/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `niri-wm/niri`). Only dgop needs to be built from source with Go.
 
 The installer is tested on Workstation Edition but should work fine on any Fedora flavor.
 
@@ -126,13 +126,13 @@ The installer is tested on Workstation Edition but should work fine on any Fedor
 
 **Supported:** Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, Zirconium, and other rpm-ostree or bootc images based on Fedora
 
-The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
+The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dux-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
 
 ### Enterprise Linux 10
 
 **Supported (testing):** RHEL 10.2+, CentOS Stream 10, Rocky Linux 10.2+, AlmaLinux 10.2+ (always the latest EL 10 minor; older minors lag the Qt baseline the packages are built against)
 
-The installer enables EPEL 10 and the same COPR repositories as Fedora. **niri only** - the Hyprland COPR and Terra (mango) do not build for EL. Terminals come from EPEL (`kitty`) or the `duxlabs/dux` COPR (`ghostty` on x86_64, `alacritty`), which also provides `xwayland-satellite`, `greetd`, and `cava` since EPEL 10 lacks them.
+The installer enables EPEL 10 and the same COPR repositories as Fedora. **niri only** - the Hyprland COPR and Terra (mango) do not build for EL. Terminals come from EPEL (`kitty`) or the `duxlabs/dux-repo` COPR (`ghostty` on x86_64, `alacritty`), which also provides `xwayland-satellite`, `greetd`, and `cava` since EPEL 10 lacks them.
 
 Hyprland, mango and miracle-wm are not supported on EL and are not planned. A community COPR, [kmf/dank-ws-copr](https://copr.fedorainfracloud.org/coprs/kmf/dank-ws-copr/), packages that stack for EL 10, but it replaces several system libraries (lua, libxkbcommon, iniparser, pixman, libdrm) and can conflict with packages such as wireplumber. Use it at your own risk; issues with those compositors on EL should go to that project.
 
@@ -140,7 +140,7 @@ Hyprland, mango and miracle-wm are not supported on EL and are not planned. A co
 
 **Supported:** Ubuntu 26.04 LTS+ (Resolute Raccoon)
 
-Packages come from the [Dux Labs PPA](./repo#ubuntu) (`ppa:avengemedia/danklinux`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
+Packages come from the [Dux Labs PPA](./repo#ubuntu) (`ppa:duxlabs/dux-repo`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
 
 ### Debian
 

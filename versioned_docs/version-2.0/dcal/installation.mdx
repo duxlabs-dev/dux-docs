@@ -57,7 +57,7 @@ Local ICS calendar directories also need an explicit filesystem grant (or the eq
 
 ### Distribution Packages
 
-Each Dux repository ships two packages: `dcal` follows tagged releases, and `dcal-git` builds from upstream `master`. They conflict, so install one.
+Each Dux repository ships two packages: `dux-calendar` follows tagged releases, and `dux-calendar-git` builds from upstream `master`. They conflict, so install one.
 
 ### Arch & Derivatives
 
@@ -65,14 +65,14 @@ Each Dux repository ships two packages: `dcal` follows tagged releases, and `dca
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-paru -S dcal-bin
+paru -S dux-calendar-bin
 ```
 
 </TabItem>
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-paru -S dcal-git
+paru -S dux-calendar-git
 ```
 
 </TabItem>
@@ -81,8 +81,8 @@ paru -S dcal-git
 ### Fedora & CentOS
 
 ```bash
-sudo dnf copr enable duxlabs/dux
-sudo dnf install dcal        # or dcal-git for the latest development build
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 ### Debian & Ubuntu
@@ -102,7 +102,7 @@ curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux
 echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
   sudo tee /etc/apt/sources.list.d/duxlabs.list
 sudo apt update
-sudo apt install dcal        # or dcal-git for the latest development build
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -114,7 +114,7 @@ curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux
 echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
   sudo tee /etc/apt/sources.list.d/duxlabs.list
 sudo apt update
-sudo apt install dcal        # or dcal-git for the latest development build
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -126,7 +126,7 @@ curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux
 echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
   sudo tee /etc/apt/sources.list.d/duxlabs.list
 sudo apt update
-sudo apt install dcal        # or dcal-git for the latest development build
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -137,9 +137,9 @@ sudo apt install dcal        # or dcal-git for the latest development build
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
-sudo apt install dcal        # or dcal-git for the latest development build
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 ### openSUSE & Derivatives
@@ -154,7 +154,7 @@ Select your distribution:
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
 sudo zypper refresh
-sudo zypper install dcal        # or dcal-git for the latest development build
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -163,7 +163,7 @@ sudo zypper install dcal        # or dcal-git for the latest development build
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
 sudo zypper refresh
-sudo zypper install dcal        # or dcal-git for the latest development build
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -172,7 +172,7 @@ sudo zypper install dcal        # or dcal-git for the latest development build
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
 sudo zypper refresh
-sudo zypper install dcal        # or dcal-git for the latest development build
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -181,7 +181,7 @@ sudo zypper install dcal        # or dcal-git for the latest development build
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
 sudo zypper refresh
-sudo zypper install dcal        # or dcal-git for the latest development build
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
 
 </TabItem>
@@ -199,7 +199,7 @@ Install Dux Calendar from our R2-backed XBPS repository or build it from source.
 <TabItem value="repo" label="Dux Repository" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
 sudo xbps-install -S dcal
 ```
@@ -222,13 +222,13 @@ cd void-packages
 ./xbps-src binary-bootstrap
 
 # Copy in the templates (adjust paths as needed)
-cp -R ../Dux/distro/void/srcpkgs/dankcalendar* srcpkgs/
+cp -R ../Dux/distro/void/srcpkgs/dux-calendar* srcpkgs/
 
 # Build the package
-./xbps-src pkg dankcalendar
+./xbps-src pkg dux-calendar
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs dankcalendar
+sudo xbps-install --repository=hostdir/binpkgs dux-calendar
 ```
 
 </TabItem>

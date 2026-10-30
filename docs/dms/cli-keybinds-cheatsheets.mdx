@@ -79,7 +79,7 @@ The Hyprland provider automatically parses your Hyprland configuration files and
 - Categorizes binds by type (Window, Workspace, Execute, etc.)
 - Shows per-device binds (`device = { ... }`) and keeps their device table when you edit them
 
-On Hyprland 0.55 and 0.56, an install still on `hyprland.conf` is parsed read-only (including `##!` section headers and `[hidden]` comments) until you run `dms setup` to migrate. See [Compositor Setup](./compositors.mdx#hyprland-configuration).
+`hyprland.conf` is not parsed and binds are not converted; re-add them in `dms/binds-user.lua` or **Settings → Input → Keyboard shortcuts**. See [Coming from hyprland.conf](./compositors.mdx#coming-from-hyprlandconf).
 
 **Usage**:
 
@@ -514,44 +514,46 @@ dms keybinds show vim
 
 ## Tips & Best Practices
 
-### Organizing Hyprland Configs
+### Organizing Sway and MangoWC Configs
 
 Use section headers to organize your keybinds:
 
 ```conf
 ##! Window Management
 ###! Focus
-bind = SUPER, left, movefocus, l
-bind = SUPER, right, movefocus, r
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
 
 ###! Layout
-bind = SUPER, F, fullscreen, 0
-bind = SUPER, V, togglefloating
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+space floating toggle
 
 ##! Applications
-bind = SUPER, T, exec, kitty
-bind = SUPER, B, exec, firefox
+bindsym $mod+Return exec kitty
+bindsym $mod+b exec firefox
 ```
+
+Hyprland's Lua config has no section headers; the provider categorizes binds by dispatcher.
 
 ### Hiding Internal Binds
 
-Use `[hidden]` to exclude binds from the display:
+On Sway and MangoWC, use `[hidden]` to exclude binds from the display:
 
 ```conf
 # This won't appear in the keybinds list
-bind = SUPER, X, exec, secret-script # [hidden]
+bindsym $mod+x exec secret-script # [hidden]
 ```
 
 ### Descriptive Comments
 
 Add clear comments to override auto-generated descriptions:
 
-```conf
-# Auto-generated: "Launch application: kitty"
-bind = SUPER, T, exec, kitty
+```lua
+-- Auto-generated: "kitty"
+hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"))
 
-# Custom: "Open terminal"
-bind = SUPER, T, exec, kitty # Open terminal
+-- Custom: "Open terminal"
+hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty")) -- Open terminal
 ```
 
 ### Consistent Naming

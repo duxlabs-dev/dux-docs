@@ -61,6 +61,8 @@ Custom compositor configurations allow you to configure displays (resolution, re
 
 ### Hyprland
 
+Hyprland 0.55 or newer is required, and the `-C` config must be Lua. A hyprlang config is ignored with a warning and the built-in config is used. Do not exec the greeter yourself, `dms-greeter` appends the launch.
+
 1. Create a baseline configuration file at `/etc/greetd/hypr.lua`:
   ```bash
   sudo tee /etc/greetd/hypr.lua > /dev/null << 'EOF'
@@ -145,7 +147,7 @@ You can automatically sync the system greeter with the logged in user's wallpape
 
 ### Automatic Sync
 
-You can use `dms-greeter sync` to automatically set up theme syncing. This command is available anywhere the `dms-greeter` package is installed.
+You can use `dms-greeter sync` to automatically set up theme syncing. This command is available anywhere the `dux-greeter` package is installed.
 
 :::note
 
