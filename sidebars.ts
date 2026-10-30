@@ -52,6 +52,18 @@ const sidebars: SidebarsConfig = {
         'dms/calendar-integration',
         'dms/lock-screen-authentication',
         'dms/vpn',
+        {
+          type: 'category',
+          label: 'Security & Privacy',
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'dms/outbound-connections',
+              label: 'Outgoing Connections Inventory',
+            },
+          ],
+        },
         'dms/autostart',
         'dms/network-speed-monitor',
         'dms/reboot-to-another-os',
