@@ -1,0 +1,277 @@
+---
+title: Keyboard Navigation
+description: Keys for moving around Settings, the launcher, Control Center, the dash and every other DMS surface
+sidebar_position: 5
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Keyboard Navigation
+
+Every DMS surface can be driven from the keyboard. This page lists the keys that work once a surface is open. The shortcuts that open them belong to your compositor; see [Compositor Setup](compositors) and [Keybinds & IPC](keybinds-ipc).
+
+A few keys mean the same thing almost everywhere:
+
+| Action | Keys |
+| --- | --- |
+| Close the surface, or step back out of a sub-view first | `Escape` |
+| Move the selection in a list | `Up` `Down`, `Ctrl+J` `Ctrl+K` |
+| Run the selected item | `Enter` |
+| Open the context menu of the selected item | `Menu`, `F10` |
+
+In right-to-left languages, `Left` and `Right` (and their `Alt` forms) are swapped.
+
+## Settings
+
+Settings opens with the keyboard in the sidebar search field. The window has two regions, the sidebar and the page, and the keyboard is always in one of them.
+
+### Moving Between Regions
+
+| Action | Keys |
+| --- | --- |
+| Switch between the sidebar and the page | `Ctrl+Tab`, `Ctrl+Shift+Tab` |
+| Move from the sidebar to the page | `Alt+Right` |
+| Move from the page to the sidebar | `Alt+Left` |
+| Search settings | `Ctrl+F` |
+
+### Sidebar
+
+| Action | Keys |
+| --- | --- |
+| Search settings | type in the search field |
+| Move through search results | `Up` `Down`, `Tab` `Shift+Tab` |
+| Open the selected result | `Enter` |
+| Highlight a page from the search field | `Up` `Down`, then `Tab` `Shift+Tab` to keep moving |
+| Open the highlighted page and move into it | `Enter` |
+| Move into the current page | `Enter` with nothing highlighted |
+| Clear the search or the highlight | `Escape` |
+| Move between sidebar rows | `Up` `Down` |
+| Open the focused row | `Enter`, `Space` |
+
+### Page
+
+| Action | Keys |
+| --- | --- |
+| Move between controls | `Up` `Down`, `Tab` `Shift+Tab` |
+| Go back to the previous page | `Alt+Left`, `Backspace` |
+| Leave a text field | `Escape` |
+| Go back, or return to the sidebar from a top-level page | `Escape` |
+
+Controls that use the arrow keys themselves (text fields, lists, open menus) keep them; `Tab` still moves on. On a top-level page with nothing to go back to, `Alt+Left` returns to the sidebar. `Escape` never closes the Settings window; close it like any other window.
+
+## Launcher
+
+The same keys work in the launcher modal, the spotlight bar, the launcher inside the island and the niri overview search.
+
+| Action | Keys |
+| --- | --- |
+| Move the selection | `Up` `Down`, `Ctrl+J` `Ctrl+K` |
+| Move inside a grid or tile section | `Left` `Right`, `Ctrl+H` `Ctrl+L` |
+| Jump a page | `PgUp` `PgDown` |
+| Jump to the next or previous section | `Ctrl+N`, `Ctrl+P` |
+| Next or previous mode | `Ctrl+Tab`, `Ctrl+Shift+Tab` |
+| All, Apps, Files, Plugins mode | `Ctrl+1` to `Ctrl+4`, `Alt+1` to `Alt+4` |
+| Open the selected item | `Enter` |
+| Launch a new instance even when the default action is Focus | `Ctrl+Enter` |
+| Paste the selected clipboard or plugin item | `Shift+Enter` |
+| Show the actions of the selected item, then cycle them | `Tab`, `Shift+Tab` |
+| Run the highlighted action | `Enter` |
+| Open the context menu | `Menu`, `F10` |
+| Leave a plugin filter, or return from an automatic switch to Files | `Backspace` in an empty search field |
+| Close the actions, then the plugin filter, then the launcher | `Escape` |
+
+The mode shortcuts can be rebound in **Settings → Launcher**. **Default action** on that page chooses whether `Enter` launches an app or focuses its running window.
+
+In a `dms dmenu` list with multi-select, `Shift+Enter` toggles the highlighted entry and `Enter` confirms the selection. In the app editor, `Ctrl+S` or `Ctrl+Enter` saves and `Escape` cancels.
+
+## Control Center
+
+| Action | Keys |
+| --- | --- |
+| Move between tiles and their toggle buttons | `Tab`, `Shift+Tab` |
+| Activate the focused tile or button | `Enter`, `Space` |
+| Enter edit mode | `F2`, `Ctrl+E` |
+| Undo an edit | `Ctrl+Z` |
+| Close a picker or sheet, go back from a page, leave edit mode, then close | `Escape` |
+
+A tile with details opens them; its icon button toggles it.
+
+## Dash
+
+The dash opens with the keyboard already in the current tab, without a focus ring, so tab keys such as `Space` for play/pause on Media work straight away. The window has two regions, the tab row and the content, like Settings.
+
+| Action | Keys |
+| --- | --- |
+| Switch between the tab row and the content | `Ctrl+Tab`, `Ctrl+Shift+Tab`, `F6`, `Shift+F6` |
+| Switch tabs from anywhere | `Ctrl+PgDown`, `Ctrl+PgUp` |
+| Edit the layout | `F2`, `Ctrl+E` |
+| Clear a tab-row highlight or close an open panel, then leave edit mode, then close the dash | `Escape` |
+
+On the tab row:
+
+| Action | Keys |
+| --- | --- |
+| Highlight the next or previous tab | `Tab`, `Shift+Tab` |
+| Open the highlighted tab | `Enter`, `Space` |
+| Switch tabs at once | `Left` `Right` (`Up` `Down` on a side tab rail), `Home`, `End` |
+| Move into the content | `Down` (`Right` from a left rail) |
+
+In the content:
+
+| Action | Keys |
+| --- | --- |
+| Move between controls, wrapping around | `Tab`, `Shift+Tab` |
+| Move between Overview cards | arrow keys when the card does not use them, `Alt` + arrow keys, `Alt+H` `J` `K` `L` |
+| Cycle Overview cards | `Alt+Tab`, `Alt+Shift+Tab` |
+| Return to the tab row | `Alt` + the arrow toward it, from the edge card or a tab without cards |
+
+Cards and tabs keep the keys they use themselves: the calendar moves its selected day with the arrows, and Media seeks with `Left` `Right` and changes the volume with `Up` `Down`. While a panel, sheet or editor inside a tab is open, such as calendar event details or the wallpaper browser, the dash's own keys (`Ctrl+Tab`, `F6`, `F2`, `Tab` wrapping and the `Alt` card keys) step aside so it can use them; `Escape` closes it first. The island's dash faces use the same keys.
+
+## Notification Center
+
+The first `Down` (or `Up`) starts keyboard selection on the newest notification. `Up` on the first item leaves it again.
+
+| Action | Keys |
+| --- | --- |
+| Move the selection | `Up` `Down`, `Tab` `Shift+Tab`, `Ctrl+N` `Ctrl+P`, `Ctrl+J` `Ctrl+K` |
+| Open the selected notification | `Enter` |
+| Run one of its actions | `1` to `9` |
+| Expand or collapse the group | `Space` |
+| Expand the message text | `E` |
+| Dismiss the selected notification | `Delete`, `Backspace` |
+| Clear all | `Shift+Delete`, `Shift+Backspace` |
+| Switch between Current and History | `Left`, `Right` |
+| Show the key hints | `F10` |
+| Close | `Escape` |
+
+On the History tab, `Up` `Down` move, `Delete` or `Backspace` removes the entry, `Shift+Delete` clears the history and `F10` shows the hints.
+
+## Clipboard History
+
+Typing filters the list. Press `F10` for the hints overlay.
+
+| Action | Keys |
+| --- | --- |
+| Move the selection | `Up` `Down`, `Tab` `Shift+Tab`, `Ctrl+N` `Ctrl+P`, `Ctrl+J` `Ctrl+K` |
+| Copy the entry | `Enter`, `Ctrl+C` |
+| Paste the entry | `Shift+Enter` |
+| Pin or unpin | `Ctrl+S` |
+| Edit | `Ctrl+E` |
+| Preview | `Ctrl+Space` |
+| Delete the entry | `Delete` |
+| Clear all | `Shift+Delete` |
+| Switch between Recent and Saved | `Ctrl+Tab`, `Ctrl+Shift+Tab` |
+| Show the key hints | `F10` |
+| Close | `Escape` |
+
+With **Settings → Clipboard → Enter to paste** on, `Enter` pastes and `Shift+Enter` copies.
+
+In the preview, `Up` `Down` or `Tab` move to the neighbouring entry, `Enter` copies or pastes, and `Escape` or `Ctrl+Space` closes the preview. In the editor, `Ctrl+S` saves and returns to the list, `Ctrl+Shift+S` saves and closes, `Ctrl+Shift+V` saves and pastes, and `Escape` returns to the list.
+
+## Power Menu
+
+| Action | Keys |
+| --- | --- |
+| Move the selection (list) | `Up` `Down`, `Tab` `Shift+Tab`, `Ctrl+N` `Ctrl+P`, `Ctrl+J` `Ctrl+K` |
+| Move the selection (grid) | arrow keys, `Ctrl+N` `Ctrl+P` across, `Ctrl+J` `Ctrl+K` down and up |
+| Run the selected action | `Enter` |
+| Close | `Escape` |
+
+Each action also has its own key, shown on its button:
+
+| Action | Key |
+| --- | --- |
+| Reboot | `R` |
+| Soft reboot | `B` |
+| Reboot to firmware setup | `F` |
+| Log out | `X` |
+| Power off | `P` |
+| Lock | `L` |
+| Suspend | `S` |
+| Hibernate | `H` |
+| Restart DMS | `D` |
+| Switch User | `U` |
+| Reboot to a boot entry | `1` to `9` |
+
+With **Settings → Power & sleep → Hold to confirm** on, hold the key until the ring fills; releasing early cancels. Lock and Restart DMS run at once.
+
+## System Monitor
+
+| Action | Keys |
+| --- | --- |
+| Processes, Performance, Disks, System tab | `1` to `4` |
+| Search processes | `Ctrl+F` |
+| Move the selection | `Up` `Down`, `Ctrl+J` |
+| First or last process | `Home`, `End` |
+| Show or hide process details | `Enter`, `Space` |
+| Kill the selected process | `Delete`, `Ctrl+K` |
+| Open the context menu | `Menu`, `F10` |
+| Close | `Escape` |
+
+The process list popout on the bar uses the same keys, without the tab numbers. In the context menu, `Up` `Down` or `J` `K` move, `Enter` or `Space` run the entry, and `Escape`, `Left` or `H` close it. Killing a process always asks first.
+
+## Lock Screen
+
+| Action | Keys |
+| --- | --- |
+| Unlock | type the password, `Enter` |
+| Move the cursor | `Left` `Right`, `Home` `End`, `Ctrl+B` `Ctrl+F`, `Ctrl+A` `Ctrl+E` |
+| Delete a character | `Backspace`, `Ctrl+H`, `Delete`, `Ctrl+D` |
+| Delete the previous word | `Ctrl+W`, `Ctrl+Backspace` |
+| Delete to the start or end | `Ctrl+U`, `Ctrl+K` |
+| Move to the on-screen keyboard button, when shown | `Tab` |
+| Hide the on-screen keyboard, cancel a security key prompt, or clear the field | `Escape` |
+| Unlock with a security key | `Ctrl+Q` (off by default) |
+
+Turn on the security key shortcut and pick its key in **Settings → Lock screen → Security key shortcut**. Any key dismisses the video screensaver and cancels the fade before the screen locks.
+
+## Island
+
+| Action | Keys |
+| --- | --- |
+| Collapse the island | `Escape` |
+
+The launcher inside the island uses the [launcher keys](#launcher).
+
+## Workspace Overview
+
+On niri:
+
+| Action | Keys |
+| --- | --- |
+| Focus the column to the left or right | `Left`, `Right` |
+| Focus the workspace above or below | `Up`, `Down` |
+| Search apps | type a letter |
+| Close the overview | `Enter`, `Escape` |
+
+On Hyprland, `Left` and `Right` switch workspaces on the current monitor and `Escape` closes the overview.
+
+## Keybinds Cheatsheet
+
+| Action | Keys |
+| --- | --- |
+| Search | `Ctrl+F` |
+| Find a bind by pressing it | press the shortcut while the search field is focused |
+| Scroll | `Up` `Down`, `Ctrl+J` `Ctrl+K` |
+| Close | `Escape`, or the shortcut that opened the cheatsheet |
+
+## Dialogs and Menus
+
+| Surface | Keys |
+| --- | --- |
+| Confirmation dialogs | `Left` `Right` choose a button, `Enter` confirms, `Escape` cancels |
+| Context menus | `Up` `Down` move, `Enter` runs the entry, `Escape` or `Left` closes |
+| Power profile picker | arrow keys or `Tab` move, `Enter` or `Space` apply, `1` to `3` apply directly, `Escape` closes |
+| App and browser picker | arrow keys move, `Enter` opens, `Tab` toggles **Always use this app**, `Ctrl+Shift+C` copies the target, `Escape` closes |
+| Multiplexer sessions | `Up` `Down` or `Ctrl+J` `Ctrl+K` move, `Enter` attaches (or creates a new session), `Ctrl+N` new, `Ctrl+R` rename, `Ctrl+D` kill, `Escape` closes |
+| Notepad | `Ctrl+S` save, `Ctrl+O` open, `Ctrl+N` new, `Ctrl+F` find (`Enter` / `Shift+Enter` next and previous match), `Escape` closes the slideout |

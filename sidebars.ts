@@ -74,6 +74,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'dms/keybinds-ipc',
+        'dms/keyboard-navigation',
         {
           type: 'category',
           label: 'CLI',
