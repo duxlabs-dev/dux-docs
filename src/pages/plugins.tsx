@@ -167,34 +167,77 @@ function categoryOptions(plugins: Plugin[]): { id: string; label: string }[] {
 
 interface UrlFilters {
   tab: ActiveTab;
-  type: string;
-  category: string;
-  compositor: string;
+  type: string[];
+  category: string[];
+  compositor: string[];
 }
+
+type MultiFilterKey = Exclude<keyof UrlFilters, 'tab'>;
+
+const multiFilterKeys: MultiFilterKey[] = ['type', 'category', 'compositor'];
+
+const readListParam = (params: URLSearchParams, key: string): string[] =>
+  (params.get(key) ?? '').split(',').filter(Boolean);
 
 const readUrlFilters = (search: string): UrlFilters => {
   const params = new URLSearchParams(search);
   return {
     tab: params.get('tab') === 'themes' ? 'themes' : 'plugins',
-    type: params.get('type') ?? 'all',
-    category: params.get('category') ?? 'all',
-    compositor: params.get('compositor') ?? 'all',
+    type: readListParam(params, 'type'),
+    category: readListParam(params, 'category'),
+    compositor: readListParam(params, 'compositor'),
   };
 };
 
-const urlFilterDefaults: UrlFilters = { tab: 'plugins', type: 'all', category: 'all', compositor: 'all' };
-
 const writeUrlFilters = (search: string, filters: UrlFilters): string => {
   const params = new URLSearchParams(search);
-  for (const key of Object.keys(filters) as (keyof UrlFilters)[]) {
-    if (filters[key] === urlFilterDefaults[key]) {
+  if (filters.tab === 'plugins') {
+    params.delete('tab');
+  } else {
+    params.set('tab', filters.tab);
+  }
+  for (const key of multiFilterKeys) {
+    if (filters[key].length === 0) {
       params.delete(key);
       continue;
     }
-    params.set(key, filters[key]);
+    params.set(key, filters[key].join(','));
   }
   return params.toString();
 };
+
+const toggleValue = (values: string[], value: string): string[] =>
+  values.includes(value) ? values.filter(v => v !== value) : [...values, value];
+
+interface FilterChipGroupProps {
+  label: string;
+  options: { id: string; label: string }[];
+  selected: string[];
+  onChange: (next: string[]) => void;
+}
+
+function FilterChipGroup({ label, options, selected, onChange }: FilterChipGroupProps) {
+  return (
+    <div className={styles.filterGroup}>
+      <label className={styles.filterLabel}>{label}</label>
+      <div className={styles.filterButtons}>
+        {options.map(option => {
+          const active = option.id === 'all' ? selected.length === 0 : selected.includes(option.id);
+          return (
+            <button
+              key={option.id}
+              className={`${styles.filterButton} ${active ? styles.active : ''}`}
+              aria-pressed={active}
+              onClick={() => onChange(option.id === 'all' ? [] : toggleValue(selected, option.id))}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 const compositors = [
   { id: 'all', label: 'All Compositors' },
@@ -395,9 +438,9 @@ export default function Plugins() {
   const [filteredThemes, setFilteredThemes] = useState<Theme[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState(initialFilters.category);
-  const [selectedType, setSelectedType] = useState(initialFilters.type);
-  const [selectedCompositor, setSelectedCompositor] = useState(initialFilters.compositor);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialFilters.category);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>(initialFilters.type);
+  const [selectedCompositors, setSelectedCompositors] = useState<string[]>(initialFilters.compositor);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFirstPartyOnly, setShowFirstPartyOnly] = useState(false);
   const [showReviewedOnly, setShowReviewedOnly] = useState(false);
@@ -423,21 +466,21 @@ export default function Plugins() {
   useEffect(() => {
     const next = writeUrlFilters(location.search, {
       tab: activeTab,
-      type: selectedType,
-      category: selectedCategory,
-      compositor: selectedCompositor,
+      type: selectedTypes,
+      category: selectedCategories,
+      compositor: selectedCompositors,
     });
     if (next !== new URLSearchParams(location.search).toString()) {
       history.replace({ search: next });
     }
-  }, [activeTab, selectedType, selectedCategory, selectedCompositor]);
+  }, [activeTab, selectedTypes, selectedCategories, selectedCompositors]);
 
   useEffect(() => {
     const filters = readUrlFilters(location.search);
     setActiveTab(filters.tab);
-    setSelectedType(filters.type);
-    setSelectedCategory(filters.category);
-    setSelectedCompositor(filters.compositor);
+    setSelectedTypes(filters.type);
+    setSelectedCategories(filters.category);
+    setSelectedCompositors(filters.compositor);
   }, [location.search]);
 
   useEffect(() => {
@@ -452,7 +495,7 @@ export default function Plugins() {
 
   useEffect(() => {
     filterPlugins();
-  }, [plugins, selectedCategory, selectedType, selectedCompositor, searchQuery, showFirstPartyOnly, showReviewedOnly, hideBroken]);
+  }, [plugins, selectedCategories, selectedTypes, selectedCompositors, searchQuery, showFirstPartyOnly, showReviewedOnly, hideBroken]);
 
   useEffect(() => {
     filterThemes();
@@ -485,17 +528,17 @@ export default function Plugins() {
   const filterPlugins = () => {
     let filtered = [...(plugins ?? [])];
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(p => p.category === selectedCategory);
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(p => selectedCategories.includes(p.category));
     }
 
-    if (selectedType !== 'all') {
-      filtered = filtered.filter(p => p.capabilities.includes(selectedType));
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter(p => selectedTypes.some(type => p.capabilities.includes(type)));
     }
 
-    if (selectedCompositor !== 'all') {
+    if (selectedCompositors.length > 0) {
       filtered = filtered.filter(p =>
-        p.compositors.includes(selectedCompositor) || p.compositors.includes('any')
+        p.compositors.includes('any') || selectedCompositors.some(comp => p.compositors.includes(comp))
       );
     }
 
@@ -798,53 +841,9 @@ export default function Plugins() {
 
             {activeTab === 'plugins' && (
               <div className={styles.filterRow}>
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Category</label>
-                  <div className={styles.filterButtons}>
-                    {categories.map(cat => (
-                      <button
-                        key={cat.id}
-                        className={`${styles.filterButton} ${selectedCategory === cat.id ? styles.active : ''}`}
-                        aria-pressed={selectedCategory === cat.id}
-                        onClick={() => setSelectedCategory(cat.id)}
-                      >
-                        {cat.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Type</label>
-                  <div className={styles.filterButtons}>
-                    {pluginTypes.map(type => (
-                      <button
-                        key={type.id}
-                        className={`${styles.filterButton} ${selectedType === type.id ? styles.active : ''}`}
-                        aria-pressed={selectedType === type.id}
-                        onClick={() => setSelectedType(type.id)}
-                      >
-                        {type.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Compositor</label>
-                  <div className={styles.filterButtons}>
-                    {compositors.map(comp => (
-                      <button
-                        key={comp.id}
-                        className={`${styles.filterButton} ${selectedCompositor === comp.id ? styles.active : ''}`}
-                        aria-pressed={selectedCompositor === comp.id}
-                        onClick={() => setSelectedCompositor(comp.id)}
-                      >
-                        {comp.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <FilterChipGroup label="Category" options={categories} selected={selectedCategories} onChange={setSelectedCategories} />
+                <FilterChipGroup label="Type" options={pluginTypes} selected={selectedTypes} onChange={setSelectedTypes} />
+                <FilterChipGroup label="Compositor" options={compositors} selected={selectedCompositors} onChange={setSelectedCompositors} />
               </div>
             )}
 
@@ -1189,9 +1188,9 @@ export default function Plugins() {
               <p>No plugins found matching your criteria.</p>
               <button
                 onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedType('all');
-                  setSelectedCompositor('all');
+                  setSelectedCategories([]);
+                  setSelectedTypes([]);
+                  setSelectedCompositors([]);
                   setSearchQuery('');
                   setShowFirstPartyOnly(false);
                   setShowReviewedOnly(false);

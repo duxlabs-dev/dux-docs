@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 	"time"
 
@@ -300,10 +301,10 @@ func (c *Cache) GetLastUpdate() time.Time {
 }
 
 type FilterOptions struct {
-	Category      string
-	Compositor    string
+	Categories    []string
+	Compositors   []string
 	FirstParty    bool
-	Capability    string
+	Capabilities  []string
 	ExcludeStatus []string
 }
 
@@ -322,7 +323,7 @@ func (c *Cache) FilterPlugins(opts FilterOptions) []models.Plugin {
 }
 
 func matchesFilter(plugin models.Plugin, opts FilterOptions) bool {
-	if opts.Category != "" && plugin.Category != opts.Category {
+	if len(opts.Categories) > 0 && !slices.Contains(opts.Categories, plugin.Category) {
 		return false
 	}
 
@@ -330,39 +331,23 @@ func matchesFilter(plugin models.Plugin, opts FilterOptions) bool {
 		return false
 	}
 
-	if opts.Compositor != "" {
-		found := false
-		for _, comp := range plugin.Compositors {
-			if comp == opts.Compositor || comp == "any" {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
+	if len(opts.Compositors) > 0 && !slices.Contains(plugin.Compositors, "any") && !anyOverlap(plugin.Compositors, opts.Compositors) {
+		return false
 	}
 
-	if opts.Capability != "" {
-		found := false
-		for _, cap := range plugin.Capabilities {
-			if cap == opts.Capability {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
+	if len(opts.Capabilities) > 0 && !anyOverlap(plugin.Capabilities, opts.Capabilities) {
+		return false
 	}
 
-	for _, excluded := range opts.ExcludeStatus {
-		for _, status := range plugin.Status {
-			if status == excluded {
-				return false
-			}
-		}
+	if anyOverlap(plugin.Status, opts.ExcludeStatus) {
+		return false
 	}
 
 	return true
+}
+
+func anyOverlap(values, wanted []string) bool {
+	return slices.ContainsFunc(values, func(value string) bool {
+		return slices.Contains(wanted, value)
+	})
 }
