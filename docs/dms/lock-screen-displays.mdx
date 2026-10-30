@@ -1,0 +1,37 @@
+---
+title: Lock Screen Displays
+description: Choose lock-screen displays and configure inactive monitor backgrounds
+sidebar_position: 4.5
+---
+
+# Lock Screen Displays
+
+Configure which monitors show the lock-screen prompt and widgets under
+**Settings > Lock Screen > Displays**. Other monitors remain locked and show
+an inactive background without the prompt or widgets.
+
+## Inactive backgrounds
+
+By default, inactive monitors show a solid color for OLED burn-in protection.
+Use **Inactive display color** to choose that color.
+
+To show a wallpaper instead:
+
+1. Select the monitor or monitors that should show the prompt and widgets.
+2. Enable **Blur wallpaper on inactive monitors** in the same Displays card.
+
+The toggle appears when specific lock-screen monitors are selected, rather
+than all monitors. It is disabled by default; keep it disabled if you prefer
+a solid background for OLED burn-in protection.
+
+Inactive monitors use the configured lock-screen background image, or their
+per-monitor wallpaper when no separate lock-screen image is set. Images use
+the existing lock-screen blur, dimming, and fill mode. If no image wallpaper
+is configured, the monitor retains **Inactive display color**.
+
+This blur is rendered by DMS and does not require compositor-specific blur
+rules. Enabling it does not change authentication or add widgets to inactive
+monitors.
+
+For password, fingerprint, and security-key settings, see
+[Lock Screen Authentication](./lock-screen-authentication).
