@@ -51,6 +51,7 @@ const sidebars: SidebarsConfig = {
         },
         'dms/calendar-integration',
         'dms/lock-screen-authentication',
+        'dms/network',
         'dms/vpn',
         'dms/autostart',
         'dms/network-speed-monitor',
