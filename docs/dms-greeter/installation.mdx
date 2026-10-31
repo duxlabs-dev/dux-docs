@@ -133,10 +133,10 @@ Select your release (add the repository):
 <TabItem value="trixie" label="Debian 13 (Trixie)" default>
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 ```
 
@@ -144,10 +144,10 @@ sudo apt update
 <TabItem value="testing" label="Debian Testing">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 ```
 
@@ -155,10 +155,10 @@ sudo apt update
 <TabItem value="sid" label="Debian Sid">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 ```
 
@@ -234,7 +234,7 @@ sudo apt install dux-greeter       # replaces dux-greeter-git
 
 ### openSUSE & Derivatives
 
-Dux Greeter is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll. Both **`dux-greeter`** and **`dux-greeter-git`** ship from the same danklinux project and conflict with each other.
+Dux Greeter is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll. Both **`dux-greeter`** and **`dux-greeter-git`** ship from the same `home:duxlabs-dev:dux-repo` project and conflict with each other.
 
 Select your distribution (add the repository):
 
@@ -242,7 +242,7 @@ Select your distribution (add the repository):
 <TabItem value="tumbleweed" label="Tumbleweed" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 ```
 
@@ -250,7 +250,7 @@ sudo zypper refresh
 <TabItem value="leap16" label="Leap 16">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 ```
 
@@ -258,7 +258,7 @@ sudo zypper refresh
 <TabItem value="leap161" label="Leap 16.1">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 ```
 
@@ -266,7 +266,7 @@ sudo zypper refresh
 <TabItem value="slowroll" label="Slowroll">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 ```
 

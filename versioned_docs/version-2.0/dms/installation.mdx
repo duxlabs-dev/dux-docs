@@ -26,7 +26,6 @@ This guide covers installation of Dux Shell across different Linux distributions
 - [**quickshell**](https://github.com/quickshell-mirror/quickshell) (required) - The core framework
 - [**cava**](https://github.com/karlstav/cava) (optional) - Audio visualizer widget
 - [**dcal**](https://github.com/duxlabs-dev/dux-calendar) (optional) - Complete desktop calendar app with native integration for DMS calendar widgets
-- [**dgop**](https://github.com/duxlabs-dev/dux-gop) (optional) - System telemetry for resource widgets
 - [**dsearch**](https://github.com/duxlabs-dev/dux-search) (optional) - Filesystem search engine
 - [**matugen**](https://github.com/InioX/matugen) (optional) - Material Design color palette generation
 - [**niri**](https://github.com/niri-wm/niri) (optional) - DMS Team's choice of Wayland compositor
@@ -102,8 +101,8 @@ Headless works the same way: `duxinstall -c niri -t ghostty -y` prints the layer
 To layer the packages yourself instead (niri and ghostty shown):
 
 ```bash
-sudo curl -fsSLo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:avengemedia:dms.repo \
-  https://copr.fedorainfracloud.org/coprs/avengemedia/dms/repo/fedora-$(rpm -E %fedora)/avengemedia-dms-fedora-$(rpm -E %fedora).repo
+sudo curl -fsSLo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:duxlabs:dms.repo \
+  https://copr.fedorainfracloud.org/coprs/duxlabs/dms/repo/fedora-$(rpm -E %fedora)/duxlabs-dms-fedora-$(rpm -E %fedora).repo
 sudo rpm-ostree install dms niri ghostty quickshell matugen xwayland-satellite
 systemctl reboot
 ```
@@ -141,15 +140,15 @@ echo "deb http://deb.debian.org/debian trixie-backports main" | \
 sudo apt update
 sudo apt install -t trixie-backports quickshell
 
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 
-curl -fsSL https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/avengemedia-dms.gpg
-echo "deb [signed-by=/etc/apt/keyrings/avengemedia-dms.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/avengemedia-dms.list
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms.list
 
 sudo apt update
 sudo apt install dms
@@ -159,15 +158,15 @@ sudo apt install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 
-curl -fsSL https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/avengemedia-dms-git.gpg
-echo "deb [signed-by=/etc/apt/keyrings/avengemedia-dms-git.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/avengemedia-dms-git.list
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms-git.list
 
 sudo apt update
 sudo apt install dms-git
@@ -187,15 +186,15 @@ sudo apt install dms-git
 sudo apt update
 sudo apt install quickshell
 
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 
-curl -fsSL https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/avengemedia-dms.gpg
-echo "deb [signed-by=/etc/apt/keyrings/avengemedia-dms.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/avengemedia-dms.list
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms.list
 
 sudo apt update
 sudo apt install dms
@@ -205,15 +204,15 @@ sudo apt install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 
-curl -fsSL https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/avengemedia-dms-git.gpg
-echo "deb [signed-by=/etc/apt/keyrings/avengemedia-dms-git.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/avengemedia-dms-git.list
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms-git.list
 
 sudo apt update
 sudo apt install dms-git
@@ -233,15 +232,15 @@ sudo apt install dms-git
 sudo apt update
 sudo apt install quickshell
 
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 
-curl -fsSL https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/avengemedia-dms.gpg
-echo "deb [signed-by=/etc/apt/keyrings/avengemedia-dms.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/avengemedia-dms.list
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms.list
 
 sudo apt update
 sudo apt install dms
@@ -251,15 +250,15 @@ sudo apt install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 
-curl -fsSL https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/avengemedia-dms-git.gpg
-echo "deb [signed-by=/etc/apt/keyrings/avengemedia-dms-git.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/avengemedia-dms-git.list
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms-git.list
 
 sudo apt update
 sudo apt install dms-git
@@ -329,8 +328,8 @@ Select your distribution, then choose stable or development packages.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/openSUSE_Tumbleweed/home:AvengeMedia:dms.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/openSUSE_Tumbleweed/home:duxlabs-dev:dms.repo
 sudo zypper refresh
 sudo zypper install dms
 ```
@@ -339,8 +338,8 @@ sudo zypper install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/openSUSE_Tumbleweed/home:AvengeMedia:dms-git.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/openSUSE_Tumbleweed/home:duxlabs-dev:dms-git.repo
 sudo zypper refresh
 sudo zypper install dms-git
 ```
@@ -355,8 +354,8 @@ sudo zypper install dms-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/16.0/home:AvengeMedia:dms.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/16.0/home:duxlabs-dev:dms.repo
 sudo zypper refresh
 sudo zypper install dms
 ```
@@ -365,8 +364,8 @@ sudo zypper install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/16.0/home:AvengeMedia:dms-git.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/16.0/home:duxlabs-dev:dms-git.repo
 sudo zypper refresh
 sudo zypper install dms-git
 ```
@@ -381,8 +380,8 @@ sudo zypper install dms-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/16.1/home:AvengeMedia:dms.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/16.1/home:duxlabs-dev:dms.repo
 sudo zypper refresh
 sudo zypper install dms
 ```
@@ -391,8 +390,8 @@ sudo zypper install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/16.1/home:AvengeMedia:dms-git.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/16.1/home:duxlabs-dev:dms-git.repo
 sudo zypper refresh
 sudo zypper install dms-git
 ```
@@ -407,8 +406,8 @@ sudo zypper install dms-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms/openSUSE_Slowroll/home:AvengeMedia:dms.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/openSUSE_Slowroll/home:duxlabs-dev:dms.repo
 sudo zypper refresh
 sudo zypper install dms
 ```
@@ -417,8 +416,8 @@ sudo zypper install dms
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
-sudo zypper addrepo https://download.opensuse.org/repositories/home:/AvengeMedia:/dms-git/openSUSE_Slowroll/home:AvengeMedia:dms-git.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/openSUSE_Slowroll/home:duxlabs-dev:dms-git.repo
 sudo zypper refresh
 sudo zypper install dms-git
 ```
@@ -566,13 +565,12 @@ cd void-packages
 cp -R ../dux-repo/distro/void/srcpkgs/* srcpkgs/
 cp -R ../dux-shell/distro/void/srcpkgs/* srcpkgs/
 
-# Build the packages (dms requires dux-gop)
-./xbps-src pkg dux-gop
+# Build the packages
 ./xbps-src pkg dux-search
 ./xbps-src pkg dms
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs dms dux-gop
+sudo xbps-install --repository=hostdir/binpkgs dms dux-search
 ```
 
 </TabItem>
@@ -701,7 +699,6 @@ To uninstall a source build, run `sudo make uninstall` from the repository direc
 
 Install optional components for full functionality using your distribution's package manager:
 
-- `dgop` - Detailed system metrics and process lists
 - `dsearch` - Filesystem search engine
 - `matugen` - Material Design color palette generation
 - `i2c-tools` - ddc monitor backlight control

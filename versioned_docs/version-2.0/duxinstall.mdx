@@ -96,9 +96,7 @@ Logs are written to `/tmp/duxinstall-<timestamp>.log`. Set `DUXINSTALL_LOG_DIR` 
 ### Desktop Utilities
 - **quickshell** - The QML-based shell framework powering DMS
 - **matugen** - Auto-theming engine that generates color schemes from wallpapers
-- **dgop** - System resource monitoring (CPU, RAM, GPU, temperatures)
 - **dsearch** - Blazingly fast filesystem search.
-- **cliphist** - Clipboard history manager
 - **wl-clipboard** - Clipboard utilities for Wayland
 
 ### System Packages
@@ -110,7 +108,7 @@ Build dependencies: git, jq, curl, wget, go, cmake, rustup. The exact package li
 
 **Supported:** Arch, ArchARM, Archcraft, CachyOS, EndeavourOS, Manjaro
 
-Uses `pacman` for system packages from official repos, including `dms-shell` from extra. Builds quickshell, matugen (pre-compiled binary), and dgop from AUR using `makepkg` - no AUR helper needed. niri, hyprland and hyprland-guiutils are available in official repos.
+Uses `pacman` for system packages from official repos, including `dms-shell` from extra. Builds quickshell and matugen (pre-compiled binary) from AUR using `makepkg` - no AUR helper needed. niri, hyprland and hyprland-guiutils are available in official repos.
 
 If you're using archinstall, the `minimal` profile with `NetworkManager` for networking is a good starting point.
 
@@ -118,7 +116,7 @@ If you're using archinstall, the `minimal` profile with `NetworkManager` for net
 
 **Supported:** Fedora, Nobara, Fedora Asahi Remix
 
-Almost everything comes from official repos or COPR repositories (`avengemedia/danklinux`, `avengemedia/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `niri-wm/niri`). Only dgop needs to be built from source with Go.
+Almost everything comes from official repos or COPR repositories (`duxlabs/dux-repo`, `duxlabs/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `niri-wm/niri`).
 
 The installer is tested on Workstation Edition but should work fine on any Fedora flavor.
 
@@ -140,7 +138,7 @@ Hyprland, mango and miracle-wm are not supported on EL and are not planned. A co
 
 **Supported:** Ubuntu 26.04 LTS+ (Resolute Raccoon)
 
-Packages come from the [Dux Labs PPA](./repo#ubuntu) (`ppa:avengemedia/danklinux`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
+Packages come from the [Dux Labs PPA](./repo#ubuntu) (`ppa:duxlabs/dux-repo`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
 
 ### Debian
 
@@ -188,11 +186,9 @@ Gentoo requires a **systemd** installation. OpenRC is not supported.
 | hyprland | Official repos (GURU for -git) | Depends on variant selection, with X USE flag |
 | quickshell | GURU overlay | Always uses live ebuild (`**` keywords), full feature set |
 | matugen | GURU overlay | Color generation tool |
-| cliphist | GURU overlay | Clipboard manager |
 | xdg-desktop-portal-gtk | Official repos | With wayland and X USE flags |
 | mate-polkit | Official repos | PolicyKit authentication agent |
 | accountsservice | Official repos | User account management |
-| dgop | Manual | Built from source with Go |
 | xwayland-satellite | Manual | For niri X11 app support |
 | Dux Shell | Manual | Git clone to `~/.config/quickshell/dms` |
 
@@ -212,7 +208,6 @@ Gentoo requires a **systemd** installation. OpenRC is not supported.
 
 Most distros now have pre-built packages via the [Dux Repository](./repo). The installer handles any remaining builds automatically:
 
-- **dgop** - Built from Go source on distros without packages. Installs to `/usr/local/bin`.
 - **Gentoo** - Still builds most packages from source via Portage (see above).
 
 ## Managing Your Setup

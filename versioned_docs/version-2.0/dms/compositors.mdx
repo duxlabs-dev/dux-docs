@@ -84,9 +84,6 @@ For systemd autostart setup, see the [Installation guide](./installation#niri). 
 
 ```kdl
 spawn-at-startup "dms" "run"
-
-// Optional: Clipboard history
-spawn-at-startup "bash" "-c" "wl-paste --watch cliphist store &"
 ```
 
 #### Environment Variables
@@ -287,9 +284,6 @@ For systemd autostart setup (recommended if you have multiple desktop environmen
 ```lua
 hl.on("hyprland.start", function()
     hl.exec_cmd("dms run")
-
-    -- Optional: Clipboard history
-    hl.exec_cmd("wl-paste --watch cliphist store")
 end)
 ```
 
@@ -542,9 +536,6 @@ For systemd autostart setup (recommended if you have multiple desktop environmen
 
 ```conf
 exec_once=dms run
-
-# Optional: Clipboard history
-exec_once=wl-paste --type text --watch cliphist store
 ```
 
 #### Environment Variables
@@ -661,9 +652,6 @@ For systemd autostart setup (recommended if you have multiple desktop environmen
 
 ```conf
 exec dms run
-
-# Optional: Clipboard history
-exec wl-paste --watch cliphist store
 ```
 
 #### DMS Keybindings

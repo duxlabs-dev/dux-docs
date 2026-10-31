@@ -38,7 +38,6 @@ Dux Shell is now available on more distributions than ever before!
 - [**Quickshell-git**](https://github.com/quickshell-mirror/quickshell): Development build of Quickshell (Dux Labs repositories)
 
 ### Utilities
-- [**cliphist**](https://github.com/sentriz/cliphist): Wayland clipboard manager with history support
 - [**dgop**](https://github.com/duxlabs-dev/dux-gop): Stateless CPU/GPU monitor system by Dux Labs
 - [**dsearch**](https://github.com/duxlabs-dev/dux-search): a Blazingly fast filesystem search tool by Dux Labs
 - [**Dux Calendar**](https://github.com/duxlabs-dev/dux-calendar) (`dcal`): Standalone calendar app for Local, Google, Microsoft, CalDAV, and iCloud — packages **`dcal`** and **`dcal-git`**
@@ -64,7 +63,7 @@ For complete DMS installation instructions including repository setup, see the [
 
 :::note[Renamed packages]
 
-The new names exist only in the `duxlabs` repositories; the legacy `avengemedia` repositories keep the old names. After `dms migrate dux`, an existing install moves to the new names on its next upgrade, because the old names are kept as obsoleted or transitional packages. The commands themselves (`dgop`, `dsearch`, `dcal`, `dms-greeter`) do not change.
+The new names exist only in the `duxlabs` repositories (`home:duxlabs-dev` on OBS); the legacy `avengemedia` repositories (`home:AvengeMedia` on OBS) keep the old names. After `dms migrate dux`, an existing install moves to the new names on its next upgrade, because the old names are kept as obsoleted or transitional packages. The commands themselves (`dgop`, `dsearch`, `dcal`, `dms-greeter`) do not change.
 
 | Old package | New package |
 | --- | --- |
@@ -107,10 +106,10 @@ sudo apt update
 sudo apt install -t trixie-backports quickshell
 
 # Dux OBS for niri and other companions
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install niri
 ```
@@ -119,10 +118,10 @@ sudo apt install niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install quickshell-git niri-git
 ```
@@ -142,10 +141,10 @@ sudo apt update
 sudo apt install quickshell
 
 # Dux OBS for niri and other companions
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install niri
 ```
@@ -154,10 +153,10 @@ sudo apt install niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install quickshell-git niri-git
 ```
@@ -177,10 +176,10 @@ sudo apt update
 sudo apt install quickshell
 
 # Dux OBS for niri and other companions
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install niri
 ```
@@ -189,10 +188,10 @@ sudo apt install niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install quickshell-git niri-git
 ```
@@ -258,7 +257,7 @@ Select your distribution, then choose stable or development packages.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell niri
 ```
@@ -267,7 +266,7 @@ sudo zypper install quickshell niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell-git niri-git
 ```
@@ -282,7 +281,7 @@ sudo zypper install quickshell-git niri-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell niri
 ```
@@ -291,7 +290,7 @@ sudo zypper install quickshell niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell-git niri-git
 ```
@@ -306,7 +305,7 @@ sudo zypper install quickshell-git niri-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell niri
 ```
@@ -315,7 +314,7 @@ sudo zypper install quickshell niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell-git niri-git
 ```
@@ -330,7 +329,7 @@ sudo zypper install quickshell-git niri-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell niri
 ```
@@ -339,7 +338,7 @@ sudo zypper install quickshell niri
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install quickshell-git niri-git
 ```
@@ -391,7 +390,7 @@ Niri packages are available in both stable and development variants. Supported o
 
 ### Fedora COPR
 
-The COPR provides packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10. On EL the `dux` COPR also carries packages missing from EPEL 10: `greetd`, `xwayland-satellite`, `alacritty`, `gtk4-layer-shell`, `cava`, and `ghostty` (x86_64 only).
+The COPR provides packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10. On EL the `dux-repo` COPR also carries packages missing from EPEL 10: `greetd`, `xwayland-satellite`, `alacritty`, `gtk4-layer-shell`, `cava`, and `ghostty` (x86_64 only).
 
 - **Dux Core Repository**: [duxlabs/dux-repo](https://copr.fedorainfracloud.org/coprs/duxlabs/dux-repo/)
 - **DMS Stable**: [duxlabs/dms](https://copr.fedorainfracloud.org/coprs/duxlabs/dms/)
@@ -401,16 +400,17 @@ The COPR provides packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10
 
 The OBS provides packages for OpenSUSE and Debian based distributions:
 
-- **Dux Core Repository**: [home:AvengeMedia:danklinux](https://build.opensuse.org/project/show/home:AvengeMedia:danklinux)
-- **DMS Stable**: [home:AvengeMedia:dms](https://build.opensuse.org/project/show/home:AvengeMedia:dms)
-- **DMS Development**: [home:AvengeMedia:dms-git](https://build.opensuse.org/project/show/home:AvengeMedia:dms-git)
+- **Dux Labs OBS Home**: [home:duxlabs-dev](https://build.opensuse.org/project/show/home:duxlabs-dev)
+- **Dux Core Repository**: [home:duxlabs-dev:dux-repo](https://build.opensuse.org/project/show/home:duxlabs-dev:dux-repo)
+- **DMS Stable**: [home:duxlabs-dev:dms](https://build.opensuse.org/project/show/home:duxlabs-dev:dms)
+- **DMS Development**: [home:duxlabs-dev:dms-git](https://build.opensuse.org/project/show/home:duxlabs-dev:dms-git)
 
 ### Launchpad PPA
 
 The Launchpad PPAs provide packages for Ubuntu distributions:
 
 - **Dux Labs Team Page**: [~duxlabs](https://launchpad.net/~duxlabs)
-- **Dux Core PPA**: [ppa:duxlabs/dux-repo](https://launchpad.net/~duxlabs/+archive/ubuntu/dux)
+- **Dux Core PPA**: [ppa:duxlabs/dux-repo](https://launchpad.net/~duxlabs/+archive/ubuntu/dux-repo)
 - **DMS Stable PPA**: [ppa:duxlabs/dms](https://launchpad.net/~duxlabs/+archive/ubuntu/dms)
 - **DMS Development PPA**: [ppa:duxlabs/dms-git](https://launchpad.net/~duxlabs/+archive/ubuntu/dms-git)
 

@@ -3,7 +3,7 @@ title: Migrate repositories
 description: Move DMS package repositories from the legacy avengemedia owner to duxlabs with dms migrate dux
 ---
 
-`dms migrate dux` moves the package-manager repositories for DMS from the legacy `avengemedia` owner to `duxlabs`. Only the repository changes. The package renames (`dgop` to `dux-gop` and the others) exist only in the `duxlabs` repositories and happen on the next upgrade after the move; see [Renamed packages](../repo).
+`dms migrate dux` moves the package-manager repositories for DMS from the legacy `avengemedia` owner to `duxlabs`. Only the repository changes. The package renames (`dgop` to `dux-gop` and the others) exist only in the `duxlabs` repositories and happen on the next upgrade after the move (on Debian and openSUSE the command switches them itself); see [Renamed packages](../repo).
 
 ## Usage
 
@@ -25,6 +25,7 @@ dms migrate dux -y           # no prompt
 | Fedora, EL 10 (COPR) | `avengemedia/dms`, `avengemedia/dms-git`, `avengemedia/danklinux` | `duxlabs/dms`, `duxlabs/dms-git`, `duxlabs/dux-repo` |
 | Ubuntu (PPA) | `ppa:avengemedia/dms`, `ppa:avengemedia/dms-git`, `ppa:avengemedia/danklinux` | `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git`, `ppa:duxlabs/dux-repo` |
 | Void (XBPS) | `https://void.danklinux.com/dms/current`, `https://void.danklinux.com/danklinux/current` | `https://void.duxlabs.dev/dms/current`, `https://void.duxlabs.dev/dux-repo/current` |
+| Debian, openSUSE (OBS) | `home:AvengeMedia:dms`, `home:AvengeMedia:dms-git`, `home:AvengeMedia:danklinux` | `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git`, `home:duxlabs-dev:dux-repo` |
 
 Only repositories that are enabled on your system are moved. The short-lived `duxlabs/dux` dependency repository (used by the 2.0 release docs before it was renamed) is also treated as legacy and replaced by `duxlabs/dux-repo`. The `dms-git` repositories appear only if you use the development builds.
 
@@ -71,11 +72,34 @@ sudo xbps-install -S
 
 `danklinux/current` is replaced by `dux-repo/current`. If you only had `dms/current` (greeter-only installs), `dux-repo/current` is added to `/etc/xbps.d/dux.conf`, since the greeter now lives there. The packages are signed with the same key as before, so XBPS does not ask you to import a new one.
 
+**Debian**, for each OBS project that moves (`<project>` is `dms`, `dms-git` or `dux-repo`, `<old>` is `dms`, `dms-git` or `danklinux`, `<release>` is `Debian_13`, `Debian_Testing` or `Debian_Unstable`):
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/<project>/<release>/Release.key | gpg --dearmor | sudo tee /etc/apt/keyrings/home-duxlabs-dev-<project>.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-<project>.gpg arch=<arch>] https://download.opensuse.org/repositories/home:/duxlabs-dev:/<project>/<release>/ /' | sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-<project>.list
+sudo apt-get update
+sudo apt-get install -y dux-gop dux-greeter
+sudo rm -f /etc/apt/sources.list.d/duxlabs.list /etc/apt/keyrings/duxlabs.gpg
+sudo apt-get update
+```
+
+`home:AvengeMedia:danklinux` is replaced by `home:duxlabs-dev:dux-repo`. The new projects are signed with a new key, which the first command installs. The `apt-get install` line lists the new names of the renamed packages you have installed under their old names (`dgop` and `dms-greeter` in this example), so they switch right away. The `rm -f` lines remove each sources file that points at a legacy project, whatever it is called (`duxlabs.list` from the 2.0 docs in this example), together with its keyring unless another source still uses it.
+
+**openSUSE**, for each OBS project that moves (`<project>` and `<old>` as above, `<release>` is `openSUSE_Tumbleweed`, `openSUSE_Slowroll`, `16.0` or `16.1`):
+
+```bash
+sudo zypper addrepo -f https://download.opensuse.org/repositories/home:/duxlabs-dev:/<project>/<release>/home:duxlabs-dev:<project>.repo
+sudo zypper --gpg-auto-import-keys refresh
+sudo zypper --non-interactive install --oldpackage --allow-vendor-change --from home_duxlabs-dev_dms --from home_duxlabs-dev_dux-repo 'dms>=2.0.0' 'dux-greeter>=2.0.0' 'dux-gop>=0.1.12' 'quickshell>=0.3.2'
+sudo zypper removerepo home_AvengeMedia_<old>
+```
+
+The `zypper install` line switches each package you installed from a legacy project to the new one, under its new name if it was renamed. zypper keeps installed packages with the vendor they came from, so without `--allow-vendor-change` they would stay on the legacy repositories. OBS numbers each build's release itself, so the new release can be lower than the installed one: `--oldpackage` allows that, and the `>=` floor is the installed version. Packages from openSUSE itself are left alone. If you moved the repositories by hand, running `dms migrate dux` still performs this switch.
+
 **Fedora Atomic** (Silverblue, Kinoite, Bazzite): there is no `dnf copr`, so the command prints a `curl` for the new `.repo` file and an `rm -f` for the old one and leaves them for you to run.
 
 ## Other distributions
 
 - **Arch, NixOS, Gentoo:** nothing to migrate.
-- **Debian, openSUSE (OBS):** migration will be added once the new `duxlabs` OBS projects exist. Until then the `home:AvengeMedia` repositories stay in place and keep working.
 
 [`dms doctor`](./cli-doctor#package-repos) shows whether any legacy repositories are left.

@@ -97,10 +97,10 @@ Select your release:
 <TabItem value="trixie" label="Debian 13 (Trixie)" default>
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
@@ -109,10 +109,10 @@ sudo apt install dux-calendar        # or dux-calendar-git for the latest develo
 <TabItem value="testing" label="Debian Testing">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
@@ -121,10 +121,10 @@ sudo apt install dux-calendar        # or dux-calendar-git for the latest develo
 <TabItem value="sid" label="Debian Sid">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
 sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
 ```
@@ -152,7 +152,7 @@ Select your distribution:
 <TabItem value="tumbleweed" label="Tumbleweed" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
@@ -161,7 +161,7 @@ sudo zypper install dux-calendar        # or dux-calendar-git for the latest dev
 <TabItem value="leap16" label="Leap 16">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
@@ -170,7 +170,7 @@ sudo zypper install dux-calendar        # or dux-calendar-git for the latest dev
 <TabItem value="leap161" label="Leap 16.1">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```
@@ -179,7 +179,7 @@ sudo zypper install dux-calendar        # or dux-calendar-git for the latest dev
 <TabItem value="slowroll" label="Slowroll">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
 sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
 ```

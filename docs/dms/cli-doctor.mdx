@@ -108,8 +108,8 @@ Checks whether the DMS package repositories on this system still point at the le
 
 | Status | Message | Meaning |
 |--------|---------|---------|
-| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR or PPA repositories still come from `avengemedia`. Run [`dms migrate dux`](./cli-migrate). |
-| 🟢 OK | `Current` | All DMS repositories come from `duxlabs`. |
+| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate). |
+| 🟢 OK | `Current` | All DMS repositories come from `duxlabs` (`home:duxlabs-dev` on OBS). |
 | ⚪ Info | `No DMS package repositories` | No DMS package repositories are configured, so there is nothing to check. |
 
 ---
@@ -232,10 +232,6 @@ Detected terminals (in priority order): `ghostty`, `kitty`, `alacritty`, `foot`,
 ### matugen
 
 DMS leverages matugen with custom color enrichment (dank16) to generate themes for itself and various applications, terminals, and IDEs.
-
-### dgop
-
-Required to use system monitoring widgets and applets (CPU, RAM, Disk, Network, Processes). See [dgop documentation](../dgop/) for more information.
 
 ### cava
 
