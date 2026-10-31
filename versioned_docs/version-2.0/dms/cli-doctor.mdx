@@ -102,6 +102,16 @@ The location of the `shell.qml` is the installed location of the DMS shell confi
 - `user`: if manually  installed via manual compilation & installation
 - `nix`: if installed via Nix package manager
 
+### Package Repos {/* #package-repos */}
+
+Checks whether the DMS package repositories on this system still point at the legacy `avengemedia` owner.
+
+| Status | Message | Meaning |
+|--------|---------|---------|
+| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate). |
+| 🟢 OK | `Current` | All DMS repositories come from `duxlabs` (`home:duxlabs-dev` on OBS). |
+| ⚪ Info | `No DMS package repositories` | No DMS package repositories are configured, so there is nothing to check. |
+
 ---
 
 ## Compositor Checks

@@ -68,6 +68,12 @@ Dux Shell is available through COPR repositories for Fedora 43/44/45, Rawhide, a
 
 On Enterprise Linux, enable EPEL first (`sudo dnf install epel-release`, or the [EPEL release RPM](https://docs.fedoraproject.org/en-US/epel/getting-started/) on RHEL). EL support is in testing and covers niri only.
 
+:::note[Existing installs]
+
+The COPR repositories moved from `avengemedia` to `duxlabs`: `duxlabs/dms`, `duxlabs/dms-git` and `duxlabs/dux-repo` (formerly `avengemedia/danklinux`). If you installed from the `avengemedia` COPRs, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
 <Tabs groupId="dms-channel">
 <TabItem value="stable" label="Stable Release" default>
 
@@ -124,6 +130,12 @@ Dux Shell is available through Open Build Service (OBS) for Debian and Launchpad
 Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
 
 Stable **quickshell** should come from Debian (see the [Dux Debian section](../repo#debian)). The Dux OBS `quickshell` package for Debian is **deprecated** — if you still have it, `sudo apt remove quickshell` then install the Debian package before continuing.
+
+:::note[Existing installs]
+
+The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
 
 Select your release, then choose stable or development packages.
 
@@ -274,6 +286,12 @@ sudo apt install dms-git
 
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
+:::note[Existing installs]
+
+The PPAs moved from `avengemedia` to `duxlabs`: `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git` and `ppa:duxlabs/dux-repo` (formerly `ppa:avengemedia/danklinux`). If you added the `avengemedia` PPAs, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
 <Tabs groupId="dms-channel">
 <TabItem value="stable" label="Stable Release" default>
 
@@ -318,6 +336,12 @@ sudo apt install dms
 ## OpenSUSE & Derivatives
 
 Dux Shell is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+
+:::note[Existing installs]
+
+The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
 
 Select your distribution, then choose stable or development packages.
 
@@ -515,6 +539,12 @@ Install the `niri-session`, `sway-session`, or `labwc-session` packages for thos
 :::note
 
 Install DMS from our R2-backed XBPS repositories or build it from source.
+
+:::
+
+:::note[Existing installs]
+
+The XBPS repositories moved to `void.duxlabs.dev`, and `danklinux/current` is now `dux-repo/current`. If you configured `void.danklinux.com`, run [`dms migrate dux`](./cli-migrate) to switch.
 
 :::
 
