@@ -2166,13 +2166,13 @@ Declare `targetScreen`, `active` or `rowBudget` (rows of 96 px that fit on scree
 | Member | Description |
 |--------|-------------|
 | `implicitHeight` | The dash grows to fit it. Minimum `DashMetrics.tabMinHeight` |
-| `focusTarget` | Item focused when Ctrl+Tab or Down enters the tab |
+| `focusTarget` | Item focused when Ctrl+Tab, F6 or an unused arrow key steps into the tab's controls |
 | `restoreFocus()` | Called when the dash opens on the tab or returns focus to it |
-| `handleKeyEvent(event)` | Return `true` to consume a key. Ctrl+PgUp and Ctrl+PgDown stay with the dash; Ctrl+Tab, Ctrl+Shift+Tab and F6 do too unless `blocksTabNavigation` is set |
+| `handleKeyEvent(event)` | Return `true` to consume a key. Ctrl+PgUp and Ctrl+PgDown stay with the dash; Tab, Ctrl+Tab and F6 (with Shift) do too unless `blocksTabNavigation` is set |
 | `blocksTabNavigation` | True while an editor needs native Tab traversal |
 | `menuActions` | `[{ label, iconName, action, visible?, enabled? }]` for the three-dot menu |
 | `signal tabRequested(string id)` | Switch the dash to another tab, like `"overview"` or `"plugin_other"` |
-| `signal navFocusRequested` | Hand focus back to the dash navigation |
+| `signal navFocusRequested` | Step focus back out of the tab's controls |
 
 For tiles inside a tab, use `Card` from `qs.Modules.DDash.Overview`. It has the same surface colors, radius and tones as the overview cards.
 
@@ -2299,14 +2299,15 @@ Rectangle {
 
 ### Keyboard
 
-The dash opens with the keyboard silently inside the tab (`restoreFocus()`), so your keys work at once. While focus is inside the tab, the dash offers every key to its `handleKeyEvent` first; on the tab bar it offers only Escape. What it does with the rest:
+The dash opens with the keyboard silently inside the tab (`restoreFocus()`), so your keys work at once, and offers every key to its `handleKeyEvent` first. The tab bar itself takes no keyboard focus. What the dash does with the rest:
 
-- On the tab bar, Tab and Shift+Tab move a highlight and Enter or Space opens the highlighted tab. Left and Right arrow keys switch tabs at once.
-- Ctrl+Tab or Ctrl+Shift+Tab jumps between the tab bar and the tab content, entering at `focusTarget`, unless the tab sets `blocksTabNavigation`. F6 and Shift+F6, and Down from the tab bar, also enter it.
-- Inside the content, Tab and Shift+Tab walk its controls and wrap around, unless the tab sets `blocksTabNavigation`.
+- Until the user steps into the tab's controls, Tab and Shift+Tab switch dash tabs.
+- Ctrl+Tab, F6 (with or without Shift), or an arrow key your tab does not consume steps into the controls at `focusTarget`. Ctrl+Tab, F6 or Escape steps back out, as does emitting `navFocusRequested`.
+- Inside the controls, Tab and Shift+Tab walk them and wrap around.
 - Ctrl+PgDown and Ctrl+PgUp switch tabs from anywhere.
-- On the overview, the arrows move between cards when the focused card does not use them, as do Alt+Arrows or Alt+H/J/K/L; Alt+Tab / Alt+Shift+Tab cycle them. Non-clickable cards without a `focusTarget` are skipped. Alt+Arrow toward the tab bar from the edge card, or from a tab without cards, returns to the tab bar.
-- Escape leaves edit mode, then a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
+- Tab, Ctrl+Tab and F6 step aside while the tab sets `blocksTabNavigation`.
+- On the overview, the arrows move between cards when the focused card does not use them, as do Alt+Arrows or Alt+H/J/K/L; Alt+Tab / Alt+Shift+Tab cycle them. Non-clickable cards without a `focusTarget` are skipped. Alt+Arrow toward the tab bar from the edge card steps back out.
+- Escape leaves edit mode, then steps out of the controls, then leaves a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
 
 ### Opening the Dash From Other Surfaces
 
