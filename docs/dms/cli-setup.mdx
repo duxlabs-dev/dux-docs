@@ -60,7 +60,7 @@ DMS writes Hyprland config in Lua only. When the installed Hyprland reports a ve
 :::
 
 :::note[MangoWC 0.18 or newer]
-Everything `dms setup` writes for MangoWC uses the snake_case keys of MangoWC 0.18 and newer. With no subcommand, your existing `config.conf` is backed up to `config.conf.backup.<timestamp>` and replaced. Its bind, `monitor_rule` and `window_rule` lines move into `dms/binds.conf`, `dms/outputs.conf` and `dms/windowrules.conf` when those are empty, converted to snake_case. Fragments that already have content are kept as they are; if they predate 0.18, convert them with MangoWC's `migrate-config-keys.sh` (see [MangoWC Configuration](./compositors.mdx#mangowc-configuration)).
+Everything `dms setup` writes for MangoWC uses the snake_case keys of MangoWC 0.18 and newer. With no subcommand, your existing `config.conf` is backed up to `config.conf.backup.<timestamp>` and replaced. Its bind, `monitor_rule` and `window_rule` lines move into `dms/binds.conf`, `dms/outputs.conf` and `dms/windowrules.conf` when those are empty, converted to snake_case. If you use `config.toml` instead, it is backed up to `config.toml.backup.<timestamp>` and replaced with a stock `config.toml`; DMS never creates a `config.conf` next to it, which would shadow it. Your TOML binds and rules are not moved into the fragments and stay in the backup. Fragments that already have content are kept as they are; if they predate 0.18, convert them with MangoWC's `migrate-config-keys.sh` (see [MangoWC Configuration](./compositors.mdx#mangowc-configuration)).
 :::
 
 :::tip

@@ -508,10 +508,10 @@ These Hyprland rows live on other Settings pages and are hidden unless the runni
 
 ## MangoWC Configuration
 
-[MangoWC](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf`.
+[MangoWC](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf` or `~/.config/mango/config.toml`. MangoWC loads `config.conf` when it exists, otherwise `config.toml`, and DMS works with either.
 
 :::note[MangoWC 0.18 or newer]
-MangoWC 0.18 renamed its config keys to snake_case and dropped the old names (`exec-once` is now `exec_once`, `windowrule` is `window_rule`, `monitorrule` is `monitor_rule`, `borderpx` is `border_px`, and so on). The file format is still `.conf`, not TOML. Lines with the old names are rejected as unknown keywords. DMS supports MangoWC 0.18 and newer, and everything `dms setup` and the shell write uses the snake_case names.
+MangoWC 0.18 renamed its config keys to snake_case and dropped the old names (`exec-once` is now `exec_once`, `windowrule` is `window_rule`, `monitorrule` is `monitor_rule`, `borderpx` is `border_px`, and so on). Lines with the old names are rejected as unknown keywords. DMS supports MangoWC 0.18 and newer, and everything `dms setup` and the shell write uses the snake_case names.
 
 To convert an older config, run the `migrate-config-keys.sh` attached to [MangoWC's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) over `~/.config/mango`; it rewrites `config.conf` and the DMS fragments alike. If you had that script running from a systemd `--user` path unit or a cron job to keep up with DMS, remove it: DMS writes snake_case itself now. [`dms doctor`](./cli-doctor.mdx#compositor-checks) lists any keys MangoWC still rejects.
 :::
@@ -530,7 +530,7 @@ To convert an older config, run the `migrate-config-keys.sh` attached to [MangoW
 | `windowrules.conf` | Window rules | Applications → Window rules |
 | `binds.conf` | Keybinds | Input → Keyboard shortcuts |
 
-If you maintain `config.conf` by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
+The fragments are `.conf` files whichever main config you use; MangoWC reads each file in its own format. If you maintain your main config by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
 
 ```conf
 # Add to the end of ~/.config/mango/config.conf
@@ -548,7 +548,25 @@ mkdir -p ~/.config/mango/dms
 touch ~/.config/mango/dms/{colors,layout,cursor,input,outputs,windowrules,binds}.conf
 ```
 
-Mouse and touchpad rows map onto MangoWC's `mouse_*` and `trackpad_*` keys. Keyboard keys (`xkb_rules_*`, `repeat_*`, numlock) are written only once you set one of them, so an untouched Keyboard page keeps the keyboard lines in your own `config.conf`. The **Keymap file** row is hidden on MangoWC because it has no such option. Numlock is written as `numlock_on`.
+With `config.toml`, source them from a `[global]` table:
+
+```toml
+# Add to the end of ~/.config/mango/config.toml
+[global]
+source = [
+    "./dms/colors.conf",
+    "./dms/layout.conf",
+    "./dms/cursor.conf",
+    "./dms/input.conf",
+    "./dms/outputs.conf",
+    "./dms/windowrules.conf",
+    "./dms/binds.conf",
+]
+```
+
+Don't keep a `config.conf` next to `config.toml`: MangoWC loads `config.conf` and ignores the TOML file.
+
+Mouse and touchpad rows map onto MangoWC's `mouse_*` and `trackpad_*` keys. Keyboard keys (`xkb_rules_*`, `repeat_*`, numlock) are written only once you set one of them, so an untouched Keyboard page keeps the keyboard lines in your own main config. The **Keymap file** row is hidden on MangoWC because it has no such option. Numlock is written as `numlock_on`.
 
 For manual configuration recommendations, continue below.
 

@@ -164,9 +164,9 @@ In an Aqueous session, warns when the `aqueous-config` helper is missing. Keybin
 
 When the installed MangoWC is older than 0.18, doctor reports a **Mango config format** error, `Mango <version> is older than 0.18`: DMS writes Mango config with the snake_case keys of 0.18 and newer, which that release rejects. Upgrade MangoWC.
 
-In a MangoWC session, doctor also reads `~/.config/mango/config.conf` and every `.conf` file in `~/.config/mango/dms/`:
+In a MangoWC session, doctor also reads the main config MangoWC loads (`~/.config/mango/config.conf`, else `config.toml`) and every `.conf` file in `~/.config/mango/dms/`:
 
-- **Mango config keys** (error), `Unknown keys: <key> (<file>), ...`: doctor runs `mango -p` over `config.conf` and the files it sources, and lists every key MangoWC rejects. Pre-0.18 names are the usual cause; convert them with the `migrate-config-keys.sh` from [MangoWC's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) or rename them by hand.
+- **Mango config keys** (error), `Unknown keys: <key> (<file>), ...`: doctor runs `mango -p` over the main config and the files it sources, and lists every key MangoWC rejects. Pre-0.18 names are the usual cause; convert them with the `migrate-config-keys.sh` from [MangoWC's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) or rename them by hand.
 - **Mango mouse binds** (warning), `Obsolete overview binds in <files>`: `mousebind=NONE,btn_left,toggleoverview,1` and `mousebind=NONE,btn_right,killclient,0` swallow normal clicks. Remove them.
 
 ### Active {/* #compositor */}
