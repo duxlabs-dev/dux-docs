@@ -130,15 +130,35 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 | Miracle WM | `miracle-wm` | `miracle-wm --version` |
 | River | `river` | `river -version` |
 | Wayfire | `wayfire` | `wayfire --version` |
+| Scroll | `scroll` | `scroll --version` |
+| Aqueous | `aqueous` | `aqueous -version` |
+| Umbriel | `umbriel` | `umbriel --version` |
 
 ### Hyprland Lua config
 
 On Hyprland, doctor warns when:
 
-- **Hyprland `<version>` is older than 0.55**: DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer. Upgrade Hyprland.
+- **Hyprland Lua config**, `Hyprland <version> is older than 0.55`: DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer. Upgrade Hyprland.
+- **Quickshell for Hyprland 0.57**, `Quickshell <version> is older than 0.3.2`: Hyprland 0.57 sends workspace addresses instead of ids, and older Quickshell collapses named and special workspaces. Upgrade Quickshell.
+- **Hyprland deprecated config**, `<n> deprecated option(s)`: `hyprctl -j deprecated-config` lists options your config still uses that Hyprland has deprecated. Update or remove them.
 
-- **Quickshell is older than 0.3.2 on Hyprland 0.57+**: Hyprland 0.57 sends workspace addresses instead of ids, and older Quickshell collapses named and special workspaces. Upgrade Quickshell.
-- **Deprecated config options**: `hyprctl -j deprecated-config` lists options your config still uses that Hyprland has deprecated. Update or remove them.
+### niri config {/* #niri-config */}
+
+When niri is installed, doctor reads `~/.config/niri/config.kdl` and every `.kdl` file in `~/.config/niri/dms/`. DMS never rewrites `config.kdl` or `dms/binds.kdl`, so each warning names the line to fix by hand.
+
+- **binds-next include**, `config.kdl does not include dms/binds-next.kdl`: add `include optional=true "dms/binds-next.kdl"` above the `dms/binds.kdl` include, or run `dms setup`. Without it you lose the DMS binds that depend on the niri version, including Keyboard Shortcuts. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
+- **binds-next include**, `config.kdl:<line> includes dms/binds-next.kdl after dms/binds.kdl`: move it above, so your binds in `dms/binds.kdl` override the DMS defaults.
+- **Mod+Shift+Slash**, `<file>:<line> binds Mod+Shift+Slash`: on the next niri release, this bind also fires for `Mod+Shift+7` on German, Spanish and Swedish layouts. Rename it to `Mod+Shift+question`, which `dms/binds-next.kdl` already binds to Keyboard Shortcuts.
+- **keep-max-bpc**, `<file>:<line> sets keep-max-bpc-unchanged`: niri after 26.04 removed this debug flag and rejects the whole config. Delete the line and set max-bpc in the output section instead.
+- **binds-next.kdl**, `dms/binds-next.kdl is rejected by the installed niri`: niri then rejects the whole config. Delete the file; DMS rewrites it for your niri on its next start.
+
+### Background Blur
+
+Reports whether the compositor supports `ext-background-effect-v1`, which DMS uses for background blur. See [Compositor Blur](./compositor-blur.mdx).
+
+### aqueous-config
+
+In an Aqueous session, warns when the `aqueous-config` helper is missing. Keybind and display edits from Settings need it.
 
 ### Mango config
 
@@ -149,9 +169,9 @@ In a MangoWC session, doctor also reads `~/.config/mango/config.conf` and every 
 - **Mango config keys** (error), `Unknown keys: <key> (<file>), ...`: doctor runs `mango -p` over `config.conf` and the files it sources, and lists every key MangoWC rejects. Pre-0.18 names are the usual cause; convert them with the `migrate-config-keys.sh` from [MangoWC's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) or rename them by hand.
 - **Mango mouse binds** (warning), `Obsolete overview binds in <files>`: `mousebind=NONE,btn_left,toggleoverview,1` and `mousebind=NONE,btn_right,killclient,0` swallow normal clicks. Remove them.
 
-### Active Compositor {/* #compositor */}
+### Active {/* #compositor */}
 
-Currently running compositor.
+The compositor running in this session.
 
 ---
 
@@ -177,7 +197,7 @@ Used to prevent the system from idling or sleeping.
 
 ### ShortcutInhibitor
 
-Used to manage keyboard shortcuts, specific to the niri compositor.
+Used to manage keyboard shortcuts on niri and Aqueous.
 
 ---
 
@@ -271,31 +291,21 @@ DMS supports different network stacks, NetworkManager is recommended for the vas
 - systemd-networkd : Ethernet only, no Wifi or VPN support
 - iwd+systemd-networkd : Wifi and Ethernet supported, no VPN support
 
-### gp-saml-gui
+### dux-search
 
-Required for GlobalProtect VPN connections that use SAML (browser-based) authentication. When a GlobalProtect connection requires SAML, DMS launches [gp-saml-gui](https://github.com/dlenski/gp-saml-gui) to open a browser window for login, then captures the resulting authentication cookie.
+Checks for the `dsearch` command, used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
 
-### openconnect
+### dux-calendar
 
-Required for GlobalProtect SAML VPN connections and for Fortinet VPN profiles.
+Checks for the `dcal` calendar app. See [Dux Calendar documentation](../dcal/) for more information.
 
-- For GlobalProtect SAML, [openconnect](https://gitlab.com/openconnect/openconnect) converts the prelogin cookie from `gp-saml-gui` into an authentication cookie that NetworkManager can use.
-- For Fortinet password profiles started from the DMS VPN widget, DMS uses `openconnect --authenticate` directly and passes the short-lived cookie to NetworkManager. If the VPN server certificate is not trusted, DMS displays its fingerprint for confirmation and saves the approved fingerprint only after the tunnel connects successfully.
-- For Fortinet profiles that authenticate against an external identity provider, DMS runs the browser login itself and hands the resulting session to NetworkManager.
+### dux-files
 
-The NetworkManager openconnect plugin provides the tunnel in every one of those cases, and importing an `openfortivpn` config requires it too. It is packaged separately from the `openconnect` command; see [VPN](vpn#plugins-and-packages) for the package names, and [VPN](vpn) for connecting and importing profiles.
+Checks for the `dfiles` file manager (the **File manager** row). See [Dux Files documentation](../dfiles/) for more information.
 
-:::note
-Native Fortinet authentication applies to profiles with `protocol=fortinet` using either `authtype=password` or `authtype=saml`. Password profiles do not handle OTP or MFA challenge forms; with browser login, any MFA your identity provider asks for happens in the browser. Other OpenConnect protocols are not included in this flow.
-:::
+### logind
 
-### dsearch
-
-Used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
-
-### loginctl
-
-Available on systems using `systemd` or `elogind`. Used for various session management features such as lock integration, lock before suspend, etc.
+The `org.freedesktop.login1` D-Bus service, available on systems using `systemd` or `elogind`. Used for various session management features such as lock integration, lock before suspend, etc.
 
 ### fprintd
 
@@ -372,7 +382,11 @@ See [Installation](installation#compositor-specific-systemd-setup) for the equiv
 
 Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
 
-Doctor also warns when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua.
+Doctor also warns (**Greeter session**) when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua. On Arch it warns (**Greeter package**) when a retired `greetd-dms-greeter` package is still installed; switch to the `dux-greeter` package.
+
+### xdg-desktop-portal
+
+Checks that the settings portal answers. Chromium, Electron and libadwaita apps follow light and dark mode through it. The portal is D-Bus activated and needs `graphical-session.target`; without systemd, or on a compositor that never starts that target, start the portal backend and `xdg-desktop-portal` from your compositor config.
 
 ---
 
@@ -446,6 +460,13 @@ To verify without re-login, force a cache rebuild:`XDG_MENU_PREFIX=plasma- kbuil
 :::note
 `kde-cli-tools` (which provides `keditfiletype`) must also be installed, as Dolphin's "Open with…" dialog depends on it. Plasma sessions already export this variable automatically, so this only applies to non-Plasma compositors.
 :::
+
+---
+
+## Fonts
+
+Checks the **Normal Font**, **Monospace Font** and **Display Font** set in `settings.json`. The defaults (Google Sans Flex, Fira Code, DM Serif Display) ship with DMS; doctor warns if their files are missing from the install. Any other font must be registered with fontconfig, so doctor also needs `fc-list` (**Fontconfig Tools**) and a non-empty font cache (**Fontconfig Cache**). If a font is not found, install it or run `fc-cache -fv`.
+
 ---
 
 ## JSON Output

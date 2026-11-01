@@ -51,6 +51,10 @@ dms setup binds
 
 Running `dms setup` with no subcommand deploys all of the above, plus the input fragment (`dms/input.kdl` on niri, `dms/input.lua` on Hyprland, `dms/input.conf` on MangoWC) and, on Hyprland, `dms/binds-user.lua`. The input fragment has no subcommand of its own.
 
+:::note[niri binds-next.kdl]
+On niri, `dms setup` and `dms setup binds` also write `~/.config/niri/dms/binds-next.kdl`, the binds that depend on the niri version (the Keyboard Shortcuts cheatsheet, and a Mod tap for the overview on the next niri release). Unlike the other files, DMS owns this one: it is replaced whenever its content no longer matches the installed niri, and DMS checks it again each time it starts. If your `config.kdl` doesn't include it, setup prints the line to add above `dms/binds.kdl`. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
+:::
+
 :::note[Hyprland 0.55 or newer]
 DMS writes Hyprland config in Lua only. When the installed Hyprland reports a version older than 0.55, `dms setup` stops with `hyprland.lua is not loaded by Hyprland <version>; DMS needs 0.55 or newer` instead of writing a config Hyprland would ignore. If the version can't be detected, it deploys anyway.
 :::

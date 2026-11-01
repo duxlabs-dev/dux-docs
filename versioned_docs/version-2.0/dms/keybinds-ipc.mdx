@@ -981,14 +981,14 @@ dms ipc call keybinds toggleWithPath sway /etc/sway/config
 **Supported Providers:**
 
 The keybinds modal supports all providers available through the `dms keybinds` CLI:
-- **Built-in providers**: Hyprland, Sway, MangoWC, Miracle WM (automatically parse compositor configs)
+- **Built-in providers**: niri, Hyprland, Sway, Scroll, MangoWC, Miracle WM, Aqueous (automatically parse compositor configs)
 - **Custom cheatsheets**: Any JSON-based cheatsheet in `~/.config/dms/cheatsheets/`
 
 The modal automatically parses configuration files and displays keybinds organized by category with optional subcategories. See the [Keybinds & Cheatsheets](/docs/dms/cli-keybinds-cheatsheets) documentation for more details on providers and creating custom cheatsheets.
 
 ### window-rules
 
-**niri only**
+**niri, Hyprland, and MangoWC only**
 
 Window rules editor modal for managing compositor window rules.
 
@@ -1006,7 +1006,7 @@ dms ipc call window-rules toggle
 ```
 
 :::note
-This feature is only available on the niri compositor.
+This feature is only available on niri, Hyprland, and MangoWC compositors. Other compositors return `WINDOW_RULES_UNSUPPORTED_COMPOSITOR`.
 :::
 
 ### workspace-rename

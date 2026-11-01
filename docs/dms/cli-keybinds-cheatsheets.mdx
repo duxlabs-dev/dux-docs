@@ -24,7 +24,7 @@ The `dms keybinds` command provides a unified interface for viewing and managing
 The keybinds framework offers:
 - **Auto-discovery**: Automatically finds keybinds from application configs
 - **Custom cheatsheets**: Create JSON files for any application
-- **Multiple providers**: Built-in support for Hyprland, Sway, MangoWC, labwc, and Miracle WM, with extensibility for other applications
+- **Multiple providers**: Built-in support for niri, Hyprland, Sway, Scroll, MangoWC, Miracle WM, and Aqueous, with extensibility for other applications
 - **XDG compliance**: Follows XDG Base Directory standards for config locations
 
 ## Quick Start
@@ -194,7 +194,8 @@ The Niri provider parses KDL-format Niri configuration files and extracts keybin
 - Supports DMS overrides via `~/.config/niri/dms/binds.kdl`
 - Detects conflicts between DMS defaults and your binds
 - Validates config before writing using `niri validate`
-- Supports bind options: `repeat`, `cooldown-ms`, `allow-when-locked`
+- Supports bind options: `repeat`, `cooldown-ms`, `allow-when-locked`, `allow-inhibiting`, and on the next niri release, release triggers and `pass-through`
+- Marks release-only binds with a **Release** badge in the cheatsheet
 
 **Usage**:
 
@@ -232,6 +233,13 @@ dms keybinds set niri "Mod+Print" "screenshot" --cooldown-ms 500
 dms keybinds set niri "Mod+Shift+T" "spawn kitty" \
   --desc "Open terminal" \
   --replace-key "Mod+T"
+
+# Next niri release: run on key release (here, a Mod tap)
+dms keybinds set niri "Mod" "toggle-overview" --trigger release
+
+# Next niri release: one action on press, another on release (push-to-talk)
+dms keybinds set niri "Control_R" "spawn wpctl set-mute @DEFAULT_SOURCE@ 0" \
+  --trigger both --release-action "spawn wpctl set-mute @DEFAULT_SOURCE@ 1"
 ```
 
 Remove a keybind:
@@ -242,13 +250,15 @@ dms keybinds remove niri "Mod+T"
 
 #### Niri Config Setup
 
-Include the DMS binds file in your Niri config:
+Include the DMS binds files in your Niri config:
 
 ```kdl
 // ~/.config/niri/config.kdl
 
-// Include DMS keybind overrides
-include "~/.config/niri/dms/binds.kdl"
+// Version-dependent DMS binds, rewritten by DMS
+include optional=true "dms/binds-next.kdl"
+// DMS keybind overrides
+include optional=true "dms/binds.kdl"
 
 binds {
     Mod+Q { close-window; }
@@ -256,9 +266,12 @@ binds {
 }
 ```
 
+`dms/binds-next.kdl` holds the Keyboard Shortcuts bind (`Mod+Shift+Slash` on niri 26.04, `Mod+Shift+question` on the next release) and, on the next release, a `Mod` tap that toggles the overview. DMS rewrites it to match the installed niri, so change these binds in `dms/binds.kdl` instead. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
+
 :::tip[Include Order Matters]
 - DMS include **before** your binds: Your binds override DMS defaults
 - DMS include **after** your binds: DMS binds take priority
+- `dms/binds-next.kdl` goes **before** `dms/binds.kdl`, so binds you set through DMS override it
 
 The cheatsheet output includes conflict detection showing which binds are overridden.
 :::
@@ -270,7 +283,13 @@ The cheatsheet output includes conflict detection showing which binds are overri
 | repeat | `--no-repeat` | Disable key repeat (default: enabled) |
 | cooldown-ms | `--cooldown-ms <ms>` | Minimum time between activations |
 | allow-when-locked | `--allow-when-locked` | Allow bind when screen is locked |
+| allow-inhibiting=false | `--no-inhibiting` | Keep the bind working while an app inhibits shortcuts |
 | hotkey-overlay-title | `--desc <text>` | Description shown in Niri's hotkey overlay |
+| `release { }` | `--trigger press\|release\|both` | Fire on press (default), on release, or both. Omitted keeps the existing bind's trigger. Not for scroll binds. Next niri release |
+| `press { }` `release { }` | `--release-action <action>` | Action run on release; requires `--trigger both` |
+| pass-through | `--pass-through` | Also send the key to the focused window. Keyboard binds only. Release-only binds already pass through, so `--pass-through=false` stops that. Next niri release |
+
+`--trigger`, `--release-action` and `--pass-through` only work with the niri provider. In **Settings → Input → Keyboard shortcuts** the same options are the **Release** and **Non-consuming** toggles. The editor shows a press-and-release bind's release action, but only the CLI sets it.
 
 #### Action Formats
 

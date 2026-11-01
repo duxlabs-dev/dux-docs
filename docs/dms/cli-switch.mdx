@@ -8,15 +8,15 @@ description: Move DMS packages between stable releases and beta builds with dms 
 ## Usage
 
 ```bash
-dms switch beta                # dms, quickshell and dms-greeter to beta builds
+dms switch beta                # dms, quickshell and dux-greeter to beta builds
 dms switch stable              # back to stable releases
-dms switch beta dankcalendar   # only the named packages
+dms switch beta dux-calendar   # only the named packages
 dms switch stable -y           # no prompts
 ```
 
-Without package names, `dms`, `quickshell` and `dms-greeter` switch together. The greeter runs the shell's interface, so a greeter on a different channel than `dms` can break the login screen. Packages that are not installed are skipped.
+Without package names, `dms`, `quickshell` and `dux-greeter` switch together. The greeter runs the shell's interface, so a greeter on a different channel than `dms` can break the login screen. Packages that are not installed are skipped.
 
-Name packages to switch only those: `dms`, `quickshell`, `greeter`, `dankcalendar`, `danksearch`.
+Name packages to switch only those: `dms`, `quickshell`, `dux-greeter`, `dux-calendar`, `dux-files`, `dux-search`.
 
 The command lists what will change and asks before doing anything. When `dms` or `quickshell` changes, the shell restarts at the end.
 

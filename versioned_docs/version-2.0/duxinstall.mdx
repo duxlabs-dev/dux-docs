@@ -52,10 +52,10 @@ On an image-based host (Fedora Atomic, bootc) headless mode never installs packa
 | `--privesc <sudo\|doas\|run0>` | | Privilege escalation tool. Autodetected by default. |
 | `--git` | | Install the git version of every dep that has one. |
 | `--git-deps <name,...>` | | Install the git version of specific deps (e.g. `niri,quickshell`). |
-| `--all-features` | | Enable all optional deps (`dms-greeter`, `dsearch`, `dcal`). |
-| `--dms-greeter` | | Install dms-greeter. |
-| `--dsearch` | | Install dsearch and enable its user indexing service. |
-| `--dcal` | | Install dcal. |
+| `--all-features` | | Enable all optional deps (`dms-greeter`, `danksearch`, `dankcalendar`). |
+| `--dms-greeter` | | Install dms-greeter (`dux-greeter` package). |
+| `--danksearch` | | Install dsearch (`dux-search` package) and enable its user indexing service. |
+| `--dankcalendar` | | Install dcal (`dux-calendar` package). |
 | `--include-deps <name,...>` | | Enable optional deps that are off by default (e.g. `dms-greeter`). |
 | `--exclude-deps <name,...>` | | Skip specific deps. |
 | `--replace-configs <name,...>` | | Replace only the listed configs: `niri`, `hyprland`, `ghostty`, `kitty`, `alacritty`. |
@@ -108,7 +108,7 @@ Build dependencies: git, jq, curl, wget, go, cmake, rustup. The exact package li
 
 **Supported:** Arch, ArchARM, Archcraft, CachyOS, EndeavourOS, Manjaro
 
-Uses `pacman` for system packages from official repos, including `dms-shell` from extra. Builds quickshell and matugen (pre-compiled binary) from AUR using `makepkg` - no AUR helper needed. niri, hyprland and hyprland-guiutils are available in official repos.
+Uses `pacman` for system packages from official repos, including `dux-shell`, quickshell and matugen from extra. Builds AUR packages (git variants and the optional greeter, search and calendar) using `makepkg` - no AUR helper needed. niri, hyprland and hyprland-guiutils are available in official repos.
 
 If you're using archinstall, the `minimal` profile with `NetworkManager` for networking is a good starting point.
 
@@ -116,7 +116,7 @@ If you're using archinstall, the `minimal` profile with `NetworkManager` for net
 
 **Supported:** Fedora, Nobara, Fedora Asahi Remix
 
-Almost everything comes from official repos or COPR repositories (`duxlabs/dux-repo`, `duxlabs/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `niri-wm/niri`).
+Almost everything comes from official repos or COPR repositories (`duxlabs/dux-repo`, `duxlabs/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `yalter/niri`).
 
 The installer is tested on Workstation Edition but should work fine on any Fedora flavor.
 
@@ -124,7 +124,7 @@ The installer is tested on Workstation Edition but should work fine on any Fedor
 
 **Supported:** Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, Zirconium, and other rpm-ostree or bootc images based on Fedora
 
-The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dux-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
+The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
 
 ### Enterprise Linux 10
 
