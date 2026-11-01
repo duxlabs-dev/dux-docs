@@ -82,6 +82,10 @@ dms ipc call plugins list
 Use [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) to auto-reload your plugin during development. The reload command uses the plugin `id` from your `plugin.json`.
 :::
 
+:::warning New files in an update
+Reloading picks up changes to files the shell has already loaded. A QML or JS file that is new in a directory the running shell has already loaded from fails with `File name case mismatch` until `dms restart`, because Qt keeps each directory's file list for the life of the shell. Users update plugins without restarting, so put files that a release adds in a new subdirectory, or say in the release notes that the update needs `dms restart`.
+:::
+
 ## Quick Start
 
 ### 1. Create Plugin Directory
