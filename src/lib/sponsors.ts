@@ -32,7 +32,8 @@ function apiOrigin() {
 }
 
 export async function fetchSponsors(signal?: AbortSignal): Promise<SponsorsFeed> {
-  const response = await fetch(`${apiOrigin()}/sponsors`, {signal});
+  // The edge adds max-age=600 even to 503s, so skip the browser cache or "Try again" replays the error.
+  const response = await fetch(`${apiOrigin()}/sponsors`, {signal, cache: 'no-cache'});
   if (!response.ok) throw new SponsorsError(response.status === 503);
   const data: Partial<SponsorsFeed> = await response.json();
   return {current: data.current ?? [], past: data.past ?? [], updatedAt: data.updatedAt ?? ''};
