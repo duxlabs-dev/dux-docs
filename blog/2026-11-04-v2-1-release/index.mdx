@@ -14,75 +14,88 @@ import StormHero, {StormThankYou, stormStyles} from './StormHero';
 
 {/*
   SCAFFOLD NOTES (delete before publishing)
-  - Every image under /img/blog/v2.1/ is a placeholder. Drop real 1200x900 light/dark shots over them, same filenames. og.png is 1200x630.
   - Contributor table generated from: scripts/release-notes.py v2.0.0..HEAD --format blog (dms repo). Regenerate against the release tag.
   - Root /docs/ links resolve to 2.1 once the docs version is cut (docs:version 2.1 + lastVersion '2.1').
 */}
 
 <StormHero />
 
-DMS 2.1 "Operation Storm" is here. TODO: intro paragraph. It adds an interface density setting, the DMS Classic style, a reworked media player and system monitor, video wallpapers, new on-screen displays, Fedora Atomic support in the Dux installer, and deeper niri, Hyprland, and mangowm support. It also moves installs and updates onto the new Dux Labs repositories: see [Upgrade Notes](/blog/v2-1-release#upgrade-notes).
+DMS 2.1 "Operation Storm" is here, two weeks after 2.0. It adds an interface density setting, the DMS Classic style, a reworked media player and system monitor, video wallpapers, new on-screen displays, Fedora Atomic support in the Dux installer, and deeper niri, Hyprland, and mangowm support. It also moves installs and updates onto the new Dux Labs repositories: see [Upgrade Notes](/blog/v2-1-release#upgrade-notes).
 
 {/* truncate */}
 
 ## DMS is Dux Modular Shell
 
-With 2.0, DankMaterialShell became Dux Shell. In 2.1 the name grows into the three letters everyone already uses: **Dux Modular Shell**, or **DMS** for short. The `dms` command, config paths, IPC, and plugins all stay the same, so there is nothing to change on your end. TODO: a line on why "modular" (plugins, Dash cards, DMS Classic, the `d`-prefixed sibling tools).
+With 2.0, DankMaterialShell became Dux Shell. In 2.1 the name grows into the three letters everyone already uses: **Dux Modular Shell**, or **DMS** for short. The `dms` command, config paths, IPC, and plugins all stay the same, so there is nothing to change on your end. Modular because that's how it's built: plugins, Dash tabs and cards, two interface styles, and sibling tools like dsearch, dcal, and dgop that you can take or leave.
 
 ## Interface density
 
-Shell surfaces now follow an interface density setting. Text and search fields scale with it too, so you can run DMS roomy or compact. TODO: where the setting lives and what the levels are.
+Shell surfaces now follow an interface density setting. Text and search fields scale with it too, so you can run DMS roomy or compact. Pick Spacious, Comfortable, Compact, or Dense in **Settings → Interface style**. Comfortable is the default, and sizes you changed yourself are left alone.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/density-light.png'), dark: useBaseUrl('/img/blog/v2.1/density-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The control center at Spacious density next to the same control center at Dense, which is much smaller" sources={{light: useBaseUrl('/img/blog/v2.1/density-light.png'), dark: useBaseUrl('/img/blog/v2.1/density-dark.png')}} />
+  <figcaption>Control center at Spacious and Dense.</figcaption>
 </figure>
 
 ## DMS Classic
 
-TODO: the new DMS Classic interface style. Who it's for and how to switch to it.
+Not into the Expressive shapes? DMS Classic drops the pills and the press morphing for one corner radius on every control, and Settings gets plain icons and continuous grouped cards. Switch in **Settings → Interface style → Style**.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/classic-light.png'), dark: useBaseUrl('/img/blog/v2.1/classic-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The Settings window in the Expressive style next to the same window in DMS Classic" sources={{light: useBaseUrl('/img/blog/v2.1/classic-light.png'), dark: useBaseUrl('/img/blog/v2.1/classic-dark.png')}} />
+  <figcaption>Settings in Expressive and Classic.</figcaption>
 </figure>
 
 ## Media player and lyrics
 
-The media player gets an Expressive redesign, the Bento layout is reworked, and lyrics gain new features ([apollo79](https://github.com/apollo79)). Synced lyrics can also show in the island's media slot ([PandorasFox](https://github.com/PandorasFox)). TODO: specifics.
+The media player gets an Expressive redesign, the Bento layout is reworked, and lyrics gain new features ([apollo79](https://github.com/apollo79)). Synced lyrics can also show in the island's media slot ([PandorasFox](https://github.com/PandorasFox)).
+
+- **Bento:** a squiggly seekbar, shuffle, repeat, lyrics, and output in one row, and the output and player pickers slide in as sheets.
+- **Lyrics:** smooth word fill, an indicator for instrumental breaks, and smoother scrolling.
+- **Island lyrics:** turn on **Lyrics** in the island's Behavior card under **Settings → Bar**.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/media-light.png'), dark: useBaseUrl('/img/blog/v2.1/media-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The Bento media player in the Dash with synced lyrics next to the track controls" sources={{light: useBaseUrl('/img/blog/v2.1/media-light.png'), dark: useBaseUrl('/img/blog/v2.1/media-dark.png')}} />
+  <figcaption>Synced lyrics in the Bento player.</figcaption>
 </figure>
 
 ## System monitor
 
-The system monitor window has been reworked ([Conava](https://github.com/Conava)). TODO: what changed.
+The system monitor window has been reworked ([Conava](https://github.com/Conava)). Processes, Performance, Disks, and System now sit in a side rail.
+
+- **Processes:** more columns, a details view per process, and quit, force quit, and restart from the row or right-click menu.
+- **Performance:** a page per device with live graphs.
+- **Disks:** health and SMART values per drive, without waking sleeping disks.
+- **System:** copy a summary or a Markdown report for bug reports, with no hostname, user, or network names in it.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/sysmon-light.png'), dark: useBaseUrl('/img/blog/v2.1/sysmon-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The system monitor on the Performance page with a CPU usage graph and a device list" sources={{light: useBaseUrl('/img/blog/v2.1/sysmon-light.png'), dark: useBaseUrl('/img/blog/v2.1/sysmon-dark.png')}} />
+  <figcaption>The new Performance page.</figcaption>
 </figure>
 
 ## Video wallpapers
 
-The shell can now play video wallpapers ([KadirJeager](https://github.com/KadirJeager)). TODO: supported formats, performance notes.
+The shell can now play video wallpapers ([KadirJeager](https://github.com/KadirJeager)). Pick an mp4, webm, mkv, mov, m4v, or avi like any other wallpaper, or run `dms ipc call wallpaper set /path/to/video.mp4`.
+
+- Playback uses Qt Multimedia with its ffmpeg backend.
+- It pauses while locked, with a fullscreen window on that screen, or with the screens off.
+- `ffmpeg` is optional. Without it there's no thumbnail and no wallpaper-based colors.
+- **Advance when a video ends** in the cycling settings moves on to the next wallpaper instead of looping.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/video-wallpaper-light.png'), dark: useBaseUrl('/img/blog/v2.1/video-wallpaper-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The Dash Wallpapers tab open over a purple video wallpaper" sources={{light: useBaseUrl('/img/blog/v2.1/video-wallpaper-light.gif'), dark: useBaseUrl('/img/blog/v2.1/video-wallpaper-dark.gif')}} />
+  <figcaption>A video wallpaper, picked from the Dash.</figcaption>
 </figure>
 
 ## New on-screen displays
 
-- **Keyboard layout:** an OSD when you switch layouts ([Huỳnh Thiện Lộc](https://github.com/hthienloc)).
+- **Keyboard layout:** an OSD when you switch layouts ([Huỳnh Thiện Lộc](https://github.com/hthienloc)). Off by default, turn it on in **Settings → On-screen displays**.
 - **Num Lock:** an indicator when Num Lock changes ([Huỳnh Thiện Lộc](https://github.com/hthienloc)).
 - **Input method:** an OSD when fcitx5 switches input methods ([DaniCatGames](https://github.com/DaniCatGames)).
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/osd-light.png'), dark: useBaseUrl('/img/blog/v2.1/osd-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The keyboard layout OSD showing German next to the input method OSD showing Pinyin" sources={{light: useBaseUrl('/img/blog/v2.1/osd-light.png'), dark: useBaseUrl('/img/blog/v2.1/osd-dark.png')}} />
+  <figcaption>Keyboard layout and input method OSDs.</figcaption>
 </figure>
 
 ## Dash
@@ -94,22 +107,22 @@ The shell can now play video wallpapers ([KadirJeager](https://github.com/KadirJ
 - The island can show the Dash tab bar on its faces.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/dash-light.png'), dark: useBaseUrl('/img/blog/v2.1/dash-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="The Dash overview with the user card next to the clock and weather, and Settings at the end of the tab bar" sources={{light: useBaseUrl('/img/blog/v2.1/dash-light.png'), dark: useBaseUrl('/img/blog/v2.1/dash-dark.png')}} />
+  <figcaption>The new user card, and Settings back in the tab bar.</figcaption>
 </figure>
 
 ## Audio cards
 
-Audio cards can now be turned off and on from DMS ([cmleon51](https://github.com/cmleon51)). TODO: where.
+Audio cards can now be turned off and on from DMS ([cmleon51](https://github.com/cmleon51)). Each output in **Settings → Sound & media → Audio** has a power button, and disabled cards move to their own list so you can turn them back on.
 
 <figure className={styles.screenshot}>
-  <ThemedImage alt="TODO" sources={{light: useBaseUrl('/img/blog/v2.1/audio-light.png'), dark: useBaseUrl('/img/blog/v2.1/audio-dark.png')}} />
-  <figcaption>TODO caption.</figcaption>
+  <ThemedImage alt="Audio settings listing output devices, each with a power button to disable its card" sources={{light: useBaseUrl('/img/blog/v2.1/audio-light.png'), dark: useBaseUrl('/img/blog/v2.1/audio-dark.png')}} />
+  <figcaption>Turn a card off right from Settings.</figcaption>
 </figure>
 
 ## Administrator lock settings
 
-Administrators can opt in to locking down lock screen settings, and DMS enforces the managed values ([alvarosth](https://github.com/alvarosth)). TODO: link the policy docs.
+Administrators can opt in to locking down lock screen settings, and DMS enforces the managed values ([alvarosth](https://github.com/alvarosth)). See [Administrator lock policy](/docs/dms/plugins-overview#administrator-lock-policy).
 
 ## niri
 
@@ -228,7 +241,12 @@ It lists every repository it will move and asks before it changes anything. Add 
 | Void (XBPS) | `void.danklinux.com` to `void.duxlabs.dev` |
 | Fedora Atomic (Silverblue, Kinoite, Bazzite) | Prints the `.repo` swap for you to run |
 
-**Arch and the AUR** aren't covered by `dms migrate dux`: there's no repository to switch, because the packages themselves carry the Dux names (`dux-shell` in extra, `dux-shell-git` and `dux-greeter-bin` in the AUR). TODO: the exact Arch/AUR switch-over steps.
+**Arch and the AUR** aren't covered by `dms migrate dux`: there's no repository to switch, because the packages themselves carry the Dux names (`dux-shell` in extra, `dux-shell-git` and `dux-greeter-bin` in the AUR). `pacman -Syu` swaps `dms-shell` for `dux-shell` on its own. AUR packages need a manual swap:
+
+```bash
+paru -S dux-shell-git
+paru -Rns greetd-dms-greeter-bin && paru -S dux-greeter-bin && dms-greeter install
+```
 
 Only repositories you have enabled are touched. Afterwards, [`dms doctor`](/docs/dms/cli-doctor#package-repos) shows whether any legacy repositories are left. The full list of commands for each distribution is in [Migrate repositories](/docs/dms/cli-migrate).
 
