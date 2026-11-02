@@ -40,7 +40,7 @@ DMS_DISABLE_MATUGEN=1 dms run
 
 ### DMS_ENABLE_GTK_REFRESH
 
-Enables the GTK live theme refresh after each matugen rebuild (named `DMS_ENABLE_GTK4_REFRESH` before v1.6). Running GTK4/libadwaita apps only reload `~/.config/gtk-4.0` colors when the system color-scheme changes, so DMS briefly round-trips `color-scheme` through the opposite value to force it. Some apps that follow the portal color-scheme (notably Chromium/Chrome) can miss the restore signal and get stuck in the wrong mode, so this is disabled by default — without it, GTK4 apps pick up new colors on their next launch. Set to `1` to enable.
+Enables the GTK live theme refresh after each matugen rebuild (named `DMS_ENABLE_GTK4_REFRESH` before v1.6). Running GTK4/libadwaita apps only reload `~/.config/gtk-4.0` colors when the system color-scheme changes, so DMS briefly round-trips `color-scheme` through the opposite value to force it. Some apps that follow the portal color-scheme (notably Chromium/Chrome) can miss the restore signal and get stuck in the wrong mode, so this is disabled by default. GTK 4.22 and newer don't need it: DMS refreshes them by briefly toggling the reduced-motion setting instead. On older GTK4 without it, apps pick up new colors on their next launch. Set to `1` to enable.
 
 ```bash
 DMS_ENABLE_GTK_REFRESH=1 dms run
