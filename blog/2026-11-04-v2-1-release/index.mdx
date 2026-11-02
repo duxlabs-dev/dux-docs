@@ -20,7 +20,7 @@ import StormHero, {StormThankYou, stormStyles} from './StormHero';
 
 <StormHero />
 
-DMS 2.1 "Operation Storm" is here, two weeks after 2.0. It adds an interface density setting, the DMS Classic style, a reworked media player and system monitor, video wallpapers, new on-screen displays, Fedora Atomic support in the Dux installer, and deeper niri, Hyprland, and mangowm support. It also moves installs and updates onto the new Dux Labs repositories: see [Upgrade Notes](/blog/v2-1-release#upgrade-notes).
+DMS 2.1 "Operation Storm" is here, two weeks after 2.0. It adds an interface density setting, the DMS Classic style, a reworked media player and system monitor, video wallpapers, new on-screen displays, Fedora Atomic support in the Dux installer, updates across Dux Files, Dux Calendar, dgop, and dsearch, and deeper niri, Hyprland, and mangowm support. It also moves installs and updates onto the new Dux Labs repositories: see [Upgrade Notes](/blog/v2-1-release#upgrade-notes).
 
 {/* truncate */}
 
@@ -123,6 +123,64 @@ Audio cards can now be turned off and on from DMS ([cmleon51](https://github.com
 ## Administrator lock settings
 
 Administrators can opt in to locking down lock screen settings, and DMS enforces the managed values ([alvarosth](https://github.com/alvarosth)). See [Administrator lock policy](/docs/dms/plugins-overview#administrator-lock-policy).
+
+## The Dux suite
+
+The apps around DMS moved too.
+
+### Dux Files
+
+- **Folder appearance:** give a folder a color, a different icon, or a badge. Right-click it and pick **Folder appearance** ([is-suzart](https://github.com/is-suzart)).
+- **Previews:** full-window preview for images and PDFs ([is-suzart](https://github.com/is-suzart)).
+- **Game libraries** show up in the sidebar ([is-suzart](https://github.com/is-suzart)).
+- **View:** zoom from the View menu, resizable columns, and an option to hide the window header ([is-suzart](https://github.com/is-suzart)). Hide sidebar sections you don't use ([phantomeye1931](https://github.com/phantomeye1931)).
+- **Settings:** density follows DMS, with a new Dense level. Also a file extensions toggle, hidden files sorted last, window opacity and blur, and an opener that hands files to `xdg-open`.
+- **Network and devices:** SMB servers list their shares, phones and cameras show up without a gvfs client running, and davs mounts work.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Dux Files in grid view with colored folders and Steam, Spotify, and VS Code badges" sources={{light: useBaseUrl('/img/blog/v2.1/files-light.png'), dark: useBaseUrl('/img/blog/v2.1/files-dark.png')}} />
+  <figcaption>Folder colors and badges in Dux Files.</figcaption>
+</figure>
+
+See [Dux Files](/docs/dfiles).
+
+### Dux Calendar
+
+- Window opacity, foreground layers, and compositor blur.
+- Follows your DMS fonts.
+- Google calendars keep syncing when the Tasks API quota runs out ([LazyWare](https://github.com/LazyWare)), plus CalDAV sync fixes ([alin742](https://github.com/alin742)).
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Dux Calendar in week view with work and personal events" sources={{light: useBaseUrl('/img/blog/v2.1/calendar-light.png'), dark: useBaseUrl('/img/blog/v2.1/calendar-dark.png')}} />
+  <figcaption>Week view in Dux Calendar.</figcaption>
+</figure>
+
+See [Dux Calendar](/docs/dcal).
+
+### dgop
+
+dgop feeds the new system monitor: sensors, memory modules, per-process GPU, VRAM, disk, and network, and network link info ([Conava](https://github.com/Conava)). CPU temperature now works on ARM boards ([junknewera](https://github.com/junknewera)).
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The dgop terminal UI with system info, CPU cores, memory, disks, and a process list" sources={{light: useBaseUrl('/img/blog/v2.1/dgop-light.png'), dark: useBaseUrl('/img/blog/v2.1/dgop-dark.png')}} />
+  <figcaption>dgop in a terminal.</figcaption>
+</figure>
+
+See [dgop](/docs/dgop).
+
+### dsearch
+
+dsearch skips symlinks that loop back into a parent folder, and its HTTP API is now off by default. See [Upgrade Notes](#dsearch-http-api-off-by-default).
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The launcher in file mode showing dsearch results for storm" sources={{light: useBaseUrl('/img/blog/v2.1/search-light.png'), dark: useBaseUrl('/img/blog/v2.1/search-dark.png')}} />
+  <figcaption>File search in the launcher, backed by dsearch.</figcaption>
+</figure>
+
+### Greeter and more
+
+- The greeter installs on Fedora Atomic and bootc images and no longer flashes before your theme loads.
+- The [Wallpaper Generator](https://wallpaper.duxlabs.dev) gets a color scheme picker and exact Material color math ([apollo79](https://github.com/apollo79)).
 
 ## niri
 
@@ -260,6 +318,10 @@ DMS no longer reads or manages `hyprland.conf` and needs Hyprland 0.55 or newer.
 
 mangowm 0.18 renamed its config keys to snake_case (`exec-once` is now `exec_once`, `windowrule` is `window_rule`, and so on), and DMS now writes only the new names. `dms config mango-migrate` is gone: run the `migrate-config-keys.sh` from [mangowm's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) over `~/.config/mango` instead. If you ran that script from a timer or cron job to keep up with DMS, remove it. `dms doctor` lists any keys mangowm still rejects.
 
+### dsearch: HTTP API off by default
+
+dsearch no longer serves its HTTP API unless you ask. DMS and the `dsearch` CLI use the socket, so nothing changes for most setups. If you script against the HTTP API, set `http_enabled = true`. See [configuration](/docs/dsearch/configuration#http_enabled).
+
 ## The people behind it
 
 DMS is founded and maintained by **[bbedward](https://github.com/bbedward)** and **[purian23](https://github.com/purian23)**. **[Huỳnh Thiện Lộc](https://github.com/hthienloc)** has been a close and vital contributor, landing features, bug fixes, and ongoing plugin maintenance. Thank you to everyone else contributing code, plugins, translations, packaging, testing, and bug reports.
@@ -275,6 +337,8 @@ A special thank you to everyone who supports Dux Labs through GitHub Sponsors an
 **[Huỳnh Thiện Lộc](https://github.com/hthienloc)** landed 19 pull requests, including the screenshot selector's island snap targets, themable tooltip colors, the keyboard layout OSD and Num Lock indicator, square resizing in the widget editor, and a long run of dock, dash, screenshot, and OSD fixes.
 
 Also: performance work on workspace indicators, dock tooltips, and the lock screen, plus synced lyrics in the island ([PandorasFox](https://github.com/PandorasFox)), the reworked system monitor ([Conava](https://github.com/Conava)), the Expressive media player and lyrics features ([apollo79](https://github.com/apollo79)), video wallpapers ([KadirJeager](https://github.com/KadirJeager)), five fixes across the dock, settings, and privacy indicators ([Mario-Mohar](https://github.com/Mario-Mohar)), and administrator lock settings ([alvarosth](https://github.com/alvarosth)).
+
+Across the suite: folder appearance, previews, game libraries, and view options in Dux Files ([is-suzart](https://github.com/is-suzart)), sidebar sections ([phantomeye1931](https://github.com/phantomeye1931)), calendar sync fixes ([LazyWare](https://github.com/LazyWare), [alin742](https://github.com/alin742)), build docs ([mattmars3](https://github.com/mattmars3)), and ARM CPU temperatures in dgop ([junknewera](https://github.com/junknewera)).
 
 ### All Contributions
 
