@@ -5,6 +5,7 @@ import Head from '@docusaurus/Head';
 import { Check, ChevronRight } from 'material-symbols/rounded';
 import LandingBackground from '../components/LandingBackground';
 import ThemePreview from '../components/ThemePreview';
+import SponsorStrip from '../components/SponsorStrip';
 import styles from './index.module.css';
 
 declare global {
@@ -692,6 +693,7 @@ export default function Home() {
                 </Link>
               </div>
             </div>
+            <SponsorStrip />
           </section>
         </div>
       </div>

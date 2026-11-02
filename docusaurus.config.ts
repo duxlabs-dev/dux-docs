@@ -529,6 +529,10 @@ const config: Config = {
               label: 'Contributing',
               to: '/docs/contributing',
             },
+            {
+              label: 'Sponsors',
+              to: '/sponsors',
+            },
           ],
         },
       ],

@@ -30,6 +30,8 @@ type Config struct {
 	FedoraMessagingTLSDir  string
 	QtRebuildRepo          string
 	QtRebuildPackages      []string
+	KofiVerificationToken  string
+	SponsorOwners          []string
 }
 
 func NewConfig() *Config {
@@ -100,6 +102,11 @@ func NewConfig() *Config {
 		qtRebuildPackages = "qt6-qtbase,qt6-qtdeclarative,qt6-qtwayland"
 	}
 
+	sponsorOwners := os.Getenv("SPONSOR_OWNERS")
+	if sponsorOwners == "" {
+		sponsorOwners = "AvengeMedia,duxlabs-dev"
+	}
+
 	return &Config{
 		Port:                   port,
 		Environment:            env,
@@ -124,5 +131,7 @@ func NewConfig() *Config {
 		FedoraMessagingTLSDir:  fedoraMessagingTLSDir,
 		QtRebuildRepo:          qtRebuildRepo,
 		QtRebuildPackages:      strings.Split(qtRebuildPackages, ","),
+		KofiVerificationToken:  os.Getenv("KOFI_VERIFICATION_TOKEN"),
+		SponsorOwners:          strings.Split(sponsorOwners, ","),
 	}
 }

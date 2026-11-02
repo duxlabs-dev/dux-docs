@@ -19,6 +19,7 @@ import (
 	"github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/poeditor"
 	previews_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/previews"
 	releases_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/releases"
+	sponsors_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/sponsors"
 	stickers_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/stickers"
 	themes_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/themes"
 	uploads_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/uploads"
@@ -26,6 +27,7 @@ import (
 	"github.com/duxlabs-dev/dux-docs/server/internal/api/middleware"
 	"github.com/duxlabs-dev/dux-docs/server/internal/api/server"
 	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/fedoramessaging"
+	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/github"
 	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/githubapp"
 	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/klipy"
 	"github.com/duxlabs-dev/dux-docs/server/internal/log"
@@ -33,6 +35,7 @@ import (
 	"github.com/duxlabs-dev/dux-docs/server/internal/services/qtrebuild"
 	"github.com/duxlabs-dev/dux-docs/server/internal/services/registry"
 	"github.com/duxlabs-dev/dux-docs/server/internal/services/releases"
+	"github.com/duxlabs-dev/dux-docs/server/internal/services/sponsors"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/go-co-op/gocron/v2"
@@ -89,6 +92,11 @@ func startAPI(cfg *config.Config) {
 	pluginCache := registry.NewCache(cfg.GithubToken, pluginCacheFile)
 	themeCache := registry.NewThemeCache(cfg.GithubToken, themeCacheFile)
 	releasesCache := releases.NewCache(cfg.GithubToken, cfg.BlogDir, releasesCacheFile)
+	var sponsorsGQL sponsors.GraphQL
+	if cfg.GithubToken != "" {
+		sponsorsGQL = github.NewClient(cfg.GithubToken)
+	}
+	sponsorsCache := sponsors.NewCache(sponsorsGQL, cfg.SponsorOwners, cfg.CacheDir)
 
 	var previewGen *previews.Generator
 	if cfg.CacheDir != "" {
@@ -126,6 +134,13 @@ func startAPI(cfg *config.Config) {
 		log.Info("Initializing releases cache...")
 		if err := releasesCache.Initialize(ctx); err != nil {
 			log.Error("Failed to initialize releases cache", "err", err)
+		}
+	}()
+
+	go func() {
+		log.Info("Initializing sponsors cache...")
+		if err := sponsorsCache.Refresh(ctx); err != nil {
+			log.Error("Failed to initialize sponsors cache", "err", err)
 		}
 	}()
 
@@ -246,6 +261,18 @@ func startAPI(cfg *config.Config) {
 		})
 		releases_handler.RegisterHandlers(srvImpl, releasesGroup)
 
+		sponsorsGroup := huma.NewGroup(api, "/sponsors")
+		sponsorsGroup.UseSimpleModifier(func(op *huma.Operation) {
+			op.Tags = []string{"Sponsors"}
+		})
+		sponsors_handler.RegisterHandlers(sponsorsCache, sponsorsGroup)
+
+		if cfg.KofiVerificationToken != "" {
+			r.Post("/webhooks/kofi", sponsors_handler.KofiWebhook(cfg.KofiVerificationToken, sponsorsCache))
+		} else {
+			log.Warn("KOFI_VERIFICATION_TOKEN not set; Ko-fi webhook disabled")
+		}
+
 		gifsGroup := huma.NewGroup(api, "/gifs")
 		gifsGroup.UseSimpleModifier(func(op *huma.Operation) {
 			op.Tags = []string{"GIFs"}
@@ -352,6 +379,22 @@ func startAPI(cfg *config.Config) {
 	)
 	if err != nil {
 		log.Fatal("Failed to create cache refresh job", "err", err)
+	}
+
+	// Sponsorships change rarely; Ko-fi updates arrive by webhook in between.
+	_, err = scheduler.NewJob(
+		gocron.DurationJob(time.Hour),
+		gocron.NewTask(
+			func(ctx context.Context) {
+				if err := sponsorsCache.Refresh(ctx); err != nil {
+					log.Error("Failed to refresh sponsors cache", "err", err)
+				}
+			},
+			ctx,
+		),
+	)
+	if err != nil {
+		log.Fatal("Failed to create sponsors refresh job", "err", err)
 	}
 
 	scheduler.Start()
