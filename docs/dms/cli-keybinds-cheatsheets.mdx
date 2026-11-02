@@ -104,10 +104,12 @@ The provider generates descriptions in this order:
 Binds are automatically categorized based on their dispatcher:
 - **Workspace**: workspace navigation and management
 - **Monitor**: monitor-related actions
-- **Window**: window management (move, resize, focus, kill, etc.)
+- **Window**: window management (move, resize, focus, kill, layout messages, etc.)
 - **Execute**: launching applications and scripts
 - **System**: system actions (exit, dpms, etc.)
 - **Other**: miscellaneous dispatchers
+
+A bind whose action is a Lua function (`hl.bind("SUPER + F", my_func)` or an inline `function() ... end`) is categorized by the words in its `description`, or by the function's name when it has none. Words starting with `workspace` go to Workspace, `monitor` to Monitor, `window`, `focus`, `move`, `swap`, `resize`, `fullscreen`, `float`, `maximize` or `column` to Window, and `exit`, `reload` or `dpms` to System; anything else goes to Other.
 
 **Bind options in the editor**:
 

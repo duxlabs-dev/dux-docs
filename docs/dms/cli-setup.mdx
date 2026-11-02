@@ -76,7 +76,7 @@ When `dms setup` finds your own keybinds (a non-empty `dms/binds.kdl` on niri; a
   2) Start from the DMS stock binds
 ```
 
-Keeping is the default. Either way, an existing `binds.conf` or `binds.kdl` is backed up with a timestamp first. Hyprland is not asked, since your own binds live in `dms/binds-user.lua`. `dms setup headless` keeps them unless you pass `--stock-binds`.
+Keeping is the default. Either way, an existing `binds.conf` or `binds.kdl` is backed up with a timestamp first. Hyprland is not asked, since your own binds live in `dms/binds-user.lua`. DMS owns `dms/binds.lua` and refreshes it on every Hyprland setup: `dms setup binds`, `dms setup headless --skip-existing`, and the installer when you keep your `hyprland.lua`. If you edited it, the old copy goes to `~/.config/hypr/.dms-backups/<timestamp>/dms/binds.lua` first; move those edits into `binds-user.lua`. `dms setup headless` keeps them unless you pass `--stock-binds`.
 
 ## Headless
 
@@ -119,5 +119,5 @@ dms setup layout
 The niri home-manager module's `niri.includes` option references these same files under `~/.config/niri/dms/`. See the [niri integration docs](nixos-flake#config-includes) for the full list of included files.
 
 :::info
-The individual subcommands are safe to run at any time — they skip files that already have content. To force a reset, delete or empty the file first, then run the subcommand again.
+The individual subcommands are safe to run at any time — they skip files that already have content, except Hyprland's DMS-owned `binds.lua`, which `dms setup binds` always refreshes. To force a reset, delete or empty the file first, then run the subcommand again.
 :::
