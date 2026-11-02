@@ -2,6 +2,7 @@ package sponsors
 
 import (
 	"context"
+	"fmt"
 	"strings"
 )
 
@@ -59,11 +60,11 @@ func fetchGithubSponsors(ctx context.Context, gql GraphQL, owners []string) ([]g
 	for _, owner := range owners {
 		everyone, err := listSponsorships(ctx, gql, owner, false)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%s: %w", owner, err)
 		}
 		active, err := listSponsorships(ctx, gql, owner, true)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%s: %w", owner, err)
 		}
 		activeSet := make(map[string]bool, len(active))
 		for _, s := range active {

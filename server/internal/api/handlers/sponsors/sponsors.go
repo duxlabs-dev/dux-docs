@@ -31,7 +31,8 @@ func RegisterHandlers(cache *sponsors.Cache, grp *huma.Group) {
 		},
 		func(ctx context.Context, _ *struct{}) (*GetSponsorsResponse, error) {
 			if cache == nil || !cache.IsReady() {
-				return nil, ErrCacheNotReady
+				// The edge adds a 10-minute browser cache to responses without one.
+				return nil, huma.ErrorWithHeaders(ErrCacheNotReady, http.Header{"Cache-Control": {"no-store"}})
 			}
 			return &GetSponsorsResponse{
 				CacheControl: "public, max-age=300",

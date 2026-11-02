@@ -139,8 +139,18 @@ func startAPI(cfg *config.Config) {
 
 	go func() {
 		log.Info("Initializing sponsors cache...")
-		if err := sponsorsCache.Refresh(ctx); err != nil {
-			log.Error("Failed to initialize sponsors cache", "err", err)
+		// Retry with backoff so one failed fetch doesn't leave /sponsors 503 until the hourly job.
+		for delay := 30 * time.Second; ; delay = min(delay*2, 30*time.Minute) {
+			err := sponsorsCache.Refresh(ctx)
+			if err == nil || sponsorsCache.IsReady() {
+				return
+			}
+			log.Error("Failed to initialize sponsors cache", "err", err, "retryIn", delay)
+			select {
+			case <-ctx.Done():
+				return
+			case <-time.After(delay):
+			}
 		}
 	}()
 
