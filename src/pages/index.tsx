@@ -669,6 +669,8 @@ export default function Home() {
           </section>
 
           <section className={styles.support}>
+            <SponsorStrip />
+            <ContributorStrip />
             <div className={styles.supportCard}>
               <div className={styles.supportText}>
                 <h2 className={styles.supportTitle}>
@@ -694,8 +696,6 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            <SponsorStrip />
-            <ContributorStrip />
           </section>
         </div>
       </div>
