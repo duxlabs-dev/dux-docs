@@ -32,7 +32,17 @@ type Config struct {
 	QtRebuildPackages      []string
 	KofiVerificationToken  string
 	SponsorOwners          []string
+	ContributorRepos       []string
+	ContributorExclude     []string
+	PoeditorAPIToken       string
+	PoeditorProjectIDs     []string
 }
+
+// Public, non-archived duxlabs-dev repos credited on /contributors.
+const defaultContributorRepos = "duxlabs-dev/dux-shell,duxlabs-dev/dux-qml-common,duxlabs-dev/dux-calendar," +
+	"duxlabs-dev/dux-files,duxlabs-dev/dux-plugins,duxlabs-dev/dux-plugin-registry,duxlabs-dev/dux-gop," +
+	"duxlabs-dev/dux-go,duxlabs-dev/dux-greeter,duxlabs-dev/dux-search,duxlabs-dev/dux-wallpaper-creator," +
+	"duxlabs-dev/dux-repo,duxlabs-dev/dux-docs"
 
 func NewConfig() *Config {
 	port := os.Getenv("PORT")
@@ -107,6 +117,17 @@ func NewConfig() *Config {
 		sponsorOwners = "AvengeMedia,duxlabs-dev"
 	}
 
+	contributorRepos := os.Getenv("CONTRIBUTOR_REPOS")
+	if contributorRepos == "" {
+		contributorRepos = defaultContributorRepos
+	}
+
+	poeditorProjectIDs := os.Getenv("POEDITOR_PROJECT_IDS")
+	if poeditorProjectIDs == "" {
+		// DuxShell, DuxCalendar, DuxPlugins
+		poeditorProjectIDs = "805178,832662,839330"
+	}
+
 	return &Config{
 		Port:                   port,
 		Environment:            env,
@@ -133,5 +154,9 @@ func NewConfig() *Config {
 		QtRebuildPackages:      strings.Split(qtRebuildPackages, ","),
 		KofiVerificationToken:  os.Getenv("KOFI_VERIFICATION_TOKEN"),
 		SponsorOwners:          strings.Split(sponsorOwners, ","),
+		ContributorRepos:       strings.Split(contributorRepos, ","),
+		ContributorExclude:     strings.Split(os.Getenv("CONTRIBUTOR_EXCLUDE"), ","),
+		PoeditorAPIToken:       os.Getenv("POEDITOR_API_TOKEN"),
+		PoeditorProjectIDs:     strings.Split(poeditorProjectIDs, ","),
 	}
 }

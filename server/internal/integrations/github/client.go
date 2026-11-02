@@ -96,6 +96,8 @@ func (c *Client) fetch(ctx context.Context, rawURL, accept string) ([]byte, http
 		case resp.status == http.StatusOK:
 			c.storeResponse(rawURL, resp)
 			return resp.body, resp.header, nil
+		case resp.status == http.StatusNoContent:
+			return nil, resp.header, nil
 		case resp.status == http.StatusNotModified && hasCached:
 			return cached.body, cached.header, nil
 		case resp.status == http.StatusNotFound:
@@ -347,6 +349,41 @@ func (c *Client) ListReleases(ctx context.Context, owner, repo string, perPage i
 		return nil, fmt.Errorf("failed to unmarshal releases: %w", err)
 	}
 	return releases, nil
+}
+
+type Contributor struct {
+	Login         string `json:"login"`
+	AvatarURL     string `json:"avatar_url"`
+	HTMLURL       string `json:"html_url"`
+	Type          string `json:"type"`
+	Contributions int    `json:"contributions"`
+}
+
+const maxContributorPages = 20
+
+// ListContributors returns a repo's contributors by commit count. Anonymous
+// (email-only) authors are left out; they have no profile to link.
+func (c *Client) ListContributors(ctx context.Context, owner, repo string) ([]Contributor, error) {
+	var all []Contributor
+	for page := 1; page <= maxContributorPages; page++ {
+		body, err := c.get(ctx, fmt.Sprintf("/repos/%s/%s/contributors?per_page=100&page=%d", owner, repo, page))
+		if err != nil {
+			return nil, err
+		}
+		// An empty repository answers 204 with no body.
+		if len(body) == 0 {
+			break
+		}
+		var batch []Contributor
+		if err := json.Unmarshal(body, &batch); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal contributors: %w", err)
+		}
+		all = append(all, batch...)
+		if len(batch) < 100 {
+			break
+		}
+	}
+	return all, nil
 }
 
 // GetRefHead returns the newest commit on ref and the ref's total commit count.

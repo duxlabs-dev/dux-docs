@@ -6,6 +6,7 @@ import { Check, ChevronRight } from 'material-symbols/rounded';
 import LandingBackground from '../components/LandingBackground';
 import ThemePreview from '../components/ThemePreview';
 import SponsorStrip from '../components/SponsorStrip';
+import ContributorStrip from '../components/ContributorStrip';
 import styles from './index.module.css';
 
 declare global {
@@ -694,6 +695,7 @@ export default function Home() {
               </div>
             </div>
             <SponsorStrip />
+            <ContributorStrip />
           </section>
         </div>
       </div>

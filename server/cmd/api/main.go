@@ -14,6 +14,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
 	"github.com/duxlabs-dev/dux-docs/server/config"
+	contributors_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/contributors"
 	gifs_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/gifs"
 	plugins_handler "github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/plugins"
 	"github.com/duxlabs-dev/dux-docs/server/internal/api/handlers/poeditor"
@@ -30,7 +31,9 @@ import (
 	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/github"
 	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/githubapp"
 	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/klipy"
+	poeditor_client "github.com/duxlabs-dev/dux-docs/server/internal/integrations/poeditor"
 	"github.com/duxlabs-dev/dux-docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/services/contributors"
 	"github.com/duxlabs-dev/dux-docs/server/internal/services/previews"
 	"github.com/duxlabs-dev/dux-docs/server/internal/services/qtrebuild"
 	"github.com/duxlabs-dev/dux-docs/server/internal/services/registry"
@@ -97,6 +100,17 @@ func startAPI(cfg *config.Config) {
 		sponsorsGQL = github.NewClient(cfg.GithubToken)
 	}
 	sponsorsCache := sponsors.NewCache(sponsorsGQL, cfg.SponsorOwners, cfg.CacheDir)
+	contributorsCfg := contributors.Config{
+		GitHub:     github.NewClient(cfg.GithubToken),
+		Repos:      cfg.ContributorRepos,
+		Exclude:    cfg.ContributorExclude,
+		ProjectIDs: cfg.PoeditorProjectIDs,
+		DataDir:    cfg.CacheDir,
+	}
+	if cfg.PoeditorAPIToken != "" {
+		contributorsCfg.POEditor = poeditor_client.NewClient(cfg.PoeditorAPIToken)
+	}
+	contributorsCache := contributors.NewCache(contributorsCfg)
 
 	var previewGen *previews.Generator
 	if cfg.CacheDir != "" {
@@ -146,6 +160,27 @@ func startAPI(cfg *config.Config) {
 				return
 			}
 			log.Error("Failed to initialize sponsors cache", "err", err, "retryIn", delay)
+			select {
+			case <-ctx.Done():
+				return
+			case <-time.After(delay):
+			}
+		}
+	}()
+
+	go func() {
+		log.Info("Initializing contributors cache...")
+		for delay := 30 * time.Second; ; delay = min(delay*2, 30*time.Minute) {
+			err := contributorsCache.Refresh(ctx)
+			if err == nil {
+				return
+			}
+			if contributorsCache.IsReady() {
+				// Serving the last snapshot; the scheduled job retries the failed source.
+				log.Error("Failed to refresh contributors cache", "err", err)
+				return
+			}
+			log.Error("Failed to initialize contributors cache", "err", err, "retryIn", delay)
 			select {
 			case <-ctx.Done():
 				return
@@ -277,6 +312,12 @@ func startAPI(cfg *config.Config) {
 		})
 		sponsors_handler.RegisterHandlers(sponsorsCache, sponsorsGroup)
 
+		contributorsGroup := huma.NewGroup(api, "/contributors")
+		contributorsGroup.UseSimpleModifier(func(op *huma.Operation) {
+			op.Tags = []string{"Contributors"}
+		})
+		contributors_handler.RegisterHandlers(contributorsCache, contributorsGroup)
+
 		if cfg.KofiVerificationToken != "" {
 			r.Post("/webhooks/kofi", sponsors_handler.KofiWebhook(cfg.KofiVerificationToken, sponsorsCache))
 		} else {
@@ -405,6 +446,22 @@ func startAPI(cfg *config.Config) {
 	)
 	if err != nil {
 		log.Fatal("Failed to create sponsors refresh job", "err", err)
+	}
+
+	// Contributor lists move slowly, and POEditor caps free accounts at 2000 calls an hour.
+	_, err = scheduler.NewJob(
+		gocron.DurationJob(6*time.Hour),
+		gocron.NewTask(
+			func(ctx context.Context) {
+				if err := contributorsCache.Refresh(ctx); err != nil {
+					log.Error("Failed to refresh contributors cache", "err", err)
+				}
+			},
+			ctx,
+		),
+	)
+	if err != nil {
+		log.Fatal("Failed to create contributors refresh job", "err", err)
 	}
 
 	scheduler.Start()
