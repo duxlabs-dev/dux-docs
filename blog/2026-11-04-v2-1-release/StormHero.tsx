@@ -93,7 +93,7 @@ export default function StormHero() {
         <p className={styles.heroTitle}>
           DMS <span className={styles.gradientText}>2.1</span>
         </p>
-        <p className={styles.heroSubtitle}>Operation Storm</p>
+        <p className={styles.heroSubtitle}>Stormborn</p>
       </div>
     </div>
   );
