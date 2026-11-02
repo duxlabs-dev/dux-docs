@@ -9,6 +9,7 @@ import {shapePath} from '../components/ExpressiveShape/paths';
 import {
   AVATAR_SHAPES,
   GITHUB_SPONSORS_URL,
+  KOFI_SUPPORTER_COUNT,
   KOFI_URL,
   SponsorsError,
   fetchSponsors,
@@ -51,7 +52,6 @@ export default function Sponsors(): React.JSX.Element {
   }, [load]);
 
   const feed = state.status === 'ready' ? state.feed : null;
-  const isEmpty = feed !== null && feed.current.length === 0 && feed.past.length === 0;
 
   return (
     <Layout
@@ -133,13 +133,21 @@ export default function Sponsors(): React.JSX.Element {
               />
             )}
 
-            {isEmpty && (
-              <div className={styles.statusPanel}>
-                <h2 className={styles.statusTitle}>Be the first</h2>
-                <p className={styles.statusDesc}>
-                  No one is listed here yet. Your name could be the first one.
-                </p>
-              </div>
+            {state.status !== 'loading' && (
+              <section className={`${styles.group} ${styles.kofiTally}`} aria-labelledby="sponsors-kofi">
+                <span className={styles.kofiTallyIcon} aria-hidden="true">
+                  <ExpressiveShape shape="Cookie9Sided" className={styles.kofiTallyShape} />
+                  <span className={styles.kofiIcon} />
+                </span>
+                <div>
+                  <h2 id="sponsors-kofi" className={styles.kofiTallyTitle}>
+                    <span className={styles.gradientText}>{KOFI_SUPPORTER_COUNT}+</span> supporters on Ko-fi
+                  </h2>
+                  <p className={styles.kofiTallyDesc}>
+                    Every tip counts, named or not. Thank you to everyone who has chipped in.
+                  </p>
+                </div>
+              </section>
             )}
           </div>
 

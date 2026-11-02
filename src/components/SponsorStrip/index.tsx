@@ -2,7 +2,7 @@ import React, {useEffect, useId, useState} from 'react';
 import Link from '@docusaurus/Link';
 import {ChevronRight} from 'material-symbols/rounded';
 import {shapePath} from '../ExpressiveShape/paths';
-import {AVATAR_SHAPES, fetchSponsors, type Sponsor} from '@/lib/sponsors';
+import {AVATAR_SHAPES, KOFI_SUPPORTER_COUNT, fetchSponsors, type Sponsor} from '@/lib/sponsors';
 import styles from './styles.module.css';
 
 const MAX_AVATARS = 12;
@@ -43,7 +43,7 @@ export default function SponsorStrip(): React.JSX.Element {
       </svg>
 
       <h2 id="sponsor-strip-title" className={styles.label}>
-        Backed by our sponsors
+        Backed by our sponsors and {KOFI_SUPPORTER_COUNT}+ Ko-fi supporters
       </h2>
 
       {sponsors === null ? (

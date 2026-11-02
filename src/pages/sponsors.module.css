@@ -515,6 +515,53 @@ a.member:focus-visible .initial {
   -webkit-mask: url('/img/kofi.svg') no-repeat center / contain;
 }
 
+.kofiTally {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding-block: 2rem;
+  text-align: start;
+  animation-delay: 0.3s;
+}
+
+.kofiTallyIcon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.kofiTallyShape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--md-sys-color-tertiary-container);
+}
+
+.kofiTallyIcon .kofiIcon {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.kofiTallyTitle {
+  margin: 0 0 0.25rem;
+  font-size: clamp(1.25rem, 2.25vw, 1.5rem);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--md-sys-color-on-surface);
+}
+
+.kofiTallyDesc {
+  margin: 0;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
 /* ===== Animations ===== */
 
 @keyframes fadeInUp {
@@ -599,6 +646,11 @@ a.member:focus-visible .initial {
 
   .grid {
     gap: 1rem 0.5rem;
+  }
+
+  .kofiTally {
+    flex-direction: column;
+    text-align: center;
   }
 
   .becomeActions {

@@ -17,6 +17,10 @@ export interface SponsorsFeed {
 export const GITHUB_SPONSORS_URL = 'https://github.com/sponsors/AvengeMedia';
 export const KOFI_URL = 'https://ko-fi.com/duxlabs';
 
+// Ko-fi supporters before the webhook, from the dashboard export (Nov 2026). The export
+// doesn't say who tipped privately, so they're counted, not named. Bump it now and then.
+export const KOFI_SUPPORTER_COUNT = 115;
+
 // Shapes that keep most of a square avatar visible. Assigned by index so SSR and client agree.
 export const AVATAR_SHAPES: ShapeName[] = ['Cookie9Sided', 'Clover4Leaf', 'Cookie12Sided', 'Sunny', 'SoftBurst', 'Gem'];
 
