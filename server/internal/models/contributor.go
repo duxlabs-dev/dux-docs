@@ -11,23 +11,19 @@ type CodeContributor struct {
 	Repos         []string `json:"repos"`
 }
 
-type TranslatorLanguage struct {
-	ProjectID string `json:"projectId"`
-	Project   string `json:"project"`
-	Code      string `json:"code"`
-	Name      string `json:"name"`
-}
-
-// Translator is a POEditor contributor. POEditor records who is assigned to a
-// language, not who translated what, so this is membership, not activity.
-type Translator struct {
-	Name        string               `json:"name"`
-	Proofreader bool                 `json:"proofreader,omitempty"`
-	Languages   []TranslatorLanguage `json:"languages"`
+// TranslationLanguage counts the POEditor contributors assigned to a language
+// across every project. POEditor records assignment, not activity, and no
+// names are published: translators have not agreed to be listed.
+type TranslationLanguage struct {
+	Code        string `json:"code"`
+	Name        string `json:"name"`
+	Translators int    `json:"translators"`
 }
 
 type ContributorsFeed struct {
-	Code        []CodeContributor `json:"code"`
-	Translators []Translator      `json:"translators"`
-	UpdatedAt   time.Time         `json:"updatedAt"`
+	Code      []CodeContributor     `json:"code"`
+	Languages []TranslationLanguage `json:"languages"`
+	// TranslatorCount is the number of distinct people across Languages.
+	TranslatorCount int       `json:"translatorCount"`
+	UpdatedAt       time.Time `json:"updatedAt"`
 }

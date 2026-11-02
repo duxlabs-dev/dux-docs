@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useId, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useId, useRef, useState} from 'react';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
@@ -11,7 +11,6 @@ import {
   ContributorsError,
   POEDITOR_JOIN_URL,
   fetchContributors,
-  languageCredits,
   sizedAvatar,
   type CodeContributor,
   type ContributorsFeed,
@@ -53,7 +52,7 @@ export default function Contributors(): React.JSX.Element {
   }, [load]);
 
   const feed = state.status === 'ready' ? state.feed : null;
-  const languages = useMemo(() => (feed ? languageCredits(feed.translators) : []), [feed]);
+  const languages = feed?.languages ?? [];
   const top = feed?.code.slice(0, TOP_COUNT) ?? [];
   const rest = feed?.code.slice(TOP_COUNT) ?? [];
 
@@ -92,7 +91,7 @@ export default function Contributors(): React.JSX.Element {
           <p className={styles.srOnly} role="status">
             {state.status === 'loading' && 'Loading contributors'}
             {state.status === 'error' && 'The contributor list could not be loaded'}
-            {feed && `${feed.code.length} code contributors, ${feed.translators.length} translators`}
+            {feed && `${feed.code.length} code contributors, ${feed.translatorCount} translators`}
           </p>
 
           <div aria-busy={state.status === 'loading'}>
@@ -167,20 +166,15 @@ export default function Contributors(): React.JSX.Element {
               <section className={styles.group} aria-labelledby="contributors-translators">
                 <h2 id="contributors-translators" className={styles.groupTitle}>
                   Translators
-                  <span className={styles.count}>{feed?.translators.length}</span>
+                  <span className={styles.count}>{feed?.translatorCount}</span>
                 </h2>
                 <ul className={own.languages}>
                   {languages.map((lang) => (
                     <li key={lang.code} className={own.language}>
-                      <h3 className={own.languageName}>
-                        <span>{lang.name}</span>
-                        <span className={own.languageCount}>{lang.translators.length}</span>
-                      </h3>
-                      <ul className={own.people}>
-                        {lang.translators.map((name) => (
-                          <li key={name} className={own.person}>{name}</li>
-                        ))}
-                      </ul>
+                      <span className={own.languageName}>{lang.name}</span>
+                      <span className={own.languageCount}>
+                        {lang.translators} translator{lang.translators === 1 ? '' : 's'}
+                      </span>
                     </li>
                   ))}
                 </ul>

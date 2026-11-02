@@ -76,10 +76,10 @@ export default function ContributorStrip(): React.JSX.Element {
   );
 }
 
-function stripLabel({code, translators}: ContributorsFeed): string {
+function stripLabel({code, translatorCount}: ContributorsFeed): string {
   const people = `${code.length} contributors`;
-  return translators.length > 0
-    ? `Built by ${people} and ${translators.length} translators`
+  return translatorCount > 0
+    ? `Built by ${people} and ${translatorCount} translators`
     : `Built by ${people}`;
 }
 

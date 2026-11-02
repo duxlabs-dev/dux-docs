@@ -47,12 +47,14 @@ type Cache struct {
 	now   func() time.Time
 }
 
-// snapshot holds only what the feed publishes: no POEditor emails.
+// snapshot holds only what the feed publishes: no POEditor names or emails.
+// LanguagesAt has a new key so snapshots that held translator names are refetched.
 type snapshot struct {
-	Code          []models.CodeContributor `json:"code"`
-	CodeAt        time.Time                `json:"codeAt"`
-	Translators   []models.Translator      `json:"translators"`
-	TranslatorsAt time.Time                `json:"translatorsAt"`
+	Code            []models.CodeContributor     `json:"code"`
+	CodeAt          time.Time                    `json:"codeAt"`
+	Languages       []models.TranslationLanguage `json:"languages"`
+	TranslatorCount int                          `json:"translatorCount"`
+	LanguagesAt     time.Time                    `json:"languagesAt"`
 }
 
 func NewCache(cfg Config) *Cache {
@@ -98,19 +100,19 @@ func clean(in []string) []string {
 // publish rebuilds the feed from snap. Callers hold mu, or own c exclusively.
 func (c *Cache) publish() {
 	codeReady := len(c.repos) == 0 || !c.snap.CodeAt.IsZero()
-	translatorsReady := c.po == nil || !c.snap.TranslatorsAt.IsZero()
+	translatorsReady := c.po == nil || !c.snap.LanguagesAt.IsZero()
 	c.ready = codeReady && translatorsReady
 
-	feed := models.ContributorsFeed{Code: []models.CodeContributor{}, Translators: []models.Translator{}}
+	feed := models.ContributorsFeed{Code: []models.CodeContributor{}, Languages: []models.TranslationLanguage{}}
 	if len(c.repos) > 0 && c.snap.Code != nil {
 		feed.Code = c.snap.Code
 	}
-	if c.po != nil && c.snap.Translators != nil {
-		feed.Translators = c.snap.Translators
+	if c.po != nil && c.snap.Languages != nil {
+		feed.Languages, feed.TranslatorCount = c.snap.Languages, c.snap.TranslatorCount
 	}
 	feed.UpdatedAt = c.snap.CodeAt
-	if c.snap.TranslatorsAt.After(feed.UpdatedAt) {
-		feed.UpdatedAt = c.snap.TranslatorsAt
+	if c.snap.LanguagesAt.After(feed.UpdatedAt) {
+		feed.UpdatedAt = c.snap.LanguagesAt
 	}
 	c.feed = feed
 }
@@ -135,16 +137,16 @@ func (c *Cache) Refresh(ctx context.Context) error {
 		}
 	}
 	if c.po != nil {
-		translators, err := fetchTranslators(ctx, c.po, c.projects)
+		languages, people, err := fetchLanguages(ctx, c.po, c.projects)
 		if err != nil {
 			errs = append(errs, err)
 		} else {
-			next.Translators, next.TranslatorsAt = translators, c.now().UTC()
+			next.Languages, next.TranslatorCount, next.LanguagesAt = languages, people, c.now().UTC()
 		}
 	}
 
 	c.mu.Lock()
-	changed := !next.CodeAt.Equal(c.snap.CodeAt) || !next.TranslatorsAt.Equal(c.snap.TranslatorsAt)
+	changed := !next.CodeAt.Equal(c.snap.CodeAt) || !next.LanguagesAt.Equal(c.snap.LanguagesAt)
 	c.snap = next
 	c.publish()
 	c.mu.Unlock()
@@ -155,7 +157,7 @@ func (c *Cache) Refresh(ctx context.Context) error {
 		}
 	}
 	if changed {
-		log.Infof("Contributors cache refreshed: %d code contributors, %d translators", len(next.Code), len(next.Translators))
+		log.Infof("Contributors cache refreshed: %d code contributors, %d translators", len(next.Code), next.TranslatorCount)
 	}
 	return errors.Join(errs...)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -84,7 +85,7 @@ func TestFetchCodeMergesAndFilters(t *testing.T) {
 	}
 }
 
-func TestFetchTranslatorsHidesEmailsAndMergesProjects(t *testing.T) {
+func TestFetchLanguagesCountsPeopleWithoutNames(t *testing.T) {
 	po := &fakePOEditor{
 		langs: map[string][]poeditor.Language{
 			"1": {{Code: "ru", Name: "Russian"}, {Code: "de", Name: "German"}},
@@ -92,34 +93,36 @@ func TestFetchTranslatorsHidesEmailsAndMergesProjects(t *testing.T) {
 		},
 		people: map[string][]poeditor.Contributor{
 			"1": {
-				{Name: "  Ivan   P ", Email: "ivan@x.org", Permissions: []poeditor.Permission{perm("1", "DuxShell", false, "ru")}},
-				{Name: "someone@mail.com", Email: "someone@mail.com", Permissions: []poeditor.Permission{perm("1", "DuxShell", false, "de")}},
+				{Name: "Ivan Real-Name", Email: "ivan@x.org", Permissions: []poeditor.Permission{perm("1", "DuxShell", false, "ru", "de")}},
+				{Name: "Olga", Email: "olga@x.org", Permissions: []poeditor.Permission{perm("1", "DuxShell", false, "ru")}},
 				{Name: "Admin", Email: "admin@x.org", Permissions: []poeditor.Permission{{Type: "administrator"}}},
 				// Permissions for other projects in the org must not leak in.
 				{Name: "Other", Email: "other@x.org", Permissions: []poeditor.Permission{perm("9", "Elsewhere", false, "fr")}},
 			},
 			"2": {
-				{Name: "Ivan P", Email: "IVAN@x.org", Permissions: []poeditor.Permission{perm("2", "DuxCalendar", true, "ru", "xx")}},
+				// The same person in a second project counts once.
+				{Name: "Ivan Real-Name", Email: "IVAN@x.org", Permissions: []poeditor.Permission{perm("2", "DuxCalendar", true, "ru", "xx")}},
 			},
 		},
 	}
-	got, err := fetchTranslators(context.Background(), po, []string{"1", "2"})
+	got, people, err := fetchLanguages(context.Background(), po, []string{"1", "2"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(got) != 1 {
-		t.Fatalf("got %+v", got)
+	if people != 2 {
+		t.Errorf("people = %d, want 2", people)
 	}
-	ivan := got[0]
-	if ivan.Name != "Ivan P" || !ivan.Proofreader || len(ivan.Languages) != 3 {
-		t.Fatalf("ivan = %+v", ivan)
+	var summary []string
+	for _, l := range got {
+		summary = append(summary, fmt.Sprintf("%s=%s:%d", l.Code, l.Name, l.Translators))
 	}
-	if l := ivan.Languages[2]; l.ProjectID != "2" || l.Project != "DuxCalendar" || l.Name != "xx" {
-		t.Errorf("unknown language code should fall back to the code: %+v", l)
+	// Most translators first; an unknown code falls back to itself as the name.
+	if strings.Join(summary, ",") != "ru=Russian:2,de=German:1,xx=xx:1" {
+		t.Errorf("languages = %v", summary)
 	}
 	raw, _ := json.Marshal(got)
-	if strings.Contains(string(raw), "@") {
-		t.Errorf("feed leaks an email: %s", raw)
+	if strings.Contains(string(raw), "@") || strings.Contains(string(raw), "Ivan") {
+		t.Errorf("feed leaks a name or email: %s", raw)
 	}
 }
 
@@ -151,7 +154,7 @@ func TestCacheKeepsLastGoodSourceAndPersists(t *testing.T) {
 		t.Fatal(err)
 	}
 	feed := c.GetFeed()
-	if !c.IsReady() || len(feed.Code) != 1 || len(feed.Translators) != 1 || feed.UpdatedAt.IsZero() {
+	if !c.IsReady() || len(feed.Code) != 1 || len(feed.Languages) != 1 || feed.TranslatorCount != 1 || feed.UpdatedAt.IsZero() {
 		t.Fatalf("feed = %+v", feed)
 	}
 
@@ -167,13 +170,13 @@ func TestCacheKeepsLastGoodSourceAndPersists(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if strings.Contains(string(raw), "i@x") {
-		t.Errorf("snapshot stores an email: %s", raw)
+	if strings.Contains(string(raw), "i@x") || strings.Contains(string(raw), "Ivan") {
+		t.Errorf("snapshot stores a name or email: %s", raw)
 	}
 
 	// A restart serves the snapshot before the first fetch completes.
 	restarted := NewCache(cfg)
-	if !restarted.IsReady() || len(restarted.GetFeed().Translators) != 1 {
+	if !restarted.IsReady() || restarted.GetFeed().TranslatorCount != 1 {
 		t.Errorf("restart did not load snapshot: %+v", restarted.GetFeed())
 	}
 }
@@ -184,7 +187,7 @@ func TestCacheWithoutPOEditorIsReadyFromGitHubAlone(t *testing.T) {
 	if err := c.Refresh(context.Background()); err != nil {
 		t.Fatal(err)
 	}
-	if !c.IsReady() || c.GetFeed().Translators == nil {
+	if !c.IsReady() || c.GetFeed().Languages == nil {
 		t.Errorf("feed = %+v", c.GetFeed())
 	}
 }
