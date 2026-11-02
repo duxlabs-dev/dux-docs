@@ -63,9 +63,20 @@ If the calendar window isn't open yet, it launches and navigates once loaded.
 | `events.list`   | `query`, `from` (RFC3339), `to` (RFC3339), `limit`, `offset` (all optional) |
 | `events.get`    | `uid*`, `calendarId`, `start` (occurrence start RFC3339 for recurring events) |
 | `events.create` | `calendarId*`, `summary*`, `start*`, `end*`, `description`, `location`, `allDay`, `status` (`confirmed\|tentative\|cancelled`), `reminders`, `recurrence` (RRULE list) |
-| `events.update` | `id*`, plus any of the create fields, plus `occurrenceStart` (RFC3339 — shift a single occurrence of a recurring series) |
+| `events.update` | `id*`, plus any of the create fields, plus `scope` (`series\|occurrence`) and `occurrenceStart` (RFC3339 — the edited occurrence's original start) |
 | `events.delete` | `id*`                                                                      |
 | `events.rsvp`   | `id*`, `response*` (`accept\|decline\|tentative`) — reply to a meeting invitation |
+
+`events.update` accepts a `scope` for recurring events:
+
+- `scope=occurrence` writes a `RECURRENCE-ID` exception for one instance. Pass `occurrenceStart` with that instance's original start.
+- `scope=series` updates the series master. If `occurrenceStart` is also provided, the series shifts by the delta between the old and new occurrence time.
+
+When a series edit starts from an existing exception, that exception is collapsed into the master. Other exceptions stay modified and are rebased when the series time moves.
+
+:::note
+`scope=occurrence` is currently supported for **Local** and **CalDAV** calendars.
+:::
 
 ### Tasks
 
