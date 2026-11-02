@@ -9,13 +9,13 @@ interface HeroProps {
 }
 
 const projects: Record<string, string> = {
-  dms: 'Dux Shell',
+  dms: 'Dux Modular Shell',
   'dms-greeter': 'Dux Greeter',
   dcal: 'Dux Calendar',
   dsearch: 'Dux Search',
   dgop: 'dgop',
   duxinstall: 'Dux Install',
-  dankmaterialshell: 'Dux Shell',
+  dankmaterialshell: 'Dux Modular Shell',
   dankgreeter: 'Dux Greeter',
   dankcalendar: 'Dux Calendar',
   danksearch: 'Dux Search',

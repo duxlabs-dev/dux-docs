@@ -24,7 +24,7 @@ The `dms keybinds` command provides a unified interface for viewing and managing
 The keybinds framework offers:
 - **Auto-discovery**: Automatically finds keybinds from application configs
 - **Custom cheatsheets**: Create JSON files for any application
-- **Multiple providers**: Built-in support for niri, Hyprland, Sway, Scroll, MangoWC, Miracle WM, and Aqueous, with extensibility for other applications
+- **Multiple providers**: Built-in support for niri, Hyprland, Sway, Scroll, mangowm, Miracle WM, and Aqueous, with extensibility for other applications
 - **XDG compliance**: Follows XDG Base Directory standards for config locations
 
 ## Quick Start
@@ -165,21 +165,21 @@ bindsym $mod+2 workspace number 2
 bindsym $mod+Return exec kitty # Open terminal
 ```
 
-### MangoWC
+### mangowm {/* #mangowc */}
 
-The MangoWC provider automatically parses your MangoWC (dwl) configuration and extracts keybinds.
+The mangowm provider automatically parses your mangowm (dwl) configuration and extracts keybinds.
 
 **Features**:
-- Parses MangoWC keybind definitions
+- Parses mangowm keybind definitions
 - Supports section comments with `##!` (categories) and `###!` (subcategories)
-- Auto-generates descriptions for common MangoWC actions
+- Auto-generates descriptions for common mangowm actions
 - Respects `[hidden]` comments to exclude certain binds
 - Categorizes binds by type
 
 **Usage**:
 
 ```bash
-# Use default MangoWC config path
+# Use default mangowm config path
 dms keybinds show mangowc
 
 # Specify custom path
@@ -526,7 +526,7 @@ dms keybinds show hyprland --path /custom/path/to/hypr
 # Show Sway keybinds with custom config
 dms keybinds show sway --path /etc/sway/config
 
-# Show MangoWC keybinds with custom config
+# Show mangowm keybinds with custom config
 dms keybinds show mangowc --path /custom/mangowc/config
 
 # Show custom cheatsheet
@@ -535,7 +535,7 @@ dms keybinds show vim
 
 ## Tips & Best Practices
 
-### Organizing Sway and MangoWC Configs
+### Organizing Sway and mangowm Configs
 
 Use section headers to organize your keybinds:
 
@@ -558,7 +558,7 @@ Hyprland's Lua config has no section headers; the provider categorizes binds by 
 
 ### Hiding Internal Binds
 
-On Sway and MangoWC, use `[hidden]` to exclude binds from the display:
+On Sway and mangowm, use `[hidden]` to exclude binds from the display:
 
 ```conf
 # This won't appear in the keybinds list

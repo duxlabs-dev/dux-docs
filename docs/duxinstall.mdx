@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-The **Dux Installer** (`duxinstall`) sets up the full [Dux Shell](./dms/overview.mdx) desktop experience - wallpapers, auto-theming, notifications, lock screen, and everything else you'd expect from a modern desktop. It installs packages and configures user-level settings for your compositor and terminal. If you already have niri or Hyprland set up, the installer can work around your existing config (and always backs things up before making changes).
+The **Dux Installer** (`duxinstall`) sets up the full [Dux Modular Shell](./dms/overview.mdx) desktop experience - wallpapers, auto-theming, notifications, lock screen, and everything else you'd expect from a modern desktop. It installs packages and configures user-level settings for your compositor and terminal. If you already have niri or Hyprland set up, the installer can work around your existing config (and always backs things up before making changes).
 
 ## Quickstart
 
@@ -89,7 +89,7 @@ Logs are written to `/tmp/duxinstall-<timestamp>.log`. Set `DUXINSTALL_LOG_DIR` 
 ## What Gets Installed
 
 ### Core Components
-- **[Dux Shell](./dms/overview.mdx)** - The desktop shell built with quickshell & Go.
+- **[Dux Modular Shell](./dms/overview.mdx)** - The desktop shell built with quickshell & Go.
 - **Compositor** - Your choice of [niri](https://github.com/niri-wm/niri) or [Hyprland](https://hypr.land). With Hyprland, duxinstall also installs `hyprland-guiutils` (Hyprland's dialogs and helper apps). DMS needs Hyprland 0.55 or newer; on an older Hyprland, duxinstall won't write the Lua config
 - **Terminal** - Ghostty, with Kitty and Alacritty as alternatives
 - **dms CLI** - Backend service providing dbus APIs, plugin management, and wayland protocol implementations
@@ -191,7 +191,7 @@ Gentoo requires a **systemd** installation. OpenRC is not supported.
 | mate-polkit | Official repos | PolicyKit authentication agent |
 | accountsservice | Official repos | User account management |
 | xwayland-satellite | Manual | For niri X11 app support |
-| Dux Shell | Manual | Git clone to `~/.config/quickshell/dms` |
+| Dux Modular Shell | Manual | Git clone to `~/.config/quickshell/dms` |
 
 **Global USE Flags:**
 `dbus udev alsa policykit jpeg png webp gif tiff svg brotli gdbm accessibility gtk qt6 egl gbm`

@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install Dux Shell on your system
+description: Install Dux Modular Shell on your system
 sidebar_position: 2
 image: img/dankinstall.png
 ---
@@ -19,7 +19,7 @@ import TabItem from '@theme/TabItem';
   hideTitle={true}
 />
 
-This guide covers installation of Dux Shell across different Linux distributions and methods.
+This guide covers installation of Dux Modular Shell across different Linux distributions and methods.
 
 ## Dependencies
 
@@ -64,7 +64,7 @@ These packages ship the shell, widgets, and CLI. Pair them with `niri`, `hyprlan
 
 ## Fedora & Enterprise Linux
 
-Dux Shell is available through COPR repositories for Fedora 43/44/45, Rawhide, and Enterprise Linux 10 (RHEL, CentOS Stream, Rocky Linux, AlmaLinux) on the latest 10.x minor.
+Dux Modular Shell is available through COPR repositories for Fedora 43/44/45, Rawhide, and Enterprise Linux 10 (RHEL, CentOS Stream, Rocky Linux, AlmaLinux) on the latest 10.x minor.
 
 On Enterprise Linux, enable EPEL first (`sudo dnf install epel-release`, or the [EPEL release RPM](https://docs.fedoraproject.org/en-US/epel/getting-started/) on RHEL). EL support is in testing and covers niri only.
 
@@ -117,13 +117,13 @@ Then run [`dms setup`](./cli-setup) to deploy the configs. Nothing is written ou
 
 Update with `sudo rpm-ostree upgrade` (or `dms system update`), which upgrades the image and the layered packages together; `dms update` refuses to run on image-based systems. Uninstall with `sudo rpm-ostree uninstall dms`.
 
-[Zirconium](https://github.com/zirconium-dev/zirconium/) is a ready-made bootc image with Dux Shell preinstalled: `sudo bootc switch ghcr.io/zirconium-dev/zirconium:latest`.
+[Zirconium](https://github.com/zirconium-dev/zirconium/) is a ready-made bootc image with Dux Modular Shell preinstalled: `sudo bootc switch ghcr.io/zirconium-dev/zirconium:latest`.
 
 For the greeter on these images, see [Immutable and image-based systems](../dms-greeter/installation#immutable-and-image-based-systems).
 
 ## Debian & Ubuntu
 
-Dux Shell is available through Open Build Service (OBS) for Debian and Launchpad PPA for Ubuntu.
+Dux Modular Shell is available through Open Build Service (OBS) for Debian and Launchpad PPA for Ubuntu.
 
 ### Debian
 
@@ -335,7 +335,7 @@ sudo apt install dms
 
 ## OpenSUSE & Derivatives
 
-Dux Shell is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+Dux Modular Shell is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
 
 :::note[Existing installs]
 
@@ -460,7 +460,7 @@ These overlays are maintained by the community, not the DMS team. For issues wit
 
 :::
 
-Dux Shell is available on Gentoo through the GURU overlay.
+Dux Modular Shell is available on Gentoo through the GURU overlay.
 
 Enable the official [GURU](https://wiki.gentoo.org/wiki/Project:GURU) overlay, which packages DMS (`dux-desktop/dux-shell`) alongside companion tools `dux-desktop/dux-gop` and `dux-desktop/dux-search`.
 
@@ -522,7 +522,7 @@ NixOS has dedicated documentation with two installation methods:
 
 ## Solus
 
-Dux Shell is available from the official Solus repository. Pair it with `niri`, `hyprland`, `sway`, or `labwc` packages from the official repositories for a complete desktop stack.
+Dux Modular Shell is available from the official Solus repository. Pair it with `niri`, `hyprland`, `sway`, or `labwc` packages from the official repositories for a complete desktop stack.
 
 ```bash
 sudo eopkg install dux-shell
@@ -653,7 +653,7 @@ fi
 
 :::warning
 
-This guide doesn't cover compositor installation. You need a compatible Wayland compositor (niri, Hyprland, sway, dwl/MangoWC, Miracle WM, etc.).
+This guide doesn't cover compositor installation. You need a compatible Wayland compositor (niri, Hyprland, sway, dwl/mangowm, Miracle WM, etc.).
 
 :::
 
@@ -740,7 +740,7 @@ Install optional components for full functionality using your distribution's pac
 
 After completing installation:
 
-1. **Generate compositor config** (niri, Hyprland, MangoWC): Run `dms setup` to create a starter configuration with DMS keybinds and autostart. Other compositors (sway, labwc, Miracle WM) are supported but require manual configuration.
+1. **Generate compositor config** (niri, Hyprland, mangowm): Run `dms setup` to create a starter configuration with DMS keybinds and autostart. Other compositors (sway, labwc, Miracle WM) are supported but require manual configuration.
 2. Enable the systemd service (recommended) or add `dms run` to your compositor config
 3. Configure your compositor keybinds - see the [Keybinds & IPC](keybinds-ipc) guide
 4. Customize appearance via [Themes](application-themes)
@@ -839,20 +839,20 @@ Bind DMS to the session target:
 systemctl --user add-wants hyprland-session.target dms
 ```
 
-#### MangoWC
+#### mangowm {/* #mangowc */}
 
-[MangoWC](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling compositor based on dwl (wlroots). DMS needs MangoWC 0.18 or newer.
+[mangowm](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling compositor based on dwl (wlroots). DMS needs mangowm 0.18 or newer.
 
-MangoWC ships `mango-session.target` (since 0.17.1) and starts it itself after exporting the environment to systemd, so you only need the `add-wants` step at the end of this section. If your package doesn't install the target, create it by hand:
+mangowm ships `mango-session.target` (since 0.17.1) and starts it itself after exporting the environment to systemd, so you only need the `add-wants` step at the end of this section. If your package doesn't install the target, create it by hand:
 
 ```ini title="~/.config/systemd/user/mango-session.target"
 [Unit]
-Description=MangoWC Session Target
+Description=mangowm Session Target
 Requires=graphical-session.target
 After=graphical-session.target
 ```
 
-Add to your MangoWC config:
+Add to your mangowm config:
 
 ```conf title="~/.config/mango/config.conf"
 exec_once=dbus-update-activation-environment --systemd --all

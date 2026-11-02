@@ -21,7 +21,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Quick Start
 
-*This will set up Dux on your system, including all dependencies, the Dux Shell™, and default compositor and terminal configurations.*
+*This will set up Dux on your system, including all dependencies, the Dux Modular Shell™, and default compositor and terminal configurations.*
 
 ```bash
 curl -fsSL https://install.duxlabs.dev | sh
@@ -31,7 +31,7 @@ Supports Arch Linux + Derivatives, Fedora + Derivatives, Ubuntu, Debian, PikaOS,
 
 :::tip
 
-The installer adds the appropriate repository (COPR, OBS, or PPA) or installs from official repos and installs packages through your distro's package manager. Future updates come through normal system updates. If you install DMS directly from packages, run `dms setup` to generate starter compositor and terminal configs (niri/Hyprland only). Other compositors like sway, MangoWC, labwc, and Miracle WM are supported—see [manual configuration](dms/installation#post-install).
+The installer adds the appropriate repository (COPR, OBS, or PPA) or installs from official repos and installs packages through your distro's package manager. Future updates come through normal system updates. If you install DMS directly from packages, run `dms setup` to generate starter compositor and terminal configs (niri/Hyprland only). Other compositors like sway, mangowm, labwc, and Miracle WM are supported—see [manual configuration](dms/installation#post-install).
 
 :::
 
@@ -44,12 +44,12 @@ The installer adds the appropriate repository (COPR, OBS, or PPA) or installs fr
     }}
     style={{ maxWidth: '600px', width: '100%' }}
   />
-  <figcaption>Dux Shell's Dash with a Suite of Widgets</figcaption>
+  <figcaption>Dux Modular Shell's Dash with a Suite of Widgets</figcaption>
 </figure>
 
 ## The Suite
 
-- **[Dux Shell](dms/overview)** - A feature-rich desktop shell built with [Quickshell](https://quickshell.org/) and [Go](https://golang.org/).
+- **[Dux Modular Shell](dms/overview)** - A feature-rich desktop shell built with [Quickshell](https://quickshell.org/) and [Go](https://golang.org/).
 - **[Dux Greeter](dms-greeter/)** - An aesthetically pleasing greetd greeter for your desktop.
 - **[Dux GOP](dgop/)** - A stateless, cursor-based system and process monitoring tool with a tui, cli, and REST API.
 - **[Dux Search](dsearch/)** - Extremely fast, configurable, zero-dependency indexed filesystem search service.
@@ -64,7 +64,7 @@ The age of assembling your desktop from dozens of separate tools and spending ho
 
 ### The Traditional Way: Package Hunting Simulator
 
-A typical Hyprland, niri, Sway, MangoWC, dwl, labwc, Miracle WM, or generic Wayland setup forces you to learn about and configure a dozen or more separate tools, such as:
+A typical Hyprland, niri, Sway, mangowm, dwl, labwc, Miracle WM, or generic Wayland setup forces you to learn about and configure a dozen or more separate tools, such as:
 
 - **Status Bar**: waybar, eww, or custom scripts
 - **Notifications**: mako, swaync, or dunst
@@ -107,7 +107,7 @@ Preconfigured "dotfiles" are often shared so others can replicate a working setu
   <figcaption>Control Center with system controls and quick settings</figcaption>
 </figure>
 
-Dux replaces this fragmented ecosystem with **Dux Shell** - a single, integrated solution built with [Quickshell](https://quickshell.org) and [Go](https://go.dev):
+Dux replaces this fragmented ecosystem with **Dux Modular Shell** - a single, integrated solution built with [Quickshell](https://quickshell.org) and [Go](https://go.dev):
 
 - ✅ **Full Desktop Shell** - Complete panels, widgets, and system integrations
 - ✅ **Unified Configuration** - One consistent approach, not 15 different syntaxes
@@ -126,7 +126,7 @@ That's Dux - we've already done the integration work so you can focus on using y
 
 ### Pre-configured Images
 
-Want even less setup? Some distributions ship with Dux Shell pre-configured:
+Want even less setup? Some distributions ship with Dux Modular Shell pre-configured:
 
 - <a href="https://github.com/zirconium-dev/zirconium/" style={{display: 'inline-flex', alignItems: 'center', gap: '0.4rem'}}><img src="/img/z.svg" alt="" style={{width: '1.1em', height: '1.1em', verticalAlign: 'middle'}} /> **Zirconium**</a> - A Fedora-based immutable OS with niri + DMS, optimized for container-focused development
 
@@ -144,7 +144,7 @@ Want even less setup? Some distributions ship with Dux Shell pre-configured:
   <figcaption>Full desktop view with terminal, launcher, and system monitoring</figcaption>
 </figure>
 
-Dux Shell provides a stunning desktop experience right out of the box:
+Dux Modular Shell provides a stunning desktop experience right out of the box:
 - **Dozens of Customizable Widgets**: Extendable launcher, workspace switcher, media player, clock, weather, system tray, notifications, lock screen, greeter, network integration, bluetooth integration, and more.
 - **Dynamic Theming**: Automatic color schemes applied across the desktop.
 - **Smooth Animations**: Polished transitions and effects throughout the desktop
@@ -211,7 +211,7 @@ Dux Search is a zero-dependency, blazingly-fast, fully configurable in 1 file, i
 
 Calendars on Linux usually mean wrestling with `vdirsyncer` and `khal` config files just to see your Google or iCloud events. Dux Calendar replaces that with a single standalone app.
 
-`dcal` brings Local, Google, Microsoft, CalDAV, and iCloud calendars together in one unified agenda. It runs as a lightweight daemon with a tray icon, keeps everything synced in the background, and fires native reminders for upcoming events — all with the look and feel of Dux Shell.
+`dcal` brings Local, Google, Microsoft, CalDAV, and iCloud calendars together in one unified agenda. It runs as a lightweight daemon with a tray icon, keeps everything synced in the background, and fires native reminders for upcoming events — all with the look and feel of Dux Modular Shell.
 
 - **Unified Agenda**: Every account and calendar in one view.
 - **Background Sync**: A lightweight daemon keeps accounts synced and serves the UI over IPC.
@@ -223,8 +223,8 @@ Calendars on Linux usually mean wrestling with `vdirsyncer` and `khal` config fi
 Dux and all its components are open source and MIT-licensed.
 
 Source code:
-- [Dux Shell (dms)](https://github.com/duxlabs-dev/dux-shell)
-- [Dux Shell backend (core) + Dux Installer](https://github.com/duxlabs-dev/dux-shell/tree/master/core)
+- [Dux Modular Shell (dms)](https://github.com/duxlabs-dev/dux-shell)
+- [Dux Modular Shell backend (core) + Dux Installer](https://github.com/duxlabs-dev/dux-shell/tree/master/core)
 - [dms first-party plugins](https://github.com/duxlabs-dev/dux-plugins)
 - [dgop GitHub](https://github.com/duxlabs-dev/dux-gop)
 - [Dux Search GitHub](https://github.com/duxlabs-dev/dux-search)
@@ -239,7 +239,7 @@ Ready to dive in? Head over to the [Getting Started](./getting-started.mdx) guid
 ## Join the Community
 
 - **GitHub**: [github.com/duxlabs-dev](https://github.com/duxlabs-dev)
-- **Discord**: `Dux Shell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
+- **Discord**: `Dux Modular Shell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
   - [niri discord](https://discord.gg/ppWTpKmPgT)
 - **Documentation**: You're already here!
 - **Support Development**: [Ko-fi](https://ko-fi.com/duxlabs) - Tip us if you'd like to support the project!

@@ -1,6 +1,6 @@
 ---
 title: NixOS Installation
-description: Install and configure Dux Shell on NixOS using native nixpkgs
+description: Install and configure Dux Modular Shell on NixOS using native nixpkgs
 sidebar_position: 3
 ---
 
@@ -16,23 +16,23 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Shell can be installed on NixOS using the NixOS module. This guide covers the native nixpkgs installation method.
+Dux Modular Shell can be installed on NixOS using the NixOS module. This guide covers the native nixpkgs installation method.
 
 ## Installation
 
-### 1. Enable Dux Shell
+### 1. Enable Dux Modular Shell
 
-In your NixOS configuration, enable Dux Shell:
+In your NixOS configuration, enable Dux Modular Shell:
 
 ```nix
 programs.dms-shell.enable = true;
 ```
 
-That's it! Rebuild your system and Dux Shell will be installed with sensible defaults.
+That's it! Rebuild your system and Dux Modular Shell will be installed with sensible defaults.
 
 ## Configuration Options
 
-Dux Shell provides numerous configuration options to customize your installation. Here are the main options:
+Dux Modular Shell provides numerous configuration options to customize your installation. Here are the main options:
 
 ### Feature Toggles
 
@@ -69,7 +69,7 @@ programs.dms-shell = {
 
 :::info
 
-This is not a necessary step. Currently, Quickshell's latest release, v0.3.0 covers every feature needed by Dux Shell, setting it from source will lead to bigger compilation times.
+This is not a necessary step. Currently, Quickshell's latest release, v0.3.0 covers every feature needed by Dux Modular Shell, setting it from source will lead to bigger compilation times.
 
 :::
 
@@ -99,7 +99,7 @@ programs.dms-shell = {
 
 ### Using Flake Package with NixOS Module
 
-You can use the package from the Dux Shell flake while still using the native NixOS module. This allows you to get quicker updates while keeping the module configuration:
+You can use the package from the Dux Modular Shell flake while still using the native NixOS module. This allows you to get quicker updates while keeping the module configuration:
 
 First, add the flake input to your `flake.nix`:
 
@@ -141,7 +141,7 @@ When using the flake package with the native nixpkgs module, some dependencies m
 
 ### Plugins
 
-Install Dux Shell plugins declaratively. There are two methods:
+Install Dux Modular Shell plugins declaratively. There are two methods:
 
 #### Method 1: Using the Plugin Registry (Recommended)
 

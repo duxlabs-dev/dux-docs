@@ -15,11 +15,11 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Shell works with any Wayland compositor, but we provide optimized configurations for niri, Hyprland, Sway, MangoWC, labwc, and Miracle WM. These configs include DMS-specific keybindings, proper layer shell rules, and recommended settings.
+Dux Modular Shell works with any Wayland compositor, but we provide optimized configurations for niri, Hyprland, Sway, mangowm, labwc, and Miracle WM. These configs include DMS-specific keybindings, proper layer shell rules, and recommended settings.
 
 ## niri Configuration
 
-niri uses the KDL configuration format. Dux Shell integrates seamlessly with niri's scrollable tiling layout.
+niri uses the KDL configuration format. Dux Modular Shell integrates seamlessly with niri's scrollable tiling layout.
 
 
 ### Key Configuration Sections
@@ -506,14 +506,14 @@ These Hyprland rows live on other Settings pages and are hidden unless the runni
 | **Tablet input** | Input → Mouse & touchpad → Tablet | 0.57+ | Turns drawing tablet input on or off (`input:tablet:enabled`), written to `dms/input.lua` |
 | **Warp on display change** | Wallpaper & colors → Cursor | 0.57+ | Same as workspace change, Off, On, or Force (`cursor:warp_on_monitor_change`), written to `dms/cursor.lua` |
 
-## MangoWC Configuration
+## mangowm Configuration {/* #mangowc-configuration */}
 
-[MangoWC](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf` or `~/.config/mango/config.toml`. MangoWC loads `config.conf` when it exists, otherwise `config.toml`, and DMS works with either.
+[mangowm](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf` or `~/.config/mango/config.toml`. mangowm loads `config.conf` when it exists, otherwise `config.toml`, and DMS works with either.
 
-:::note[MangoWC 0.18 or newer]
-MangoWC 0.18 renamed its config keys to snake_case and dropped the old names (`exec-once` is now `exec_once`, `windowrule` is `window_rule`, `monitorrule` is `monitor_rule`, `borderpx` is `border_px`, and so on). Lines with the old names are rejected as unknown keywords. DMS supports MangoWC 0.18 and newer, and everything `dms setup` and the shell write uses the snake_case names.
+:::note[mangowm 0.18 or newer]
+mangowm 0.18 renamed its config keys to snake_case and dropped the old names (`exec-once` is now `exec_once`, `windowrule` is `window_rule`, `monitorrule` is `monitor_rule`, `borderpx` is `border_px`, and so on). Lines with the old names are rejected as unknown keywords. DMS supports mangowm 0.18 and newer, and everything `dms setup` and the shell write uses the snake_case names.
 
-To convert an older config, run the `migrate-config-keys.sh` attached to [MangoWC's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) over `~/.config/mango`; it rewrites `config.conf` and the DMS fragments alike. If you had that script running from a systemd `--user` path unit or a cron job to keep up with DMS, remove it: DMS writes snake_case itself now. [`dms doctor`](./cli-doctor.mdx#compositor-checks) lists any keys MangoWC still rejects.
+To convert an older config, run the `migrate-config-keys.sh` attached to [mangowm's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) over `~/.config/mango`; it rewrites `config.conf` and the DMS fragments alike. If you had that script running from a systemd `--user` path unit or a cron job to keep up with DMS, remove it: DMS writes snake_case itself now. [`dms doctor`](./cli-doctor.mdx#compositor-checks) lists any keys mangowm still rejects.
 :::
 
 ### Key Configuration Sections
@@ -530,7 +530,7 @@ To convert an older config, run the `migrate-config-keys.sh` attached to [MangoW
 | `windowrules.conf` | Window rules | Applications → Window rules |
 | `binds.conf` | Keybinds | Input → Keyboard shortcuts |
 
-The fragments are `.conf` files whichever main config you use; MangoWC reads each file in its own format. If you maintain your main config by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
+The fragments are `.conf` files whichever main config you use; mangowm reads each file in its own format. If you maintain your main config by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
 
 ```conf
 # Add to the end of ~/.config/mango/config.conf
@@ -564,15 +564,15 @@ source = [
 ]
 ```
 
-Don't keep a `config.conf` next to `config.toml`: MangoWC loads `config.conf` and ignores the TOML file.
+Don't keep a `config.conf` next to `config.toml`: mangowm loads `config.conf` and ignores the TOML file.
 
-Mouse and touchpad rows map onto MangoWC's `mouse_*` and `trackpad_*` keys. Keyboard keys (`xkb_rules_*`, `repeat_*`, numlock) are written only once you set one of them, so an untouched Keyboard page keeps the keyboard lines in your own main config. The **Keymap file** row is hidden on MangoWC because it has no such option. Numlock is written as `numlock_on`.
+Mouse and touchpad rows map onto mangowm's `mouse_*` and `trackpad_*` keys. Keyboard keys (`xkb_rules_*`, `repeat_*`, numlock) are written only once you set one of them, so an untouched Keyboard page keeps the keyboard lines in your own main config. The **Keymap file** row is hidden on mangowm because it has no such option. Numlock is written as `numlock_on`.
 
 For manual configuration recommendations, continue below.
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#mangowc). If you prefer not to use systemd, add DMS directly to your MangoWC config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#mangowc). If you prefer not to use systemd, add DMS directly to your mangowm config:
 
 ```conf
 exec_once=dms run
@@ -612,16 +612,16 @@ shadows_blur=15
 
 #### Layer Rules
 
-DMS writes these rules into `dms/layout.conf`, so MangoWC skips its layer animation on the shell's own surfaces:
+DMS writes these rules into `dms/layout.conf`, so mangowm skips its layer animation on the shell's own surfaces:
 
 ```conf
 layer_rule=no_animation:1,layer_name:^(quickshell)$
 layer_rule=no_animation:1,layer_name:^dms:.*
 ```
 
-With `layer_animations=1`, MangoWC restarts a move animation every time a layer changes size or position, so the dot and island lag behind. If you do not source `dms/layout.conf`, copy these lines into `config.conf`. A `layer_rule=no_animation:1,layer_name:^dms` line you added by hand earlier can go.
+With `layer_animations=1`, mangowm restarts a move animation every time a layer changes size or position, so the dot and island lag behind. If you do not source `dms/layout.conf`, copy these lines into `config.conf`. A `layer_rule=no_animation:1,layer_name:^dms` line you added by hand earlier can go.
 
-Each matching `layer_rule` resets the on/off options it does not set, so the last match wins. Put your own rules for DMS layers after `source=./dms/layout.conf` and include `no_animation:1`. To let DMS layers animate instead, add the same two lines there with `no_animation:0`. MangoWC applies layer rules when a layer opens, so restart the shell once after updating (`dms restart`).
+Each matching `layer_rule` resets the on/off options it does not set, so the last match wins. Put your own rules for DMS layers after `source=./dms/layout.conf` and include `no_animation:1`. To let DMS layers animate instead, add the same two lines there with `no_animation:0`. mangowm applies layer rules when a layer opens, so restart the shell once after updating (`dms restart`).
 
 For more about layer rules see [layer rules](./layers.mdx).
 
@@ -669,7 +669,7 @@ window_rule=is_floating:1,app_id:^dev\.duxlabs\.shell$
 
 ## Sway Configuration
 
-[Sway](https://swaywm.org/) is an i3-compatible Wayland compositor. Dux Shell integrates with Sway's tiling layout.
+[Sway](https://swaywm.org/) is an i3-compatible Wayland compositor. Dux Modular Shell integrates with Sway's tiling layout.
 
 ### Key Configuration Sections
 
@@ -748,7 +748,7 @@ For the full list of available IPC commands see [IPC](./keybinds-ipc.mdx). Mirac
 
 ## Other Compositors
 
-Dux Shell works with any Wayland compositor that supports:
+Dux Modular Shell works with any Wayland compositor that supports:
 - Layer shell protocol (for panels and overlays)
 - Session lock protocol (for lock screen)
 - ext-workspace-v1 protocol (for workspace management)

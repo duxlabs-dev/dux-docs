@@ -1,6 +1,6 @@
 ---
 title: Development
-description: Build plugins for Dux Shell
+description: Build plugins for Dux Modular Shell
 sidebar_position: 7
 ---
 
@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Build and ship plugins for Dux Shell. This guide covers the actual patterns and components you'll use, with real working examples from the plugin library.
+Build and ship plugins for Dux Modular Shell. This guide covers the actual patterns and components you'll use, with real working examples from the plugin library.
 
 ## Development Environment
 
@@ -1490,7 +1490,7 @@ A tab is a `DashTabComponent`, an `Item` sized to the dash content area. Here's 
     "name": "Stopwatch Example",
     "description": "A standalone dash tab: a stopwatch with laps that keeps time while the dash is closed",
     "version": "1.0.0",
-    "author": "Dux Shell",
+    "author": "Dux Modular Shell",
     "type": "dash",
     "capabilities": ["dash-tab"],
     "component": "./StopwatchTab.qml",
@@ -1762,7 +1762,7 @@ A card is a `DashCardComponent`, a tonal surface in the overview grid. This one 
     "name": "Progress Example",
     "description": "A standalone overview card showing how much of the day, week, month or year has passed",
     "version": "1.0.0",
-    "author": "Dux Shell",
+    "author": "Dux Modular Shell",
     "type": "dashCard",
     "capabilities": ["dash-card"],
     "component": "./ProgressCard.qml",
@@ -1966,7 +1966,7 @@ A plugin with both surfaces, and maybe a bar widget too, uses `components`. `Das
     "name": "Counter Example",
     "description": "One counter shared by a dash tab, an overview card and a bar or dock widget",
     "version": "1.0.0",
-    "author": "Dux Shell",
+    "author": "Dux Modular Shell",
     "type": "composite",
     "capabilities": ["dash-tab", "dash-card", "dankbar-widget"],
     "icon": "counter_1",
