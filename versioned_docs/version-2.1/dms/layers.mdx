@@ -1,0 +1,285 @@
+---
+title: Layer Namespaces
+description: Layer namespaces DMS components
+sidebar_position: 7
+---
+
+# Wayland Layer Shell & Layer Rules
+
+Configuring blur for Wayland layer shells can be tricky since each compositor handles it differently.
+
+## Overview
+
+DMS uses Wayland's layer shell protocol for all UI components: the bar, popups, modals, OSDs, and notifications. Each component type gets its own namespace, allowing your compositor to target them individually for blur effects.
+
+Layer shell surfaces differ from regular windows—they're UI overlays positioned at specific layers (background, bottom, top, overlay). By assigning unique namespaces to each component type, you can apply blur selectively (e.g., "blur all modals" or "blur all popouts") without affecting other elements.
+
+## Component Namespaces
+
+Every component namespace starts with `dms:` followed by the rest of the namespace, DMS uses the following namespaces for layer shell components:
+
+### Modals
+Full-screen modal dialogs including settings, power menu, and clipboard history. These overlay the entire screen and optionally dim the background.
+
+| Component            | Namespace                       |
+| -------------------- | ------------------------------- |
+| Clipboard history    | `dms:clipboard`                 |
+| File browser         | `dms:file-browser`              |
+| Settings             | `dms:settings`                  |
+| Launcher             | `dms:spotlight`                 |
+| Bluetooth pairing    | `dms:bluetooth-pairing`         |
+| Color picker         | `dms:color-picker`              |
+| Hyprkeybinds         | `dms:hyprkeybinds`              |
+| Network info         | `dms:network-info`              |
+| Network info (wired) | `dms:network-info-wired`        |
+| Notification         | `dms:notification-center-modal` |
+| Polkit               | `dms:polkit`                    |
+| Power menu           | `dms:power-menu`                |
+| Process list         | `dms:process-list-modal`        |
+| Wifi password        | `dms:wifi-password`             |
+| Confirm modal        | `dms:confirm-modal`             |
+| Fallback namespace   | `dms:modal`                     |
+
+### Popouts
+Popup panels triggered by bar widgets, such as the control center, app drawer, and notification center. These are anchored to the bar and slide out accordingly.
+
+| Component                 | Namespace                        |
+| ------------------------- | -------------------------------- |
+| App drawer                | `dms:app-launcher`               |
+| Control center            | `dms:control-center`             |
+| Battery                   | `dms:battery`                    |
+| Vpn                       | `dms:vpn`                        |
+| Dash                      | `dms:dash`                       |
+| Notification center       | `dms:notification-center-popout` |
+| Process list              | `dms:process-list-popout`        |
+| Fallback namespace        | `dms:popout`                     |
+| Plugin                    | `dms:plugins:<namespace>`        |
+| Fallback plugin namespace | `dms:plugins:plugin`             |
+
+
+### Desktop widgets
+Desktop widget (both builtins and plugins) and other layers related to desktop widgets.
+
+| Component      | Namespace                        |
+| -------------- | -------------------------------- |
+| Desktop widget | `dms:desktop-widget:<plugin id>` |
+| Preview        | `dms:desktop-widget-preview`     |
+| Grid           | `dms:desktop-widget-grid`        |
+| Helper         | `dms:desktop-widget-helper`      |
+
+### Misc Components
+Namespaces for other component that aren't modals or popouts.
+
+| Component          | Namespace                | Use                                                                                                                                  |
+| ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Bar                | `dms:bar`                | The main panel, which can be positioned at the top, bottom, left, or right edge of the screen.                                       |
+| Dock               | `dms:dock`               | Application dock (optional component).                                                                                               |
+| Workspace overview | `dms:workspace-overview` | The workspace overview for hyprland.                                                                                                 |
+| Notification popup | `dms:notification-popup` | Toast notifications displayed when applications request user attention.                                                              |
+| OSD                | `dms:osd`                | On-screen displays for volume and brightness indicators. These appear briefly to show status information and fade out automatically. |
+| Slideout           | `dms:slideout`           | Sliding panels from screen edges (optional component).                                                                               |
+| Tooltip            | `dms:tooltip`            | Tooltip shown for example when hovering an app on the dock.                                                                          |
+| Dock context menu  | `dock-context-menu`      | Context menu when right clicking an app on the dock.                                                                                 |
+| Toast              | `dms:toast`              | Toast appearing on top middle of the screen.                                                                                         |
+| Tray menu window   | `dms:tray-menu-window`   | Menu appearing when right clicking an applet in the system tray.                                                                     |
+ 
+> **Tip:** If you are unsure about a component's namespace, you can check it using your compositor's tools:
+> - **Hyprland**: Run `hyprctl layers` with the layer opened
+> - **Niri**: Run `niri msg layers` to list active layer surfaces
+
+If you're a plugin dev, see the [plugin development](./plugin-development.mdx#widget-with-popout) page to add your layer namespace.
+
+## Floating Windows
+
+DMS application windows — Settings, Notepad, Polkit, Process List, the greeter, and the app/widget browsers — are regular XDG toplevel windows, not layer-shell surfaces. They share app ID `dev.duxlabs.shell`, so compositor **window rules** (not layer rules) apply to them.
+
+- **Floating vs. tiled**: **Interface style** → **Floating windows** → **Open floating** manages a compositor window rule that opens DMS windows floating (niri, Hyprland, mangowm). The rule lives in a managed fragment (`~/.config/niri/dms/windowrules.kdl`, `~/.config/hypr/dms/windowrules.lua`, `~/.config/mango/dms/windowrules.conf`); if the fragment isn't included in your compositor config yet, a **First Time Setup** banner on the same page adds it when you click **Setup**.
+- **Transparency & blur**: floating windows follow **Interface style** → **Surfaces** by default. Turn on **Override** under **Interface style** → **Floating windows** to give them their own opacity and foreground controls.
+- **Compositor opacity**: DMS windows already draw their own translucent background, so DMS keeps a rule for `dev.duxlabs.shell` in its window rules fragment that stops compositor opacity from dimming them further (`opaque` on Hyprland, `opacity 1.0` on niri). Opacity rules and Hyprland's decoration opacity still apply to every other window.
+- **niri xray**: the `background-effect` xray behavior of DMS windows follows **Settings → System & integrations → niri → Layout overrides → Xray blur** and is managed in `dms/layout.kdl` — a hand-written `background-effect` block for DMS in your main niri config is redundant and can be removed.
+- **Hyprland effects**: DMS windows are ordinary windows to Hyprland, so they get its blur, glow and wobbly-window effects like any other window.
+
+## Compositor Examples
+
+Each compositor has its own syntax for layer rules.
+
+### Hyprland
+
+On Hyprland 0.56 and newer, DMS blurs its own surfaces through `ext-background-effect-v1` when **Background blur** is on, so you don't need blur layer rules (see [Compositor Blur](./compositor-blur.mdx)). The blur layer rules below are for Hyprland 0.55, or for namespaces and options DMS doesn't manage.
+
+:::info
+
+In order for some layer rules (such as `animation`, `blur` and `dimaround`), you will have to disable the shell's animations and dim effect.
+
+- You can tone down animations in **Settings** > **Fonts & motion** > **Animations**.
+- You can disable the dim in **Settings** > **Launcher** and untoggle **Darken modal background**.
+
+:::
+
+#### Blur Settings
+
+Blur reach is set by the **Blur strength** slider under **Settings → Interface style**, which writes `decoration:blur:size` and `passes` to `~/.config/hypr/dms/layout.lua`. Don't set them by hand. The other blur options are yours to set in `hyprland.lua`:
+
+```lua
+hl.config({
+    decoration = {
+        blur = {
+            enabled = true,
+            ignore_opacity = true,
+            new_optimizations = true,
+            noise = 0.02,
+            contrast = 1.1,
+            vibrancy = 0.2,
+            vibrancy_darkness = 0.3
+        },
+        shadow = {
+            enabled = true,
+            range = 20,
+            render_power = 3,
+            color = "rgba(00000099)"
+        },
+    },
+})
+```
+
+#### Xray
+
+**Settings → System & integrations → Hyprland → Layout overrides** has two xray toggles, written to `dms/layout.lua`:
+
+- **Xray blur**: blurred DMS surfaces show the wallpaper, not the windows beneath. DMS writes:
+  ```lua
+  hl.layer_rule({ match = { namespace = "^dms:.*$" }, xray = true })
+  ```
+- **Bar xray** (**Frame xray** when the frame is on): the bar, island or separate frame blurs against the wallpaper even with **Xray blur** off. Hidden in connected frame mode.
+
+#### Dropdown Menus
+
+Hyprland doesn't apply `ext-background-effect-v1` to popups yet ([hyprwm/Hyprland#15737](https://github.com/hyprwm/Hyprland/pull/15737)), so dropdown and context menus stay unblurred. Until that lands, set `decoration:blur:popups = true` or add a `blur_popups` layer rule:
+
+```lua
+hl.layer_rule({ match = { namespace = "^dms:.*$" }, blur_popups = true })
+```
+
+#### Layer Rules
+
+Add these layer rules to enable blur for DMS components (only needed below Hyprland 0.56):
+
+```lua
+hl.layer_rule({
+    match = { namespace = "dms:control-center" },
+    animation = "slide right"
+})
+
+hl.layer_rule({
+    match= { namespace = "dms:workspace-overview" },
+    animation = "slide top"
+})
+-- You can find all available animations here: https://wiki.hypr.land/configuring/core/animations/
+
+-- Blur
+-- You can use match.namespace with regex to target multiple layers
+hl.layer_rule({
+    match = { namespace = "dms:(color-picker|clipboard|spotlight|settings)" },
+    blur = true,
+    ignore_alpha = 0
+})
+
+-- Dim (if you prefer a dim instead of a blur effect)
+hl.layer_rule({
+    match = { namespace = "dms:(color-picker|clipboard|spotlight|settings)" },
+    dim_around = true
+})
+```
+#### Examples
+
+<details>
+<summary>Examples</summary>
+##### Add a blur effect on the shell's Components
+
+Lower the shell's components' opacity in **Theme & Colors**>**Surface Styling** (**Surface Opacity**).
+```lua
+-- Modals
+hl.layer_rule({
+    match = { namespace = "dms:(polkit|notification-center-modal|workspace-overview|color-picker|clipboard|spotlight|settings|process-list-modal)" },
+    blur = true,
+    ignore_alpha = 0
+})
+
+-- Shell components (bar, popouts, etc.)
+hl.layer_rule({
+    match = { namespace = "dms:(bar|tooltip|toast|dock-context-menu|tray-menu-window|control-center|notification-center-popout|dash|system-update|process-list-popout|battery|popout|app-launcher)" },
+    blur = true,
+    ignore_alpha = 0
+})
+```
+</details>
+#### Performance Tuning
+
+If blur is impacting system performance, try these optimizations in order:
+
+1. **Lower Blur strength**: fewer passes cost less GPU
+2. **Use the Default blur style**: other styles cost more, animated ones far more
+3. **Turn on Xray blur**: blurs against the wallpaper instead of the stacked windows
+
+You can test blur impact in real time with `hyprctl eval` (0.55+), then restore your config with `hyprctl reload`:
+```bash
+hyprctl eval 'hl.config({ decoration = { blur = { enabled = false } } })'
+# Test performance
+hyprctl reload
+```
+
+Hyprland 0.57 removed `hyprctl keyword`.
+
+You can find more about Hyprland's layer rules [here](https://wiki.hypr.land/configuring/core/rules/layer-rules/).
+
+### Niri
+
+Niri uses a different configuration format with `layer-rule` blocks. Each rule can match namespaces using regex patterns.
+
+#### Layer Rules
+
+```kdl
+// Block out sensitive components from screencasts
+layer-rule {
+    match namespace="^dms:clipboard$"
+
+    block-out-from "screencast"
+}
+
+// Match all DMS layers with a regex
+layer-rule {
+    match namespace=r#"^dms:.*"#
+
+    // Apply rules to all DMS components
+}
+```
+
+#### Shadow Settings
+
+```kdl
+layer-rule {
+    match namespace="^dms:bar$"
+    match namespace="^dms:dock$"
+
+    shadow {
+        on
+        // off
+        softness 40
+        spread 5
+        offset x=0 y=5
+        draw-behind-window true
+        color "#00000064"
+        // inactive-color "#00000064"
+    }
+}
+```
+
+You can find more about Niri's layer rules [here](https://github.com/niri-wm/niri/wiki/Configuration:-Layer-Rules).
+
+## Other Compositors
+
+Not all compositors support blur or layer rules. Check your compositor's documentation for available options.
+
+DMS is compositor-agnostic—it only sets namespaces and lets the compositor handle the effects. Once you determine the appropriate layer rule syntax for your compositor, you can target the same namespaces listed above.
+
+- [mangowm's layer rules wiki page](https://github.com/DreamMaoMao/mangowc/wiki#layer-rules)

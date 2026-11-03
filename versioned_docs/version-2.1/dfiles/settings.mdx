@@ -1,0 +1,103 @@
+---
+title: Settings
+description: What each Dux Files setting does and where it lives
+sidebar_position: 7
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Settings
+
+Open Settings with `Ctrl+,` or from the window menu. The page has a search box, so typing a word jumps to the matching rows. Settings are stored in `~/.config/dfiles/ui-settings.json`; the key for each row is listed so you can set it from a script or the home-manager module.
+
+## General
+
+### Window
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Close behavior | `closeBehavior` | **Keep running** or **Quit** when the window's close button is used. Under the systemd unit the window always hides |
+| Register as the session file manager | `registerFileManager` | Request `org.freedesktop.FileManager1` so reveal-in-file-manager calls open here. Never takes the name from another owner |
+| Open folders in a new tab | `openLocationIn` | Locations opened from other applications get their own tab instead of replacing the current one |
+| Extract archives on open | `extractOnOpen` | Double clicking an archive extracts it beside itself instead of opening it with an app |
+| Language | `language` | Follow the system language or pick one |
+
+### Open and save dialogs
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Use Dux Files for open and save dialogs | | Serve the desktop portal's file chooser. Writes the per-user portal preference and offers to restart the portal service. See [Desktop Integration](desktop-integration#open-and-save-dialogs) |
+
+### View
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Default view | `defaultView` | List, grid or column view for folders without a remembered view |
+| Sort by | `defaultSort` | Name, size, modified or type |
+| Sort descending | `defaultSortDescending` | Reverse the default order |
+| Show hidden files | `showHidden` | Show dot-prefixed and `.hidden` entries |
+| Folders before files | `foldersFirst` | Group folders at the top |
+| Remember view and sort per folder | `rememberFolderViews` | Each folder keeps the sort and the list or grid view you last used there. Column view is not saved per folder and stays on as you browse. **Forget all folder settings** clears them |
+| Grid icon size, List icon size | | Icon sizes for each view. `Ctrl+Wheel` changes them too |
+| Count items in folders | `folderCounts` | Show the number of children next to each folder |
+
+### Files
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Open items with | `clickToOpen` | Double click or single click |
+| Confirm before moving to the trash | `confirmTrash` | Ask before `Del` |
+| Keep a list of recent files | `recentFiles` | Record opened files in the shared recently-used list and show the Recent view |
+
+### Keyboard
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Vim keys | `vimKeys` | Adds the vim layer from the [Keyboard](keyboard) page |
+| Typing in the file list | `listTyping` | Whether typed letters jump to a matching name or filter the folder |
+
+## Appearance
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Theme | `themeMode` | `light`, `dark`, or `auto` to follow the system |
+| Color source | `colorSource` | **Auto** follows [Dux Modular Shell](../dms/overview) when it runs, **Preset** picks a bundled palette (`presetTheme`), **Custom** loads your own theme file (`customThemeFile`) |
+| Radius strength | `radiusStrength` | Corner rounding across the UI |
+| Weight, Scale | `fontWeight`, `fontScale` | Typography |
+| Title bars | `windowTitleBars` | Off lets the compositor decorate windows. Open windows update when reopened |
+| Duration, Spring, Ripple effects, Reduce motion | `animationDuration`, `springBounce`, `enableRippleEffects`, `reduceMotion` | Motion |
+| Focus ring, Thickness | `focusRingEnabled`, `focusRingWidth`, `focusRingColor` | Keyboard focus indicator |
+
+## Behaviour
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Terminal | `terminal` | **Automatic** follows `$TERMINAL` and the installed emulators, or pick one |
+| Dropping without a modifier | `dragAction` | Move on the same drive and copy otherwise, always copy, always move, or ask every time |
+| Show thumbnails | `thumbnails` | Thumbnails in grid and list views |
+| Skip images larger than | `thumbnailSizeLimitMb` | Do not thumbnail files above this size |
+| Thumbnails on network locations | `networkThumbnails` | Generate thumbnails for files on gvfs mounts |
+| Include hidden files (Search in Files) | `searchHidden` | Descend into hidden folders when searching |
+| Folders to skip | `searchExcludes` | Folder names or paths, separated by commas. Build and cache folders are always skipped unless **Include ignored** is on |
+
+## Devices
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Show system partitions | `showSystemPartitions` | List internal partitions in the sidebar, not just removable media |
+| Open unmounted drives on click | `mountOnClick` | Mount a drive when you click it in the sidebar |
+
+## Next Steps
+
+- [NixOS Installation](nixos-flake) - Set these keys from home-manager
+- [IPC](ipc) - Drive Dux Files from scripts

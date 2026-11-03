@@ -1,0 +1,46 @@
+---
+title: Systemd service
+description: Start DMS as a systemd user service with your compositor session using dms systemd
+---
+
+`dms systemd` manages `dms.service` for the compositor session. It ties the service to the compositor's own session unit, so DMS starts with that compositor and nowhere else.
+
+## Usage
+
+```bash
+dms systemd enable              # start dms.service with the running compositor
+dms systemd enable --now        # and start it right away
+dms systemd enable --compositor niri
+dms systemd disable             # stop starting it with any compositor
+dms systemd status              # which sessions start it, and its current state
+dms systemd start | stop | restart
+```
+
+## What enable does
+
+`enable` runs `systemctl --user add-wants <unit> dms` against the compositor's native session unit:
+
+| Compositor | Unit | Notes |
+|------------|------|-------|
+| niri | `niri.service` | niri's own systemd integration |
+| Hyprland | `hyprland-session.target` | Shipped by Hyprland 0.57+. On older Hyprland, DMS writes the target to `~/.config/systemd/user/` and the `hyprland.lua` from `dms setup` starts it |
+| mangowm | `mango-session.target` | Mango 0.17.1+. Older Mango has no target, so `enable` fails and the Mango config starts DMS instead |
+
+The compositor is the one you are logged into. Outside a session, or to pick another one, pass `--compositor hyprland|niri|mango`.
+
+This is deliberately not `systemctl --user enable dms`. That ties the service to `graphical-session.target`, which every desktop starts, so DMS would also launch when you log into GNOME or Plasma on the same user.
+
+`dms setup` with systemd and the [Dux Installer](../duxinstall) run the same step, so you only need this command when the link went missing or you switch compositors. `dms doctor` reports `Nothing starts dms.service with <unit>` when the running compositor does not want the service.
+
+## disable
+
+Removes the `dms.service` wants link from all three compositor units and reloads systemd. Add `--now` to also stop the running service. If your compositor config starts DMS itself (`spawn-at-startup "dms" "run"`, `hl.exec_cmd("dms run")`, `exec_once=dms run`), it keeps doing so.
+
+## status
+
+```
+dms.service: enabled, active
+Starts with: niri.service, hyprland-session.target
+```
+
+`Starts with` lists the compositor units that currently want the service, which is what `dms systemd enable` adds and `dms systemd disable` removes.

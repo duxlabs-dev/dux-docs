@@ -293,16 +293,20 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/duxlabs-dev/dux-docs/tree/master',
-          lastVersion: '2.0',
+          lastVersion: '2.1',
           versions: {
             current: {
-              label: '2.1',
-              path: '2.1',
+              label: '2.2',
+              path: '2.2',
               banner: 'unreleased',
+            },
+            '2.1': {
+              label: '2.1',
+              path: '',
             },
             '2.0': {
               label: '2.0',
-              path: '',
+              path: '2.0',
             },
             '1.6': {
               label: '1.6',

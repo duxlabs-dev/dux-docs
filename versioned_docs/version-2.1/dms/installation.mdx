@@ -1,0 +1,911 @@
+---
+title: Installation
+description: Install Dux Modular Shell on your system
+sidebar_position: 2
+image: img/dankinstall.png
+---
+
+import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+This guide covers installation of Dux Modular Shell across different Linux distributions and methods.
+
+## Dependencies
+
+- [**quickshell**](https://github.com/quickshell-mirror/quickshell) (required) - The core framework
+- [**cava**](https://github.com/karlstav/cava) (optional) - Audio visualizer widget
+- [**dcal**](https://github.com/duxlabs-dev/dux-calendar) (optional) - Complete desktop calendar app with native integration for DMS calendar widgets
+- [**dsearch**](https://github.com/duxlabs-dev/dux-search) (optional) - Filesystem search engine
+- [**matugen**](https://github.com/InioX/matugen) (optional) - Material Design color palette generation
+- [**niri**](https://github.com/niri-wm/niri) (optional) - DMS Team's choice of Wayland compositor
+- [**qt6-multimedia**](https://github.com/qt/qtmultimedia) (optional) - System sound feedback
+
+For pre-built packages on Fedora, Debian, Ubuntu, and OpenSUSE, see the [Dux Repository](../repo) page.
+
+:::note
+
+Only **Quickshell** is required. All other dependencies are optional and enable specific features.
+
+:::
+
+## Arch & Derivatives
+
+`dms` is available in the official Arch repositories (extra), and as a development package in the AUR.
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo pacman -S dux-shell
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+paru -S dux-shell-git
+```
+
+</TabItem>
+</Tabs>
+
+These packages ship the shell, widgets, and CLI. Pair them with `niri`, `hyprland`, `sway`, `mangowc`, `labwc`, or `miracle-wm` packages from the official repositories for a complete desktop stack.
+
+## Fedora & Enterprise Linux
+
+Dux Modular Shell is available through COPR repositories for Fedora 43/44/45, Rawhide, and Enterprise Linux 10 (RHEL, CentOS Stream, Rocky Linux, AlmaLinux) on the latest 10.x minor.
+
+On Enterprise Linux, enable EPEL first (`sudo dnf install epel-release`, or the [EPEL release RPM](https://docs.fedoraproject.org/en-US/epel/getting-started/) on RHEL). EL support is in testing and covers niri only.
+
+:::note[Existing installs]
+
+The COPR repositories moved from `avengemedia` to `duxlabs`: `duxlabs/dms`, `duxlabs/dms-git` and `duxlabs/dux-repo` (formerly `avengemedia/danklinux`). If you installed from the `avengemedia` COPRs, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo dnf install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo dnf copr enable duxlabs/dms-git
+sudo dnf install dms
+```
+
+</TabItem>
+</Tabs>
+
+The COPR repositories also provide companion packages such as `quickshell-git`, `dux-calendar`, `matugen`, and other utilities used by the default configuration.
+
+### Fedora Atomic & bootc images
+
+Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, and other rpm-ostree or bootc images don't take `dnf install`. Packages are layered onto the image with `rpm-ostree` and become active after a reboot. The [Dux Installer](../duxinstall) detects these hosts and runs in two passes; it never installs packages or asks for a password on an image.
+
+1. Run `duxinstall`, pick your compositor and terminal. The **Packages To Layer** screen prints the exact `rpm-ostree` commands for your selection.
+2. Run those commands and reboot.
+3. Run `duxinstall` again. It resumes from the saved choices (`~/.local/state/duxinstall/resume.json`), re-checks the packages, and deploys the configuration into your home directory.
+
+Headless works the same way: `duxinstall -c niri -t ghostty -y` prints the layer commands and exits non-zero while packages are missing. Rerun the identical command after the reboot to deploy configs.
+
+To layer the packages yourself instead (niri and ghostty shown):
+
+```bash
+sudo curl -fsSLo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:duxlabs:dms.repo \
+  https://copr.fedorainfracloud.org/coprs/duxlabs/dms/repo/fedora-$(rpm -E %fedora)/duxlabs-dms-fedora-$(rpm -E %fedora).repo
+sudo rpm-ostree install dms niri ghostty quickshell matugen xwayland-satellite
+systemctl reboot
+```
+
+Then run [`dms setup`](./cli-setup) to deploy the configs. Nothing is written outside your home directory.
+
+Update with `sudo rpm-ostree upgrade` (or `dms system update`), which upgrades the image and the layered packages together; `dms update` refuses to run on image-based systems. Uninstall with `sudo rpm-ostree uninstall dms`.
+
+[Zirconium](https://github.com/zirconium-dev/zirconium/) is a ready-made bootc image with Dux Modular Shell preinstalled: `sudo bootc switch ghcr.io/zirconium-dev/zirconium:latest`.
+
+For the greeter on these images, see [Immutable and image-based systems](../dms-greeter/installation#immutable-and-image-based-systems).
+
+## Debian & Ubuntu
+
+Dux Modular Shell is available through Open Build Service (OBS) for Debian and Launchpad PPA for Ubuntu.
+
+### Debian
+
+Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
+
+Stable **quickshell** should come from Debian (see the [Dux Debian section](../repo#debian)). The Dux OBS `quickshell` package for Debian is **deprecated** — if you still have it, `sudo apt remove quickshell` then install the Debian package before continuing.
+
+:::note[Existing installs]
+
+The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
+Select your release, then choose stable or development packages.
+
+<Tabs groupId="debian-release">
+<TabItem value="trixie" label="Debian 13 (Trixie)" default>
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+# Native quickshell from Debian backports (required before dms)
+echo "deb http://deb.debian.org/debian trixie-backports main" | \
+  sudo tee /etc/apt/sources.list.d/trixie-backports.list
+sudo apt update
+sudo apt install -t trixie-backports quickshell
+
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms.list
+
+sudo apt update
+sudo apt install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms-git.list
+
+sudo apt update
+sudo apt install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="testing" label="Debian Testing">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+# Native quickshell from Debian (required before dms)
+sudo apt update
+sudo apt install quickshell
+
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms.list
+
+sudo apt update
+sudo apt install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms-git.list
+
+sudo apt update
+sudo apt install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="sid" label="Debian Sid">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+# Native quickshell from Debian (required before dms)
+sudo apt update
+sudo apt install quickshell
+
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms.list
+
+sudo apt update
+sudo apt install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+
+curl -fsSL https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dms-git.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dms-git.list
+
+sudo apt update
+sudo apt install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Ubuntu
+
+Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
+
+:::note[Existing installs]
+
+The PPAs moved from `avengemedia` to `duxlabs`: `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git` and `ppa:duxlabs/dux-repo` (formerly `ppa:avengemedia/danklinux`). If you added the `avengemedia` PPAs, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo add-apt-repository ppa:duxlabs/dms
+sudo apt update
+sudo apt install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo add-apt-repository ppa:duxlabs/dms-git
+sudo apt update
+sudo apt install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+:::tip
+
+Visit the [Dux Repository](../repo) page for OBS and PPA links and more information about available packages.\
+Add **niri** or **niri-git** to your system to get the best experience.
+
+:::
+
+### PikaOS
+
+PikaOS 4+ carries the Dux Labs packages in its own repository, so no extra repository is needed.
+
+```bash
+sudo apt update
+sudo apt install dms
+```
+
+`dms-git`, `dms-greeter`, `danksearch` and `dankcalendar` are available the same way. quickshell, niri, Hyprland and matugen come from PikaOS's own builds.
+
+## OpenSUSE & Derivatives
+
+Dux Modular Shell is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+
+:::note[Existing installs]
+
+The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
+Select your distribution, then choose stable or development packages.
+
+<Tabs groupId="opensuse-distro">
+<TabItem value="tumbleweed" label="Tumbleweed" default>
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/openSUSE_Tumbleweed/home:duxlabs-dev:dms.repo
+sudo zypper refresh
+sudo zypper install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/openSUSE_Tumbleweed/home:duxlabs-dev:dms-git.repo
+sudo zypper refresh
+sudo zypper install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="leap16" label="Leap 16">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/16.0/home:duxlabs-dev:dms.repo
+sudo zypper refresh
+sudo zypper install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/16.0/home:duxlabs-dev:dms-git.repo
+sudo zypper refresh
+sudo zypper install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="leap161" label="Leap 16.1">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/16.1/home:duxlabs-dev:dms.repo
+sudo zypper refresh
+sudo zypper install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/16.1/home:duxlabs-dev:dms-git.repo
+sudo zypper refresh
+sudo zypper install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="slowroll" label="Slowroll">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms/openSUSE_Slowroll/home:duxlabs-dev:dms.repo
+sudo zypper refresh
+sudo zypper install dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:/duxlabs-dev:/dms-git/openSUSE_Slowroll/home:duxlabs-dev:dms-git.repo
+sudo zypper refresh
+sudo zypper install dms-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+## Gentoo (Community)
+
+:::warning[Community Maintained]
+
+These overlays are maintained by the community, not the DMS team. For issues with the ebuilds, report to the respective overlay repositories.
+
+:::
+
+Dux Modular Shell is available on Gentoo through the GURU overlay.
+
+Enable the official [GURU](https://wiki.gentoo.org/wiki/Project:GURU) overlay, which packages DMS (`dux-desktop/dux-shell`) alongside companion tools `dux-desktop/dux-gop` and `dux-desktop/dux-search`.
+
+```bash
+sudo eselect repository enable guru
+sudo emaint sync -r guru
+```
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+:::note
+
+The guru overlay packages are keyworded `~amd64`, so you may need to accept the testing keyword. For example:
+
+```bash
+echo "dux-desktop/dux-shell ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dux-shell
+```
+
+:::
+
+Finally emerge the package 
+
+```bash
+sudo emerge --ask dux-desktop/dux-shell
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+:::note
+
+The live packages are not keyworded , so you will need to set keywords to `**` for the package. For example:
+
+```bash
+echo "dux-desktop/dux-shell **" | sudo tee -a /etc/portage/package.accept_keywords/dux-shell
+```
+
+:::
+
+Finally emerge the package 
+
+```bash
+sudo emerge --ask dux-desktop/dux-shell
+```
+
+</TabItem>
+</Tabs>
+
+## NixOS
+
+:::tip
+
+NixOS has dedicated documentation with two installation methods:
+- [Native nixpkgs installation](./nixos) - **Recommended** for NixOS 26.05+
+- [Flake-based installation](./nixos-flake) - Use for home-manager, per-user installs, or quicker updates
+
+:::
+
+## Solus
+
+Dux Modular Shell is available from the official Solus repository. Pair it with `niri`, `hyprland`, `sway`, or `labwc` packages from the official repositories for a complete desktop stack.
+
+```bash
+sudo eopkg install dux-shell
+```
+
+:::tip
+
+Install the `niri-session`, `sway-session`, or `labwc-session` packages for those compositors to appear in the session list for your greeter.
+
+:::
+
+## Void Linux
+
+:::note
+
+Install DMS from our R2-backed XBPS repositories or build it from source.
+
+:::
+
+:::note[Existing installs]
+
+The XBPS repositories moved to `void.duxlabs.dev`, and `danklinux/current` is now `dux-repo/current`. If you configured `void.danklinux.com`, run [`dms migrate dux`](./cli-migrate) to switch.
+
+:::
+
+<Tabs groupId="void-install-method">
+<TabItem value="repo" label="Dux Repositories" default>
+
+<Tabs>
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+echo "repository=https://void.duxlabs.dev/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -Su
+sudo xbps-install -S dms
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+echo "repository=https://void.duxlabs.dev/dms/current" | sudo tee /etc/xbps.d/dms.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -Su
+sudo xbps-install -S dms-git
+```
+
+</TabItem>
+</Tabs>
+
+:::note
+
+On the first sync, `xbps-install` will output our signing key fingerprint and ask you to type `y` to trust and import it. Verify that the key matches our official signing fingerprint.
+
+:::
+
+</TabItem>
+<TabItem value="source" label="Build from Source">
+
+If you prefer to build from source using `xbps-src`:
+
+```bash
+# Set up the Void packages tree (one time)
+git clone --depth 1 https://github.com/void-linux/void-packages.git
+cd void-packages
+./xbps-src binary-bootstrap
+
+# Copy in the DMS and Dux templates (adjust paths as needed)
+cp -R ../dux-repo/distro/void/srcpkgs/* srcpkgs/
+cp -R ../dux-shell/distro/void/srcpkgs/* srcpkgs/
+
+# Build the packages
+./xbps-src pkg dux-search
+./xbps-src pkg dms
+
+# Install the results
+sudo xbps-install --repository=hostdir/binpkgs dms dux-search
+```
+
+</TabItem>
+</Tabs>
+
+Only `quickshell` is strictly required. Install optional features as desired — `matugen` (theming), `cava` (audio visualiser), `danksearch` (search), `dankcalendar` (calendar), `qt6-multimedia` (sounds) — and a compositor such as `niri`, `hyprland`, or `sway`. See the [Void README](https://github.com/duxlabs-dev/dux-shell/tree/master/distro/void) for the full optional-dependency list.
+
+### Running Wayland from TTY (Without a Display Manager)
+
+:::tip
+
+If you use **`dms-greeter`**, all seat management, D-Bus initialization, and runtime directories are handled for you automatically. You only need the manual steps below if you choose to bypass display managers entirely and launch your compositor manually from a pure TTY shell.
+
+:::
+
+If you choose to launch your compositor (like `niri`, `Hyprland`, or `sway`) directly from a TTY login prompt instead of using a display manager (like `greetd`), Void Linux requires some manual runtime configuration because it does not run systemd by default:
+
+#### 1. Configure Seat Management (`elogind`)
+Wayland compositors require permissions to access input and graphics hardware devices directly. The `dms` package already depends on `dbus` and `elogind`; enable their services:
+
+```bash
+sudo ln -s /etc/sv/dbus /var/service/
+sudo ln -s /etc/sv/elogind /var/service/
+```
+*Note: Log out of the TTY and log back in (or reboot) so your login gets an elogind session, which grants seat access and sets `XDG_RUNTIME_DIR`. If you prefer `seatd` instead, enable it and add your user to the `_seatd` group, but do not run both seat managers at once.*
+
+#### 2. Launch the Session
+A D-Bus session bus is required for desktop utilities (including the DMS daemon and panels) to communicate. Launch your compositor wrapped inside a D-Bus session:
+
+```bash
+dbus-run-session niri
+# or
+dbus-run-session Hyprland
+```
+
+#### 3. Handle `XDG_RUNTIME_DIR`
+Wayland sockets and configurations require `XDG_RUNTIME_DIR` to be defined. If it is not automatically set on your system (e.g. if you are not running `elogind`), add the following fallback script to your shell login configuration file (e.g., `~/.bash_profile` or `~/.zprofile`):
+
+```bash
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    export XDG_RUNTIME_DIR=/run/user/$(id -u)
+    if [ ! -d "$XDG_RUNTIME_DIR" ]; then
+        mkdir -p "$XDG_RUNTIME_DIR"
+        chmod 700 "$XDG_RUNTIME_DIR"
+    fi
+fi
+```
+
+## All Other Distributions
+
+:::warning
+
+This guide doesn't cover compositor installation. You need a compatible Wayland compositor (niri, Hyprland, sway, dwl/mangowm, Miracle WM, etc.).
+
+:::
+
+### 1. Install Essential Dependencies
+
+#### Quickshell
+
+If your distribution does not provide a quickshell package, you'll need to build it from source. Quickshell requires:
+
+**Base dependencies:**
+- cmake, qt6base, qt6declarative, qtshadertools, pkg-config, cli11
+- Private Qt headers for qt6declarative (and qt6wayland on Qt < 6.10)
+- Qt 6.6 or newer. Use Qt 6.10 or newer for the lock screen: on older Qt the lock client exits on an output with a fractional scale whose logical size is not a whole number (for example 2256x1504 at 1.5), and the compositor falls back to its red lockout screen.
+
+**Key features and their dependencies:**
+- **Wayland support** (enabled by default) - qt6wayland, wayland, wayland-protocols
+- **Crash reporter** (recommended) - google-breakpad
+- **Jemalloc** (recommended for better memory management) - jemalloc
+- **System tray** - qt6dbus
+- **PAM authentication** - pam
+
+For complete build instructions and feature flags, see the [Quickshell BUILD.md](https://git.outfoxxed.me/quickshell/quickshell/raw/branch/master/BUILD.md).
+
+#### AccountsService
+
+:::note
+
+AccountsService is needed to persist user profile configurations such as profile pictures. Available in most repositories as `accountsservice`.
+
+:::
+
+```bash
+# Arch + Friends
+sudo pacman -S accountsservice
+# Fedora + Friends
+sudo dnf install accountsservice
+# Debian, Ubuntu + Friends
+sudo apt install accountsservice
+# openSUSE + Friends
+sudo zypper install accountsservice
+# Gentoo
+sudo emerge --ask sys-apps/accountsservice
+```
+
+### 2. Clone the DMS Repository
+
+Shared widgets live in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule, so clone with `--recurse-submodules`:
+
+```bash
+git clone --recurse-submodules https://github.com/duxlabs-dev/dux-shell.git ~/dms
+```
+
+In an existing clone, run `git submodule update --init` instead — `make install` fails until the submodule is present.
+
+### 3. Compile & Install the DMS Backend
+
+*Requires GO 1.26+*
+
+```bash
+cd ~/dms
+sudo make install
+```
+
+The Quickshell UI is embedded into the `dms` binary at build time. The shell runs from the embedded UI unless `-c` or `DMS_SHELL_DIR` points elsewhere. The login screen is a separate binary from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) with its own embedded UI.
+
+:::note
+
+To uninstall a source build, run `sudo make uninstall` from the repository directory.
+
+:::
+
+### 4. Install Optional Integrations
+
+Install optional components for full functionality using your distribution's package manager:
+
+- `dsearch` - Filesystem search engine
+- `matugen` - Material Design color palette generation
+- `i2c-tools` - ddc monitor backlight control
+- `dcal` - Desktop calendar integration
+- `cava` - Audio visualizer widget
+- `qt6-multimedia` - System sound feedback
+
+## Post Install
+
+After completing installation:
+
+1. **Generate compositor config** (niri, Hyprland, mangowm): Run `dms setup` to create a starter configuration with DMS keybinds and autostart. Other compositors (sway, labwc, Miracle WM) are supported but require manual configuration.
+2. Enable the systemd service (recommended) or add `dms run` to your compositor config
+3. Configure your compositor keybinds - see the [Keybinds & IPC](keybinds-ipc) guide
+4. Customize appearance via [Themes](application-themes)
+5. Extend functionality with [Plugins](plugins-overview)
+
+See [Managing Your Installation](managing) for detailed guidance on service management, environment variables, and updates.
+
+### Systemd Integration (Recommended)
+
+:::tip[Dux Installer Users]
+
+If you used the [Dux Installer](../duxinstall) or `dms setup` with systemd, this is already configured. Both bind `dms.service` to your compositor's session unit.
+
+:::
+
+**Enable autostart:**
+
+```bash
+dms systemd enable
+```
+
+This binds `dms.service` to the running compositor's session unit (`niri.service`, `hyprland-session.target` or `mango-session.target`), so DMS starts only with that compositor. See [Systemd service](./cli-systemd.mdx). The sections below show the same wiring by hand.
+
+**Manual control:**
+
+```bash
+# Start DMS now
+systemctl --user start dms
+
+# Check status
+systemctl --user status dms
+
+# View logs
+journalctl --user -u dms -f
+
+# Restart DMS
+systemctl --user restart dms
+
+# Disable autostart
+dms systemd disable
+```
+
+:::warning
+
+If using systemd autostart, remove `dms run` / `spawn "dms" "run"` / `exec_once=dms run` from your compositor's configuration to avoid running DMS twice.
+
+:::
+
+### Compositor-Specific Systemd Setup
+
+Different compositors have different levels of systemd session integration. Choose the section that matches your compositor.
+
+:::tip[Why use add-wants?]
+
+If you have multiple desktop environments installed (e.g., Plasma, GNOME, niri), using `systemctl --user enable dms` starts DMS in *all* of them. Using `add-wants` binds DMS to a specific compositor's service or session target, so it only runs where you want it. DMS won't launch when you log into Plasma or GNOME.
+
+:::
+
+#### niri
+
+niri has native systemd session integration. Bind DMS to niri's service:
+
+```bash
+systemctl --user add-wants niri.service dms
+```
+
+DMS starts when niri starts and stops when niri exits. It won't run in other sessions.
+
+#### Hyprland
+
+Hyprland 0.57 and newer ship and start `hyprland-session.target` themselves, so you can skip creating the unit below. Keep the `dbus-update-activation-environment` line in your config and still run the `add-wants` step at the end of this section.
+
+On 0.55 and 0.56, Hyprland doesn't initialize the systemd user session by default. You need to export the environment to systemd for user services to work. `dms setup` and `duxinstall` write this unit for you; to create it by hand:
+
+```ini title="~/.config/systemd/user/hyprland-session.target"
+[Unit]
+Description=Hyprland Session Target
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target
+PropagatesStopTo=graphical-session.target
+```
+
+Add to your Hyprland config (after any `env =` lines):
+
+```lua title="~/.config/hypr/hyprland.lua"
+hl.on("hyprland.start", function()
+  hl.exec_cmd("dbus-update-activation-environment --systemd --all")
+  hl.exec_cmd("systemctl --user start hyprland-session.target")
+end)
+```
+
+Bind DMS to the session target:
+
+```bash
+systemctl --user add-wants hyprland-session.target dms
+```
+
+#### mangowm {/* #mangowc */}
+
+[mangowm](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling compositor based on dwl (wlroots). DMS needs mangowm 0.18 or newer.
+
+mangowm ships `mango-session.target` (since 0.17.1) and starts it itself after exporting the environment to systemd, so you only need the `add-wants` step at the end of this section. If your package doesn't install the target, create it by hand:
+
+```ini title="~/.config/systemd/user/mango-session.target"
+[Unit]
+Description=mangowm Session Target
+Requires=graphical-session.target
+After=graphical-session.target
+```
+
+Add to your mangowm config:
+
+```conf title="~/.config/mango/config.conf"
+exec_once=dbus-update-activation-environment --systemd --all
+exec_once=systemctl --user start mango-session.target
+```
+
+Bind DMS to the session:
+
+```bash
+systemctl --user add-wants mango-session.target dms
+```
+
+#### Sway
+
+Sway (wlroots-based) needs the environment exported for systemd services.
+
+Create a session target:
+
+```ini title="~/.config/systemd/user/sway-session.target"
+[Unit]
+Description=Sway Session Target
+Requires=graphical-session.target
+After=graphical-session.target
+```
+
+Add to your Sway config:
+
+```conf title="~/.config/sway/config"
+exec dbus-update-activation-environment --systemd --all
+exec systemctl --user start sway-session.target
+```
+
+Bind DMS to the session:
+
+```bash
+systemctl --user add-wants sway-session.target dms
+```
+
+#### Miracle WM
+
+[Miracle WM](https://github.com/miracle-wm-org/miracle-wm) is a tiling Wayland compositor built on Mir. Like other compositors without native systemd session integration, it requires manual environment export.
+
+Create a session target:
+
+```ini title="~/.config/systemd/user/miracle-wm-session.target"
+[Unit]
+Description=Miracle WM Session Target
+Requires=graphical-session.target
+After=graphical-session.target
+```
+
+Bind DMS to the session:
+
+```bash
+systemctl --user add-wants miracle-wm-session.target dms
+```

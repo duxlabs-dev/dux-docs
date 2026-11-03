@@ -1,0 +1,51 @@
+---
+title: Reboot to Another OS
+description: Reboot straight into Windows or another installed system from the power menu
+sidebar_position: 6
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+On a UEFI machine with more than one OS, DMS can reboot straight into another one from the
+power menu. It sets the firmware's one-time `BootNext` entry, so the boot after that follows
+your usual order. It needs `efibootmgr`.
+
+## Using it
+
+Add entries under **Settings → Power & Sleep → Reboot to another OS**. Each one shows up in
+the power menu and the launcher as **Reboot to** followed by its name. In the power menu,
+keys `1` to `9` pick them in the order you added them.
+
+DMS asks for your password before it reboots, since only root can set `BootNext`. If a toast
+says the boot entry changed, your firmware renumbered its entries. Remove the entry and add
+it again.
+
+## Skipping the password
+
+Save this as `/etc/polkit-1/rules.d/50-dms-bootnext.rules`:
+
+```js
+polkit.addRule(function (action, subject) {
+    if (action.id !== "org.freedesktop.policykit.exec" || !subject.local || !subject.active)
+        return polkit.Result.NOT_HANDLED;
+    var program = action.lookup("program");
+    if (program !== "/usr/bin/efibootmgr" && program !== "/usr/sbin/efibootmgr")
+        return polkit.Result.NOT_HANDLED;
+    if (!new RegExp("^" + program + " --bootnext [0-9A-F]{4}$").test(action.lookup("command_line")))
+        return polkit.Result.NOT_HANDLED;
+    return polkit.Result.YES;
+});
+```
+
+Any program running as you can then pick your next boot entry without a password, including
+the PXE and USB entries your firmware lists.

@@ -1,0 +1,133 @@
+---
+title: Keyboard
+description: Every keyboard shortcut in Dux Files, plus the vim key layer
+sidebar_position: 6
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Keyboard
+
+Press `?` or `F1` in any window for this list as an overlay. Turn on **Settings → General → Vim keys** to add the keys in the Vim column; the regular keys keep working. Typing letters in the file list jumps to a matching name or filters the folder, which **Settings → General → Typing in the file list** chooses.
+
+## Getting Around
+
+| Action | Keys | Vim |
+| --- | --- | --- |
+| Open | `Return` | `l` |
+| Open in new tab | `Shift+Return` | |
+| Open in the other pane | `Ctrl+Shift+Return` | |
+| Open the containing folder | `Ctrl+Return` | |
+| Open with | `Ctrl+Shift+O` | |
+| Open in terminal | `Ctrl+Alt+T` | |
+| Move through the folder | `Up` `Down` `Left` `Right` | `j` `k` |
+| Jump to the start, the end or the next screen | `Home` `End` `PgUp` `PgDown` | `gg` `G` |
+| Jump to a name or filter the folder | type letters | |
+| Go to the parent folder | `Alt+Up`, `Backspace` | `h` |
+| Go to the home folder | `Alt+Home` | `gh` |
+| Back | `Alt+Left` | `H` |
+| Forward | `Alt+Right` | `L` |
+| Bookmark this folder | `Ctrl+D` | |
+| Type a location | `Ctrl+L` | |
+| Jump to a folder you visited | `Ctrl+Shift+K` | |
+| Search in Files | `Ctrl+F`, `/` | |
+| Search your home folder | `Ctrl+Shift+F` | |
+| Move to the search filters | `Alt+F` | |
+| New window | `Ctrl+N` | |
+| New tab | `Ctrl+T` | `t` |
+| Close tab | `Ctrl+W` | |
+| Reopen the closed tab | `Ctrl+Shift+T` | |
+| Next tab | `Ctrl+Tab`, `Ctrl+PgDown` | `gt` |
+| Previous tab | `Ctrl+Shift+Tab`, `Ctrl+PgUp` | `gT` |
+| Go to that tab | `Alt+1` to `Alt+9` | |
+| Move the tab left | `Ctrl+Shift+PgUp` | |
+| Move the tab right | `Ctrl+Shift+PgDown` | |
+| Split view | `F3` | |
+| Switch pane | `F6` | |
+| Toggle sidebar | `F9` | |
+| Focus the sidebar | `Ctrl+B` | `s` |
+
+## View
+
+| Action | Keys | Vim |
+| --- | --- | --- |
+| List view | `Ctrl+1` | |
+| Grid view | `Ctrl+2` | |
+| Column view | `Ctrl+3` | |
+| Larger icons | `Ctrl++`, `Ctrl+=` | |
+| Smaller icons | `Ctrl+-` | |
+| Default icon size | `Ctrl+0` | |
+| Resize icons | `Ctrl+Wheel` | |
+| Sort by the next column | `Ctrl+Shift+S` | |
+| Reverse the sort order | `Ctrl+Shift+R` | |
+| Show hidden files | `Ctrl+H` | `.` |
+| Preview | `Space` | |
+| Preview the next or previous selected item | `Shift+Space`, `Ctrl+Shift+Space` | |
+| Scroll the preview | `Alt+PgUp`, `Alt+PgDown` | |
+| Resize the preview, or reset its width | `Ctrl+Alt+Left`, `Ctrl+Alt+Right`, `Ctrl+Alt+0` | |
+| Reload | `F5`, `Ctrl+R` | |
+| Keyboard shortcuts | `F1`, `?` | |
+| Settings | `Ctrl+,` | |
+
+## Selection
+
+| Action | Keys | Vim |
+| --- | --- | --- |
+| Select all | `Ctrl+A` | |
+| Invert the selection | `Ctrl+Shift+A` | |
+| Add or remove the item under the cursor | `Ctrl+Space` | `v` |
+| Select a range | `Shift+Click`, `Shift+Arrows` | `J` `K` |
+| Add or remove one item | `Ctrl+Click` | |
+| Clear the selection | `Esc` | |
+
+## Files
+
+| Action | Keys | Vim |
+| --- | --- | --- |
+| Copy | `Ctrl+C` | `y` |
+| Cut | `Ctrl+X` | `x` |
+| Paste | `Ctrl+V` | `p` |
+| Paste as link | `Ctrl+Shift+V` | |
+| Rename | `F2` | `r` |
+| Move to Trash | `Del` | `d` |
+| Delete permanently | `Shift+Del` | `D` |
+| Undo | `Ctrl+Z` | `u` |
+| Redo | `Ctrl+Shift+Z`, `Ctrl+Y` | |
+| Duplicate | `Ctrl+Shift+D` | |
+| New folder | `Ctrl+Shift+N` | |
+| New folder with selection | `Ctrl+Alt+N` | |
+| Copy location path | `Ctrl+Shift+C` | |
+| Properties | `Ctrl+I`, `Alt+Return` | |
+| Open the context menu | `Menu`, `Shift+F10` | |
+
+## Sidebar
+
+These apply while the sidebar has focus (`Ctrl+B`).
+
+| Action | Keys | Vim |
+| --- | --- | --- |
+| Move through the sidebar | `Up` `Down` | `j` `k` |
+| Open the place | `Return`, `Space` | |
+| Remove the bookmark or eject the drive | `Del` | |
+| Rename the bookmark | `F2` | |
+| Open the bookmark menu | `Menu`, `Shift+F10` | |
+| Back to the files | `Esc` | |
+
+## Drag and Drop
+
+A plain drag moves on the same drive and copies otherwise. **Settings → Behaviour → Dropping without a modifier** changes that to always copy, always move, or ask every time.
+
+## Next Steps
+
+- [Settings](settings) - Vim keys, type-ahead and the rest
+- [IPC](ipc) - Bind compositor keys to Dux Files actions
