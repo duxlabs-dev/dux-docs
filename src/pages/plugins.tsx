@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
 import { useLocation, useHistory } from '@docusaurus/router';
+import {ArrowDownward, ArrowUpward, Download, Forum, GridView, KeyboardArrowDown, ThumbUp, ViewList} from 'material-symbols/rounded';
 import LandingBackground from '../components/LandingBackground';
+import {IconButton} from '@/components/ui/icon-button';
+import {Segmented} from '@/components/ui/segmented';
 import styles from './plugins.module.css';
 
 interface Plugin {
@@ -120,22 +123,121 @@ interface ThemesResponse {
 
 type ActiveTab = 'plugins' | 'themes';
 
-const categories = [
-  { id: 'all', label: 'All Plugins' },
-  { id: 'utilities', label: 'Utilities' },
-  { id: 'appearance', label: 'Appearance' },
-  { id: 'monitoring', label: 'Monitoring' },
+const pluginTypes = [
+  { id: 'all', label: 'All Types' },
+  { id: 'dankbar-widget', label: 'Bar Widget' },
+  { id: 'control-center', label: 'Control Center' },
+  { id: 'launcher', label: 'Launcher' },
+  { id: 'daemon', label: 'Daemon' },
+  { id: 'desktop-widget', label: 'Desktop Widget' },
+  { id: 'dash-tab', label: 'Dash Tab' },
+  { id: 'dash-card', label: 'Dash Card' },
 ];
 
-const capabilities = [
-  { id: 'all', label: 'All Types' },
-  { id: 'dankbar-widget', label: 'DankBar Widget' },
-  { id: 'desktop-widget', label: 'Desktop Widget' },
-  { id: 'launcher', label: 'Launcher' },
-  { id: 'control-center', label: 'Control Center' },
-  { id: 'watch-events', label: 'Event Watcher' },
-  { id: 'set-wallpaper', label: 'Wallpaper' },
-];
+const pluginTypeLabel = (capability: string): string =>
+  pluginTypes.find(type => type.id === capability)?.label ?? capability;
+
+const categoryLabels: Record<string, string> = {
+  utilities: 'Utilities',
+  monitoring: 'Monitoring',
+  system: 'System',
+  appearance: 'Appearance',
+  productivity: 'Productivity',
+  media: 'Media',
+  networking: 'Networking',
+  audio: 'Audio',
+};
+
+const categoryLabel = (id: string): string =>
+  categoryLabels[id] ?? id.charAt(0).toUpperCase() + id.slice(1);
+
+const minCategorySize = 2;
+
+function categoryOptions(plugins: Plugin[]): { id: string; label: string }[] {
+  const counts: Record<string, number> = {};
+  for (const plugin of plugins) {
+    if (!plugin.category) continue;
+    counts[plugin.category] = (counts[plugin.category] ?? 0) + 1;
+  }
+  const ids = Object.keys(counts)
+    .filter(id => counts[id] >= minCategorySize)
+    .sort((a, b) => counts[b] - counts[a] || a.localeCompare(b));
+  return [{ id: 'all', label: 'All Plugins' }, ...ids.map(id => ({ id, label: categoryLabel(id) }))];
+}
+
+interface UrlFilters {
+  tab: ActiveTab;
+  type: string[];
+  category: string[];
+  compositor: string[];
+}
+
+type MultiFilterKey = Exclude<keyof UrlFilters, 'tab'>;
+
+const multiFilterKeys: MultiFilterKey[] = ['type', 'category', 'compositor'];
+
+const readListParam = (params: URLSearchParams, key: string): string[] =>
+  (params.get(key) ?? '').split(',').filter(Boolean);
+
+const readUrlFilters = (search: string): UrlFilters => {
+  const params = new URLSearchParams(search);
+  return {
+    tab: params.get('tab') === 'themes' ? 'themes' : 'plugins',
+    type: readListParam(params, 'type'),
+    category: readListParam(params, 'category'),
+    compositor: readListParam(params, 'compositor'),
+  };
+};
+
+const writeUrlFilters = (search: string, filters: UrlFilters): string => {
+  const params = new URLSearchParams(search);
+  if (filters.tab === 'plugins') {
+    params.delete('tab');
+  } else {
+    params.set('tab', filters.tab);
+  }
+  for (const key of multiFilterKeys) {
+    if (filters[key].length === 0) {
+      params.delete(key);
+      continue;
+    }
+    params.set(key, filters[key].join(','));
+  }
+  return params.toString();
+};
+
+const toggleValue = (values: string[], value: string): string[] =>
+  values.includes(value) ? values.filter(v => v !== value) : [...values, value];
+
+interface FilterChipGroupProps {
+  label: string;
+  options: { id: string; label: string }[];
+  selected: string[];
+  onChange: (next: string[]) => void;
+}
+
+function FilterChipGroup({ label, options, selected, onChange }: FilterChipGroupProps) {
+  return (
+    <div className={styles.filterGroup}>
+      <label className={styles.filterLabel}>{label}</label>
+      <div className={styles.filterButtons}>
+        {options.map(option => {
+          const active = option.id === 'all' ? selected.length === 0 : selected.includes(option.id);
+          return (
+            <button
+              key={option.id}
+              className={`${styles.filterButton} ${active ? styles.active : ''}`}
+              aria-pressed={active}
+              onClick={() => onChange(option.id === 'all' ? [] : toggleValue(selected, option.id))}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 const compositors = [
   { id: 'all', label: 'All Compositors' },
@@ -297,9 +399,7 @@ function SortDropdown({ id, options, value, onChange }: SortDropdownProps) {
         aria-expanded={open}
       >
         <span>{selected?.label ?? 'Sort'}</span>
-        <span className={`material-symbols-outlined ${styles.sortDropdownChevron} ${open ? styles.sortDropdownChevronOpen : ''}`}>
-          expand_more
-        </span>
+        <KeyboardArrowDown size={18} className={`${styles.sortDropdownChevron} ${open ? styles.sortDropdownChevronOpen : ''}`} />
       </button>
       {open && (
         <ul className={styles.sortDropdownMenu} role="listbox" aria-labelledby={id}>
@@ -329,22 +429,18 @@ export default function Plugins() {
   const location = useLocation();
   const history = useHistory();
 
-  const getTabFromUrl = (): ActiveTab => {
-    const params = new URLSearchParams(location.search);
-    const tab = params.get('tab');
-    return tab === 'themes' ? 'themes' : 'plugins';
-  };
+  const initialFilters = readUrlFilters(location.search);
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>(getTabFromUrl);
+  const [activeTab, setActiveTab] = useState<ActiveTab>(initialFilters.tab);
   const [plugins, setPlugins] = useState<Plugin[]>([]);
   const [filteredPlugins, setFilteredPlugins] = useState<Plugin[]>([]);
   const [themes, setThemes] = useState<Theme[]>([]);
   const [filteredThemes, setFilteredThemes] = useState<Theme[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedCapability, setSelectedCapability] = useState('all');
-  const [selectedCompositor, setSelectedCompositor] = useState('all');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(initialFilters.category);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>(initialFilters.type);
+  const [selectedCompositors, setSelectedCompositors] = useState<string[]>(initialFilters.compositor);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFirstPartyOnly, setShowFirstPartyOnly] = useState(false);
   const [showReviewedOnly, setShowReviewedOnly] = useState(false);
@@ -365,23 +461,26 @@ export default function Plugins() {
     return map;
   }, [plugins]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const currentTab = params.get('tab');
-    const expectedTab = activeTab === 'themes' ? 'themes' : null;
+  const categories = React.useMemo(() => categoryOptions(plugins), [plugins]);
 
-    if (currentTab !== expectedTab) {
-      if (expectedTab) {
-        params.set('tab', expectedTab);
-      } else {
-        params.delete('tab');
-      }
-      history.replace({ search: params.toString() });
+  useEffect(() => {
+    const next = writeUrlFilters(location.search, {
+      tab: activeTab,
+      type: selectedTypes,
+      category: selectedCategories,
+      compositor: selectedCompositors,
+    });
+    if (next !== new URLSearchParams(location.search).toString()) {
+      history.replace({ search: next });
     }
-  }, [activeTab]);
+  }, [activeTab, selectedTypes, selectedCategories, selectedCompositors]);
 
   useEffect(() => {
-    setActiveTab(getTabFromUrl());
+    const filters = readUrlFilters(location.search);
+    setActiveTab(filters.tab);
+    setSelectedTypes(filters.type);
+    setSelectedCategories(filters.category);
+    setSelectedCompositors(filters.compositor);
   }, [location.search]);
 
   useEffect(() => {
@@ -396,7 +495,7 @@ export default function Plugins() {
 
   useEffect(() => {
     filterPlugins();
-  }, [plugins, selectedCategory, selectedCapability, selectedCompositor, searchQuery, showFirstPartyOnly, showReviewedOnly, hideBroken]);
+  }, [plugins, selectedCategories, selectedTypes, selectedCompositors, searchQuery, showFirstPartyOnly, showReviewedOnly, hideBroken]);
 
   useEffect(() => {
     filterThemes();
@@ -406,7 +505,7 @@ export default function Plugins() {
     try {
       setLoading(true);
       const isDev = process.env.NODE_ENV === 'development';
-      const apiOrigin = isDev ? 'http://localhost:8337' : 'https://api.danklinux.com';
+      const apiOrigin = isDev ? 'http://localhost:8337' : 'https://api.duxlabs.dev';
       const apiUrl = `${apiOrigin}/plugins?sortBy=${sortBy}&order=${sortOrder}`;
       const response = await fetch(apiUrl);
       if (!response.ok) {
@@ -429,17 +528,17 @@ export default function Plugins() {
   const filterPlugins = () => {
     let filtered = [...(plugins ?? [])];
 
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(p => p.category === selectedCategory);
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter(p => selectedCategories.includes(p.category));
     }
 
-    if (selectedCapability !== 'all') {
-      filtered = filtered.filter(p => p.capabilities.includes(selectedCapability));
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter(p => selectedTypes.some(type => p.capabilities.includes(type)));
     }
 
-    if (selectedCompositor !== 'all') {
+    if (selectedCompositors.length > 0) {
       filtered = filtered.filter(p =>
-        p.compositors.includes(selectedCompositor) || p.compositors.includes('any')
+        p.compositors.includes('any') || selectedCompositors.some(comp => p.compositors.includes(comp))
       );
     }
 
@@ -474,7 +573,7 @@ export default function Plugins() {
     try {
       setLoading(true);
       const isDev = process.env.NODE_ENV === 'development';
-      const baseUrl = isDev ? 'http://localhost:8337/themes' : 'https://api.danklinux.com/themes';
+      const baseUrl = isDev ? 'http://localhost:8337/themes' : 'https://api.duxlabs.dev/themes';
       const themeSort = pluginOnlySorts.includes(sortBy) ? 'updated_at' : sortBy;
       const apiUrl = `${baseUrl}?sortBy=${themeSort}`;
       const response = await fetch(apiUrl);
@@ -520,7 +619,7 @@ export default function Plugins() {
   const getPluginIcon = (plugin: Plugin) => {
     if (plugin.icon) {
       return (
-        <span className={`material-symbols-outlined ${styles.pluginIconMaterial}`}>
+        <span className={`material-symbols-rounded ${styles.pluginIconMaterial}`}>
           {plugin.icon}
         </span>
       );
@@ -631,11 +730,11 @@ export default function Plugins() {
   return (
     <Layout
       title="Plugins & Themes"
-      description="Discover and install plugins and themes for DankMaterialShell - extend your desktop with widgets, launchers, and more.">
+      description="Discover and install plugins and themes for Dux Shell - extend your desktop with widgets, launchers, and more.">
       <Head>
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </Head>
       <div className={styles.container}>
@@ -647,23 +746,19 @@ export default function Plugins() {
             </h1>
             <p className={styles.subtitle}>
               {activeTab === 'plugins'
-                ? 'Extend DankMaterialShell with powerful plugins for widgets, launchers, and more'
+                ? 'Extend Dux Shell with powerful plugins for widgets, launchers, and more'
                 : 'Customize your desktop with beautiful color schemes'}
             </p>
-            <div className={styles.tabContainer}>
-              <button
-                className={`${styles.tabButton} ${activeTab === 'plugins' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('plugins')}
-              >
-                Plugins
-              </button>
-              <button
-                className={`${styles.tabButton} ${activeTab === 'themes' ? styles.activeTab : ''}`}
-                onClick={() => setActiveTab('themes')}
-              >
-                Themes
-              </button>
-            </div>
+            <Segmented
+              label="Catalog"
+              className={styles.tabContainer}
+              value={activeTab}
+              onChange={setActiveTab}
+              options={[
+                {value: 'plugins', label: 'Plugins'},
+                {value: 'themes', label: 'Themes'},
+              ]}
+            />
           </section>
 
           <section className={styles.filters}>
@@ -671,6 +766,7 @@ export default function Plugins() {
               <input
                 type="text"
                 placeholder={activeTab === 'plugins' ? 'Search plugins...' : 'Search themes...'}
+                aria-label={activeTab === 'plugins' ? 'Search plugins' : 'Search themes'}
                 className={styles.searchInput}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -721,84 +817,33 @@ export default function Plugins() {
                     }}
                   />
                   {activeTab === 'plugins' && sortBy !== 'random' && (
-                    <button
-                      type="button"
-                      className={styles.sortOrderButton}
-                      onClick={() => setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
+                    <IconButton
+                      label={sortOrder === 'asc' ? 'Sort ascending' : 'Sort descending'}
                       title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-                      aria-label={sortOrder === 'asc' ? 'Sort ascending' : 'Sort descending'}
+                      onClick={() => setSortOrder(prev => (prev === 'asc' ? 'desc' : 'asc'))}
                     >
-                      <span className="material-symbols-outlined">
-                        {sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward'}
-                      </span>
-                    </button>
+                      {sortOrder === 'asc' ? <ArrowUpward /> : <ArrowDownward />}
+                    </IconButton>
                   )}
                 </div>
-                <div className={styles.viewToggle}>
-                  <button
-                    className={`${styles.viewButton} ${viewMode === 'grid' ? styles.active : ''}`}
-                    onClick={() => setViewMode('grid')}
-                    title="Grid view"
-                  >
-                    <span className="material-symbols-outlined">grid_view</span>
-                  </button>
-                  <button
-                    className={`${styles.viewButton} ${viewMode === 'list' ? styles.active : ''}`}
-                    onClick={() => setViewMode('list')}
-                    title="List view"
-                  >
-                    <span className="material-symbols-outlined">view_list</span>
-                  </button>
-                </div>
+                <Segmented
+                  label="View"
+                  className={styles.viewToggle}
+                  value={viewMode}
+                  onChange={setViewMode}
+                  options={[
+                    {value: 'grid', icon: <GridView />, label: <span className="sr-only">Grid view</span>},
+                    {value: 'list', icon: <ViewList />, label: <span className="sr-only">List view</span>},
+                  ]}
+                />
               </div>
             </div>
 
             {activeTab === 'plugins' && (
               <div className={styles.filterRow}>
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Category</label>
-                  <div className={styles.filterButtons}>
-                    {categories.map(cat => (
-                      <button
-                        key={cat.id}
-                        className={`${styles.filterButton} ${selectedCategory === cat.id ? styles.active : ''}`}
-                        onClick={() => setSelectedCategory(cat.id)}
-                      >
-                        {cat.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Type</label>
-                  <div className={styles.filterButtons}>
-                    {capabilities.map(cap => (
-                      <button
-                        key={cap.id}
-                        className={`${styles.filterButton} ${selectedCapability === cap.id ? styles.active : ''}`}
-                        onClick={() => setSelectedCapability(cap.id)}
-                      >
-                        {cap.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className={styles.filterGroup}>
-                  <label className={styles.filterLabel}>Compositor</label>
-                  <div className={styles.filterButtons}>
-                    {compositors.map(comp => (
-                      <button
-                        key={comp.id}
-                        className={`${styles.filterButton} ${selectedCompositor === comp.id ? styles.active : ''}`}
-                        onClick={() => setSelectedCompositor(comp.id)}
-                      >
-                        {comp.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <FilterChipGroup label="Category" options={categories} selected={selectedCategories} onChange={setSelectedCategories} />
+                <FilterChipGroup label="Type" options={pluginTypes} selected={selectedTypes} onChange={setSelectedTypes} />
+                <FilterChipGroup label="Compositor" options={compositors} selected={selectedCompositors} onChange={setSelectedCompositors} />
               </div>
             )}
 
@@ -812,7 +857,7 @@ export default function Plugins() {
           {loading && (
             <div className={styles.loadingContainer}>
               <div className={styles.spinner}></div>
-              <p>Loading {activeTab}...</p>
+              <p>{`Loading ${activeTab}...`}</p>
             </div>
           )}
 
@@ -862,7 +907,7 @@ export default function Plugins() {
                           className={styles.upvoteChip}
                           title="Upvote on GitHub"
                         >
-                          <span className="material-symbols-outlined">thumb_up</span>
+                          <ThumbUp size={15} />
                           {plugin.upvotes}
                         </a>
                       )}
@@ -877,7 +922,7 @@ export default function Plugins() {
                             {STATUS_LABELS[s] || s}
                           </span>
                         ))}
-                        <span className={styles.tag}>{plugin.category}</span>
+                        <span className={styles.tag}>{categoryLabel(plugin.category)}</span>
                         {viewMode === 'grid' && plugin.version && (
                           <span className={styles.tag}>v{plugin.version}</span>
                         )}
@@ -889,7 +934,7 @@ export default function Plugins() {
                       <div className={styles.pluginCapabilities}>
                         {plugin.capabilities.slice(0, 2).map(cap => (
                           <span key={cap} className={styles.capability}>
-                            {cap}
+                            {pluginTypeLabel(cap)}
                           </span>
                         ))}
                         {plugin.capabilities.length > 2 && (
@@ -945,7 +990,7 @@ export default function Plugins() {
                         href={`dms://plugin/install/${plugin.id}`}
                         className={styles.installButton}
                       >
-                        <span className="material-symbols-outlined">download</span>
+                        <Download size={18} />
                         {viewMode === 'grid' && 'Install'}
                       </a>
                       <a
@@ -968,7 +1013,7 @@ export default function Plugins() {
                           className={styles.discussButton}
                           title="Discuss / Vote"
                         >
-                          <span className="material-symbols-outlined">forum</span>
+                          <Forum size={18} />
                           {viewMode === 'grid' && <span>Discuss</span>}
                         </a>
                       )}
@@ -1004,6 +1049,7 @@ export default function Plugins() {
                             <button
                               key={variant.id}
                               className={`${styles.variantButton} ${getSelectedVariant(theme) === variant.id ? styles.active : ''}`}
+                              aria-pressed={getSelectedVariant(theme) === variant.id}
                               onClick={() => setSelectedVariants(prev => ({ ...prev, [theme.id]: variant.id }))}
                             >
                               {variant.name}
@@ -1022,6 +1068,7 @@ export default function Plugins() {
                               <button
                                 key={flavor.id}
                                 className={`${styles.variantButton} ${getSelectedFlavor(theme) === flavor.id ? styles.active : ''}`}
+                                aria-pressed={getSelectedFlavor(theme) === flavor.id}
                                 onClick={() => setSelectedFlavors(prev => ({ ...prev, [theme.id]: flavor.id }))}
                               >
                                 {flavor.name}
@@ -1036,6 +1083,7 @@ export default function Plugins() {
                               <button
                                 key={accent.id}
                                 className={`${styles.variantButton} ${getSelectedAccent(theme) === accent.id ? styles.active : ''}`}
+                                aria-pressed={getSelectedAccent(theme) === accent.id}
                                 onClick={() => setSelectedAccents(prev => ({ ...prev, [theme.id]: accent.id }))}
                               >
                                 {accent.name}
@@ -1125,7 +1173,7 @@ export default function Plugins() {
                         href={getInstallUrl(theme)}
                         className={styles.installButton}
                       >
-                        <span className="material-symbols-outlined">download</span>
+                        <Download size={18} />
                         Install Theme
                       </a>
                     </div>
@@ -1140,9 +1188,9 @@ export default function Plugins() {
               <p>No plugins found matching your criteria.</p>
               <button
                 onClick={() => {
-                  setSelectedCategory('all');
-                  setSelectedCapability('all');
-                  setSelectedCompositor('all');
+                  setSelectedCategories([]);
+                  setSelectedTypes([]);
+                  setSelectedCompositors([]);
                   setSearchQuery('');
                   setShowFirstPartyOnly(false);
                   setShowReviewedOnly(false);

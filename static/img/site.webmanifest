@@ -1,7 +1,7 @@
 {
-  "name": "Dank Linux",
-  "short_name": "Dank Linux",
-  "description": "A modern Linux desktop suite with beautiful widgets and powerful monitoring - optimized for niri, Hyprland, MangoWC, dwl, and Sway.",
+  "name": "Dux",
+  "short_name": "Dux",
+  "description": "Dux Shell and tools: a modern Wayland desktop suite for niri, Hyprland, MangoWC, dwl, labwc, and Sway.",
   "icons": [
     {
       "src": "/img/android-chrome-192x192.png",
@@ -15,6 +15,6 @@
     }
   ],
   "theme_color": "#805AD5",
-  "background_color": "#111111",
+  "background_color": "#070609",
   "display": "standalone"
 }

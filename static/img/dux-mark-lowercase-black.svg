@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <defs>
+    <linearGradient id="duxGradLight" x1="10%" y1="10%" x2="90%" y2="90%">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="50%" stop-color="#581C87"/>
+      <stop offset="100%" stop-color="#3B0764"/>
+    </linearGradient>
+    <linearGradient id="duxAccentLight" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9333EA" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#6B21A8" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer lowercase d: bowl on the left, ascender stem on the right -->
+  <path d="M84 8 V88 H48 C28 88 12 76 12 59 C12 42 28 30 48 30 H66 V8 Z" fill="url(#duxGradLight)" />
+  <!-- Inner Cutout -->
+  <path d="M66 46 H50 C38 46 28 51 28 59 C28 67 38 72 50 72 H66 Z" fill="#FFFFFF" />
+  <!-- Backward Chevron Facet -->
+  <path d="M66 46 L44 59 L66 72 Z" fill="url(#duxAccentLight)" opacity="0.9" />
+  <path d="M66 53 L56 59 L66 65 Z" fill="#FFFFFF" />
+</svg>

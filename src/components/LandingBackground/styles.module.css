@@ -1,124 +1,337 @@
-.background {
-  --mouse-x: 50vw;
-  --mouse-y: 50vh;
+/* ===== Viewport-fixed tonal blob canvas ===== */
+
+.fixedCanvas {
   position: fixed;
   inset: 0;
-  z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  z-index: 0;
 }
 
-.orb1,
-.orb2,
-.orb3 {
+/* ===== Hero shapes layer (scrolls with the page) ===== */
+
+.heroShapesLayer {
+  --ambient-ease: cubic-bezier(0.37, 0, 0.63, 1);
   position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===== Tonal blobs ===== */
+
+.blobPrimary,
+.blobSecondary,
+.blobTertiary {
+  position: absolute;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    var(--blob-color) 0%,
+    var(--blob-color) 52%,
+    color-mix(in srgb, var(--blob-color) 50%, transparent) 76%,
+    transparent 100%
+  );
+  will-change: transform;
+}
+
+.blobPrimary {
+  --blob-color: var(--md-sys-color-primary-container);
+  width: 1000px;
+  height: 920px;
+  top: -300px;
+  left: -280px;
+  opacity: 0.28;
+  animation: blobMorphA 26s var(--blob-ease) infinite alternate;
+}
+
+.blobSecondary {
+  --blob-color: var(--md-sys-color-secondary-container);
+  width: 900px;
+  height: 960px;
+  bottom: -290px;
+  right: -260px;
+  opacity: 0.22;
+  animation: blobMorphB 30s var(--blob-ease) infinite alternate;
+}
+
+.blobTertiary {
+  --blob-color: var(--md-sys-color-tertiary-container);
+  width: 760px;
+  height: 680px;
+  top: 42%;
+  left: 52%;
+  opacity: 0.16;
+  animation: blobMorphC 24s var(--blob-ease) infinite alternate;
+}
+
+.fixedCanvas {
+  --blob-ease: cubic-bezier(0.37, 0, 0.63, 1);
+}
+
+[data-theme='light'] .blobPrimary { opacity: 0.4; }
+[data-theme='light'] .blobSecondary { opacity: 0.34; }
+[data-theme='light'] .blobTertiary { opacity: 0.28; }
+
+@keyframes blobMorphA {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50%  { transform: translate(32px, -20px) scale(1.04, 0.97) rotate(14deg); }
+  100% { transform: translate(-20px, 18px) scale(0.97, 1.03) rotate(-10deg); }
+}
+
+@keyframes blobMorphB {
+  0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
+  50%  { transform: translate(-28px, 20px) scale(0.97, 1.04) rotate(-14deg); }
+  100% { transform: translate(18px, -14px) scale(1.03, 0.97) rotate(10deg); }
+}
+
+@keyframes blobMorphC {
+  0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  50%  { transform: translate(-48%, -52%) scale(1.05, 0.96) rotate(18deg); }
+  100% { transform: translate(-52%, -48%) scale(0.96, 1.04) rotate(-12deg); }
+}
+
+/* ===== Cursor-revealed coordinate grid ===== */
+
+/*
+ * The primary colour shows through two intersected masks: a 48px crosshair
+ * tile and a soft radial falloff that follows the pointer. Hidden until the
+ * pointer moves; hover-capable devices only.
+ */
+.gridReveal {
+  --grid-tile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M0 24h48M24 0v48' stroke='%23000' stroke-width='0.75' stroke-opacity='0.12'/%3E%3Cpath d='M24 19v10M19 24h10' stroke='%23000' stroke-width='1.1' stroke-linecap='round' stroke-opacity='0.5'/%3E%3Ccircle cx='24' cy='24' r='0.9'/%3E%3C/svg%3E");
+  --grid-falloff: radial-gradient(circle 340px at var(--grid-x, 50vw) var(--grid-y, 50vh), #000 0%, rgba(0, 0, 0, 0.3) 45%, transparent 70%);
+  position: absolute;
+  inset: 0;
+  background: var(--md-sys-color-primary);
+  mask-image: var(--grid-tile), var(--grid-falloff);
+  mask-size: 48px 48px, auto;
+  mask-composite: intersect;
+  -webkit-mask-image: var(--grid-tile), var(--grid-falloff);
+  -webkit-mask-size: 48px 48px, auto;
+  -webkit-mask-composite: source-in;
+  opacity: 0;
+  transition: opacity 600ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.fixedCanvas[data-pointer='in'] .gridReveal {
   opacity: 0.3;
-  animation: float 20s ease-in-out infinite;
 }
 
-.orb1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, #805ad5 0%, #d0bcff 50%, transparent 70%);
-  top: -200px;
-  left: -200px;
+[data-theme='light'] .fixedCanvas[data-pointer='in'] .gridReveal {
+  opacity: 0.28;
 }
 
-.orb2 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, #d0bcff 0%, #b794f4 50%, transparent 70%);
-  bottom: -150px;
-  right: -150px;
-  animation-delay: 7s;
+/* Common svg sizing */
+.shapeSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-.orb3 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, #6b46c1 0%, #9f7aea 50%, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation-delay: 14s;
-}
+/* ===== Curated Material 3 Expressive shapes: flat tonal fills, no shadows ===== */
 
-[data-theme='light'] .orb1 {
-  background: radial-gradient(circle, #b794f4 0%, #e9dfff 50%, transparent 70%);
-  opacity: 0.5;
-}
-
-[data-theme='light'] .orb2 {
-  background: radial-gradient(circle, #e9dfff 0%, #d0bcff 50%, transparent 70%);
-  opacity: 0.5;
-}
-
-[data-theme='light'] .orb3 {
-  background: radial-gradient(circle, #9f7aea 0%, #d0bcff 50%, transparent 70%);
-  opacity: 0.5;
-}
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(50px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-30px, 30px) scale(0.9);
-  }
-}
-
-.pattern {
+.shapeHeroLeft,
+.shapeHeroRight,
+.shapeDrifterLeft,
+.shapeDrifterRight {
   position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.1);
+  /* Solid tones pre-blended with the surface, so the grid stays behind the shapes */
+  color: color-mix(in srgb, var(--shape-tone) var(--shape-mix), var(--md-sys-color-surface));
+  transform-origin: center center;
+  will-change: transform, scale, translate;
 }
 
-[data-theme='light'] .pattern {
-  background: rgba(255, 255, 255, 0.3);
+/* 1. Flower, left of the hero title */
+.shapeHeroLeft {
+  top: 6.5rem;
+  inset-inline-start: calc(50% - 44rem);
+  width: 21rem;
+  height: 21rem;
+  --shape-tone: var(--md-sys-color-primary-container);
+  --shape-mix: 55%;
+  animation: shapeBreatheLeft 22s var(--ambient-ease) infinite alternate;
 }
 
-.grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(208, 188, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(208, 188, 255, 0.03) 1px, transparent 1px);
-  background-size: 50px 50px;
+/* 2. SoftBurst, right of the hero title */
+.shapeHeroRight {
+  top: 8.5rem;
+  inset-inline-end: calc(50% - 42rem);
+  width: 19rem;
+  height: 19rem;
+  --shape-tone: var(--md-sys-color-secondary-container);
+  --shape-mix: 70%;
+  animation: shapeBreatheRight 26s var(--ambient-ease) infinite alternate;
 }
 
-[data-theme='light'] .grid {
-  background-image:
-    linear-gradient(rgba(128, 90, 213, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(128, 90, 213, 0.08) 1px, transparent 1px);
+/* 3. Cookie6, lower left by the terminal */
+.shapeDrifterLeft {
+  top: 32rem;
+  inset-inline-start: calc(50% - 37rem);
+  width: 8.5rem;
+  height: 8.5rem;
+  --shape-tone: var(--md-sys-color-tertiary-container);
+  --shape-mix: 50%;
+  animation: shapeBreatheSmallLeft 18s var(--ambient-ease) infinite alternate;
 }
 
-/* Brighter copy of the grid, revealed in a circle around the cursor */
-.grid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(208, 188, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(208, 188, 255, 0.1) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: radial-gradient(circle 500px at var(--mouse-x) var(--mouse-y), black 0%, transparent 100%);
-  -webkit-mask-image: radial-gradient(circle 500px at var(--mouse-x) var(--mouse-y), black 0%, transparent 100%);
+/* 4. Clover4, lower right by the terminal */
+.shapeDrifterRight {
+  top: 30rem;
+  inset-inline-end: calc(50% - 36rem);
+  width: 9rem;
+  height: 9rem;
+  --shape-tone: var(--md-sys-color-primary-container);
+  --shape-mix: 40%;
+  animation: shapeBreatheSmallRight 20s var(--ambient-ease) infinite alternate;
 }
 
-[data-theme='light'] .grid::before {
-  background-image:
-    linear-gradient(rgba(128, 90, 213, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(128, 90, 213, 0.2) 1px, transparent 1px);
+/* Light containers sit too close to the surface, so tint from the key colors instead */
+[data-theme='light'] .shapeHeroLeft { --shape-tone: var(--md-sys-color-primary); --shape-mix: 16%; }
+[data-theme='light'] .shapeHeroRight { --shape-tone: var(--md-sys-color-secondary); --shape-mix: 20%; }
+[data-theme='light'] .shapeDrifterRight { --shape-tone: var(--md-sys-color-primary); --shape-mix: 12%; }
+
+@keyframes shapeBreatheLeft {
+  0%   { transform: rotate(-10deg) scale(1); }
+  50%  { transform: rotate(-6deg) scale(1.03) translate(6px, -8px); }
+  100% { transform: rotate(-14deg) scale(0.98) translate(-4px, 6px); }
 }
 
-@media (hover: none) and (pointer: coarse), (max-width: 768px) {
-  .grid::before {
+@keyframes shapeBreatheRight {
+  0%   { transform: rotate(14deg) scale(1); }
+  50%  { transform: rotate(19deg) scale(1.03) translate(-8px, 6px); }
+  100% { transform: rotate(9deg) scale(0.98) translate(4px, -6px); }
+}
+
+@keyframes shapeBreatheSmallLeft {
+  0%   { transform: rotate(-8deg) scale(1); }
+  50%  { transform: rotate(4deg) scale(1.05) translateY(-8px); }
+  100% { transform: rotate(-14deg) scale(0.97) translateY(6px); }
+}
+
+@keyframes shapeBreatheSmallRight {
+  0%   { transform: rotate(10deg) scale(1); }
+  50%  { transform: rotate(-2deg) scale(1.05) translateY(-6px); }
+  100% { transform: rotate(14deg) scale(0.97) translateY(6px); }
+}
+
+/*
+ * Scroll-linked scale and drift (progressive enhancement).
+ * Uses the independent scale/translate properties so it composes with the
+ * ambient transform animation above instead of replacing it.
+ */
+@supports (animation-timeline: scroll()) {
+  .shapeHeroLeft {
+    animation: shapeBreatheLeft 22s var(--ambient-ease) infinite alternate,
+               scrollGrowLeft linear both;
+    animation-timeline: auto, scroll(root);
+    animation-range: normal, 0 100vh;
+  }
+
+  .shapeHeroRight {
+    animation: shapeBreatheRight 26s var(--ambient-ease) infinite alternate,
+               scrollGrowRight linear both;
+    animation-timeline: auto, scroll(root);
+    animation-range: normal, 0 100vh;
+  }
+
+  .shapeDrifterLeft {
+    animation: shapeBreatheSmallLeft 18s var(--ambient-ease) infinite alternate,
+               scrollGrowSmall linear both;
+    animation-timeline: auto, scroll(root);
+    animation-range: normal, 0 100vh;
+  }
+
+  .shapeDrifterRight {
+    animation: shapeBreatheSmallRight 20s var(--ambient-ease) infinite alternate,
+               scrollGrowSmall linear both;
+    animation-timeline: auto, scroll(root);
+    animation-range: normal, 0 100vh;
+  }
+}
+
+@keyframes scrollGrowLeft {
+  from { scale: 1; translate: 0 0; }
+  to   { scale: 1.08; translate: -1.5rem 3rem; }
+}
+
+@keyframes scrollGrowRight {
+  from { scale: 1; translate: 0 0; }
+  to   { scale: 0.94; translate: 1.5rem 4rem; }
+}
+
+@keyframes scrollGrowSmall {
+  from { scale: 1; translate: 0 0; }
+  to   { scale: 1.12; translate: 0 2.5rem; }
+}
+
+/* ===== Responsive adjustments ===== */
+
+@media (max-width: 1200px) {
+  .shapeHeroLeft {
+    inset-inline-start: -4rem;
+    width: 17rem;
+    height: 17rem;
+  }
+
+  .shapeHeroRight {
+    inset-inline-end: -4rem;
+    width: 15rem;
+    height: 15rem;
+  }
+
+  .shapeDrifterLeft {
+    inset-inline-start: -2rem;
+    top: 34rem;
+    width: 7rem;
+    height: 7rem;
+  }
+
+  .shapeDrifterRight {
+    inset-inline-end: -2rem;
+    top: 33rem;
+    width: 7.5rem;
+    height: 7.5rem;
+  }
+}
+
+@media (max-width: 996px) {
+  .shapeDrifterLeft,
+  .shapeDrifterRight {
     display: none;
+  }
+
+  .shapeHeroLeft {
+    inset-inline-start: -6rem;
+    top: 7rem;
+    width: 15rem;
+    height: 15rem;
+    --shape-mix: 25%;
+  }
+
+  .shapeHeroRight {
+    inset-inline-end: -6rem;
+    top: 18rem;
+    width: 14rem;
+    height: 14rem;
+    --shape-mix: 22%;
+  }
+}
+
+@media (max-width: 996px) {
+  [data-theme='light'] .shapeHeroLeft { --shape-mix: 10%; }
+  [data-theme='light'] .shapeHeroRight { --shape-mix: 12%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shapeHeroLeft,
+  .shapeHeroRight,
+  .shapeDrifterLeft,
+  .shapeDrifterRight,
+  .blobPrimary,
+  .blobSecondary,
+  .blobTertiary {
+    animation: none !important;
   }
 }

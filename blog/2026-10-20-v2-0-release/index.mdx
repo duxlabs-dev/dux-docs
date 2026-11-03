@@ -1,0 +1,566 @@
+---
+title: "DMS 2.0: DankMaterialShell is now Dux Shell"
+description: DMS 2.0 "Heisenberg" brings a new name, a new design, plugins for Dash and OmegaDock, Dux Dot, deeper compositor support, a customizable lock screen, the Dux Lyrical Engine, and Dux Files, a new standalone file manager.
+slug: v2-0-release
+authors: duxlabs
+tags: [release, announcement]
+image: /img/blog/v2.0/og.png
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import styles from './styles.module.css';
+import ExpressiveShape from '@site/src/components/ExpressiveShape';
+
+<div className={styles.blogHero}>
+  <ExpressiveShape shape="Cookie12Sided" className={`${styles.shape} ${styles.shapeCookie}`} />
+  <ExpressiveShape shape="SoftBurst" className={`${styles.shape} ${styles.shapeBurst}`} />
+  <ExpressiveShape shape="Flower" className={`${styles.shape} ${styles.shapeFlower}`} />
+  <ExpressiveShape shape="Pill" className={`${styles.shape} ${styles.shapePill}`} />
+  <div className={styles.heroContent}>
+    <p className={styles.heroTitle}>DMS <span className={styles.accentText}>2.0</span></p>
+    <p className={styles.lockup} role="img" aria-label="Heisenberg">
+      <span className={styles.element}>
+        <span className={styles.elementNumber}>2</span>
+        <span className={styles.elementSymbol}>He</span>
+        <span className={styles.elementMass}>4.0026</span>
+      </span>
+      <span>isenberg</span>
+    </p>
+  </div>
+</div>
+
+**DankMaterialShell is now Dux Shell**, and Dank Linux is now **Dux Labs**.
+
+DMS 2.0 "Heisenberg" is here with a new design across the shell, plugins for Dash and OmegaDock, the new Dux Dot, and much deeper compositor support for Hyprland, MangoWC, and newly added, Aqueous. There's a customizable lock screen, the Dux Lyrical Engine, and **Dux Files**, a new standalone file manager.
+
+{/* truncate */}
+
+## DankMaterialShell is now Dux Shell
+
+DMS started as one shell. Since then it has picked up a greeter, a system monitor, a search service, a calendar, a package repository, and a plugin community, and 2.0 adds a file manager. That's a lot to keep calling DankMaterialShell, so the whole suite is moving under one name: **Dux Labs**.
+
+| Before | Now |
+|---|---|
+| Dank Linux | Dux Labs |
+| DankMaterialShell | Dux Shell |
+| DankGreeter | Dux Greeter |
+| DankSearch | Dux Search |
+| DankGOP | Dux GOP |
+| DankCalendar | Dux Calendar |
+| DankLinux repository | Dux Labs repository |
+| new | Dux Files |
+
+It's the same team and the same projects. The shell is still DMS, and the command is still `dms`.
+
+### Why "Dux"?
+
+**Dux** is our mascot, and the name is a nod to **Tux**, the Linux penguin. It's short, it's not taken by any major software projects, it starts with a D so we don't have to rename the binaries (`dms`, `dcal`, `dgop`), and it gives a friendlier vibe than "Dank" did.
+
+The new GitHub org is [duxlabs-dev](https://github.com/duxlabs-dev). The package repositories move shortly after launch. Details are in [the repositories](#the-repositories) section at the end.
+
+## A new design
+
+2.0 brings Material 3 Expressive to Settings, Control Center, Dash, and the shared widgets, with new controls, grouped settings, new navigation, colors, and motion.
+
+Settings is reorganized so things live where you'd look for them. Bar widgets have their own options, Dash has its own page, and related settings open in subpages.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The redesigned Settings window with wallpaper and color controls in the purple theme" sources={{light: useBaseUrl('/img/blog/v2.0/settings-light.png'), dark: useBaseUrl('/img/blog/v2.0/settings-dark.png')}} />
+  <figcaption>The new Settings.</figcaption>
+</figure>
+
+## Dash plugins
+
+Dash is now customizable beyond the built-in tabs. Plugins can add a full tab, a card in the overview, or both. Reorder and resize cards, choose what belongs in your overview, and configure each entry.
+
+The built-in pages have been rebuilt too: the overview, media player, weather, and wallpapers all use the new design.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Dash overview with the purple theme, calendar, weather, media, and notifications" sources={{light: useBaseUrl('/img/blog/v2.0/dash-light.png'), dark: useBaseUrl('/img/blog/v2.0/dash-dark.png')}} />
+  <figcaption>The new Dash overview.</figcaption>
+</figure>
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The redesigned media player tab in Dash" sources={{light: useBaseUrl('/img/blog/v2.0/media-light.png'), dark: useBaseUrl('/img/blog/v2.0/media-dark.png')}} />
+  <figcaption>The new default media player, named Bento.</figcaption>
+</figure>
+
+For plugin authors, the new surfaces are `dash` and `dashCard`. A composite plugin can provide both. See the [Dash plugin docs](/docs/dms/plugin-development#dash-plugins) for manifests, options, sizing, and examples.
+
+## Build your own lock screen
+
+The lock screen now uses widgets. Add, move, resize, and configure the clock, date, notifications, status, and power controls. Choose a clock style, change its colors and font, and put things where you want them.
+
+The editor gives you a preview while you make changes. Open **Settings → Security → Lock screen** to get started.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Purple lock screen preview with the widget browser open" sources={{light: useBaseUrl('/img/blog/v2.0/lock-light.png'), dark: useBaseUrl('/img/blog/v2.0/lock-dark.png')}} />
+  <figcaption>Adding widgets in the lock screen editor.</figcaption>
+</figure>
+
+
+## Dux Lyrical Engine
+
+The media player now has synced lyrics with word-level and even syllable-level precision when the source provides timing.
+
+Choose your providers and drag them into priority order in **Settings → Sound & media → Media player**. The built-in sources include Better Lyrics, Unison, LyricsPlus, KuGou, LRCLIB, and YouTube Music. Local lyrics are supported too. Turn all providers off to use local lyrics only.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The Dash media player with synced lyrics during playback" sources={{light: useBaseUrl('/img/blog/v2.0/lyrics-light.png'), dark: useBaseUrl('/img/blog/v2.0/lyrics-dark.png')}} />
+  <figcaption>Synced lyrics in the media player.</figcaption>
+</figure>
+
+Plugins can add lyrics providers without needing a QML interface. Widgets can also use the lyrics service for their own displays. See [lyrics providers](/docs/dms/plugin-development#lyrics-providers) and the [lyrics API](/docs/dms/plugin-development#lyrics).
+
+
+## Dux Files
+
+**Dux Files** is a new file manager from Dux Labs, shipping alongside 2.0. It's a standalone app: a small Go daemon does the file work and a Quickshell window sits on top. It shares the look of the shell and follows your DMS theme when both run, but it doesn't need DMS.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Dux Files in grid view with the preview drawer open on a picture" sources={{light: useBaseUrl('/img/dfileslight.png'), dark: useBaseUrl('/img/dfiles.png')}} />
+  <figcaption>Dux Files in grid view with the preview drawer.</figcaption>
+</figure>
+
+- **Tabs and split view:** open folders in tabs, or show two folders side by side and drag files between them.
+- **List, grid, and column views:** each folder remembers its sort order and list or grid view. Column view stays on as you browse.
+- **Preview:** press Space to see a preview and details of the selected file next to the list.
+- **File operations:** copy, move, rename, and delete with progress and undo. If you don't have permission, retry as administrator.
+- **Archives:** open zip, tar, 7z, and rar files, and compress files into zip or tar, without installing extra tools.
+- **Search:** search the current folder or your whole home, filtered by type, date, or size.
+- **Drives and network shares:** mount USB drives, unlock encrypted ones, and connect to SFTP, SMB, and WebDAV servers.
+- **Works with your apps:** "Show in folder" from your browser opens Dux Files. It can also replace the open and save dialogs in other apps.
+- **Keyboard navigation:** drive the entire interface with the keyboard only.
+
+Get it from the [installation guide](/docs/dfiles/installation), and read the rest in the [Dux Files docs](/docs/dfiles).
+
+
+## Wallpaper Generator
+
+Make your own Material 3 wallpaper at [wallpaper.duxlabs.dev](https://wallpaper.duxlabs.dev). Pick shapes, patterns, and a palette. Wallpapers can be exported as a PNG, or as a DMS format which automatically follows your theme colors.
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The Wallpaper Generator with purple shapes on a contour pattern" sources={{light: useBaseUrl('/img/blog/v2.0/wallpaper-light.png'), dark: useBaseUrl('/img/blog/v2.0/wallpaper-dark.png')}} />
+  <figcaption>The Wallpaper Generator.</figcaption>
+</figure>
+
+
+## Operation Freedom: Dux Dot
+
+Dux Dot is a new dynamic island-style hub built around one persistent dot. It morphs into your launcher, dashboard, control center, media, weather, wallpaper, and notifications. Keep your existing IPCs and keybinds, or route them through the new bar settings.
+
+It is a super minimal way to run DMS, and it stays out of your way. Clean, fast, fullscreen, and gamer-mode ready. Place it, or fling it, anywhere on the screen.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Dux Dot resting as a small circle on the desktop wallpaper" sources={{light: useBaseUrl('/img/blog/v2.0/dot-light.png'), dark: useBaseUrl('/img/blog/v2.0/dot-dark.png')}} />
+  <figcaption>Dux Dot, one dot for the whole shell.</figcaption>
+</figure>
+
+
+## The island, anywhere
+
+The island can now go in any bar as a widget, float anywhere on screen, run vertically, or tuck into the top of the display in notch mode.
+
+The compact face holds more widgets, including media, weather, a workspace switcher, a privacy indicator, and a system tray. Volume, brightness, and other changes can show in the island instead of the usual on-screen display.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The island as a horizontal pill and the same face run vertically, with the clock, weather, and a notification count" sources={{light: useBaseUrl('/img/blog/v2.0/island-light.png'), dark: useBaseUrl('/img/blog/v2.0/island-dark.png')}} />
+  <figcaption>The island horizontal and vertical.</figcaption>
+</figure>
+
+
+## Bars that move like the island
+
+Bars now use the same spring motion as the island, so size and corner changes ease into place instead of jumping.
+
+Thickness can be fractional or fit to the widgets, and middle or right clicking empty bar space can run an action you pick.
+
+Each section can turn on auto overflow. Flexible widgets shrink first, and whatever still doesn't fit moves into an overflow menu. Per widget, set **Placement** to Auto, Keep in Bar, or Always in overflow.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Bar settings with Main Bar on the top edge, a second bar on the left, and Frame selected as the layout" sources={{light: useBaseUrl('/img/blog/v2.0/bars-light.png'), dark: useBaseUrl('/img/blog/v2.0/bars-dark.png')}} />
+  <figcaption>Updated bar settings with easy target placement.</figcaption>
+</figure>
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Bar widget settings with auto overflow on for the center section and the overflow button placed after Weather" sources={{light: useBaseUrl('/img/blog/v2.0/overflow-light.png'), dark: useBaseUrl('/img/blog/v2.0/overflow-dark.png')}} />
+  <figcaption>Auto overflow for a bar section, with the button placed after a widget.</figcaption>
+</figure>
+
+
+## Dock
+
+The dock can be used as an OmegaDock now. Add more than one, put each on any edge, and choose a compact icon row or a taskbar.
+
+Taskbar mode is new. The dock spans the whole edge, end to end. Compact mode is still a strip of icons.
+
+The dock runs the same widgets as the bar, including plugins, so a clock, tray, media, workspaces, or anything a plugin provides can sit next to your apps. A widget can open as a popout or inline, where the dock grows and the panel sits beside the icons. Plugin authors provide that panel with `attachedContent`. See [widgets in a dock](/docs/dms/plugin-development#widgets-in-a-dock).
+
+Hover magnification scales the icon under the pointer and can push its neighbors aside, and the focused app can expand into a pill. The dock animates on the same spring as the island and the bars.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="A dock mixing app icons with a clock, pinned apps, and a weather widget" sources={{light: useBaseUrl('/img/blog/v2.0/dock-light.png'), dark: useBaseUrl('/img/blog/v2.0/dock-dark.png')}} />
+  <figcaption>App icons and widgets sharing the dock.</figcaption>
+</figure>
+
+
+## Control Center
+
+In the Control Center, tiles come in a smaller half-height size for tighter grids, and pill widgets like volume and brightness can be sized in half steps.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="Control Center in edit mode, with a profile header, power buttons, and a grid of tiles being resized" sources={{light: useBaseUrl('/img/blog/v2.0/control-center-light.png'), dark: useBaseUrl('/img/blog/v2.0/control-center-dark.png')}} />
+  <figcaption>The Control Center, laid out and resized.</figcaption>
+</figure>
+
+
+## Digital Wellbeing
+
+Dash has a new Digital Wellbeing tab. It tracks screen time, lets you set a daily limit and per-app limits, and tells you when you hit one. Scripts can read the same status over IPC.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The Digital Wellbeing tab in Dash, with weekly screen time and a list of the most used apps" sources={{light: useBaseUrl('/img/blog/v2.0/digital-wellbeing-light.png'), dark: useBaseUrl('/img/blog/v2.0/digital-wellbeing-dark.png')}} />
+  <figcaption>Weekly screen time and the most used apps.</figcaption>
+</figure>
+
+## niri
+
+niri can turn the touchpad on and off. DMS shows the change on screen, and the default config binds the touchpad key to `toggle-touchpad`. Focus follows mouse works too.
+
+Switching workspaces can show an on-screen display, window rules can set a column's width and height as a percentage, and connected displays can be cycled. A hidden bar gets out of the way while the overview is open, and a dock set to overview-only shows up there.
+
+## Hyprland and MangoWC
+
+**Hyprland** catches up with 0.56: dwindle, master, and scrolling layouts with their own settings, special workspaces as scratchpads, and the new blur styles, glow, motion blur, and group tabs. Wobbly windows work on Hyprland git.
+
+**MangoWC** 0.18 renamed its config keys to snake_case. DMS writes the new format, and `dms config mango-migrate` converts an existing config.
+
+On both, mouse, touchpad, keyboard, and focus follows mouse are in Settings, and `dms setup` can start the shell from `hyprland-session.target` or `mango-session.target`.
+
+## Aqueous and Umbriel
+
+**[Aqueous](https://www.seafoam-labs.org/)** gets comprehensive support, and **[Umbriel](https://github.com/noctalia-dev/umbriel)** gets basic support.
+
+They join niri, Hyprland, MangoWC, Sway, labwc, and Miracle.
+
+## Keyboard navigation in Settings
+
+Settings can now be operated entirely keyboard driven or with a mouse:
+
+- **Switch panes:** Press `Ctrl+Tab` or `Ctrl+Shift+Tab` (as well as `Alt+Left` / `Alt+Right`) to jump back and forth between the sidebar and the active content page.
+- **Navigate:** Use the arrow keys (`Up` / `Down`) or `Tab` / `Shift+Tab` to move between categories in the sidebar and rows on any settings page. Both the sidebar and content smoothly auto-scroll to keep the focused control in view.
+- **Toggle and activate:** Press `Space`, `Enter`, or `Return` to toggle switches, press buttons, open dropdowns, and pick color swatches. Custom swatches can be removed with `Delete`.
+- **Quick search:** Press `Ctrl+F` from anywhere to jump straight to the search field in the sidebar. Arrow keys navigate results, and `Enter` opens the selected setting.
+- **History and exit:** Press `Alt+Left` or `Backspace` to navigate back in page history, or `Escape` to step back or return focus to the sidebar. Each page remembers its focused element when you return.
+
+## More in 2.0
+
+- **Launcher:** dmenu mode, custom keybinds, app editing, VPN search, Open with for files, Flatpak uninstall, an option to focus a running window instead of launching a new one, and an option to turn off history.
+- **Workspaces:** dot, line, and card indicators, a compact mode, and a minimum workspace count.
+- **Theming:** bold color variants, wallpaper-tinted terminal colors with background opacity, Positron support, and a per-bar background color.
+- **Wallpaper:** cycling can recurse into subdirectories.
+- **Audio:** mono audio toggle.
+- **Network:** Fortinet VPN with SAML and password auth.
+- **Settings:** touchpad click method, and `config.d` to split settings across files.
+- **Multiplexers:** Herdr joins tmux and zellij.
+- **Blur:** strength slider.
+- **Plugin browser:** shelves, typo-tolerant search, detail pages, and one-click upvotes.
+- **Desktop widgets:** editor improvements.
+- **Notifications:** extra rule conditions, timed per-app mutes, hovered popups stay put, and `invokeLast` over IPC.
+- **Screenshots:** snap to open popouts and Ctrl+C to copy without saving.
+- **Displays:** per-output ICC color profiles and color temperature.
+- **System updates:** floating window, Portage backend, highlighted upgrade logs, and a reboot prompt after kernel updates.
+- **Channels:** `dms switch beta` moves to beta packages after taking a backup, and `dms switch stable` goes back. Name a package to switch only that one. See [Switch channels](/docs/dms/cli-switch).
+- **Distros:** official PikaOS support, Enterprise Linux 10 (RHEL, CentOS Stream, Rocky Linux, AlmaLinux), and native FreeBSD support.
+
+## New plugin types
+
+Plugins can now add a tab or a card to **Dash** and sit in the **dock**, opening as a popout or a panel that grows the dock. Desktop plugins can also go on the **lock screen**. See the [Dash plugin docs](/docs/dms/plugin-development#dash-plugins) and [widgets in a dock](/docs/dms/plugin-development#widgets-in-a-dock).
+
+The plugin browser in Settings was rebuilt, led by [lung595](https://github.com/lung595). It has a Discover page with shelves and daily and weekly picks, filters for your compositor, typo-tolerant search, detail pages, one-click upvotes, and undo after an uninstall.
+
+<figure className={styles.screenshot}>
+  <ThemedImage alt="The plugin browser with the Discover shelves, picks of the week and day, sort and filter chips, and plugin cards with badges and vote counts" sources={{light: useBaseUrl('/img/blog/v2.0/plugins-light.png'), dark: useBaseUrl('/img/blog/v2.0/plugins-dark.png')}} />
+  <figcaption>The new plugin browser.</figcaption>
+</figure>
+
+Update checks only flag a plugin when the remote has commits you don't have yet ([Bernardo Gomes](https://github.com/bernardopg)), and plugin state saves on the first change after a reload ([Mario-Mohar](https://github.com/Mario-Mohar)).
+
+The [registry](/plugins) is past 380 plugins and 47 themes, up from 337 and 42 at 1.6. The most upvoted new plugins are Sands and Orbit Bluetooth by [lung595](https://github.com/lung595), Screenshot+ by [pcmid](https://github.com/pcmid), MangoWM Layout Manager by [omarluq](https://github.com/omarluq), and Bitwarden Dankbar and DankChat by [coldi1337](https://github.com/coldi1337). [satoshoe-dev](https://github.com/satoshoe-dev) and [by-architect](https://github.com/by-architect) each added six.
+
+Upvote the plugins you use so other people find them.
+
+## Fixes and polish
+
+Alongside the redesign, 2.0 carries 90+ bug fixes and quality-of-life improvements across the shell. Some of the ones you may notice:
+
+<details>
+<summary>View Details</summary>
+
+- The fingerprint reader keeps working after closing the lid or suspending.
+- The lock screen shows on every display when none is selected, and locks before sleep even when the sleep command skips logind.
+- Monitors wake after an automatic lock.
+- The shell takes the lock back when it restarts into a locked session.
+- Tray icons no longer jump position when their properties change, and the tray keeps working across display reconnects.
+- The island's pill no longer jumps sideways when the compact face switches.
+- Hidden bar pills no longer catch clicks.
+- The dock cycles grouped windows again, keeps its focused indicator in the niri overview, and drops orphaned surfaces when you delete a dock.
+- iwd no longer asks for a Wi-Fi password twice, and Wi-Fi devices are rediscovered before scanning.
+- Bridge, bond, team, and VLAN links count as wired under systemd-networkd.
+- Tailscale follows profile switches.
+- Bluetooth headset controls go to the active player.
+- Refresh rate is restored after resume.
+- Brightness retries the initial DDC read.
+- Screenshot HUD and selection labels scale correctly on HiDPI displays, a saved screenshot can be copied as a file, and only one screenshot instance runs at a time.
+- Screen captures no longer count as camera use in the privacy indicator.
+- Scrolling song titles in the media widget no longer truncate.
+- Wallpapers keep loading when the surface regenerates, and scrolling wallpapers render once they've decoded.
+- Clipboard history decodes file URIs, large file copies no longer fail, and copied folders can be restored.
+- The notepad keeps your notes across repeated saves.
+- Hovered notification popups stay pinned, and the popup timer no longer restarts after the enter animation.
+- Battery reports when a charge threshold isn't supported instead of pretending it worked.
+- The sink volume no longer gets overwritten while you adjust it, and a missing event sound no longer breaks the rest.
+- Pinned state is kept when you edit a launcher entry.
+- The process list searches every process, not just the top 100.
+- Plugin updates only show when the remote has something new, and plugins no longer get injected into app categories.
+- Settings skips unchanged saves so edits you make outside the shell aren't swallowed.
+- `dms doctor` warns when a Qt platform theme plugin targets a different Qt version.
+- The CLI times out instead of hanging when the DMS server doesn't answer.
+- Logging out ends the logind session on compositors with no quit request.
+- Update lists skip obsoleted dnf packages and collapse rows duplicated across repositories.
+- Hyprland window rules use syntax Hyprland 0.56 accepts.
+- Light-mode colors, KDE color scheme templates, and the kitty cursor color follow your theme more closely.
+- Theme generation runs at low priority and regenerates once when the scheme or monitor changes.
+- The calendar no longer repeats a day.
+- ...and many, many more.
+
+</details>
+
+## Upgrade Notes
+
+### (Breaking) App ID Change
+
+The DMS app ID is now `dev.duxlabs.shell`, replacing `com.danklinux.dms`. The window rules DMS manages itself are updated automatically. If you wrote your own compositor window rules for DMS windows, update them to the new ID.
+
+On niri, for example, this:
+
+```kdl
+window-rule {
+    match app-id=r#"^com\.danklinux\.dms$"#
+    open-floating true
+}
+```
+
+becomes:
+
+```kdl
+window-rule {
+    match app-id=r#"^dev\.duxlabs\.shell$"#
+    open-floating true
+}
+```
+
+## Plugin authors: update your widgets
+
+:::warning[Deprecated widget imports and types]
+
+The old widget wrappers are deprecated and will be removed in a future release. Update the imports **and** the type names. The compatibility wrappers log a warning with the replacement to use.
+
+:::
+
+For example, this:
+
+```qml
+import qs.Widgets
+
+DankButton {
+    text: "Open"
+}
+```
+
+becomes:
+
+```qml
+import qs.DCommon.Widgets
+
+DButton {
+    text: "Open"
+}
+```
+
+Some common replacements:
+
+| Old type | New type in `qs.DCommon.Widgets` |
+|---|---|
+| `DankButton` | `DButton` |
+| `DankActionButton` | `DActionButton` |
+| `DankIcon` | `DIcon` |
+| `DankSlider` | `DSlider` |
+| `DankToggle` | `DToggle` |
+| `DankTextField` | `DTextField` |
+| `DankTabBar` | `DTabBar` |
+| `DankFlickable` | `DFlickable` |
+| `DankListView` | `DListView` |
+| `DankScrollbar` | `DScrollbar` |
+
+`StyledText` keeps its name and is also available from `qs.DCommon.Widgets`. Shell-specific types still live in `qs.Widgets`, so keep that import if your plugin uses them. Check the warning for each deprecated type rather than replacing every import blindly.
+
+The replacements are in the [shared widget library](https://github.com/duxlabs-dev/dux-qml-common/tree/master/DCommon/Widgets), and the [compatibility wrappers](https://github.com/duxlabs-dev/dux-shell/tree/master/quickshell/Widgets) show the old and new names.
+
+## Notes for Package Maintainers
+
+DMS now lives at [duxlabs-dev/dux-shell](https://github.com/duxlabs-dev/dux-shell).
+
+The desktop files and icon follow the new app ID, so update any install lines that name them:
+
+| Old file | New file |
+|---|---|
+| `assets/com.danklinux.dms.desktop` | `assets/dev.duxlabs.shell.desktop` |
+| `assets/com.danklinux.dms.notepad.desktop` | `assets/dev.duxlabs.shell.notepad.desktop` |
+| `assets/com.danklinux.dms.svg` | `assets/dev.duxlabs.shell.svg` |
+
+Dux Calendar's assets moved the same way, from `com.danklinux.dankcalendar.*` to `dev.duxlabs.calendar.*`.
+
+Binary names, systemd units, and the `dms-open.desktop` URL handler are unchanged.
+
+Renaming packages to the new names is not required, but we'd prefer it:
+
+| Old name | New name |
+|---|---|
+| `dms`, `DankMaterialShell`, `dms-shell` | `dux-shell` |
+| `dgop` | `dux-gop` |
+| `dankcalendar`, `dank-calendar` | `dux-calendar` |
+| `dank-greeter` | `dux-greeter` |
+
+## The people behind it
+
+DMS is founded and maintained by **[bbedward](https://github.com/bbedward)** and **[purian23](https://github.com/purian23)**. **[Huỳnh Thiện Lộc](https://github.com/hthienloc)** has been a close and vital contributor, landing features, bug fixes, and ongoing plugin maintenance. Thank you to everyone else contributing code, plugins, translations, packaging, testing, and bug reports.
+
+Thanks to **LuckShiba** and **EricDraven** for their NixOS work and community support.
+
+Thank you to **apollo79** and **georgestafilidis**, the two new designers who pioneered the design in 2.0 and much more daily!
+
+<div className={styles.designers}>
+  <a className={styles.designer} href="https://github.com/apollo79">
+    <img src={useBaseUrl('/img/blog/v2.0/apollo79.jpg')} alt="" width="80" height="80" loading="lazy" />
+    <span><strong>apollo79</strong><span>2.0 design</span></span>
+  </a>
+  <a className={styles.designer} href="https://github.com/georgestafilidis">
+    <img src={useBaseUrl('/img/blog/v2.0/georgestafilidis.png')} alt="" width="80" height="80" loading="lazy" />
+    <span><strong>georgestafilidis</strong><span>2.0 design</span></span>
+  </a>
+</div>
+
+A special thank you to everyone who supports Dux Labs through GitHub Sponsors and [Ko-fi](https://ko-fi.com/duxlabs). Your support keeps this project going, and we're grateful for every one of you!
+
+## Community Contributions
+
+600+ commits from 65 contributors since 1.6. Time for a callout:
+
+**[Huỳnh Thiện Lộc](https://github.com/hthienloc)** landed 31 commits, including the dock's proximity magnification, neighbor push-apart, and animated focused-app pill, plus toggling the compositor overview from the dock's launcher button. He also brought the island's system tray slot and overflow menu, auto-hide for the island in overlay mode, and the niri workspace-switch OSD. On the screenshot side: touch and stylus region capture, snapping to open panels, Ctrl+C to copy without saving, and the `--hud` flag. Also the redesigned keybinds cheatsheet, Flatpak uninstall from the launcher, and recursive wallpaper cycling.
+
+Also: per-output ICC color profiles and color temperature ([KIDult2226](https://github.com/KIDult2226)), VPN search, do-not-disturb while screen sharing, and timed idle inhibitor presets ([avesst](https://github.com/avesst)), gamma exceptions for fullscreen and excluded apps ([euletheia](https://github.com/euletheia)), and native FreeBSD support ([Zer0TraceX](https://github.com/Zer0TraceX)).
+
+### All Contributions
+
+| Contributor | Contribution |
+|---|---|
+| **[0xdeafbeef](https://github.com/0xdeafbeef)** | Cycle connected displays on niri ([PR #3362](https://github.com/duxlabs-dev/dux-shell/pull/3362)) |
+| **[14Do](https://github.com/14Do)** | • Collapse dnf rows duplicated across repos ([PR #3524](https://github.com/duxlabs-dev/dux-shell/pull/3524))<br/>• Skip the obsoleted packages in dnf output ([PR #3525](https://github.com/duxlabs-dev/dux-shell/pull/3525)) |
+| **[aarshivv](https://github.com/aarshivv)** | Display config: read live layout from hyprland instead of the cached wlr snapshot ([PR #3418](https://github.com/duxlabs-dev/dux-shell/pull/3418)) |
+| **[al-ula](https://github.com/al-ula)** | App picker: strip desktop suffix when resolving mime handlers ([PR #3710](https://github.com/duxlabs-dev/dux-shell/pull/3710)) |
+| **[aldair-meneses](https://github.com/aldair-meneses)** | Add configurable middle and right click actions on empty space ([PR #3582](https://github.com/duxlabs-dev/dux-shell/pull/3582)) |
+| **[alexhulbert](https://github.com/alexhulbert)** | Add shadow to island and satellites when shadow is turned on ([PR #3798](https://github.com/duxlabs-dev/dux-shell/pull/3798)) |
+| **[alvarosth](https://github.com/alvarosth)** | • Take the lock back when the shell restarts into a locked session ([PR #3685](https://github.com/duxlabs-dev/dux-shell/pull/3685))<br/>• Let the CLI policy turn the registries off ([PR #3703](https://github.com/duxlabs-dev/dux-shell/pull/3703)) |
+| **[Aman9das](https://github.com/Aman9das)** | Add positron as a vscode fork ([PR #3507](https://github.com/duxlabs-dev/dux-shell/pull/3507)) |
+| **[apollo79](https://github.com/apollo79)** | • Add a link to the source code in plugin details ([PR #3690](https://github.com/duxlabs-dev/dux-shell/pull/3690))<br/>• Add seek-to-line on clicking lyrics line ([PR #3823](https://github.com/duxlabs-dev/dux-shell/pull/3823))<br/>• Add rotating cookie album style ([PR #3819](https://github.com/duxlabs-dev/dux-shell/pull/3819))<br/>• Align with m3e spec ([PR #3689](https://github.com/duxlabs-dev/dux-shell/pull/3689)) |
+| **[arfan21](https://github.com/arfan21)** | • Add Word, Spreadsheet, Presentation, Archive app default ([PR #3580](https://github.com/duxlabs-dev/dux-shell/pull/3580))<br/>• Expand vscode syntax and semantic token colors ([PR #3686](https://github.com/duxlabs-dev/dux-shell/pull/3686)) |
+| **[artrixdotdev](https://github.com/artrixdotdev)** | Show headphones icon for bluetooth headset ([PR #3783](https://github.com/duxlabs-dev/dux-shell/pull/3783)) |
+| **[arya-satwika](https://github.com/arya-satwika)** | Improved readability on buttons ([PR #3481](https://github.com/duxlabs-dev/dux-shell/pull/3481)) |
+| **[avesst](https://github.com/avesst)** | • Support fortinet vpn with saml and password auth ([PR #3384](https://github.com/duxlabs-dev/dux-shell/pull/3384))<br/>• Add vpn connections as a search provider ([PR #3391](https://github.com/duxlabs-dev/dux-shell/pull/3391))<br/>• Idle inhibitor: add duration presets and timed expiry ([PR #3344](https://github.com/duxlabs-dev/dux-shell/pull/3344))<br/>• Auto-enable do not disturb while screen sharing ([PR #3316](https://github.com/duxlabs-dev/dux-shell/pull/3316))<br/>• Stop counting screen captures as camera use ([PR #3428](https://github.com/duxlabs-dev/dux-shell/pull/3428)) |
+| **[bernardopg](https://github.com/bernardopg)** | • Warn when a qt platform theme plugin targets another qt minor ([PR #3771](https://github.com/duxlabs-dev/dux-shell/pull/3771))<br/>• Only flag updates when remote head is not contained in local history ([PR #3778](https://github.com/duxlabs-dev/dux-shell/pull/3778)) |
+| **[centifanto](https://github.com/centifanto)** | Release hidden slideout input mask ([PR #3500](https://github.com/duxlabs-dev/dux-shell/pull/3500)) |
+| **[chenshifanjian](https://github.com/chenshifanjian)** | Decode file uris and stop failing oversized file copies ([PR #3598](https://github.com/duxlabs-dev/dux-shell/pull/3598)) |
+| **[cmleon51](https://github.com/cmleon51)** | • Explain why the autostart settings page is empty ([PR #3754](https://github.com/duxlabs-dev/dux-shell/pull/3754))<br/>• Dim outputs without a backlight or ddc through gamma ([PR #3813](https://github.com/duxlabs-dev/dux-shell/pull/3813)) |
+| **[Conava](https://github.com/Conava)** | • Terminal background opacity and wallpaper-tinted colors ([PR #3662](https://github.com/duxlabs-dev/dux-shell/pull/3662))<br/>• Open media and the power menu in one step ([PR #3756](https://github.com/duxlabs-dev/dux-shell/pull/3756)) |
+| **[cwelsys](https://github.com/cwelsys)** | • Only re-enable displays the cycle itself turned off ([PR #3377](https://github.com/duxlabs-dev/dux-shell/pull/3377))<br/>• Stop hidden pills from catching clicks ([PR #3488](https://github.com/duxlabs-dev/dux-shell/pull/3488)) |
+| **[davidjmdev](https://github.com/davidjmdev)** | Make popout reopen after terminal upgrade optional ([PR #3307](https://github.com/duxlabs-dev/dux-shell/pull/3307)) |
+| **[dionjoshualobo](https://github.com/dionjoshualobo)** | Mono audio toggle ([PR #3539](https://github.com/duxlabs-dev/dux-shell/pull/3539)) |
+| **[domenkozar](https://github.com/domenkozar)** | Use available width for menu labels ([PR #3456](https://github.com/duxlabs-dev/dux-shell/pull/3456)) |
+| **[EmiOnFlux](https://github.com/EmiOnFlux)** | Add portage backend ([PR #3676](https://github.com/duxlabs-dev/dux-shell/pull/3676)) |
+| **[enchanteddev](https://github.com/enchanteddev)** | • Added middle-click to play/pause media and mute audio ([PR #3332](https://github.com/duxlabs-dev/dux-shell/pull/3332))<br/>• Added option to choose the control center icon to be either Battery gauge or Connectivity ([PR #3342](https://github.com/duxlabs-dev/dux-shell/pull/3342)) |
+| **[euletheia](https://github.com/euletheia)** | Night mode exceptions ([PR #2809](https://github.com/duxlabs-dev/dux-shell/pull/2809)) |
+| **[ezemtsov](https://github.com/ezemtsov)** | Network(networkmanager): rebuild the Wi-Fi list once per scan ([PR #3818](https://github.com/duxlabs-dev/dux-shell/pull/3818)) |
+| **[FengYing1314](https://github.com/FengYing1314)** | Use plugin ids for management actions ([PR #3284](https://github.com/duxlabs-dev/dux-shell/pull/3284)) |
+| **[guillemcanal](https://github.com/guillemcanal)** | • Allow users to customize launcher keybindings ([PR #3800](https://github.com/duxlabs-dev/dux-shell/pull/3800))<br/>• Add "Open with..." action to file search results ([PR #3801](https://github.com/duxlabs-dev/dux-shell/pull/3801)) |
+| **[hattapauzi](https://github.com/hattapauzi)** | Lock before sleep when the command skips logind ([PR #3587](https://github.com/duxlabs-dev/dux-shell/pull/3587)) |
+| **[hkoeck](https://github.com/hkoeck)** | Show the prompt PAM actually asked for ([PR #3691](https://github.com/duxlabs-dev/dux-shell/pull/3691)) |
+| **[hthienloc](https://github.com/hthienloc)** | • Add workspace switch OSD for niri (#1756) ([PR #3337](https://github.com/duxlabs-dev/dux-shell/pull/3337))<br/>• Add touch & stylus support for region capture ([PR #3353](https://github.com/duxlabs-dev/dux-shell/pull/3353))<br/>• Add flatpak uninstall option in context menu ([PR #3340](https://github.com/duxlabs-dev/dux-shell/pull/3340))<br/>• Add flag to control HUD scale and visibility ([PR #3398](https://github.com/duxlabs-dev/dux-shell/pull/3398))<br/>• Show edit window rule when rule exists ([PR #3516](https://github.com/duxlabs-dev/dux-shell/pull/3516))<br/>• Redesign cheatsheet with category navigation ([PR #3534](https://github.com/duxlabs-dev/dux-shell/pull/3534))<br/>• Snap to active popouts & modals in region mode ([PR #3618](https://github.com/duxlabs-dev/dux-shell/pull/3618))<br/>• Add customizable proximity icon magnification ([PR #3625](https://github.com/duxlabs-dev/dux-shell/pull/3625))<br/>• Expand focused app indicator into animated pill ([PR #3640](https://github.com/duxlabs-dev/dux-shell/pull/3640))<br/>• Add Ctrl+C shortcut to copy w/o saving ([PR #3645](https://github.com/duxlabs-dev/dux-shell/pull/3645))<br/>• Push neighboring icons apart on magnification ([PR #3681](https://github.com/duxlabs-dev/dux-shell/pull/3681))<br/>• Toggle compositor overview on launcher button right-click ([PR #3694](https://github.com/duxlabs-dev/dux-shell/pull/3694))<br/>• Allow recursive cycling through subdirectories ([PR #3739](https://github.com/duxlabs-dev/dux-shell/pull/3739))<br/>• Support auto-hide for island in overlay mode ([PR #3772](https://github.com/duxlabs-dev/dux-shell/pull/3772))<br/>• Add system tray slot and overflow menu to compact home ([PR #3780](https://github.com/duxlabs-dev/dux-shell/pull/3780))<br/>• Overflow menu & context menu to Dpopout ([PR #3239](https://github.com/duxlabs-dev/dux-shell/pull/3239))<br/>• Credit Reverier-Xu/Ori-fcitx5 for fcitx5 theme inspiration ([PR #3510](https://github.com/duxlabs-dev/dux-shell/pull/3510))<br/>• Update Ko-fi support link in README ([PR #3578](https://github.com/duxlabs-dev/dux-shell/pull/3578)) |
+| **[ignacypekala](https://github.com/ignacypekala)** | Add support for multiple config files ([PR #3425](https://github.com/duxlabs-dev/dux-shell/pull/3425)) |
+| **[iperegkefalos](https://github.com/iperegkefalos)** | Add touchpad click method in settings ([PR #3356](https://github.com/duxlabs-dev/dux-shell/pull/3356)) |
+| **[jetersen](https://github.com/jetersen)** | Rediscover wifi devices before scanning ([PR #3821](https://github.com/duxlabs-dev/dux-shell/pull/3821)) |
+| **[KadirJeager](https://github.com/KadirJeager)** | • App drawer: open the context menu at the click position ([PR #3697](https://github.com/duxlabs-dev/dux-shell/pull/3697))<br/>• Hide include setup banners on compositors without includes ([PR #3699](https://github.com/duxlabs-dev/dux-shell/pull/3699))<br/>• Send the vrr setting on the wlr-output path ([PR #3701](https://github.com/duxlabs-dev/dux-shell/pull/3701))<br/>• Workspace rename: prefill the focused workspace name on hyprland ([PR #3698](https://github.com/duxlabs-dev/dux-shell/pull/3698))<br/>• End the logind session on logout when the compositor has no quit request ([PR #3700](https://github.com/duxlabs-dev/dux-shell/pull/3700)) |
+| **[KIDult2226](https://github.com/KIDult2226)** | Per-output ICC color profiles and color temperature ([PR #3388](https://github.com/duxlabs-dev/dux-shell/pull/3388)) |
+| **[koopa1338](https://github.com/koopa1338)** | Inject external color palettes into matugen ([PR #3509](https://github.com/duxlabs-dev/dux-shell/pull/3509)) |
+| **[korbash](https://github.com/korbash)** | • Allow popouts from bars revealed in overview ([PR #3592](https://github.com/duxlabs-dev/dux-shell/pull/3592))<br/>• Restore cycling through grouped windows ([PR #3637](https://github.com/duxlabs-dev/dux-shell/pull/3637))<br/>• Use the current dms executable for matugen ([PR #3648](https://github.com/duxlabs-dev/dux-shell/pull/3648))<br/>• Keep focusedWorkspaceId in sync with niri's focused workspace ([PR #3713](https://github.com/duxlabs-dev/dux-shell/pull/3713))<br/>• Use explicit shell readiness ([PR #3514](https://github.com/duxlabs-dev/dux-shell/pull/3514)) |
+| **[LarsArtmann](https://github.com/LarsArtmann)** | Timed per-app popup mutes (1h / 4h) ([PR #3628](https://github.com/duxlabs-dev/dux-shell/pull/3628)) |
+| **[li-yuanfei](https://github.com/li-yuanfei)** | • Create screenshot directory lazily ([PR #3286](https://github.com/duxlabs-dev/dux-shell/pull/3286))<br/>• Retry initial DDC read ([PR #3287](https://github.com/duxlabs-dev/dux-shell/pull/3287)) |
+| **[lingdiansr](https://github.com/lingdiansr)** | Identify codecs from the profile description ([PR #3643](https://github.com/duxlabs-dev/dux-shell/pull/3643)) |
+| **[lostdata2](https://github.com/lostdata2)** | Pulse the critical bar indicator ([PR #3596](https://github.com/duxlabs-dev/dux-shell/pull/3596)) |
+| **[LuckShiba](https://github.com/LuckShiba)** | Add nix-vendor-hash pre-commit hook ([PR #3521](https://github.com/duxlabs-dev/dux-shell/pull/3521)) |
+| **[lung595](https://github.com/lung595)** | • Wrap long ToggleSetting labels instead of drawing under the toggle ([PR #3744](https://github.com/duxlabs-dev/dux-shell/pull/3744))<br/>• Ranking module and directory metadata for the plugin browser (1/3) ([PR #3751](https://github.com/duxlabs-dev/dux-shell/pull/3751))<br/>• Discover shelves, quick filters and typo-tolerant search in the browser (2/3) ([PR #3752](https://github.com/duxlabs-dev/dux-shell/pull/3752))<br/>• Detail page actions, one-click upvote, author page and undo after uninstall (3/3) ([PR #3753](https://github.com/duxlabs-dev/dux-shell/pull/3753)) |
+| **[marcusramberg](https://github.com/marcusramberg)** | Expose signal strength and conn type ([PR #3533](https://github.com/duxlabs-dev/dux-shell/pull/3533)) |
+| **[Mario-Mohar](https://github.com/Mario-Mohar)** | • Add invokeLast ipc to run the newest notification's default action ([PR #3734](https://github.com/duxlabs-dev/dux-shell/pull/3734))<br/>• Skip the clear confirmation when there is nothing to clear ([PR #3730](https://github.com/duxlabs-dev/dux-shell/pull/3730))<br/>• Stop treating BAMF_DESKTOP_FILE_HINT as a snap marker ([PR #3729](https://github.com/duxlabs-dev/dux-shell/pull/3729))<br/>• Write the first state save after a reload ([PR #3733](https://github.com/duxlabs-dev/dux-shell/pull/3733))<br/>• Search every process, not just the top 100 by cpu ([PR #3763](https://github.com/duxlabs-dev/dux-shell/pull/3763))<br/>• Color picker: remove recent colors with a hover button, delete or backspace ([PR #3764](https://github.com/duxlabs-dev/dux-shell/pull/3764)) |
+| **[matthewyjiang](https://github.com/matthewyjiang)** | • Add Herdr backend ([PR #3531](https://github.com/duxlabs-dev/dux-shell/pull/3531))<br/>• Reboot into a chosen EFI boot entry ([PR #3568](https://github.com/duxlabs-dev/dux-shell/pull/3568))<br/>• Let quickshell run tools from ~/.local/bin under systemd ([PR #3575](https://github.com/duxlabs-dev/dux-shell/pull/3575)) |
+| **[MishowHD](https://github.com/MishowHD)** | Handle profile switches and bus updates reactively ([PR #3427](https://github.com/duxlabs-dev/dux-shell/pull/3427)) |
+| **[neofion](https://github.com/neofion)** | Keyboard layout: add user-editable label overrides for compact mode ([PR #3503](https://github.com/duxlabs-dev/dux-shell/pull/3503)) |
+| **[njfletcher215](https://github.com/njfletcher215)** | • Added launcher dmenu mode ([PR #3639](https://github.com/duxlabs-dev/dux-shell/pull/3639))<br/>• Matugen on startup toggle ([PR #3270](https://github.com/duxlabs-dev/dux-shell/pull/3270)) |
+| **[nofuturekid](https://github.com/nofuturekid)** | Allow extra conditions per rule ([PR #3683](https://github.com/duxlabs-dev/dux-shell/pull/3683)) |
+| **[Pedroj-64](https://github.com/Pedroj-64)** | • Network(iwd): follow the Wi-Fi device when iwd recreates it ([PR #3707](https://github.com/duxlabs-dev/dux-shell/pull/3707))<br/>• Network(networkd): treat bridge, bond, team and vlan links as wired ([PR #3706](https://github.com/duxlabs-dev/dux-shell/pull/3706)) |
+| **[Perdixky](https://github.com/Perdixky)** | Add focus follows mouse toggle ([PR #3755](https://github.com/duxlabs-dev/dux-shell/pull/3755)) |
+| **[phoropter](https://github.com/phoropter)** | Update vesktop.css ([PR #3410](https://github.com/duxlabs-dev/dux-shell/pull/3410)) |
+| **[satoshoe-dev](https://github.com/satoshoe-dev)** | • Skip unchanged saves so external edits are not swallowed ([PR #3504](https://github.com/duxlabs-dev/dux-shell/pull/3504))<br/>• Pick the DankCommon translation for the chosen locale ([PR #3505](https://github.com/duxlabs-dev/dux-shell/pull/3505)) |
+| **[schmidma](https://github.com/schmidma)** | Route headset controls to the active player ([PR #3273](https://github.com/duxlabs-dev/dux-shell/pull/3273)) |
+| **[skamprogiannis](https://github.com/skamprogiannis)** | • Wake monitors after automatic lock ([PR #3633](https://github.com/duxlabs-dev/dux-shell/pull/3633))<br/>• Prevent repeated saves from erasing notes ([PR #3684](https://github.com/duxlabs-dev/dux-shell/pull/3684)) |
+| **[SpyrosPsarras](https://github.com/SpyrosPsarras)** | Network monitor: add hide when idle and compact mode options ([PR #3569](https://github.com/duxlabs-dev/dux-shell/pull/3569)) |
+| **[tassiovirginio](https://github.com/tassiovirginio)** | Recover SNI items orphaned at first boot ([PR #3570](https://github.com/duxlabs-dev/dux-shell/pull/3570)) |
+| **[tomecarvalho](https://github.com/tomecarvalho)** | Add "hide on last display" option ([PR #3816](https://github.com/duxlabs-dev/dux-shell/pull/3816)) |
+| **[wowo101](https://github.com/wowo101)** | Restore copied folders from history ([PR #3695](https://github.com/duxlabs-dev/dux-shell/pull/3695)) |
+| **[Zer0TraceX](https://github.com/Zer0TraceX)** | Add initial native FreeBSD support ([PR #3559](https://github.com/duxlabs-dev/dux-shell/pull/3559)) |
+| **[ZoeyErinBauer](https://github.com/ZoeyErinBauer)** | Add support for shelly ([PR #3367](https://github.com/duxlabs-dev/dux-shell/pull/3367)) |
+
+Thanks also to the translators, package maintainers, plugin and theme authors, and everyone testing builds and reporting bugs. If we missed you, let us know on Discord or GitHub.
+
+## The repositories
+
+2.0 is the rebrand. The package repositories move next.
+
+New Dux Labs repositories are almost ready to replace the AvengeMedia and DankLinux ones. Shortly after this release, 2.0.1 will move installs and updates onto them, including dankinstall. Existing users will run `dms migrate dux` to point their distro's repositories at Dux Labs. Until that ships, keep the repositories you already have.
+
+## Resources
+
+<a href="/docs/getting-started" className={styles.getStartedLink}>Get started with DMS <span aria-hidden="true">→</span></a>
+
+<div className={styles.linksRow}>
+  <a href="https://github.com/duxlabs-dev/dux-shell">GitHub</a>
+  <a href="/docs/">Documentation</a>
+  <a href="/docs/dfiles">Dux Files</a>
+  <a href="/plugins">Plugins &amp; themes</a>
+  <a href="https://wallpaper.duxlabs.dev">Wallpapers</a>
+  <a href="https://discord.gg/ppWTpKmPgT">Discord</a>
+  <a href="https://ko-fi.com/duxlabs">Support on Ko-fi</a>
+</div>
+
+<div className={styles.niriThanks}>
+  <img src={useBaseUrl('/img/niri.svg')} alt="niri" width="48" height="48" loading="lazy" />
+  <span>Special thanks to <a href="https://github.com/YaLTeR">YaLTeR</a> and the <a href="https://github.com/niri-wm/niri">niri</a> community for their continued support and collaboration.</span>
+</div>
+
+<div className={styles.thankYouHero}>
+  <ExpressiveShape shape="Cookie12Sided" className={`${styles.shape} ${styles.shapeCookie}`} />
+  <ExpressiveShape shape="SoftBurst" className={`${styles.shape} ${styles.shapeBurst}`} />
+  <div className={styles.heroContent}>
+    <h2>Thank <span className={styles.accentText}>you.</span></h2>
+    <p>To everyone contributing code, translations, plugins, packaging, feedback, sponsorships, and donations. DMS is here because of you.</p>
+  </div>
+</div>

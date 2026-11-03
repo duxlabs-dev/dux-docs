@@ -1,0 +1,20 @@
+{
+  "headers": [
+    {
+      "source": "**/*",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, s-maxage=300, stale-while-revalidate=86400, stale-if-error=86400" }]
+    },
+    {
+      "source": "{img,fonts}/**",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=604800" }]
+    },
+    {
+      "source": "assets/**",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "serve.json",
+      "headers": [{ "key": "Cache-Control", "value": "no-store" }]
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -16,18 +16,22 @@ const sidebars: SidebarsConfig = {
   tutorialSidebar: [
     'index',
     'getting-started',
-    'dankinstall',
+    {
+      type: 'doc',
+      id: 'duxinstall',
+      label: 'Dux Installer',
+    },
     {
       type: 'category',
-      label: 'DankMaterialShell (dms)',
+      label: 'Dux Shell (DMS)',
       collapsed: false,
       items: [
         {
           type: 'doc',
-          id: 'dankmaterialshell/overview',
+          id: 'dms/overview',
           label: 'Overview & Architecture',
         },
-        'dankmaterialshell/installation',
+        'dms/installation',
         {
           type: 'category',
           label: 'Installation - NixOS',
@@ -35,88 +39,106 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'dankmaterialshell/nixos',
+              id: 'dms/nixos',
               label: 'NixOS module',
             },
             {
               type: 'doc',
-              id: 'dankmaterialshell/nixos-flake',
+              id: 'dms/nixos-flake',
               label: 'Flake (NixOS/home-manager)',
             },
           ],
         },
-        'dankmaterialshell/calendar-integration',
-        'dankmaterialshell/lock-screen-authentication',
-        'dankmaterialshell/vpn',
-        'dankmaterialshell/reboot-to-another-os',
+        'dms/calendar-integration',
+        'dms/lock-screen-authentication',
+        'dms/vpn',
+        'dms/autostart',
+        'dms/network-speed-monitor',
+        'dms/reboot-to-another-os',
         {
           type: 'doc',
-          id: 'dankmaterialshell/managing',
+          id: 'dms/managing',
           label: 'Managing Your Installation',
         },
-        'dankmaterialshell/compositors',
-        'dankmaterialshell/layers',
-        'dankmaterialshell/compositor-blur',
+        'dms/compositors',
+        'dms/layers',
+        'dms/compositor-blur',
         {
           type: 'category',
           label: 'Themes',
           collapsed: false,
           items: [
-            'dankmaterialshell/application-themes',
-            'dankmaterialshell/icon-theming',
-            'dankmaterialshell/custom-themes',
+            'dms/application-themes',
+            'dms/icon-theming',
+            'dms/custom-themes',
           ],
         },
-        'dankmaterialshell/keybinds-ipc',
+        'dms/keybinds-ipc',
+        'dms/keyboard-navigation',
         {
           type: 'category',
           label: 'CLI',
           collapsed: false,
           items: [
-            'dankmaterialshell/cli-setup',
-            'dankmaterialshell/cli-doctor',
+            'dms/cli-setup',
+            'dms/cli-doctor',
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-system-updater',
+              id: 'dms/cli-system-updater',
               label: 'System updater',
             },
-            'dankmaterialshell/cli-process-management',
-            'dankmaterialshell/cli-keybinds-cheatsheets',
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-dank16',
+              id: 'dms/cli-switch',
+              label: 'Switch channels',
+            },
+            {
+              type: 'doc',
+              id: 'dms/cli-migrate',
+              label: 'Migrate repositories',
+            },
+            {
+              type: 'doc',
+              id: 'dms/cli-systemd',
+              label: 'Systemd service',
+            },
+            'dms/cli-process-management',
+            'dms/cli-keybinds-cheatsheets',
+            {
+              type: 'doc',
+              id: 'dms/cli-dank16',
               label: 'Dank16 (ANSI Colors)',
             },
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-color-picker',
+              id: 'dms/cli-color-picker',
               label: 'Color Picker',
             },
-            'dankmaterialshell/cli-brightness',
+            'dms/cli-brightness',
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-icc',
+              id: 'dms/cli-icc',
               label: 'ICC Color Profiles',
             },
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-clipboard',
+              id: 'dms/cli-clipboard',
               label: 'Clipboard Manager',
             },
-            'dankmaterialshell/cli-screenshot',
+            'dms/cli-screenshot',
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-qr',
+              id: 'dms/cli-qr',
               label: 'QR Codes',
             },
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-dmenu',
+              id: 'dms/cli-dmenu',
               label: 'Dmenu',
             },
             {
               type: 'doc',
-              id: 'dankmaterialshell/cli-notify',
+              id: 'dms/cli-notify',
               label: 'Notifications',
             },
           ],
@@ -126,36 +148,36 @@ const sidebars: SidebarsConfig = {
           label: 'Plugins',
           collapsed: false,
           items: [
-            'dankmaterialshell/plugins-overview',
-            'dankmaterialshell/plugin-development',
+            'dms/plugins-overview',
+            'dms/plugin-development',
           ],
         },
-        'dankmaterialshell/advanced-configuration',
+        'dms/advanced-configuration',
       ],
     },
     {
       type: 'category',
-      label: 'DankLinux Repository',
+      label: 'Dux Labs Repo',
       collapsed: false,
       items: [
         {
           type: 'doc',
-          id: 'danklinux/index',
+          id: 'repo/index',
           label: 'Overview',
         },
       ],
     },
     {
       type: 'category',
-      label: 'DankGreeter (dms-greeter)',
+      label: 'Dux Greeter',
       collapsed: false,
       items: [
         {
           type: 'doc',
-          id: 'dankgreeter/index',
+          id: 'dms-greeter/index',
           label: 'Overview',
         },
-        'dankgreeter/installation',
+        'dms-greeter/installation',
         {
           type: 'category',
           label: 'Installation - NixOS',
@@ -163,23 +185,23 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'dankgreeter/nixos',
+              id: 'dms-greeter/nixos',
               label: 'NixOS module',
             },
             {
               type: 'doc',
-              id: 'dankgreeter/nixos-flake',
+              id: 'dms-greeter/nixos-flake',
               label: 'Flake',
             },
           ],
         },
-        'dankgreeter/configuration',
-        'dankgreeter/authentication',
+        'dms-greeter/configuration',
+        'dms-greeter/authentication',
       ],
     },
     {
       type: 'category',
-      label: 'DankGOP (dgop)',
+      label: 'Dux GOP',
       collapsed: false,
       items: [
         {
@@ -194,15 +216,15 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'DankSearch (dsearch)',
+      label: 'Dux Search',
       collapsed: false,
       items: [
         {
           type: 'doc',
-          id: 'danksearch/index',
+          id: 'dsearch/index',
           label: 'Overview',
         },
-        'danksearch/installation',
+        'dsearch/installation',
         {
           type: 'category',
           label: 'Installation - NixOS',
@@ -210,35 +232,65 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
-              id: 'danksearch/nixos-flake',
+              id: 'dsearch/nixos-flake',
               label: 'Flake (home-manager)',
             },
             {
               type: 'doc',
-              id: 'danksearch/nixos',
+              id: 'dsearch/nixos',
               label: 'NixOS module',
             },
           ],
         },
-        'danksearch/configuration',
-        'danksearch/usage',
+        'dsearch/configuration',
+        'dsearch/usage',
       ],
     },
     {
       type: 'category',
-      label: 'DankCalendar (dcal)',
+      label: 'Dux Calendar',
       collapsed: false,
       items: [
         {
           type: 'doc',
-          id: 'dankcalendar/index',
+          id: 'dcal/index',
           label: 'Overview',
         },
-        'dankcalendar/installation',
-        'dankcalendar/accounts',
-        'dankcalendar/usage',
-        'dankcalendar/navigation',
-        'dankcalendar/ipc',
+        'dcal/installation',
+        'dcal/accounts',
+        'dcal/usage',
+        'dcal/navigation',
+        'dcal/ipc',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Dux Files',
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          id: 'dfiles/index',
+          label: 'Overview',
+        },
+        'dfiles/installation',
+        {
+          type: 'category',
+          label: 'Installation - NixOS',
+          collapsed: true,
+          items: [
+            {
+              type: 'doc',
+              id: 'dfiles/nixos-flake',
+              label: 'Flake (NixOS/home-manager)',
+            },
+          ],
+        },
+        'dfiles/usage',
+        'dfiles/desktop-integration',
+        'dfiles/keyboard',
+        'dfiles/settings',
+        'dfiles/ipc',
       ],
     },
     'contributing',
@@ -248,7 +300,7 @@ const sidebars: SidebarsConfig = {
       label: 'Contributing Plugins & Themes',
     },
     'support',
-    'dankmaterialshell/changelog',
+    'dms/changelog',
   ],
 };
 

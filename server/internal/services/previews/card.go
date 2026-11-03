@@ -5,7 +5,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 	"github.com/fogleman/gg"
 )
 

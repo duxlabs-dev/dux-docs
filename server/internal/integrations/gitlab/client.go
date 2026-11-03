@@ -3,6 +3,7 @@ package gitlab
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,6 +16,8 @@ type Client struct {
 	httpClient *http.Client
 	token      string
 }
+
+var ErrNotFound = errors.New("unexpected status code: 404")
 
 func NewClient(token string) *Client {
 	return &Client{
@@ -42,6 +45,9 @@ func (c *Client) get(ctx context.Context, path string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusNotFound {
+		return nil, ErrNotFound
+	}
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}

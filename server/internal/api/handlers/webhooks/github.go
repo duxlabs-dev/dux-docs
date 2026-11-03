@@ -12,7 +12,7 @@ import (
 
 	"github.com/danielgtaylor/huma/v2"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
 )
 
 const refreshDebounce = 2 * time.Second

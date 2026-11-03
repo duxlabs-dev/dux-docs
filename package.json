@@ -1,5 +1,5 @@
 {
-  "name": "dms-docs-docusaurus",
+  "name": "dux-docs",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -28,11 +28,16 @@
     "@docusaurus/theme-mermaid": "^3.10.2",
     "@easyops-cn/docusaurus-search-local": "^0.55.2",
     "@mdx-js/react": "^3.1.1",
+    "@tailwindcss/postcss": "^4.3.3",
     "clsx": "^2.1.1",
+    "material-shapes-ts": "^0.3.0",
+    "material-symbols": "npm:@nine-thirty-five/material-symbols-react@^2.5.0",
     "plugin-image-zoom": "^1.2.0",
     "prism-react-renderer": "^2.4.1",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.10.2",

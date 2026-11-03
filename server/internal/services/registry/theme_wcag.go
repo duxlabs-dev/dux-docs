@@ -4,7 +4,7 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 // Thresholds from WCAG 2.2 SC 1.4.3 / 1.4.6

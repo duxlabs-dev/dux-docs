@@ -1,0 +1,1333 @@
+---
+title: Keybinds & IPC
+description: Comprehensive IPC functionality for external control of Dux Shell
+sidebar_position: 5
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+Dux Shell provides comprehensive IPC (Inter-Process Communication) functionality that allows external control of the shell through command-line commands. All IPC commands follow the format:
+
+```bash
+dms ipc call <target> <function> [parameters...]
+```
+
+## Discovering IPC commands
+
+List all available targets and functions while DMS is running:
+
+```bash
+dms ipc list     # list all targets and functions
+dms ipc          # same
+dms ipc --help   # same, plus usage text
+```
+
+:::note
+Live listing requires DMS to be running. If listing fails, use this page as the offline reference or start the shell with `dms run`.
+:::
+
+## Core Controls
+
+### audio
+
+Manage audio output and input devices.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `setvolume <percentage>` | Set output volume | percentage (0-100) |
+| `increment <step>` | Increase output volume | step (default: 5) |
+| `decrement <step>` | Decrease output volume | step (default: 5) |
+| `mute` | Toggle output mute | - |
+| `setmic <percentage>` | Set microphone volume | percentage (0-100) |
+| `micmute` | Toggle microphone mute | - |
+| `cycleoutput` | Cycle through audio output devices | - |
+| `setmono <bool>` | Enable or disable mono audio | true/false |
+| `getmono` | Get current mono audio state | - |
+| `status` | Get current audio status | - |
+
+**Examples:**
+```bash
+dms ipc call audio setvolume 50
+dms ipc call audio increment 10
+dms ipc call audio mute
+dms ipc call audio cycleoutput
+dms ipc call audio setmono true
+dms ipc call audio getmono
+```
+
+:::note
+`audio setmic` and `audio micmute` remain available for backwards compatibility, but new scripts and keybinds should use the dedicated [`mic`](#mic) target below.
+:::
+
+### mic
+
+Dedicated microphone input control with interactive OSD support.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `setvolume <percentage>` | Set microphone volume | percentage (0-100) |
+| `increment <step>` | Increase microphone volume (unmutes if muted) | step (default: 5) |
+| `decrement <step>` | Decrease microphone volume (unmutes if muted) | step (default: 5) |
+| `mute` | Toggle microphone mute | - |
+| `status` | Get current microphone volume and mute state | - |
+
+**Examples:**
+```bash
+dms ipc call mic setvolume 75
+dms ipc call mic increment 5
+dms ipc call mic decrement 10
+dms ipc call mic mute
+dms ipc call mic status
+```
+
+**Notes:**
+- Adjusting the microphone volume triggers an interactive OSD (when `osdMicVolumeEnabled` is on) with a draggable slider and a mute toggle, mirroring the speaker volume OSD.
+- `increment` and `decrement` automatically unmute the microphone before changing the level.
+
+### brightness
+
+Control display brightness for internal and external displays.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `set <percentage> [device]` | Set brightness level | percentage (1-100), device (optional) |
+| `increment <step> [device]` | Increase brightness | step, device (optional) |
+| `decrement <step> [device]` | Decrease brightness | step, device (optional) |
+| `status` | Get current brightness status | - |
+| `list` | List all brightness devices | - |
+| `enableExponential [device]` | Enable exponential brightness mode | device (optional, uses current if not specified) |
+| `disableExponential [device]` | Disable exponential brightness mode | device (optional, uses current if not specified) |
+| `toggleExponential [device]` | Toggle exponential brightness mode | device (optional, uses current if not specified) |
+
+**Examples:**
+```bash
+dms ipc call brightness set 80
+dms ipc call brightness increment 10 ""
+dms ipc call brightness decrement 5 "intel_backlight"
+dms ipc call brightness disableExponential "backlight:intel_backlight"
+dms ipc call brightness toggleExponential
+dms ipc call brightness set 40 "software:DP-2"
+```
+
+### night
+
+Night mode (gamma/color temperature) control.
+
+`gamma` and `contrast` are separate from night mode. They stay applied when night mode is off, and setting both back to 1.0 releases the gamma protocol so other tools can bind it again, unless an output is software-dimmed. Both need DMS API v34.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `toggle` | Toggle night mode on/off | - |
+| `enable` | Enable night mode | - |
+| `disable` | Disable night mode | - |
+| `status` | Get night mode status | - |
+| `gamma [value]` | Get/set display gamma, applied with or without night mode | 0.5-2.0, 1.0 is neutral (optional) |
+| `contrast [value]` | Get/set display contrast around mid-gray, applied with or without night mode | 0.5-2.0, 1.0 is neutral (optional) |
+| `getCurrentTemp` | Get live gamma temperature | - |
+| `getTargetTemp` | Get configured night temperature | - |
+| `getDayTemp` | Get configured day temperature | - |
+| `setTargetTemp <value>` | Set night temperature | value in Kelvin (2500-6000) |
+| `setDayTemp <value>` | Set day temperature (applies when automation is on) | value in Kelvin (2500-6000) |
+| `getSchedule` | Get automation details (mode, period, sun times, next transition) | - |
+| `automation [mode]` | Get/set automation mode | "manual", "time", or "location" (optional) |
+| `schedule <start> <end>` | Set time-based schedule | start time (HH:MM), end time (HH:MM) |
+| `location <lat> <lon>` | Set location coordinates | latitude, longitude |
+
+**Examples:**
+```bash
+dms ipc call night toggle
+dms ipc call night gamma 1.2
+dms ipc call night contrast 1.1
+dms ipc call night getCurrentTemp
+dms ipc call night setTargetTemp 4000
+dms ipc call night setDayTemp 5500
+dms ipc call night getSchedule
+dms ipc call night automation time
+dms ipc call night schedule 20:00 06:00
+dms ipc call night location 40.7128 -74.0060
+```
+
+### mpris
+
+Media player control via MPRIS interface.
+
+| Function | Description |
+| --- | --- |
+| `list` | List all available media players |
+| `play` | Start playback |
+| `pause` | Pause playback |
+| `playPause` | Toggle play/pause |
+| `previous` | Skip to previous track |
+| `next` | Skip to next track |
+| `stop` | Stop playback |
+
+**Examples:**
+```bash
+dms ipc call mpris playPause
+dms ipc call mpris next
+```
+
+### lock
+
+Screen lock control and status.
+
+| Function | Description |
+| --- | --- |
+| `lock` | Lock the screen immediately |
+| `lockAndOutputsOff` | Lock the screen, fade to black, then power off the monitors (GNOME Super+L style). Any input cancels the fade or wakes the monitors; the fade duration follows the fade-to-DPMS grace period setting. |
+| `demo` | Show lock screen demo (doesn't lock) |
+| `isLocked` | Check if screen is locked |
+
+**Examples:**
+```bash
+dms ipc call lock lock
+dms ipc call lock lockAndOutputsOff
+dms ipc call lock isLocked
+```
+
+### sessions
+
+Switch between logind sessions that are already running on the current seat. Wraps `loginctl list-sessions` and `loginctl activate`.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `list` | List sessions as tab-separated rows (current marked `*current*`) | - |
+| `refresh` | Re-enumerate sessions in the background | - |
+| `open` | Refresh and open the Switch User picker | - |
+| `activate <sessionId>` | Activate a session by its numeric logind ID | sessionId |
+| `switchTo <target>` | Activate a session by username or session ID | target (username or sessionId) |
+
+**Examples:**
+```bash
+# See what's switchable
+dms ipc call sessions list
+
+# Open the Switch User picker (good for a keybind)
+dms ipc call sessions open
+
+# Jump straight to another logged-in user
+dms ipc call sessions switchTo testuser2
+
+# Or by session ID
+dms ipc call sessions activate 4
+```
+
+:::note
+This only switches between sessions that *already exist* on the current seat. Creating a brand-new session for a user who isn't logged in needs a multi-session greeter (greetd-flexiserver / GDM / LightDM); the picker's empty state offers a Log out fallback to reach the greeter.
+:::
+
+The `dms switch-user [target]` CLI command wraps the same calls with a friendlier interactive list when no target matches.
+
+### inhibit
+
+Idle inhibitor control to prevent automatic sleep/lock.
+
+| Function | Description |
+| --- | --- |
+| `toggle` | Toggle idle inhibit state |
+| `enable` | Enable idle inhibit indefinitely (prevent sleep) |
+| `enableFor <minutes>` | Enable idle inhibit for a number of minutes |
+| `disable` | Disable idle inhibit (allow sleep) |
+| `status` | Report whether idle inhibit is on, and the remaining time when a timer is set |
+| `reason <text>` | Set the inhibit reason; pass an empty string to read the current one |
+
+**Examples:**
+```bash
+dms ipc call inhibit toggle
+dms ipc call inhibit enable
+dms ipc call inhibit enableFor 60
+dms ipc call inhibit status
+dms ipc call inhibit reason "rendering a video"
+dms ipc call inhibit reason ""   # prints the current reason
+```
+
+The state is saved in the session, like Do Not Disturb, so it survives a shell
+restart — whether that comes from `dms restart` or from systemd bringing the
+service back.
+
+### powerprofile
+
+Power profile control via the PowerProfiles D-Bus interface. Changes stay in sync with DMS UI and trigger the power profile OSD when enabled in Settings → OSD.
+
+Requires either `power-profiles-daemon`, `tuned` with `tuned-ppd` or `tlp` with `tlp-pd`, to be installed and running. Works on all compositors.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open` | Show the power profile picker modal | - |
+| `close` | Close the power profile picker modal | - |
+| `toggle` | Toggle power profile picker modal visibility | - |
+| `list` | List available profile slugs (one per line) | - |
+| `status` | Get the currently active profile slug | - |
+| `set <profile>` | Set the active power profile | slug or alias (see below) |
+| `cycle` | Cycle to the next available profile | - |
+
+**Profile slugs and aliases for `set`:**
+- `power-saver` — also `powersaver`, `saver`, `0`
+- `balanced` — also `1`
+- `performance` — also `2` (only when supported by hardware)
+
+**Cycle order:** `power-saver` → `balanced` → `performance` → `power-saver` (skips profiles not available on your hardware).
+
+**Examples:**
+```bash
+dms ipc call powerprofile status
+dms ipc call powerprofile list
+dms ipc call powerprofile cycle
+dms ipc call powerprofile set balanced
+dms ipc call powerprofile set performance
+dms ipc call powerprofile toggle
+```
+
+**Notes:**
+- `list` returns only profiles available on your system (performance is omitted when unsupported)
+- `status` returns the current slug: `power-saver`, `balanced`, or `performance`
+- Returns `ERROR: power-profiles-daemon not available` when no PowerProfiles daemon (`power-profiles-daemon`, `tuned-ppd` or `tlp-pd`) is running
+- Returns `ERROR: Failed to set power profile` if the profile change could not be applied
+
+### wellbeing
+
+Digital Wellbeing screen time tracking and limits. Usage is recorded by the DMS server, so tracking needs a running `dms` backend with wellbeing support.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `toggle` | Toggle screen time tracking | - |
+| `enable` | Enable screen time tracking | - |
+| `disable` | Disable screen time tracking | - |
+| `status` | Report tracking state, today's screen time and the daily limit | - |
+| `today` | Today's screen time in seconds (`0` while tracking is off) | - |
+| `dailyLimit <minutes>` | Set the daily screen time limit; `0` clears it, empty string prints the current one | minutes |
+| `appLimit <appId> <minutes>` | Set a daily limit for one app; `0` clears it, empty string prints the current one | app id, minutes |
+
+To open the Digital Wellbeing dashboard tab, use `dms ipc call dash open wellbeing`. The tab only appears while tracking is enabled.
+
+**Examples:**
+```bash
+dms ipc call wellbeing status
+dms ipc call wellbeing toggle
+dms ipc call wellbeing today
+dms ipc call wellbeing dailyLimit 180
+dms ipc call wellbeing dailyLimit ""   # prints the current limit
+dms ipc call wellbeing appLimit firefox 60
+dms ipc call wellbeing appLimit firefox 0
+```
+
+**Keybind examples:**
+```kdl
+// niri
+Mod+Shift+W { spawn "dms" "ipc" "call" "dash" "toggle" "wellbeing"; }
+```
+```lua
+-- Hyprland
+hl.bind(mod .. " + SHIFT + W", hl.dsp.exec_cmd("dms ipc call dash toggle wellbeing"))
+```
+
+Both actions are also available in **Settings → Keyboard shortcuts** as *Dashboard: Digital Wellbeing* and *Screen Time Tracking: Toggle*.
+
+## Wallpaper & Profile
+
+### wallpaper
+
+Wallpaper management with support for global and per-monitor configurations.
+
+#### Global Wallpaper Functions
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `get` | Get current wallpaper path | - |
+| `set <path>` | Set wallpaper | path to image file |
+| `clear` | Clear all wallpapers | - |
+| `next` | Cycle to next wallpaper | - |
+| `prev` | Cycle to previous wallpaper | - |
+
+#### Per-Monitor Functions
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `getFor <screen>` | Get wallpaper for monitor | monitor name (e.g., "DP-2") |
+| `setFor <screen> <path>` | Set wallpaper for monitor | monitor name, path to image |
+| `nextFor <screen>` | Cycle to next wallpaper | monitor name |
+| `prevFor <screen>` | Cycle to previous wallpaper | monitor name |
+
+**Examples:**
+```bash
+# Global wallpaper mode
+dms ipc call wallpaper set /path/to/image.jpg
+dms ipc call wallpaper next
+
+# Per-monitor wallpaper mode
+dms ipc call wallpaper setFor DP-2 /path/to/image1.jpg
+dms ipc call wallpaper setFor eDP-1 /path/to/image2.jpg
+dms ipc call wallpaper nextFor eDP-1
+
+# Clear and return to global mode
+dms ipc call wallpaper clear
+```
+
+**Note:** When per-monitor mode is enabled, legacy global functions will return error messages directing you to use the per-monitor equivalents.
+
+### profile
+
+User profile image management.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `getImage` | Get current profile image path | - |
+| `setImage <path>` | Set profile image | path to image file |
+| `clearImage` | Clear profile image | - |
+
+**Examples:**
+```bash
+dms ipc call profile setImage /path/to/avatar.png
+dms ipc call profile clearImage
+```
+
+## Appearance Controls
+
+### theme
+
+Theme mode control (light/dark mode switching).
+
+| Function | Description |
+| --- | --- |
+| `toggle` | Toggle between light and dark themes |
+| `light` | Switch to light theme |
+| `dark` | Switch to dark theme |
+| `getMode` | Get current theme mode |
+
+**Examples:**
+```bash
+dms ipc call theme toggle
+dms ipc call theme dark
+```
+
+### bar
+
+Control individual bars using flexible selectors.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `reveal <selector> <value>` | Show a bar | selector + value |
+| `hide <selector> <value>` | Hide a bar | selector + value |
+| `toggle <selector> <value>` | Toggle bar visibility | selector + value |
+| `status <selector> <value>` | Get bar visibility status | selector + value |
+| `autoHide <selector> <value>` | Enable auto-hide mode | selector + value |
+| `manualHide <selector> <value>` | Disable auto-hide mode | selector + value |
+| `toggleAutoHide <selector> <value>` | Toggle auto-hide mode | selector + value |
+| `toggleReveal <selector> <value>` | Toggle the runtime reveal/tuck state for an auto-hidden bar | selector + value |
+| `getPosition <selector> <value>` | Get bar position | selector + value |
+| `setPosition <selector> <value> <position>` | Set bar position | selector + value + position (top, bottom, left, right) |
+
+**Note:** `toggleReveal` only affects bars with auto-hide enabled. Moving the pointer into the bar reveal area clears the IPC reveal state and hands control back to normal hover auto-hide behavior.
+
+**Selectors:**
+- `index` - Select by position (0-based)
+- `id` - Select by unique bar ID
+- `name` - Select by bar name
+
+**Examples:**
+```bash
+# By index
+dms ipc call bar hide index 0
+dms ipc call bar reveal index 1
+dms ipc call bar toggle index 0
+
+# By name
+dms ipc call bar toggle name "Main Bar"
+dms ipc call bar status name "Secondary"
+
+# By ID
+dms ipc call bar reveal id abc123
+
+# Auto-hide controls
+dms ipc call bar autoHide index 0
+dms ipc call bar manualHide name "Main Bar"
+dms ipc call bar toggleAutoHide index 1
+dms ipc call bar toggleReveal index 0
+
+# Position controls
+dms ipc call bar getPosition index 0
+dms ipc call bar getPosition id default
+dms ipc call bar setPosition index 0 top
+dms ipc call bar setPosition id default left
+```
+
+**Island and Dot:** A bar instance may use the Island or Dot layout (Settings → Bar → Layout). Both are still listed by `bar` selectors (`index` includes them), but visibility and auto-hide commands return `BAR_IS_ISLAND` — use the [`island`](#island) or [`dot`](#dot) target instead. `setPosition` accepts only `top` and `bottom` for an edge island; for a free island it only picks the orientation (`top`/`bottom` horizontal, `left`/`right` vertical).
+
+### island
+
+Island activity surface. Requires a bar instance using the Island layout and enabled. Commands target the focused screen unless you use an `*On` variant. This target never answers for a [Dot](#dot); use `openInstance` / `toggleInstance` with a bar id to address either kind explicitly.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open <activity>` | Expand into the requested activity | activity id |
+| `toggle <activity>` | Collapse if expanded; otherwise expand into the activity | activity id |
+| `show <activity>` | Switch the compact face without expanding | activity id |
+| `close` | Collapse back to the compact face | - |
+| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when Default Opens is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
+| `status` | JSON snapshot of the island on the focused screen | - |
+| `notifications` | Toggle the notification center as an island activity | - |
+| `openOn` / `toggleOn` / `showOn` / `closeOn` / `cycleOn` / `statusOn` / `notificationsOn` | Same actions on a named monitor | activity (where required) + screen name |
+| `openInstance` / `toggleInstance` | Address one island or dot instance by bar id | activity + screen name + bar id |
+| `move <x> <y>` | Move a free island's center to a pixel position on its screen, clamped fully on screen | x, y |
+| `moveOn <screen> <x> <y>` | Same on a named monitor | screen name, x, y |
+| `center` / `centerOn <screen>` | Recenter a free island, useful to recover one parked off a disconnected display | screen name (for `centerOn`) |
+
+**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
+
+**Free placement:** With Float on, Settings → Bar → General → Placement offers **Edge** (floats along its edge) or **Anywhere** (a draggable island you can park at any point on the display). `move` / `center` only apply to an Anywhere island and return `DANK_ISLAND_NOT_FREE` otherwise. `status` reports `free` plus the anchor `x` / `y` for free islands.
+
+When an Island or a Dot is the sole top chrome on the focused display, or an island or dot there has **Shared shortcuts** set to **Always here** or is the last one clicked under **Last used on this screen**, these existing targets open island activities instead of their popouts:
+
+- `control-center` `open` / `toggle` / `hide` / `status`
+- `notifications` `open` / `toggle` / `close` (the notification modal is used if the island does not own the screen)
+- `dash` `open` / `toggle` with `overview` (or no tab), `media`, `wallpaper`, or `weather`, and `dash close` while those activities are open
+
+`spotlight` and `launcher` open the island launcher when **Launcher → Default Opens** is Island, and fall back to Spotlight if the focused screen has no island. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
+
+**Examples:**
+```bash
+dms ipc call island toggle home
+dms ipc call island open media
+dms ipc call island open launcher
+dms ipc call island open controlcenter
+dms ipc call island open wallpaper
+dms ipc call island open weather
+dms ipc call island open notifications
+dms ipc call island show home
+dms ipc call island toggleOn media DP-1
+dms ipc call island cycle
+dms ipc call island close
+dms ipc call island status
+dms ipc call island move 1600 900
+dms ipc call island centerOn DP-1
+dms ipc call island openInstance controlcenter DP-1 default
+```
+
+### dot
+
+Dot: a bar instance using the Dot layout (Settings → Bar → Layout → Dot). It rests as a small draggable dot anywhere on the display, floats over every other bar, and opens the same activities as the island. Fades and shrinks when idle; hover or drag to wake it. Commands target the focused screen unless you use an `*On` variant, and answer only for dots — an [`island`](#island) never responds here.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open <activity>` | Expand the dot into the requested activity | activity id |
+| `toggle <activity>` | Collapse if expanded; otherwise expand into the activity | activity id |
+| `show <activity>` | Switch the pending activity without expanding | activity id |
+| `close` | Collapse back to the dot | - |
+| `cycle` | Cycle activities, same order as the island | - |
+| `status` | JSON snapshot of the dot (`screen`, `x`, `y`, `idle`, `activity`, `expanded`, …) | - |
+| `notifications` | Toggle the notification center as a dot activity | - |
+| `move <x> <y>` | Move the dot's center to a pixel position on its screen, clamped fully on screen | x, y |
+| `center` | Recenter the dot on its screen (Settings → Dot → **Reset Position** recenters it on every screen) | - |
+| `openOn` / `toggleOn` / `showOn` | Same activity action on a named monitor | activity + screen name |
+| `closeOn` / `cycleOn` / `statusOn` / `notificationsOn` / `centerOn` | Same action on a named monitor | screen name |
+| `moveOn` | Move the dot on a named monitor | screen name + x + y |
+| `openInstance` / `toggleInstance` | Address one dot instance by bar id | activity + screen name + bar id |
+
+Activities and their aliases match the [`island`](#island) target. Replies use a `DANK_DOT_` prefix (`DANK_DOT_OPEN`, `DANK_DOT_CLOSED`, `DANK_DOT_MOVED`, `DANK_DOT_UNAVAILABLE`, …).
+
+With bars on the same screen, the dot only reacts to clicks and this target by default; the shared `control-center`, `notifications`, `dash`, `spotlight` and `launcher` targets keep opening your bar popouts. On a screen with no bar and no island, the dot is the sole chrome and takes them automatically.
+
+**Shared shortcuts** (Settings → Bar → General, with the dot or an island selected) changes this per instance:
+
+- **Normal routing** — the default above.
+- **Always here** — shared targets open in this dot or island, even when bars share the screen. Only one instance per screen can hold this; choosing it on another resets the previous one to Normal.
+- **Last used on this screen** — shared shortcuts follow the last bar, island or dot you clicked. Each screen remembers its own destination until the shell restarts; clicking a standard bar restores its popouts and launcher. Before the first click, Normal routing applies.
+
+All three work with the Frame layout and do not require changing your launcher style. Explicit `dot` and `island` commands keep their own targets regardless.
+
+**Examples:**
+```bash
+dms ipc call dot toggle home
+dms ipc call dot open launcher
+dms ipc call dot open controlcenter
+dms ipc call dot notifications
+dms ipc call dot move 1600 900
+dms ipc call dot moveOn DP-1 200 200
+dms ipc call dot center
+dms ipc call dot close
+dms ipc call dot status
+```
+
+### dock
+
+Dock visibility and behavior control.
+
+A dock is one of possibly several configurations, each holding one screen edge. Functions without a selector act on the dock of the focused screen; the `*For` variants take a selector naming a dock by its id or its display name (as shown in **Settings → Dock → Configuration**). Any function returns `DOCK_NOT_FOUND` when no dock matches.
+
+| Function | Description |
+| --- | --- |
+| `reveal` / `revealFor <selector>` | Enable the dock |
+| `hide` / `hideFor <selector>` | Disable the dock |
+| `toggle` / `toggleFor <selector>` | Toggle the dock |
+| `status` / `statusFor <selector>` | Get dock visibility status |
+| `edit` / `editFor <selector>` | Open the dock's widget edit mode, or `DOCK_HIDDEN` when the dock is disabled |
+| `autoHide` | Enable auto-hide mode |
+| `manualHide` | Disable auto-hide mode |
+| `toggleAutoHide` | Toggle auto-hide mode |
+| `autoHideFor <selector> <enabled>` | Set auto-hide on a named dock, `true` or `false` |
+
+**Examples:**
+```bash
+dms ipc call dock toggle
+dms ipc call dock hide
+dms ipc call dock reveal
+dms ipc call dock status
+dms ipc call dock edit
+
+# A specific dock, by display name or id
+dms ipc call dock revealFor Dock
+dms ipc call dock hideFor dock_1757371200000
+dms ipc call dock editFor Dock
+
+# Auto-hide controls
+dms ipc call dock autoHide
+dms ipc call dock manualHide
+dms ipc call dock toggleAutoHide
+dms ipc call dock autoHideFor Dock true
+```
+
+### widget
+
+Control bar widget popouts, menus, and visibility (including plugins).
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `toggle <widgetId>` | Toggle widget popout visibility | widget ID |
+| `openWith <widgetId> <mode>` | Open widget popout in a specific mode | widget ID, mode |
+| `toggleWith <widgetId> <mode>` | Toggle widget popout in a specific mode | widget ID, mode |
+| `openQuery <widgetId> <query>` | Open widget popout with a pre-filled search query | widget ID, query text |
+| `toggleQuery <widgetId> <query>` | Toggle widget popout with a pre-filled search query | widget ID, query text |
+| `list` | List all registered widget IDs with visibility state | - |
+| `status <widgetId>` | Get widget popout visibility status | widget ID |
+| `visibility <widgetId>` | Get widget visibility state | widget ID |
+| `reveal <widgetId>` | Force widget to be visible | widget ID |
+| `hide <widgetId>` | Force widget to be hidden | widget ID |
+| `reset <widgetId>` | Clear visibility override, return to normal behavior | widget ID |
+
+`toggle clock` runs the clock's click action (Settings → Bar widgets → Clock): the dashboard by default, which opens on the first enabled tab when Overview is off and does nothing when no tab is enabled.
+
+**Examples:**
+```bash
+dms ipc call widget list
+dms ipc call widget toggle clock
+dms ipc call widget status weather
+
+# Open widget popout in a specific mode (e.g., launcher tabs)
+dms ipc call widget openWith launcherButton all
+dms ipc call widget openWith launcherButton files
+dms ipc call widget openWith launcherButton apps
+dms ipc call widget openWith launcherButton plugins
+dms ipc call widget toggleWith launcherButton files
+
+# Open widget popout with a pre-filled search query
+dms ipc call widget openQuery launcherButton "browser"
+dms ipc call widget toggleQuery launcherButton "settings"
+
+# Control widget visibility on the bar
+dms ipc call widget visibility weather
+dms ipc call widget hide weather
+dms ipc call widget reveal weather
+dms ipc call widget reset weather
+```
+
+**Notes:**
+- Use `list` to discover available widget IDs with their current visibility state (`[visible]` or `[hidden]`)
+- Widget IDs come from the widgets in your bar settings; a disabled widget still opens its popout
+- With several bars, popouts open on the focused screen, preferring a bar where the widget is shown, then the bar you last clicked when **Last used on this screen** is on. A widget on a hidden bar opens anchored where that bar sits
+- The `status` function returns "visible" or "hidden" for the widget **popout** state
+- The `visibility`, `reveal`, `hide`, and `reset` functions control the widget's **bar presence** (whether it appears on the bar at all)
+- Plugins can define conditional visibility via `visibilityCommand` — use `reset` to return to that behavior after overriding
+
+## Modal Controls
+
+These targets control various modal windows and overlays.
+
+### spotlight
+
+Application launcher modal with search capabilities.
+
+:::note
+`spotlight` and `launcher` are synonymous — both targets call the same launcher modal for backwards compatibility.
+
+When **Launcher → Default Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
+:::
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open` | Show launcher | - |
+| `close` | Hide launcher | - |
+| `toggle` | Toggle launcher visibility | - |
+| `openWith <mode>` | Open launcher in a specific mode | `all`, `apps`, `files`, `plugins` |
+| `toggleWith <mode>` | Toggle launcher in a specific mode | `all`, `apps`, `files`, `plugins` |
+| `openQuery <query>` | Show launcher with search | search text |
+| `toggleQuery <query>` | Toggle launcher with search | search text |
+
+**Examples:**
+```bash
+dms ipc call spotlight toggle
+dms ipc call spotlight openQuery browser
+dms ipc call spotlight toggleQuery "!"
+dms ipc call spotlight openWith apps
+dms ipc call spotlight toggleWith files
+```
+
+### spotlight-bar
+
+Spotlight Bar — a compact inline search bar that drops down from the top center of the screen. Designed for quick app launches and searches without opening the full launcher modal.
+
+**Default keybind:** `Alt + Space`
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open` | Show the Spotlight Bar | - |
+| `close` | Hide the Spotlight Bar | - |
+| `toggle` | Toggle the Spotlight Bar | - |
+| `openWith <mode>` | Open the Spotlight Bar in a specific mode | `all`, `apps`, `files`, `plugins` |
+| `toggleWith <mode>` | Toggle the Spotlight Bar in a specific mode | `all`, `apps`, `files`, `plugins` |
+| `openQuery <query>` | Show the Spotlight Bar with search | search text |
+| `toggleQuery <query>` | Toggle the Spotlight Bar with search | search text |
+
+**Examples:**
+```bash
+dms ipc call spotlight-bar toggle
+dms ipc call spotlight-bar open
+dms ipc call spotlight-bar close
+dms ipc call spotlight-bar openQuery browser
+dms ipc call spotlight-bar toggleQuery "!"
+dms ipc call spotlight-bar openWith apps
+dms ipc call spotlight-bar toggleWith files
+```
+
+### Other Modals
+
+All these modals support `open`, `close`, and `toggle` functions:
+
+- **clipboard** - Clipboard history manager
+- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `invokeLast`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
+- **processlist** - System process list and performance monitor (also supports `focusOrToggle`)
+- **powermenu** - Power menu for system actions
+- **control-center** - Quick settings (network, bluetooth, audio, etc.)
+- **notepad** - Quick notepad/scratchpad
+
+`invokeLast` runs the default action of the newest notification and dismisses it, like clicking its popup. It falls back to the first action and returns `NOTIFICATION_INVOKE_NO_ACTION` when there is nothing to run.
+
+When an Island is the sole top chrome on the focused display (or an island or dot there owns shared shortcuts), `control-center` and `notifications` open island activities instead of their popouts. The notification modal still opens if the island does not own the screen.
+
+**Examples:**
+```bash
+dms ipc call clipboard toggle
+dms ipc call notifications open
+dms ipc call notifications clearAll
+dms ipc call notifications dismiss
+dms ipc call notifications invokeLast
+dms ipc call notifications dismissAllPopups
+dms ipc call notifications toggleDoNotDisturb
+dms ipc call notifications getDoNotDisturb
+dms ipc call notifications enableDoNotDisturbIndefinitely
+dms ipc call notifications enableDoNotDisturbUntilTomorrowMorning
+dms ipc call notifications enableDoNotDisturbUntil 1744819200000
+dms ipc call processlist open
+dms ipc call powermenu toggle
+dms ipc call control-center toggle
+dms ipc call notepad open
+```
+
+### settings
+
+Settings modal with additional read/write access to configuration values.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open` | Show settings modal | - |
+| `openWith <tab>` | Open settings to specific tab | tab ID |
+| `close` | Hide settings modal | - |
+| `toggle` | Toggle settings modal | - |
+| `toggleWith <tab>` | Toggle settings to specific tab | tab ID |
+| `focusOrToggle` | Focus settings if open, otherwise toggle | - |
+| `focusOrToggleWith <tab>` | Focus/toggle to specific tab | tab ID |
+| `tabs` | List available tab IDs | - |
+| `get <key>` | Get a setting value | setting key name |
+| `set <key> <value>` | Set a setting value | setting key, new value |
+
+**Settings Categories:**
+
+Each category in the settings sidebar can be opened directly. Names are case-insensitive, and `-`, `_` and spaces are ignored, so `bar-widgets`, `bar_widgets` and `barwidgets` are equivalent.
+
+| Category | Tab | Also accepts |
+| --- | --- | --- |
+| Wallpaper & colors | `personalization` | `wallpaper`, `colors`, `wallpaper_colors` |
+| Interface style | `theme_surfaces` | `interface`, `interface_style` |
+| Fonts & motion | `typography` | `fonts`, `fonts_motion` |
+| Bar | `dankbar` | `bar` |
+| Bar widgets | `dankbar_widgets` | `bar_widgets`, `workspaces` |
+| Dock | `dock` | `dock_launcher` |
+| Launcher | `launcher` | - |
+| Dashboard | `dank_dash` | `dashboard` |
+| Desktop widgets | `desktop_widgets` | - |
+| Notifications | `notifications` | - |
+| On-screen displays | `osd` | - |
+| Digital wellbeing | `wellbeing` | `screen_time` |
+| Sound & media | `sound_media` | `sound`, `media` |
+| Displays | `displays` | - |
+| Input | `input` | - |
+| Power & battery | `power_battery` | `power`, `power_security` |
+| Network | `network` | - |
+| Users & accounts | `user_accounts` | - |
+| Security | `security_accounts` | `security` |
+| Applications | `applications` | - |
+| Date, time & region | `date_time_region` | `datetime`, `region` |
+| System & integrations | `system` | - |
+| Plugins | `plugins` | - |
+| About | `about` | - |
+
+Individual pages inside a category (for example `theme`, `keybinds`, `lock_screen`, `dock_appearance`) can also be opened directly. Run `dms ipc call settings tabs` for the full list of page IDs, including installed plugins as `plugin:<id>`. Categories that don't apply to your system are hidden from the sidebar and the jump list.
+
+The same categories are available as a jump list when you right-click the DMS Settings icon pinned to the dock or the bar's pinned apps.
+
+**Examples:**
+```bash
+dms ipc call settings toggle
+dms ipc call settings openWith wallpaper
+dms ipc call settings openWith bar-widgets
+dms ipc call settings toggleWith dock
+dms ipc call settings focusOrToggleWith displays
+dms ipc call settings tabs
+dms ipc call settings set showSeconds true
+dms ipc call settings set opacity 0.9
+```
+
+**Note:** The `set` function supports boolean, number, and string values. Objects and arrays are not currently supported.
+
+### dash
+
+Dashboard popup with multiple tabs.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open [tab]` | Show dashboard | tab: "", "overview", "media", "wallpaper", "weather", "wellbeing", "notifications" |
+| `close` | Hide dashboard | - |
+| `toggle [tab]` | Toggle dashboard | tab |
+| `openAt <tab> <position>` | Show dashboard anchored to a bar section | tab, position: "left", "center", "right" |
+| `toggleAt <tab> <position>` | Toggle dashboard anchored to a bar section | tab, position |
+
+Without a position, the dashboard anchors to the clock widget. `openAt`/`toggleAt` anchor it to the given bar section instead — useful when triggering the dash from a custom widget or script.
+
+On displays where an Island is the sole top chrome (or an island or dot there owns shared shortcuts), `open`/`toggle` with `media`, `wallpaper`, or `weather` route to the matching island activity. `close` collapses those activities when they are open.
+
+**Examples:**
+```bash
+dms ipc call dash toggle ""
+dms ipc call dash open overview
+dms ipc call dash toggle media
+dms ipc call dash open weather
+dms ipc call dash open wellbeing
+dms ipc call dash toggleAt wallpaper center
+dms ipc call dash openAt overview right
+```
+
+### file
+
+File browser controls for selecting wallpapers and profile images.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `browse <type>` | Open file browser | "wallpaper" or "profile" |
+
+**Examples:**
+```bash
+dms ipc call file browse wallpaper
+dms ipc call file browse profile
+```
+
+### color-picker
+
+In-shell color picker modal for theme and settings color selection.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open` | Show color picker modal | - |
+| `openColor <color>` | Show modal with a pre-selected color | color string (e.g. `#ff0000`) |
+| `close` | Hide color picker modal | - |
+| `closeInstant` | Hide without animation | - |
+| `toggle` | Toggle modal visibility | - |
+| `toggleInstant` | Toggle without animation on hide | - |
+
+**Examples:**
+```bash
+dms ipc call color-picker toggle
+dms ipc call color-picker openColor "#3f51b5"
+```
+
+:::tip
+**Screen eyedropper:** `dms color pick` is a standalone CLI command, not an IPC target. See [Color Picker CLI](cli-color-picker).
+:::
+
+### welcome
+
+First-launch welcome wizard with feature overview, system diagnostics, and configuration quick links.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open` | Show wizard at Welcome page | - |
+| `doctor` | Show wizard at System Check page | - |
+| `page <num>` | Show wizard at specific page | 0=Welcome, 1=Doctor, 2=Complete |
+
+**Pages:**
+- **0 - Welcome**: Feature overview with DMS highlights
+- **1 - System Check**: Runs `dms doctor` with filterable results (Errors, Warnings, Info, OK)
+- **2 - Complete**: Configuration quick links, keybind shortcuts, and external resources
+
+**Examples:**
+```bash
+dms ipc call welcome open
+dms ipc call welcome doctor
+dms ipc call welcome page 2
+```
+
+**Settings Integration:** Available in Settings → About → Tools as "Show Welcome" and "System Check" buttons.
+
+## System Utilities
+
+### niri
+
+**Screenshot functions require niri 25.11+.** Automatic touchpad OSD updates require a niri build with `TouchpadToggled` IPC events (currently niri-git).
+
+Screenshot and touchpad controls for the niri compositor. Captures are opened in your configured editor for markup and annotation.
+
+| Function | Description |
+| --- | --- |
+| `screenshot` | Interactive selection screenshot |
+| `screenshotScreen` | Capture entire screen |
+| `screenshotWindow` | Capture focused window |
+| `showTouchpadOsd <enabled>` | Show the hardware-reported touchpad state (`true` for on, `false` for off), without changing it |
+
+**Examples:**
+```bash
+dms ipc call niri screenshot
+dms ipc call niri screenshotScreen
+dms ipc call niri screenshotWindow
+dms ipc call niri showTouchpadOsd true
+dms ipc call niri showTouchpadOsd false
+```
+
+**Touchpad toggle:** DMS listens for niri's `TouchpadToggled` events and shows the reported software-toggle state. Native keybindings and `niri msg action toggle-touchpad` both trigger the OSD. This state describes niri's software toggle; hardware switches and `input { touchpad { off; } }` can still disable the device.
+
+The following binding calls niri directly. It uses `spawn` so the config remains parseable on older niri versions; toggling still requires the `toggle-touchpad` action, and the OSD requires the new events:
+
+```kdl
+XF86TouchpadToggle allow-when-locked=true repeat=false {
+    spawn "niri" "msg" "action" "toggle-touchpad";
+}
+```
+
+**Hardware On/Off keys:** For laptops that enable or disable the touchpad in hardware and emit `XF86TouchpadOn` or `XF86TouchpadOff`, these bindings show the corresponding OSD without sending a toggle action. They do not require niri's `toggle-touchpad` action or `TouchpadToggled` events.
+
+```kdl
+XF86TouchpadOn allow-when-locked=true repeat=false {
+    spawn "dms" "ipc" "call" "niri" "showTouchpadOsd" "true";
+}
+XF86TouchpadOff allow-when-locked=true repeat=false {
+    spawn "dms" "ipc" "call" "niri" "showTouchpadOsd" "false";
+}
+```
+
+The OSD can be turned off in Settings → OSD → Touchpad.
+
+**Configuration:**
+
+Set the `DMS_SCREENSHOT_EDITOR` environment variable to choose your preferred screenshot editor backend:
+
+```bash
+# Use Swappy (default)
+export DMS_SCREENSHOT_EDITOR=swappy
+
+# Use Satty
+export DMS_SCREENSHOT_EDITOR=satty
+```
+
+**Requirements:** niri compositor and your chosen screenshot editor (Swappy or Satty) must be installed.
+
+### keybinds
+
+Dynamic keybinds cheatsheet modal that works with multiple providers.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `open <provider>` | Show keybinds modal | provider name (e.g., "hyprland", "sway", "mangowc") |
+| `openWithPath <provider> <path>` | Show keybinds modal with custom config path | provider name, path to config |
+| `close` | Hide keybinds modal | - |
+| `toggle <provider>` | Toggle keybinds modal visibility | provider name |
+| `toggleWithPath <provider> <path>` | Toggle keybinds modal with custom config path | provider name, path to config |
+
+**Examples:**
+```bash
+dms ipc call keybinds toggle hyprland
+dms ipc call keybinds toggle sway
+dms ipc call keybinds toggle mangowc
+dms ipc call keybinds open tmux
+
+# With custom config paths
+dms ipc call keybinds openWithPath hyprland /custom/path/to/hypr
+dms ipc call keybinds toggleWithPath sway /etc/sway/config
+```
+
+**Supported Providers:**
+
+The keybinds modal supports all providers available through the `dms keybinds` CLI:
+- **Built-in providers**: niri, Hyprland, Sway, Scroll, MangoWC, Miracle WM, Aqueous (automatically parse compositor configs)
+- **Custom cheatsheets**: Any JSON-based cheatsheet in `~/.config/dms/cheatsheets/`
+
+The modal automatically parses configuration files and displays keybinds organized by category with optional subcategories. See the [Keybinds & Cheatsheets](/docs/dms/cli-keybinds-cheatsheets) documentation for more details on providers and creating custom cheatsheets.
+
+### window-rules
+
+**niri, Hyprland, and MangoWC only**
+
+Window rules editor modal for managing compositor window rules.
+
+| Function | Description |
+| --- | --- |
+| `open` | Open the window rules editor |
+| `close` | Close the window rules editor |
+| `toggle` | Toggle window rules editor visibility |
+
+**Examples:**
+```bash
+dms ipc call window-rules open
+dms ipc call window-rules close
+dms ipc call window-rules toggle
+```
+
+:::note
+This feature is only available on niri, Hyprland, and MangoWC compositors. Other compositors return `WINDOW_RULES_UNSUPPORTED_COMPOSITOR`.
+:::
+
+### workspace-rename
+
+**Niri and Hyprland only**
+
+Rename the currently active workspace via a dialog.
+
+| Function | Description |
+| --- | --- |
+| `open` | Open the workspace rename dialog |
+
+**Examples:**
+```bash
+dms ipc call workspace-rename open
+```
+
+**Note:** Returns an error if running on an unsupported compositor.
+
+### outputs
+
+Monitor output profile management for switching between display configurations.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `listProfiles` | List all available output profiles | - |
+| `current` | Get the currently active profile | - |
+| `setProfile <name>` | Switch to a specific output profile | profile name |
+| `cycleProfile` | Cycle through configured profiles in order (wraps from last back to first) | - |
+| `cycle` | Cycle through connected displays, leaving one enabled (niri only) | - |
+| `status` | Get current output configuration status | - |
+| `refresh` | Refresh output configuration | - |
+
+**Examples:**
+```bash
+# List available profiles
+dms ipc call outputs listProfiles
+
+# Check current profile
+dms ipc call outputs current
+
+# Switch to a specific profile
+dms ipc call outputs setProfile "docked"
+dms ipc call outputs setProfile "laptop-only"
+
+# Cycle through profiles in order
+dms ipc call outputs cycleProfile
+
+# Cycle through connected displays, one enabled at a time
+dms ipc call outputs cycle
+
+# Get output status
+dms ipc call outputs status
+
+# Refresh configuration
+dms ipc call outputs refresh
+```
+
+:::note
+This feature is only available on niri, Hyprland, and MangoWC compositors.
+:::
+
+#### Cycling connected displays
+
+`cycle` walks connected outputs in name order and leaves a single display enabled. If the next output is disabled, DMS enables it and waits for confirmation before disabling the others. If it is already enabled, the others are disabled immediately.
+
+The command returns as soon as the switch is started:
+
+| Status | Meaning |
+| --- | --- |
+| `OUTPUT_CYCLE_ACCEPTED` | Switching started, not a confirmation that it finished |
+| `OUTPUT_CYCLE_BUSY` | Still waiting for the previously selected output to become enabled |
+| `OUTPUT_CYCLE_NOOP` | Fewer than two outputs connected, or switching could not start |
+| `OUTPUT_CYCLE_UNSUPPORTED` | Compositor is not niri, its IPC socket is unavailable, or output-state notifications are unavailable |
+
+If the selected display disconnects and no connected display is left enabled, DMS enables the previous connected display in the cycle. The cycle order lives in memory and resets when DMS restarts.
+
+:::note
+`cycle` is niri only, unlike the profile functions above.
+:::
+
+### hypr
+
+**Hyprland-only features**
+
+Hyprland-specific workspace overview control.
+
+| Function | Description |
+| --- | --- |
+| `openOverview` | Show Hyprland workspace overview |
+| `closeOverview` | Hide Hyprland workspace overview |
+| `toggleOverview` | Toggle Hyprland workspace overview visibility |
+
+**Examples:**
+```bash
+dms ipc call hypr toggleOverview
+```
+
+**Workspace Overview:**
+
+The workspace overview shows all your workspaces across all monitors with live window previews:
+- **Multi-monitor support** - Shows workspaces from all connected monitors with monitor name labels
+- **Live window previews** - Real-time screen capture of all windows on each workspace
+- **Drag-and-drop** - Move windows between workspaces and monitors by dragging
+- **Keyboard navigation** - Use Left/Right arrow keys to switch between workspaces on current monitor
+- **Visual indicators** - Active workspace highlighted when it contains windows
+- **Click to switch** - Click any workspace to switch to it
+- **Click outside or press Escape** - Close the overview
+
+**Note:** All hypr functions return `HYPR_NOT_AVAILABLE` if not running Hyprland.
+
+### plugins
+
+Manage plugins at runtime - useful for development and troubleshooting.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `list` | List all available plugins with status | - |
+| `status <pluginId>` | Check if a plugin is loaded | plugin ID |
+| `reload <pluginId>` | Hot-reload a plugin without restarting | plugin ID |
+| `enable <pluginId>` | Enable a disabled plugin | plugin ID |
+| `disable <pluginId>` | Disable a loaded plugin | plugin ID |
+
+**Examples:**
+```bash
+# See what plugins are available
+dms ipc call plugins list
+
+# Check if a specific plugin is running
+dms ipc call plugins status myPlugin
+
+# Hot-reload during development (no shell restart needed)
+dms ipc call plugins reload myPlugin
+
+# Toggle plugins on/off
+dms ipc call plugins enable myPlugin
+dms ipc call plugins disable myPlugin
+```
+
+### systemupdater
+
+System updater widget control and background update checks.
+
+| Function | Description |
+| --- | --- |
+| `toggle` | Toggle the system updater popout open/closed |
+| `open` | Open the system updater popout |
+| `close` | Close the system updater popout |
+| `updatestatus` | Trigger a background update check |
+
+**Examples:**
+```bash
+dms ipc call systemupdater toggle
+dms ipc call systemupdater open
+dms ipc call systemupdater close
+dms ipc call systemupdater updatestatus
+```
+
+### defaultApp
+
+Launch the applications configured in Settings → Default Apps. Each function resolves the default handler for the associated MIME type and launches it.
+
+| Function | Description |
+| --- | --- |
+| `browser` | Launch the default web browser |
+| `fileManager` | Launch the default file manager |
+| `textEditor` | Launch the default text editor |
+| `pdfReader` | Launch the default PDF reader |
+| `imageViewer` | Launch the default image viewer |
+| `videoPlayer` | Launch the default video player |
+| `musicPlayer` | Launch the default music player |
+| `mail` | Launch the default mail client |
+| `calendar` | Launch the default calendar application |
+
+**Examples:**
+```bash
+dms ipc call defaultApp browser
+dms ipc call defaultApp fileManager
+dms ipc call defaultApp textEditor
+```
+
+**Note:** Returns a launch-request confirmation. If no default is configured (or its desktop entry can't be found) for the requested type, a warning is logged and nothing launches.
+
+### desktopWidget
+
+Control desktop widget instances (clocks, system monitors, etc.).
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `list` | List all widget instances with ID, type, name, and status | - |
+| `status <instanceId>` | Get widget status (enabled, overlay, clickThrough, etc.) | instance ID |
+| `enable <instanceId>` | Enable the widget | instance ID |
+| `disable <instanceId>` | Disable the widget | instance ID |
+| `toggleEnabled <instanceId>` | Toggle widget enabled/disabled | instance ID |
+| `toggleOverlay <instanceId>` | Toggle show on overlay layer | instance ID |
+| `setOverlay <instanceId> <bool>` | Set overlay visibility | instance ID, true/false |
+| `toggleClickThrough <instanceId>` | Toggle click-through mode | instance ID |
+| `setClickThrough <instanceId> <bool>` | Set click-through mode | instance ID, true/false |
+| `toggleSyncPosition <instanceId>` | Toggle position sync across screens | instance ID |
+| `setSyncPosition <instanceId> <bool>` | Set position sync across screens | instance ID, true/false |
+
+**Examples:**
+```bash
+# List all desktop widgets
+dms ipc call desktopWidget list
+
+# Get widget status
+dms ipc call desktopWidget status dw_1234567890_abc123
+
+# Toggle overlay visibility (useful for keybinds)
+dms ipc call desktopWidget toggleOverlay dw_1234567890_abc123
+
+# Enable click-through mode
+dms ipc call desktopWidget setClickThrough dw_1234567890_abc123 true
+
+# Toggle position sync
+dms ipc call desktopWidget toggleSyncPosition dw_1234567890_abc123
+```
+
+**Notes:**
+- Use `list` to discover widget instance IDs
+- Click-through mode allows mouse clicks to pass through the widget to windows below
+- Position sync keeps the widget at the same relative position across multiple monitors
+
+### toast
+
+Display toast notifications for user feedback and scripted alerts.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `info <message>` | Show info toast (1.5s) | message text |
+| `infoWith <message> <details> <command> <category>` | Info toast with extras | message, details, command, category |
+| `warn <message>` | Show warning toast (3s) | message text |
+| `warnWith <message> <details> <command> <category>` | Warning toast with extras | message, details, command, category |
+| `error <message>` | Show error toast (5s) | message text |
+| `errorWith <message> <details> <command> <category>` | Error toast with extras (8s, expandable) | message, details, command, category |
+| `hide` | Hide current toast | - |
+| `dismiss <category>` | Dismiss toasts by category | category name |
+| `status` | Get current toast state | - |
+
+**Examples:**
+```bash
+# Simple messages
+dms ipc call toast info "Build complete"
+dms ipc call toast warn "Disk space low"
+dms ipc call toast error "Connection failed"
+
+# With details (expandable in UI)
+dms ipc call toast errorWith "Git push failed" "Permission denied (publickey)" "git push origin main" "git"
+
+# With category for later dismissal
+dms ipc call toast warnWith "Downloading update..." "" "" "updater"
+dms ipc call toast dismiss "updater"
+
+# Check current state
+dms ipc call toast status
+
+# Force hide
+dms ipc call toast hide
+```
+
+**Notes:**
+- The `*With` variants accept optional details (expandable in UI), a command string, and a category
+- Use empty strings (`""`) for optional parameters you want to skip
+- Categories allow grouping related toasts for batch dismissal
+- The `status` function returns `hidden` or `visible:level:message`
+
+## Scripting and Automation
+
+IPC commands are designed for integration with keybindings, scripts, and automation tools.
+
+### Time-based Automation
+
+```bash
+#!/bin/bash
+# Toggle night mode based on time of day
+hour=$(date +%H)
+if [ $hour -ge 20 ] || [ $hour -le 6 ]; then
+    dms ipc call night enable
+else
+    dms ipc call night disable
+fi
+```
+
+### Status Checking
+
+```bash
+# Check if screen is locked before performing action
+if dms ipc call lock isLocked | grep -q "false"; then
+    dms ipc call notifications open
+fi
+```
+
+### Conditional Logic
+
+```bash
+# Increase brightness only if below threshold
+current=$(dms ipc call brightness status | grep -oP '\d+')
+if [ "$current" -lt 50 ]; then
+    dms ipc call brightness set 50
+fi
+
+# Cycle power profile only when not in performance mode
+if [ "$(dms ipc call powerprofile status)" != "performance" ]; then
+    dms ipc call powerprofile cycle
+fi
+```
+
+## Return Values
+
+Most IPC functions return string messages indicating:
+- Success confirmation with current values
+- Error messages if operation fails
+- Status information for query functions
+- Empty/void return for simple action functions
+
+Functions that return void (like media controls) execute the action but don't provide feedback. Check the application state through other means if needed.
+
+## Next Steps
+
+See compositor-specific keybinding configuration in your compositor's documentation to integrate these IPC commands with your workflow.

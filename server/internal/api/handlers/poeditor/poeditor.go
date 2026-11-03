@@ -12,7 +12,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	discord "github.com/latte-soft/discord-webhooks-go"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
 )
 
 const notifyCooldown = 1 * time.Hour

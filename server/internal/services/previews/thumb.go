@@ -3,7 +3,7 @@ package previews
 import (
 	"image"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 // Thumbs are the screenshot alone at the 16:10 ratio the shell's plugin cards use.

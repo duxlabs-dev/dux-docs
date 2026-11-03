@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
 )
 
 const (

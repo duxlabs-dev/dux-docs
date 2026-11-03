@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 type ConditionalInput struct {

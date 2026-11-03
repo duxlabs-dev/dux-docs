@@ -2,6 +2,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type { PrismTheme } from 'prism-react-renderer';
+import path from 'path';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -181,8 +182,8 @@ const proseOnly = (content: string) =>
     .replace(/```[\s\S]*?```/g, '');
 
 const config: Config = {
-  title: 'Dank Linux',
-  tagline: 'A modern Linux desktop suite with beautiful widgets and powerful monitoring - optimized for niri, Hyprland, MangoWC, dwl, labwc, and Sway.',
+  title: 'Dux',
+  tagline: 'Dux Shell and tools: a modern Wayland desktop suite for niri, Hyprland, MangoWC, dwl, labwc, and Sway.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -251,7 +252,7 @@ const config: Config = {
       tagName: 'meta',
       attributes: {
         property: 'og:site_name',
-        content: 'Dank Linux',
+        content: 'Dux',
       },
     },
     // Twitter Card meta tags
@@ -265,15 +266,15 @@ const config: Config = {
   ],
 
   // Set the production url of your site here
-  url: 'https://danklinux.com',
+  url: 'https://duxlabs.dev',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'AvengeMedia', // Usually your GitHub org/user name.
-  projectName: 'dms-docs', // Usually your repo name.
+  organizationName: 'duxlabs-dev', // Usually your GitHub org/user name.
+  projectName: 'dux-docs', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -291,29 +292,21 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/AvengeMedia/DankLinux-Docs/tree/master',
-          lastVersion: '1.6',
+          editUrl: 'https://github.com/duxlabs-dev/dux-docs/tree/master',
+          lastVersion: '2.0',
           versions: {
             current: {
-              label: '1.7',
-              path: '1.7',
+              label: '2.1',
+              path: '2.1',
               banner: 'unreleased',
+            },
+            '2.0': {
+              label: '2.0',
+              path: '',
             },
             '1.6': {
               label: '1.6',
-              path: '',
-            },
-            '1.5': {
-              label: '1.5',
-              path: '1.5',
-            },
-            '1.4': {
-              label: '1.4',
-              path: '1.4',
-            },
-            '1.2': {
-              label: '1.2',
-              path: '1.2',
+              path: '1.6',
             },
           },
         },
@@ -321,17 +314,17 @@ const config: Config = {
           showReadingTime: true,
           readingTime: ({content, locale, defaultReadingTime}) =>
             defaultReadingTime({content: proseOnly(content), locale}),
-          blogTitle: 'Dank Linux Updates',
-          blogDescription: 'News, releases, and updates from the Dank Linux project.',
+          blogTitle: 'Dux Updates',
+          blogDescription: 'News, releases, and updates from the Dux project.',
           blogSidebarTitle: 'Recent Posts',
           blogSidebarCount: 5,
           feedOptions: {
             type: ['rss', 'atom'],
-            copyright: `Copyright © ${new Date().getFullYear()} Dank Linux`,
+            copyright: `Copyright © ${new Date().getFullYear()} Dux Labs`,
           },
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: ['./src/css/m3e.css', './src/css/custom.css'],
         },
       } satisfies Preset.Options,
     ],
@@ -343,6 +336,16 @@ const config: Config = {
   themes: ['@docusaurus/theme-mermaid'],
 
   plugins: [
+    () => ({
+      name: 'm3e',
+      configurePostCss(options) {
+        options.plugins.push(require('@tailwindcss/postcss'));
+        return options;
+      },
+      configureWebpack() {
+        return {resolve: {alias: {'@': path.resolve(__dirname, 'src')}}};
+      },
+    }),
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
@@ -368,9 +371,36 @@ const config: Config = {
       '@dipakparmar/docusaurus-plugin-umami',
       {
         websiteID: 'b79205dd-087a-4fbd-b7d7-c60650c76414',
-        analyticsDomain: 'umami.danklinux.com',
+        analyticsDomain: 'umami.duxlabs.dev',
         dataAutoTrack: true,
-        dataDomains: 'danklinux.com',
+        dataDomains: 'duxlabs.dev,danklinux.com',
+      },
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [{from: '/blog/v1-7-release', to: '/blog/v2-0-release'}],
+        createRedirects(existingPath: string) {
+          const map: [string, string[]][] = [
+            ['/docs/dms/', ['/docs/dankmaterialshell/']],
+            ['/docs/dms-greeter/', ['/docs/dankgreeter/']],
+            ['/docs/dsearch/', ['/docs/danksearch/']],
+            ['/docs/dcal/', ['/docs/dankcalendar/']],
+            ['/docs/repo/', ['/docs/packaging/', '/docs/danklinux/']],
+            ['/docs/dms', ['/docs/dankmaterialshell']],
+            ['/docs/dms-greeter', ['/docs/dankgreeter']],
+            ['/docs/dsearch', ['/docs/danksearch']],
+            ['/docs/dcal', ['/docs/dankcalendar']],
+            ['/docs/repo', ['/docs/packaging', '/docs/danklinux']],
+            ['/docs/duxinstall', ['/docs/dankinstall']],
+          ];
+          for (const [neu, olds] of map) {
+            if (existingPath === neu || existingPath.startsWith(neu.endsWith('/') ? neu : neu + '/')) {
+              return olds.map((old) => existingPath.replace(neu, old));
+            }
+          }
+          return undefined;
+        },
       },
     ],
     [
@@ -388,11 +418,11 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card (fallback for pages without images)
-    image: 'img/homepage/danklinux-preview.png',
+    image: 'img/homepage/dux-preview.png',
     announcementBar: {
-      id: 'v1-6-release',
+      id: 'v2-0-release',
       content:
-        '<b>DMS 1.6 "Marble Tabby" is here</b> - Dank Island, numerous performance & resource optimizations, standalone greeter, and a lot more. <a href="/blog/v1-6-release">Read the announcement</a>',
+        '<b>DMS 2.0: DankMaterialShell is now Dux Shell.</b> <span class="announcement-detail">New design, Dash plugins, a customizable lock screen, the Dux Lyrical Engine, and Dux Files.</span> <a class="announcement-cta" href="/blog/v2-0-release">Read the announcement</a>',
       backgroundColor: '#6B46C1',
       textColor: '#ffffff',
       isCloseable: true,
@@ -416,18 +446,11 @@ const config: Config = {
       wrap: true,
       timeout: 1000,
     },
-    // Algolia DocSearch configuration (placeholder for future setup)
-    // algolia: {
-    //   appId: 'YOUR_APP_ID',
-    //   apiKey: 'YOUR_SEARCH_API_KEY',
-    //   indexName: 'danklinux',
-    //   contextualSearch: true,
-    // },
     navbar: {
       logo: {
-        alt: 'Dank Linux Logo',
-        src: 'img/path32_black.svg',
-        srcDark: 'img/path32.svg',
+        alt: 'Dux Labs Logo',
+        src: 'img/dux-labs-logo-light.svg',
+        srcDark: 'img/dux-labs-logo-dark.svg',
       },
       items: [
         {
@@ -441,13 +464,19 @@ const config: Config = {
           to: '/docs/',
           label: 'Docs',
           position: 'right',
-          activeBaseRegex: '^/docs(?!/getting-started|/dankmaterialshell/plugins-overview).*',
+          activeBaseRegex: '^/docs(?!/getting-started|/dms/plugins-overview).*',
         },
         {
           to: '/plugins',
-          label: 'Plugins & Themes',
+          label: 'Plugins',
           position: 'right',
           activeBasePath: '/plugins',
+        },
+        {
+          href: 'https://wallpaper.duxlabs.dev',
+          label: 'Wallpaper',
+          position: 'right',
+          className: 'navbar-wallpaper-link',
         },
         {
           to: '/blog',
@@ -464,7 +493,7 @@ const config: Config = {
           className: 'navbar-version-dropdown',
         },
         {
-          href: 'https://github.com/AvengeMedia/DankMaterialShell',
+          href: 'https://github.com/duxlabs-dev/dux-shell',
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
@@ -476,7 +505,7 @@ const config: Config = {
           'aria-label': 'Discord community',
         },
         {
-          href: 'https://ko-fi.com/danklinux',
+          href: 'https://ko-fi.com/duxlabs',
           position: 'right',
           className: 'navbar-kofi-link',
           'aria-label': 'Support on Ko-fi',
@@ -500,10 +529,18 @@ const config: Config = {
               label: 'Contributing',
               to: '/docs/contributing',
             },
+            {
+              label: 'Sponsors',
+              to: '/sponsors',
+            },
+            {
+              label: 'Contributors',
+              to: '/contributors',
+            },
           ],
         },
       ],
-      copyright: `© ${new Date().getFullYear()} Dank Linux • MIT License`,
+      copyright: `© ${new Date().getFullYear()} Dux Labs • MIT License`,
     },
     prism: {
       theme: dankPurpleLight,

@@ -3,8 +3,8 @@ package releases_handler
 import (
 	"net/http"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/api/server"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/api/server"
 )
 
 type HandlerGroup struct {

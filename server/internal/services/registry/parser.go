@@ -3,19 +3,24 @@ package registry
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/url"
+	"slices"
+	"sort"
 	"strings"
+	"sync"
 	"time"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/integrations/github"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/integrations/gitlab"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/github"
+	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/gitlab"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 type Parser struct {
 	token   string
+	mu      sync.Mutex
 	clients map[string]*github.Client
 	gitlab  *gitlab.Client
 }
@@ -28,6 +33,9 @@ func NewParser(token string) *Parser {
 }
 
 func (p *Parser) getGitLabClient() *gitlab.Client {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
 	if p.gitlab == nil {
 		p.gitlab = gitlab.NewClient("")
 	}
@@ -35,6 +43,9 @@ func (p *Parser) getGitLabClient() *gitlab.Client {
 }
 
 func (p *Parser) getClient(host string) (*github.Client, error) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+
 	if client, ok := p.clients[host]; ok {
 		return client, nil
 	}
@@ -54,36 +65,31 @@ func (p *Parser) getClient(host string) (*github.Client, error) {
 	return client, nil
 }
 
-func (p *Parser) FetchPlugins(ctx context.Context) ([]models.Plugin, error) {
+func (p *Parser) FetchPlugins(ctx context.Context, prev []models.Plugin) ([]models.Plugin, error) {
 	registryPlugins, err := p.fetchRegistryPlugins(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch registry plugins: %w", err)
 	}
 
-	var plugins []models.Plugin
+	carry := newCarryForward("plugin", pluginsByID(prev))
 	for _, regPlugin := range registryPlugins {
-		plugin, err := p.enrichPlugin(ctx, regPlugin)
-		if err != nil {
-			log.Warnf("Skipping plugin %s: %v", regPlugin.ID, err)
-			continue
+		if err := ctx.Err(); err != nil {
+			return nil, err
 		}
 
-		plugins = append(plugins, plugin)
+		plugin, err := p.enrichPlugin(ctx, regPlugin)
+		carry.add(regPlugin.ID, plugin, err)
 	}
 
-	p.applyFeedback(ctx, plugins)
-
-	return plugins, nil
+	return carry.result(), nil
 }
 
-func (p *Parser) applyFeedback(ctx context.Context, plugins []models.Plugin) {
-	feedback, err := p.FetchFeedback(ctx)
-	if err != nil {
-		log.Warnf("Failed to fetch plugin feedback: %v", err)
-		return
+func pluginsByID(plugins []models.Plugin) map[string]models.Plugin {
+	byID := make(map[string]models.Plugin, len(plugins))
+	for _, plugin := range plugins {
+		byID[plugin.ID] = plugin
 	}
-
-	mergeFeedback(plugins, feedback)
+	return byID
 }
 
 func (p *Parser) fetchRegistryPlugins(ctx context.Context) ([]models.RegistryPlugin, error) {
@@ -92,7 +98,7 @@ func (p *Parser) fetchRegistryPlugins(ctx context.Context) ([]models.RegistryPlu
 		return nil, err
 	}
 
-	contents, err := client.GetRepoContents(ctx, "AvengeMedia", "dms-plugin-registry", "plugins")
+	contents, err := client.GetRepoContents(ctx, "duxlabs-dev", "dux-plugin-registry", "plugins")
 	if err != nil {
 		return nil, fmt.Errorf("failed to get plugins directory: %w", err)
 	}
@@ -108,9 +114,12 @@ func (p *Parser) fetchRegistryPlugins(ctx context.Context) ([]models.RegistryPlu
 		}
 
 		fileData, err := client.GetFileContents(ctx, content.DownloadURL)
-		if err != nil {
-			log.Warnf("Failed to fetch %s: %v", content.Name, err)
+		switch {
+		case errors.Is(err, github.ErrNotFound):
+			log.Warnf("Skipping %s: %v", content.Name, err)
 			continue
+		case err != nil:
+			return nil, fmt.Errorf("failed to fetch %s: %w", content.Name, err)
 		}
 
 		var plugin models.RegistryPlugin
@@ -216,7 +225,7 @@ func buildPlugin(regPlugin models.RegistryPlugin, metadata models.PluginMetadata
 	plugin := models.Plugin{
 		ID:           regPlugin.ID,
 		Name:         regPlugin.Name,
-		Capabilities: regPlugin.Capabilities,
+		Capabilities: withSurfaceCapabilities(regPlugin.Capabilities, metadata),
 		Category:     regPlugin.Category,
 		Repo:         regPlugin.Repo,
 		Author:       regPlugin.Author,
@@ -238,6 +247,41 @@ func buildPlugin(regPlugin models.RegistryPlugin, metadata models.PluginMetadata
 	}
 
 	return plugin
+}
+
+var surfaceCapabilities = map[string]string{
+	"launcher": "launcher",
+	"daemon":   "daemon",
+	"desktop":  "desktop-widget",
+	"dash":     "dash-tab",
+	"dashCard": "dash-card",
+}
+
+func manifestSurfaces(metadata models.PluginMetadata) []string {
+	if len(metadata.Components) > 0 {
+		surfaces := make([]string, 0, len(metadata.Components))
+		for surface := range metadata.Components {
+			surfaces = append(surfaces, surface)
+		}
+		sort.Strings(surfaces)
+		return surfaces
+	}
+	if metadata.Type == "" {
+		return nil
+	}
+	return []string{metadata.Type}
+}
+
+func withSurfaceCapabilities(capabilities []string, metadata models.PluginMetadata) []string {
+	merged := append([]string(nil), capabilities...)
+	for _, surface := range manifestSurfaces(metadata) {
+		capability, ok := surfaceCapabilities[surface]
+		if !ok || slices.Contains(merged, capability) {
+			continue
+		}
+		merged = append(merged, capability)
+	}
+	return merged
 }
 
 func parseRepoURL(repoURL string) (host, owner, repo string, err error) {

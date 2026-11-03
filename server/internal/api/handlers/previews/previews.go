@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/services/previews"
+	"github.com/duxlabs-dev/dux-docs/server/internal/services/previews"
 )
 
 var pluginIDPattern = regexp.MustCompile(`^[a-zA-Z][a-zA-Z0-9_-]{0,63}$`)

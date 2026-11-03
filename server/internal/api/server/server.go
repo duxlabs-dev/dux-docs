@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/services/registry"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/services/releases"
+	"github.com/duxlabs-dev/dux-docs/server/internal/services/registry"
+	"github.com/duxlabs-dev/dux-docs/server/internal/services/releases"
 )
 
 type EmptyInput struct{}

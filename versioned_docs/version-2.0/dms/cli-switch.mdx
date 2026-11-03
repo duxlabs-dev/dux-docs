@@ -1,0 +1,57 @@
+---
+title: Switch channels
+description: Move DMS packages between stable releases and beta builds with dms switch
+---
+
+`dms switch` moves installed DMS packages between **stable** releases and **beta** builds (daily builds from the main branch). It replaces each package in place and backs up your settings first.
+
+## Usage
+
+```bash
+dms switch beta                # dms, quickshell and dms-greeter to beta builds
+dms switch stable              # back to stable releases
+dms switch beta dankcalendar   # only the named packages
+dms switch stable -y           # no prompts
+```
+
+Without package names, `dms`, `quickshell` and `dms-greeter` switch together. The greeter runs the shell's interface, so a greeter on a different channel than `dms` can break the login screen. Packages that are not installed are skipped.
+
+Name packages to switch only those: `dms`, `quickshell`, `greeter`, `dankcalendar`, `danksearch`.
+
+The command lists what will change and asks before doing anything. When `dms` or `quickshell` changes, the shell restarts at the end.
+
+## Your settings
+
+Before switching `dms`, the current settings, plugins, themes, session and cache state are saved to:
+
+```
+~/.local/state/dms/switch/<channel>-<time>.tar.gz
+```
+
+`<channel>` is the channel you are leaving. The three newest backups per channel are kept. If the backup fails, nothing is switched.
+
+Only a change to `dms` takes a backup. Switching `quickshell`, `dms-greeter` or another package alone does not touch your settings, so no archive is written. The archives use the `dms backup` format and can be restored at any time with `dms backup restore <archive>`.
+
+**Going to beta is safe.** Beta upgrades your settings the same way a new release would.
+
+**Going back to stable can lose options.** Stable does not know settings added or renamed on beta and drops them on its next save. When a backup from your last stable run exists, `dms switch stable` offers to restore it after the switch. Your beta settings stay in the beta backup, so switching to beta again and restoring that archive with `dms backup restore` is always possible. With `-y` the current settings are kept and no restore is offered.
+
+Starting with this release, the shell also copies `settings.json` to `settings.v<N>.json` when it finds settings written by a newer version, before it saves anything.
+
+Settings kept in a dotfiles repository through a symlink are backed up and restored through the link, so the repository is updated in place.
+
+## Supported distributions
+
+| Distribution | How the package is replaced |
+|---|---|
+| Arch | the new build is fetched or built first, then swapped with `pacman` |
+| Fedora, EL 10 | `dnf swap`; for `dms`, which keeps its name, the COPR is changed and `dnf distro-sync` runs |
+| openSUSE | `zypper install new '!old'` in one transaction |
+| Debian, Ubuntu | `apt` replaces the conflicting package itself |
+| Void | `xbps-remove` then `xbps-install`; the old package is put back if the install fails |
+
+On NixOS and Gentoo, change the channel through your configuration instead.
+
+## Dux Installer
+
+Toggling an installed package between stable and git in the [Dux Installer](../duxinstall), or passing `--git-deps` / `--git-all` in headless mode, uses the same replacement. Earlier versions skipped the package or failed with a conflict.

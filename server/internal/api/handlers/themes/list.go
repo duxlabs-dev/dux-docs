@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 type ThemeSortBy string

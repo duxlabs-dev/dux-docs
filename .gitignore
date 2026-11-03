@@ -7,7 +7,7 @@
 # Generated files
 .docusaurus
 .cache-loader
-lib
+/lib
 preview-images
 
 # Misc

@@ -7,12 +7,15 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"slices"
 	"sync"
 	"time"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
+
+const moderationGrace = time.Minute
 
 type PreviewSyncer interface {
 	Sync(ctx context.Context, plugins []models.Plugin) []models.Plugin
@@ -21,6 +24,7 @@ type PreviewSyncer interface {
 type Cache struct {
 	mu          sync.RWMutex
 	plugins     []models.Plugin
+	moderatedAt map[string]time.Time
 	parser      *Parser
 	lastUpdate  time.Time
 	ready       bool
@@ -36,6 +40,7 @@ type pluginSnapshot struct {
 func NewCache(githubToken, persistPath string) *Cache {
 	return &Cache{
 		plugins:     []models.Plugin{},
+		moderatedAt: make(map[string]time.Time),
 		parser:      NewParser(githubToken),
 		persistPath: persistPath,
 	}
@@ -62,13 +67,21 @@ func (c *Cache) Initialize(ctx context.Context) error {
 func (c *Cache) Refresh(ctx context.Context) error {
 	log.Info("Refreshing plugin cache...")
 
-	plugins, err := c.parser.FetchPlugins(ctx)
+	plugins, err := c.parser.FetchPlugins(ctx, c.GetPlugins())
 	if err != nil {
 		return err
 	}
 
+	feedbackStarted := time.Now()
+	feedback, err := c.parser.FetchFeedback(ctx)
+	if err != nil {
+		log.Warnf("Failed to fetch plugin feedback: %v", err)
+	}
+
 	c.mu.Lock()
 	carryFeedback(plugins, c.plugins)
+	mergeFeedback(plugins, feedback)
+	c.keepRecentModeration(plugins, feedbackStarted.Add(-moderationGrace))
 	c.mu.Unlock()
 
 	if c.previews != nil {
@@ -174,6 +187,7 @@ func (c *Cache) ApplyStatus(pluginID, status string, add bool) {
 			break
 		}
 	}
+	c.moderatedAt[pluginID] = time.Now()
 	c.mu.Unlock()
 
 	if err := c.saveToDisk(); err != nil {
@@ -191,10 +205,23 @@ func (c *Cache) ApplySimilar(pluginID, similarID string, add bool) {
 			break
 		}
 	}
+	c.moderatedAt[pluginID] = time.Now()
 	c.mu.Unlock()
 
 	if err := c.saveToDisk(); err != nil {
 		log.Warn("Failed to persist plugin cache after similar update", "err", err)
+	}
+}
+
+func (c *Cache) keepRecentModeration(plugins []models.Plugin, since time.Time) {
+	current := pluginsByID(c.plugins)
+	for i := range plugins {
+		cached, ok := current[plugins[i].ID]
+		if !ok || c.moderatedAt[plugins[i].ID].Before(since) {
+			continue
+		}
+		plugins[i].Status = cached.Status
+		plugins[i].Similar = cached.Similar
 	}
 }
 
@@ -274,10 +301,10 @@ func (c *Cache) GetLastUpdate() time.Time {
 }
 
 type FilterOptions struct {
-	Category      string
-	Compositor    string
+	Categories    []string
+	Compositors   []string
 	FirstParty    bool
-	Capability    string
+	Capabilities  []string
 	ExcludeStatus []string
 }
 
@@ -296,7 +323,7 @@ func (c *Cache) FilterPlugins(opts FilterOptions) []models.Plugin {
 }
 
 func matchesFilter(plugin models.Plugin, opts FilterOptions) bool {
-	if opts.Category != "" && plugin.Category != opts.Category {
+	if len(opts.Categories) > 0 && !slices.Contains(opts.Categories, plugin.Category) {
 		return false
 	}
 
@@ -304,39 +331,23 @@ func matchesFilter(plugin models.Plugin, opts FilterOptions) bool {
 		return false
 	}
 
-	if opts.Compositor != "" {
-		found := false
-		for _, comp := range plugin.Compositors {
-			if comp == opts.Compositor || comp == "any" {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
+	if len(opts.Compositors) > 0 && !slices.Contains(plugin.Compositors, "any") && !anyOverlap(plugin.Compositors, opts.Compositors) {
+		return false
 	}
 
-	if opts.Capability != "" {
-		found := false
-		for _, cap := range plugin.Capabilities {
-			if cap == opts.Capability {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
+	if len(opts.Capabilities) > 0 && !anyOverlap(plugin.Capabilities, opts.Capabilities) {
+		return false
 	}
 
-	for _, excluded := range opts.ExcludeStatus {
-		for _, status := range plugin.Status {
-			if status == excluded {
-				return false
-			}
-		}
+	if anyOverlap(plugin.Status, opts.ExcludeStatus) {
+		return false
 	}
 
 	return true
+}
+
+func anyOverlap(values, wanted []string) bool {
+	return slices.ContainsFunc(values, func(value string) bool {
+		return slices.Contains(wanted, value)
+	})
 }

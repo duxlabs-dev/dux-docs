@@ -1,0 +1,57 @@
+---
+title: Dux Calendar Privacy Policy
+description: How Dux Calendar handles your calendar data and account credentials
+---
+
+# Dux Calendar Privacy Policy
+
+**Effective date: July 26, 2026**
+
+Dux Calendar ("dcal") is a free, open-source desktop calendar application for Linux and FreeBSD, developed by Dux Labs. This policy explains what data the application accesses and how it is handled.
+
+The short version: **Dux Calendar is a local application. Your data stays on your device.** We do not operate any servers, and your calendar data, tasks, and credentials are never transmitted to us or to any third party.
+
+## Data Dux Calendar accesses
+
+When you connect a calendar account, Dux Calendar accesses only the data needed to provide its calendar features:
+
+- **Calendar events** — read, created, updated, and deleted to provide two-way sync between your provider and the app, including responding to meeting invitations.
+- **Calendar list** — read to show your calendars and their names and colors.
+- **Tasks** — read, created, updated, and completed to provide the tasks view.
+- **Your account email address** — read once when you connect an account, to identify the account in the app and to determine which invitation attendee is you.
+
+For Google accounts, this corresponds to the following OAuth scopes: `calendar.events`, `calendar.calendarlist.readonly`, `tasks`, and `userinfo.email`.
+
+## How your data is stored
+
+All data is stored locally on your device:
+
+- Calendar and task data is cached in a local database in your XDG data directory.
+- OAuth tokens and account secrets are stored in your system keyring (Secret Service / KWallet) when available, or in an encrypted local file otherwise.
+
+Nothing is uploaded anywhere except to the calendar provider you connected, via that provider's official API, to perform the sync you requested.
+
+## What we do not do
+
+- We do not collect, store, transmit, sell, or share your data. We cannot — the application has no backend.
+- We do not use your data for advertising.
+- We do not use your data to develop, improve, or train machine-learning or artificial-intelligence models.
+- The application contains no analytics or telemetry.
+
+## Google API Services — Limited Use disclosure
+
+Dux Calendar's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including the Limited Use requirements.
+
+## Revoking access and deleting data
+
+- Removing an account in Dux Calendar deletes its cached data and stored credentials from your device.
+- You can also revoke Dux Calendar's access to your Google account at any time at [myaccount.google.com/permissions](https://myaccount.google.com/permissions), or to your Microsoft account at [account.live.com/consent/Manage](https://account.live.com/consent/Manage).
+- Uninstalling the application and removing its data directory removes all remaining local data.
+
+## Changes to this policy
+
+Changes to this policy will be published at this address with an updated effective date.
+
+## Contact
+
+Questions about this policy can be raised on [GitHub](https://github.com/duxlabs-dev/dux-calendar/issues) or by email at contact@duxlabs.dev.

@@ -21,7 +21,7 @@ func (f *fakeDispatcher) Dispatch(_ context.Context, _, _, eventType string, pay
 }
 
 func newTestWatcher(d Dispatcher) *Watcher {
-	return NewWatcher("AvengeMedia", "danklinux", []string{"qt6-qtbase", "qt6-qtdeclarative", " qt6-qtwayland "}, d)
+	return NewWatcher("duxlabs-dev", "dux-repo", []string{"qt6-qtbase", "qt6-qtdeclarative", " qt6-qtwayland "}, d)
 }
 
 func TestHandleDispatchesMatchingBuilds(t *testing.T) {

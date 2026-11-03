@@ -107,7 +107,7 @@ sudo dnf copr enable avengemedia/danklinux
 sudo dnf install dankcalendar-git
 ```
 
-**Debian (OBS)** and **Ubuntu (PPA)** first enable the [DankLinux repository](/docs/danklinux/), then:
+**Debian (OBS)** and **Ubuntu (PPA)** first enable the [DankLinux repository](/docs/repo/), then:
 
 ```bash
 sudo apt install dankcalendar-git
@@ -119,7 +119,7 @@ sudo apt install dankcalendar-git
 sudo zypper install dankcalendar-git
 ```
 
-Repository setup commands for each Debian release, Ubuntu, and openSUSE variant are in the [installation guide](/docs/dankcalendar/installation). You can also build from source with `git clone` and `make install`.
+Repository setup commands for each Debian release, Ubuntu, and openSUSE variant are in the [installation guide](/docs/dcal/installation). You can also build from source with `git clone` and `make install`.
 
 You can connect accounts from the GUI or the CLI.
 
@@ -131,11 +131,11 @@ dcal account add google   # or microsoft, caldav, icloud, local
 
 DankCalendar runs as a daemon, so closing the window only hides it and sync and reminders keep running in the tray - you can change the close behavior in settings. Enable **Start at login** from Settings, or install the systemd user service.
 
-See the [DankCalendar documentation](/docs/dankcalendar/) for full installation, account setup, and IPC reference.
+See the [DankCalendar documentation](/docs/dcal/) for full installation, account setup, and IPC reference.
 
 ## Updates since v0.1
 
-DankCalendar has moved quickly since the initial release. [v0.2.0](https://github.com/AvengeMedia/dankcalendar/releases/tag/v0.2.0) is the latest; here are the headline additions from v0.1.1 through v0.2.0.
+DankCalendar has moved quickly since the initial release. [v0.2.0](https://github.com/duxlabs-dev/dux-calendar/releases/tag/v0.2.0) is the latest; here are the headline additions from v0.1.1 through v0.2.0.
 
 ### Calendar sources
 
@@ -167,11 +167,11 @@ DankCalendar has moved quickly since the initial release. [v0.2.0](https://githu
 
 - **More languages** — Dutch, Italian, Vietnamese, Spanish, Hebrew, Russian, Ukrainian (with RTL), Polish, and Chinese Simplified.
 
-See the full [release history](https://github.com/AvengeMedia/dankcalendar/releases) on GitHub for version-by-version notes.
+See the full [release history](https://github.com/duxlabs-dev/dux-calendar/releases) on GitHub for version-by-version notes.
 
 ## Why a new Linux calendar?
 
-It fits the Dank philosophy of focused tools ([dgop](/docs/dgop/), [dsearch](/docs/danksearch/)) that do one thing well and integrate together, without unnecessary dependencies or assumptions about your setup. The calendar is a core part of the user experience, so it deserves a first-party solution that works well with the shell and with your existing accounts.
+It fits the Dank philosophy of focused tools ([dgop](/docs/dgop/), [dsearch](/docs/dsearch/)) that do one thing well and integrate together, without unnecessary dependencies or assumptions about your setup. The calendar is a core part of the user experience, so it deserves a first-party solution that works well with the shell and with your existing accounts.
 
 khal and vdirsyncer are scriptable and lightweight, but they're two tools you wire together yourself. You write a `vdirsyncer` config, set up OAuth tokens by hand, run sync on a cron, then point khal at the output. It's not a user-friendly or comprehensive solution.
 
@@ -185,18 +185,18 @@ DankCalendar keeps the good part of that idea, one synced backend that lots of t
 
 ## Resources
 
-<a href="/docs/dankcalendar/" className={styles.getStartedLink}>
+<a href="/docs/dcal/" className={styles.getStartedLink}>
   Read the DankCalendar docs <span>→</span>
 </a>
 
 <div className={styles.linksRow}>
-  <a href="https://github.com/AvengeMedia/dankcalendar" className={styles.supportLink}>GitHub</a>
+  <a href="https://github.com/duxlabs-dev/dux-calendar" className={styles.supportLink}>GitHub</a>
   <span className={styles.linkDivider}>•</span>
-  <a href="/docs/dankcalendar/" className={styles.supportLink}>Documentation</a>
+  <a href="/docs/dcal/" className={styles.supportLink}>Documentation</a>
   <span className={styles.linkDivider}>•</span>
   <a href="https://discord.gg/ppWTpKmPgT" className={styles.supportLink}>Discord</a>
   <span className={styles.linkDivider}>•</span>
-  <a href="https://ko-fi.com/danklinux" className={styles.supportLink}>Support on Ko-fi</a>
+  <a href="https://ko-fi.com/duxlabs" className={styles.supportLink}>Support on Ko-fi</a>
 </div>
 
 <div className={styles.communityHero}>
@@ -213,7 +213,7 @@ DankCalendar keeps the good part of that idea, one synced backend that lots of t
     <p className={styles.communityText}>DankCalendar is brand new, so feedback and bug reports go a long way. Come hang out in the <code>#dms</code> channels on the niri Discord, or open an issue on GitHub. Providers, widgets, and translations are all welcome.</p>
     <div className={styles.communityLinks}>
       <a href="https://discord.gg/ppWTpKmPgT" className={styles.discordButton}>Join the Discord</a>
-      <a href="https://github.com/AvengeMedia/dankcalendar/issues" className={styles.ghostButton}>Report an issue</a>
+      <a href="https://github.com/duxlabs-dev/dux-calendar/issues" className={styles.ghostButton}>Report an issue</a>
     </div>
   </div>
 </div>

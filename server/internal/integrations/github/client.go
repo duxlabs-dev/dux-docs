@@ -1,6 +1,7 @@
 package github
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -11,6 +12,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -18,6 +20,22 @@ type Client struct {
 	baseURL    string
 	httpClient *http.Client
 	token      string
+
+	mu           sync.Mutex
+	responses    map[string]cachedResponse
+	limitedUntil time.Time
+}
+
+type cachedResponse struct {
+	etag   string
+	header http.Header
+	body   []byte
+}
+
+type response struct {
+	status int
+	header http.Header
+	body   []byte
 }
 
 func NewClient(token string) *Client {
@@ -30,25 +48,34 @@ func NewClientWithBaseURL(baseURL, token string) *Client {
 		httpClient: &http.Client{
 			Timeout: 30 * time.Second,
 		},
-		token: token,
+		token:     token,
+		responses: make(map[string]cachedResponse),
 	}
 }
 
 const (
-	maxRetries     = 3
-	retryBaseDelay = 250 * time.Millisecond
+	maxRetries        = 3
+	retryBaseDelay    = 250 * time.Millisecond
+	rateLimitFallback = time.Minute
+	apiAccept         = "application/vnd.github.v3+json"
 )
 
-var ErrNotFound = errors.New("unexpected status code: 404")
+var (
+	ErrNotFound    = errors.New("unexpected status code: 404")
+	ErrRateLimited = errors.New("github rate limit exceeded")
+)
 
-func (c *Client) do(ctx context.Context, method, path string) ([]byte, error) {
-	body, _, err := c.doWithHeader(ctx, method, path)
+func (c *Client) get(ctx context.Context, path string) ([]byte, error) {
+	body, _, err := c.fetch(ctx, c.baseURL+path, apiAccept)
 	return body, err
 }
 
-func (c *Client) doWithHeader(ctx context.Context, method, path string) ([]byte, http.Header, error) {
-	var lastErr error
+func (c *Client) fetch(ctx context.Context, rawURL, accept string) ([]byte, http.Header, error) {
+	if err := c.rateLimitErr(); err != nil {
+		return nil, nil, err
+	}
 
+	var lastErr error
 	for attempt := 0; attempt < maxRetries; attempt++ {
 		if attempt > 0 {
 			select {
@@ -58,58 +85,137 @@ func (c *Client) doWithHeader(ctx context.Context, method, path string) ([]byte,
 			}
 		}
 
-		body, header, status, err := c.doOnce(ctx, method, path)
-		switch {
-		case err != nil:
+		cached, hasCached := c.cachedResponse(rawURL)
+		resp, err := c.fetchOnce(ctx, rawURL, accept, cached.etag)
+		if err != nil {
 			lastErr = err
-		case status == http.StatusOK:
-			return body, header, nil
-		case status == http.StatusNotFound:
+			continue
+		}
+
+		switch {
+		case resp.status == http.StatusOK:
+			c.storeResponse(rawURL, resp)
+			return resp.body, resp.header, nil
+		case resp.status == http.StatusNoContent:
+			return nil, resp.header, nil
+		case resp.status == http.StatusNotModified && hasCached:
+			return cached.body, cached.header, nil
+		case resp.status == http.StatusNotFound:
 			return nil, nil, ErrNotFound
-		default:
-			lastErr = fmt.Errorf("unexpected status code: %d", status)
-			if !retryableStatus(status) {
-				return nil, nil, lastErr
-			}
+		}
+
+		if reset, limited := rateLimitReset(resp); limited {
+			return nil, nil, c.markRateLimited(reset)
+		}
+
+		lastErr = fmt.Errorf("unexpected status code: %d", resp.status)
+		if !retryableStatus(resp.status) {
+			return nil, nil, lastErr
 		}
 	}
 
 	return nil, nil, lastErr
 }
 
-func (c *Client) doOnce(ctx context.Context, method, path string) ([]byte, http.Header, int, error) {
-	req, err := http.NewRequestWithContext(ctx, method, c.baseURL+path, nil)
+func (c *Client) fetchOnce(ctx context.Context, rawURL, accept, etag string) (response, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 	if err != nil {
-		return nil, nil, 0, fmt.Errorf("failed to create request: %w", err)
+		return response{}, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	req.Header.Set("Accept", "application/vnd.github.v3+json")
+	if accept != "" {
+		req.Header.Set("Accept", accept)
+	}
 	if c.token != "" {
 		req.Header.Set("Authorization", "Bearer "+c.token)
+	}
+	if etag != "" {
+		req.Header.Set("If-None-Match", etag)
 	}
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return nil, nil, 0, fmt.Errorf("request failed: %w", err)
+		return response{}, fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return nil, resp.Header, resp.StatusCode, nil
-	}
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, resp.Header, resp.StatusCode, fmt.Errorf("failed to read response body: %w", err)
+		return response{}, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	return body, resp.Header, resp.StatusCode, nil
+	return response{status: resp.StatusCode, header: resp.Header, body: body}, nil
+}
+
+func (c *Client) cachedResponse(rawURL string) (cachedResponse, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	cached, ok := c.responses[rawURL]
+	return cached, ok
+}
+
+func (c *Client) storeResponse(rawURL string, resp response) {
+	etag := resp.header.Get("ETag")
+	if etag == "" {
+		return
+	}
+
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.responses[rawURL] = cachedResponse{etag: etag, header: resp.header, body: resp.body}
+}
+
+func (c *Client) rateLimitErr() error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if !time.Now().Before(c.limitedUntil) {
+		return nil
+	}
+	return rateLimitedUntil(c.limitedUntil)
+}
+
+func (c *Client) markRateLimited(reset time.Time) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.limitedUntil = reset
+	return rateLimitedUntil(reset)
+}
+
+func rateLimitedUntil(reset time.Time) error {
+	return fmt.Errorf("%w until %s", ErrRateLimited, reset.UTC().Format(time.RFC3339))
+}
+
+func rateLimitReset(resp response) (time.Time, bool) {
+	if resp.status != http.StatusForbidden && resp.status != http.StatusTooManyRequests {
+		return time.Time{}, false
+	}
+
+	if seconds, err := strconv.Atoi(resp.header.Get("Retry-After")); err == nil {
+		return time.Now().Add(time.Duration(seconds) * time.Second), true
+	}
+
+	if resp.header.Get("X-RateLimit-Remaining") == "0" {
+		return quotaReset(resp.header), true
+	}
+
+	if resp.status == http.StatusTooManyRequests || bytes.Contains(bytes.ToLower(resp.body), []byte("rate limit")) {
+		return time.Now().Add(rateLimitFallback), true
+	}
+
+	return time.Time{}, false
+}
+
+func quotaReset(header http.Header) time.Time {
+	epoch, err := strconv.ParseInt(header.Get("X-RateLimit-Reset"), 10, 64)
+	if err != nil {
+		return time.Now().Add(rateLimitFallback)
+	}
+	return time.Unix(epoch, 0)
 }
 
 func retryableStatus(status int) bool {
 	switch status {
-	case http.StatusForbidden, http.StatusTooManyRequests,
-		http.StatusInternalServerError, http.StatusBadGateway,
+	case http.StatusInternalServerError, http.StatusBadGateway,
 		http.StatusServiceUnavailable, http.StatusGatewayTimeout:
 		return true
 	default:
@@ -128,7 +234,7 @@ type RepoContent struct {
 func (c *Client) GetRepoContents(ctx context.Context, owner, repo, path string) ([]RepoContent, error) {
 	apiPath := fmt.Sprintf("/repos/%s/%s/contents/%s", owner, repo, path)
 
-	body, err := c.do(ctx, http.MethodGet, apiPath)
+	body, err := c.get(ctx, apiPath)
 	if err != nil {
 		return nil, err
 	}
@@ -146,31 +252,8 @@ func (c *Client) GetRepoContents(ctx context.Context, owner, repo, path string) 
 }
 
 func (c *Client) GetFileContents(ctx context.Context, url string) ([]byte, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create request: %w", err)
-	}
-
-	if c.token != "" {
-		req.Header.Set("Authorization", "Bearer "+c.token)
-	}
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("request failed: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read response body: %w", err)
-	}
-
-	return body, nil
+	body, _, err := c.fetch(ctx, url, "")
+	return body, err
 }
 
 type Commit struct {
@@ -203,7 +286,7 @@ func (c *Client) ListIssues(ctx context.Context, owner, repo, label string) ([]I
 	for page := 1; ; page++ {
 		path := fmt.Sprintf("/repos/%s/%s/issues?labels=%s&state=all&per_page=100&page=%d", owner, repo, label, page)
 
-		body, err := c.do(ctx, http.MethodGet, path)
+		body, err := c.get(ctx, path)
 		if err != nil {
 			return nil, err
 		}
@@ -229,7 +312,7 @@ func (c *Client) GetLastCommit(ctx context.Context, owner, repo, path string) (*
 		apiPath += fmt.Sprintf("&path=%s", path)
 	}
 
-	body, err := c.do(ctx, http.MethodGet, apiPath)
+	body, err := c.get(ctx, apiPath)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +339,7 @@ type Release struct {
 }
 
 func (c *Client) ListReleases(ctx context.Context, owner, repo string, perPage int) ([]Release, error) {
-	body, err := c.do(ctx, http.MethodGet, fmt.Sprintf("/repos/%s/%s/releases?per_page=%d", owner, repo, perPage))
+	body, err := c.get(ctx, fmt.Sprintf("/repos/%s/%s/releases?per_page=%d", owner, repo, perPage))
 	if err != nil {
 		return nil, err
 	}
@@ -268,11 +351,46 @@ func (c *Client) ListReleases(ctx context.Context, owner, repo string, perPage i
 	return releases, nil
 }
 
+type Contributor struct {
+	Login         string `json:"login"`
+	AvatarURL     string `json:"avatar_url"`
+	HTMLURL       string `json:"html_url"`
+	Type          string `json:"type"`
+	Contributions int    `json:"contributions"`
+}
+
+const maxContributorPages = 20
+
+// ListContributors returns a repo's contributors by commit count. Anonymous
+// (email-only) authors are left out; they have no profile to link.
+func (c *Client) ListContributors(ctx context.Context, owner, repo string) ([]Contributor, error) {
+	var all []Contributor
+	for page := 1; page <= maxContributorPages; page++ {
+		body, err := c.get(ctx, fmt.Sprintf("/repos/%s/%s/contributors?per_page=100&page=%d", owner, repo, page))
+		if err != nil {
+			return nil, err
+		}
+		// An empty repository answers 204 with no body.
+		if len(body) == 0 {
+			break
+		}
+		var batch []Contributor
+		if err := json.Unmarshal(body, &batch); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal contributors: %w", err)
+		}
+		all = append(all, batch...)
+		if len(batch) < 100 {
+			break
+		}
+	}
+	return all, nil
+}
+
 // GetRefHead returns the newest commit on ref and the ref's total commit count.
 func (c *Client) GetRefHead(ctx context.Context, owner, repo, ref string) (*Commit, int, error) {
 	apiPath := fmt.Sprintf("/repos/%s/%s/commits?sha=%s&per_page=1", owner, repo, url.QueryEscape(ref))
 
-	body, header, err := c.doWithHeader(ctx, http.MethodGet, apiPath)
+	body, header, err := c.fetch(ctx, c.baseURL+apiPath, apiAccept)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -312,7 +430,7 @@ func lastPage(link string) int {
 func (c *Client) GetFileAtRef(ctx context.Context, owner, repo, path, ref string) ([]byte, error) {
 	apiPath := fmt.Sprintf("/repos/%s/%s/contents/%s?ref=%s", owner, repo, path, url.QueryEscape(ref))
 
-	body, err := c.do(ctx, http.MethodGet, apiPath)
+	body, err := c.get(ctx, apiPath)
 	if err != nil {
 		return nil, err
 	}

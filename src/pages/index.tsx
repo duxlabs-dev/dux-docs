@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import Head from '@docusaurus/Head';
+import { Check, ChevronRight } from 'material-symbols/rounded';
 import LandingBackground from '../components/LandingBackground';
+import ThemePreview from '../components/ThemePreview';
+import SponsorStrip from '../components/SponsorStrip';
+import ContributorStrip from '../components/ContributorStrip';
 import styles from './index.module.css';
 
 declare global {
@@ -19,6 +23,7 @@ const compositors = [
   { name: 'Sway', logo: '/img/sway.svg', duration: 600 },
   { name: 'labwc', logo: '/img/labwc.png', duration: 600 },
   { name: 'Miracle', logo: '/img/miraclewm.svg', duration: 600 },
+  { name: 'Aqueous', logo: '/img/aqueous.svg', duration: 600 },
   { name: 'Wayland', logo: null, duration: 0 },
 ];
 
@@ -29,14 +34,16 @@ const compositorLinks: Record<string, string> = {
   'Sway': 'https://swaywm.org/',
   'labwc': 'https://labwc.github.io/',
   'Miracle': 'https://github.com/miracle-wm-org/miracle-wm',
+  'Aqueous': 'https://www.seafoam-labs.org/aqueous/overview/',
 };
 
 export default function Home() {
   const [typed, setTyped] = useState('');
   const [showCursor, setShowCursor] = useState(true);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [currentCompositor, setCurrentCompositor] = useState(-1);
   const [copied, setCopied] = useState(false);
-  const fullText = 'curl -fsSL https://install.danklinux.com | sh';
+  const fullText = 'curl -fsSL https://install.duxlabs.dev | sh';
   const videoRef = React.useRef<HTMLIFrameElement>(null);
 
   const handleCopyCommand = async () => {
@@ -50,17 +57,29 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotion = () => setReduceMotion(preference.matches);
+    updateMotion();
+    preference.addEventListener('change', updateMotion);
+    return () => preference.removeEventListener('change', updateMotion);
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setTyped(fullText);
+      return;
+    }
     if (typed.length < fullText.length) {
       const timeout = setTimeout(() => {
         setTyped(fullText.slice(0, typed.length + 1));
       }, 50);
       return () => clearTimeout(timeout);
     }
-  }, [typed, fullText]);
+  }, [typed, fullText, reduceMotion]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowCursor(prev => !prev);
+      setShowCursor((prev) => !prev);
     }, 500);
     return () => clearInterval(interval);
   }, []);
@@ -125,6 +144,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (reduceMotion) {
+      setCurrentCompositor(compositors.length - 1);
+      return;
+    }
     const timeouts: NodeJS.Timeout[] = [];
 
     const showFirstTimeout = setTimeout(() => {
@@ -146,7 +169,7 @@ export default function Home() {
     return () => {
       timeouts.forEach(t => clearTimeout(t));
     };
-  }, []);
+  }, [reduceMotion]);
 
   useEffect(() => {
     if (!videoRef.current || typeof window === 'undefined') return;
@@ -193,16 +216,50 @@ export default function Home() {
     };
   }, []);
 
+  // Scroll reveal: cards below the fold start small and scale in as they enter view.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+
+    const selector = `.${styles.screenshotCard}, .${styles.featureCard}, .${styles.supportCard}`;
+    const viewportHeight = window.innerHeight;
+    const pending = Array.from(document.querySelectorAll<HTMLElement>(selector)).filter(
+      (el) => el.getBoundingClientRect().top > viewportHeight * 0.95,
+    );
+    pending.forEach((el) => el.setAttribute('data-reveal', 'pending'));
+
+    const timers: number[] = [];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let order = 0;
+        entries
+          .filter((entry) => entry.isIntersecting)
+          .forEach((entry) => {
+            const el = entry.target as HTMLElement;
+            observer.unobserve(el);
+            timers.push(window.setTimeout(() => el.setAttribute('data-reveal', 'in'), order++ * 70));
+          });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+    );
+    pending.forEach((el) => observer.observe(el));
+
+    return () => {
+      observer.disconnect();
+      timers.forEach((t) => window.clearTimeout(t));
+      pending.forEach((el) => el.removeAttribute('data-reveal'));
+    };
+  }, []);
 
   return (
     <Layout
+      wrapperClassName="landing-main-wrapper"
       title="Modern Desktop Suite"
-      description="A modern Linux desktop suite with beautiful widgets and powerful monitoring - optimized for niri, Hyprland, MangoWC, Sway, and Miracle WM.">
+      description="A modern Linux desktop suite with beautiful widgets and powerful monitoring - optimized for niri, Hyprland, MangoWC, Sway, Miracle WM, and Aqueous.">
       <Head>
-        <meta property="og:image" content="https://danklinux.com/img/homepage/danklinux-preview.png" />
-        <meta property="og:image:width" content="2145" />
-        <meta property="og:image:height" content="1365" />
-        <meta name="twitter:image" content="https://danklinux.com/img/homepage/danklinux-preview.png" />
+        <meta property="og:image" content="https://duxlabs.dev/img/homepage/dux-preview.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:image" content="https://duxlabs.dev/img/homepage/dux-preview.png" />
       </Head>
       <noscript>
         <style>{`
@@ -237,7 +294,7 @@ export default function Home() {
                 <span className={styles.compositorRotatorWrapper}>
                   <noscript>
                     <span style={{display: 'inline', fontSize: 'inherit', color: 'inherit'}}>
-                      niri, Hyprland, Sway, and Wayland
+                      niri, Hyprland, Sway, Aqueous, and Wayland
                     </span>
                   </noscript>
                   <span className={styles.compositorRotator}>
@@ -265,9 +322,7 @@ export default function Home() {
               <div className={styles.heroCTA}>
                 <Link to="/docs/getting-started" className={styles.primaryCTA}>
                   <span>Get Started</span>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className={styles.ctaArrow}>
-                    <path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
+                  <ChevronRight size={20} className={styles.ctaArrow} />
                 </Link>
                 <Link to="/docs/" className={styles.secondaryCTA}>
                   Documentation
@@ -275,19 +330,25 @@ export default function Home() {
               </div>
 
               <div className={styles.terminalFloat}>
-                <div className={styles.terminalWindow} onClick={handleCopyCommand}>
+                <div
+                  className={styles.terminalWindow}
+                  onClick={handleCopyCommand}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleCopyCommand();
+                  }}
+                  aria-label={`Copy install command: ${fullText}`}
+                >
                   {copied && (
                     <div className={styles.copiedIndicator}>
-                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ marginRight: '0.5rem' }}>
-                        <path d="M4 10L8 14L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
+                      <Check size={16} style={{ marginRight: '0.5rem' }} />
                       Copied
                     </div>
                   )}
                   <div className={styles.terminalHeader}>
                     <div className={styles.terminalLogos}>
                       {compositors
-                        .slice(0, 5)
                         .filter((compositor) => compositor.logo)
                         .map((compositor) => (
                           <a
@@ -319,13 +380,13 @@ export default function Home() {
                               <span className={styles.cmdFlag}>{typed.slice(4, Math.min(10, typed.length))}</span>
                             )}
                             {typed.length > 10 && (
-                              <span className={styles.cmdUrl}>{typed.slice(10, Math.min(42, typed.length))}</span>
+                              <span className={styles.cmdUrl}>{typed.slice(10, Math.min(38, typed.length))}</span>
                             )}
-                            {typed.length > 42 && (
-                              <span className={styles.cmdPipe}>{typed.slice(42, Math.min(45, typed.length))}</span>
+                            {typed.length > 38 && (
+                              <span className={styles.cmdPipe}>{typed.slice(38, Math.min(41, typed.length))}</span>
                             )}
-                            {typed.length > 45 && (
-                              <span className={styles.cmdCommand}>{typed.slice(45)}</span>
+                            {typed.length > 41 && (
+                              <span className={styles.cmdCommand}>{typed.slice(41)}</span>
                             )}
                           </>
                         )}
@@ -339,7 +400,7 @@ export default function Home() {
                       <span className={styles.success}>✓ Installing dependencies</span>
                     </div>
                     <div className={`${styles.terminalLine} ${typed.length >= fullText.length ? styles.fadeIn : styles.hidden}`} style={{ animationDelay: '0.6s' }}>
-                      <span className={styles.success}>✓ Configuring DankMaterialShell</span>
+                      <span className={styles.success}>✓ Configuring Dux Shell</span>
                     </div>
                     <div className={`${styles.terminalLine} ${typed.length >= fullText.length ? styles.fadeIn : styles.hidden}`} style={{ animationDelay: '0.9s' }}>
                       <span className={styles.success}>✓ Ready to rock!</span>
@@ -360,11 +421,9 @@ export default function Home() {
                     <img src="/img/z.svg" alt="Zirconium" className={styles.preconfiguredLogo} />
                     <div className={styles.preconfiguredInfo}>
                       <span className={styles.preconfiguredName}>Zirconium</span>
-                      <span className={styles.preconfiguredDesc}>Fedora-based immutable OS with niri + DMS</span>
+                      <span className={styles.preconfiguredDesc}>Fedora-based immutable OS with niri + Dux Shell</span>
                     </div>
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className={styles.preconfiguredArrow}>
-                      <path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <ChevronRight size={16} className={styles.preconfiguredArrow} />
                   </a>
                   <a
                     href="https://fedoraproject.org/spins/miraclewm/"
@@ -375,11 +434,9 @@ export default function Home() {
                     <img src="/img/fedora-mark.svg" alt="Fedora" className={styles.preconfiguredLogo} />
                     <div className={styles.preconfiguredInfo}>
                       <span className={styles.preconfiguredName}>Fedora Miracle Spin</span>
-                      <span className={styles.preconfiguredDesc}>Official Fedora Spin with MiracleWM + DMS</span>
+                      <span className={styles.preconfiguredDesc}>Official Fedora Spin with MiracleWM + Dux Shell</span>
                     </div>
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className={styles.preconfiguredArrow}>
-                      <path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <ChevronRight size={16} className={styles.preconfiguredArrow} />
                   </a>
                 </div>
               </div>
@@ -402,7 +459,7 @@ export default function Home() {
                   <iframe
                     ref={videoRef}
                     className={styles.screenshotVideo}
-                    src="https://player.mediadelivery.net/embed/526968/28e655a4-2553-48d0-8325-6a0864237eac?muted=true&loop=true"
+                    src="https://player.mediadelivery.net/embed/526968/bb74c859-f2c7-43d6-aded-1715e9d3cc8e?muted=true&loop=true"
                     loading="lazy"
                     style={{ border: 0, width: '100%', height: '100%' }}
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
@@ -410,7 +467,7 @@ export default function Home() {
                   />
                 </div>
                 <div className={styles.screenshotLabel}>
-                  <h3>DankMaterialShell in Action</h3>
+                  <h3>Dux Shell in Action</h3>
                   <p>Experience the fluid interface and beautiful animations</p>
                 </div>
               </div>
@@ -418,20 +475,24 @@ export default function Home() {
               <div className={styles.screenshotCard}>
                 <div className={styles.screenshotFrame}>
                   <img
-                    src="/img/homepage/dankdash_dark.png"
-                    alt="DankDash - Overview Dashboard"
+                    src="/img/homepage/dankdash_dark.webp"
+                    alt="Dux Dash - Overview Dashboard"
                     className={`${styles.screenshotImage} ${styles.darkOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                   <img
-                    src="/img/homepage/dankdash_light.png"
-                    alt="DankDash - Overview Dashboard"
+                    src="/img/homepage/dankdash_light.webp"
+                    alt="Dux Dash - Overview Dashboard"
                     className={`${styles.screenshotImage} ${styles.lightOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                 </div>
                 <div className={styles.screenshotLabel}>
-                  <h3>Dank Dash</h3>
+                  <h3>Dux Dash</h3>
                   <p>Media controls, weather, calendar, and system info at a glance</p>
                 </div>
               </div>
@@ -439,78 +500,44 @@ export default function Home() {
               <div className={styles.screenshotCard}>
                 <div className={styles.screenshotFrame}>
                   <img
-                    src="/img/homepage/launcher_dark.png"
-                    alt="Spotlight Launcher"
-                    className={`${styles.screenshotImage} ${styles.darkOnly} ${styles.topAlign}`}
-                    data-zoom
-                  />
-                  <img
-                    src="/img/homepage/launcher_light.png"
-                    alt="Spotlight Launcher"
-                    className={`${styles.screenshotImage} ${styles.lightOnly} ${styles.topAlign}`}
-                    data-zoom
-                  />
-                </div>
-                <div className={styles.screenshotLabel}>
-                  <h3>Launcher</h3>
-                  <p>Launch applications, filesystem searches, and more with the launcher & plugins.</p>
-                </div>
-              </div>
-
-              <div className={styles.screenshotCard}>
-                <div className={styles.screenshotFrame}>
-                  <img
-                    src="/img/homepage/controlcenter_dark.png"
-                    alt="Control Center"
+                    src="/img/homepage/controlcenter_dark.webp"
+                    alt="Quick Settings"
                     className={`${styles.screenshotImage} ${styles.darkOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                   <img
-                    src="/img/homepage/controlcenter_light.png"
-                    alt="Control Center"
+                    src="/img/homepage/controlcenter_light.webp"
+                    alt="Quick Settings"
                     className={`${styles.screenshotImage} ${styles.lightOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                 </div>
                 <div className={styles.screenshotLabel}>
-                  <h3>Control Center</h3>
-                  <p>Fully configurable system settings and quick toggles.</p>
+                  <h3>Quick Settings</h3>
+                  <p>Effortlessly control your audio, displays, network, and bluetooth</p>
                 </div>
               </div>
 
               <div className={styles.screenshotCard}>
                 <div className={styles.screenshotFrame}>
                   <img
-                    src="/img/homepage/process_dark.png"
-                    alt="System Monitor"
-                    className={`${styles.screenshotImage} ${styles.darkOnly}`}
-                    data-zoom
-                  />
-                  <img
-                    src="/img/homepage/process_light.png"
-                    alt="System Monitor"
-                    className={`${styles.screenshotImage} ${styles.lightOnly}`}
-                    data-zoom
-                  />
-                </div>
-                <div className={styles.screenshotLabel}>
-                  <h3>System Monitor</h3>
-                  <p>Real-time system & process metrics</p>
-                </div>
-              </div>
-
-              <div className={styles.screenshotCard}>
-                <div className={styles.screenshotFrame}>
-                  <img
-                    src="/img/homepage/widget_dark.png"
+                    src="/img/homepage/widget_dark.webp"
                     alt="Widget Customization"
                     className={`${styles.screenshotImage} ${styles.darkOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                   <img
-                    src="/img/homepage/widget_light.png"
+                    src="/img/homepage/widget_light.webp"
                     alt="Widget Customization"
                     className={`${styles.screenshotImage} ${styles.lightOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                 </div>
@@ -523,15 +550,19 @@ export default function Home() {
               <div className={styles.screenshotCard}>
                 <div className={styles.screenshotFrame}>
                   <img
-                    src="/img/homepage/plugins_dark.png"
+                    src="/img/homepage/plugins_dark.webp"
                     alt="Plugins"
                     className={`${styles.screenshotImage} ${styles.darkOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                   <img
-                    src="/img/homepage/plugins_light.png"
+                    src="/img/homepage/plugins_light.webp"
                     alt="Plugins"
                     className={`${styles.screenshotImage} ${styles.lightOnly}`}
+                    loading="lazy"
+                    decoding="async"
                     data-zoom
                   />
                 </div>
@@ -555,41 +586,48 @@ export default function Home() {
 
             <div className={styles.featuresGrid}>
               <FeatureCard
-                title="DankMaterialShell"
+                title="Dux Shell"
                 description="A modern and beautiful desktop shell with dynamic theming and smooth animations."
-                imageDark="/img/desktop.png"
-                imageLight="/img/desktoplight.png"
+                imageDark="/img/desktop.webp"
+                imageLight="/img/desktoplight.webp"
+                href="/docs/dms/overview"
               />
               <FeatureCard
-                title="Dank Install"
-                description="One line installer for an automated quick and easy setup."
-                imageDark="/img/dankinstall.png"
-                imageLight="/img/dankinstalallight.png"
+                title="Dux Files"
+                description="A fast, keyboard-first file manager with tabs, split view, search, trash, devices, and network shares."
+                imageDark="/img/dfiles.webp"
+                imageLight="/img/dfileslight.webp"
+                href="/docs/dfiles"
               />
               <FeatureCard
-                title="Dank GOP"
+                title="Dux GOP"
                 description="Stateless system and process monitoring for CPU, memory, GPU, disks, and network interfaces."
-                imageDark="/img/dgop.png"
-                imageLight="/img/dgoplight.png"
+                imageDark="/img/dgop.webp"
+                imageLight="/img/dgoplight.webp"
+                href="/docs/dgop"
               />
               <FeatureCard
-                title="Dank Greeter"
+                title="Dux Greeter"
                 description="An aesthetically pleasing greetd greeter for your desktop."
-                imageDark="/img/dgreet.png"
-                imageLight="/img/dgreetlight.png"
+                imageDark="/img/dgreet.webp"
+                imageLight="/img/dgreetlight.webp"
+                href="/docs/dms-greeter"
               />
               <FeatureCard
-                title="Dank Search"
+                title="Dux Search"
                 description="Blazingly fast and efficient file system search tool."
-                imageDark="/img/dsearch.png"
-                imageLight="/img/dsearchlight.png"
+                imageDark="/img/dsearch.webp"
+                imageLight="/img/dsearchlight.webp"
                 imageAlign="top"
+                href="/docs/dsearch"
               />
               <FeatureCard
-                title="Fully Customizable"
-                description="Plugins, widgets, themes, and configs to make it yours"
-                imageDark="/img/homepage/plugins_dark.png"
-                imageLight="/img/homepage/plugins_light.png"
+                title="Dux Calendar"
+                description="Your calendars, events, and tasks together, with Google, Microsoft, CalDAV, and iCloud support."
+                imageDark="/img/dms/dcal_dark.webp"
+                imageLight="/img/dms/dcal_light.webp"
+                imageAlign="top"
+                href="/docs/dcal"
               />
             </div>
           </section>
@@ -598,46 +636,64 @@ export default function Home() {
             <div className={styles.showcaseGrid}>
               <div className={styles.showcaseText}>
                 <h2 className={styles.showcaseTitle}>
-                  Beautiful by <span className={styles.gradientText}>default</span>
+                  One theme.<br /><span className={styles.gradientText}>Across your apps.</span>
                 </h2>
                 <p className={styles.showcaseDesc}>
-                  Dynamic theming powered by matugen extracts colors from your wallpaper
-                  to create a cohesive experience.
+                  Dux Shell automatically generates matching colors for supported GTK and Qt apps,
+                  terminals, editors, and more.
+                </p>
+                <p className={styles.showcaseDesc}>
+                  Our custom <Link to="/docs/dms/cli-dank16">dank16</Link> algorithm builds a full 16-color palette
+                  for terminals and syntax highlighting, with contrast tuned for light and dark themes.
                 </p>
                 <ul className={styles.showcaseFeatures}>
                   <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 10L8 14L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span>Material Design 3 color schemes</span>
+                    <Check size={20} />
+                    <span>GTK3, GTK4, and Qt</span>
                   </li>
                   <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 10L8 14L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span>Automatic theming for system applications.</span>
+                    <Check size={20} />
+                    <span>Terminal and editor color schemes</span>
                   </li>
                   <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 10L8 14L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span>Automatic light/dark mode</span>
-                  </li>
-                  <li>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 10L8 14L16 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span>Smooth animations throughout</span>
+                    <Check size={20} />
+                    <span>Light and dark modes</span>
                   </li>
                 </ul>
+                <Link to="/docs/dms/application-themes" className={styles.themingLink}>
+                  Set up app theming <span aria-hidden="true">↗</span>
+                </Link>
               </div>
-              <div className={styles.showcaseVisual}>
-                <div className={styles.colorGrid}>
-                  <div className={styles.colorBlock} style={{ background: 'linear-gradient(135deg, #805AD5, #6B46C1)' }}></div>
-                  <div className={styles.colorBlock} style={{ background: 'linear-gradient(135deg, #D0BCFF, #9F7AEA)' }}></div>
-                  <div className={styles.colorBlock} style={{ background: 'linear-gradient(135deg, #B794F4, #805AD5)' }}></div>
-                  <div className={styles.colorBlock} style={{ background: 'linear-gradient(135deg, #6B46C1, #553C9A)' }}></div>
-                </div>
+              <ThemePreview />
+            </div>
+          </section>
+
+          <section className={styles.support}>
+            <SponsorStrip />
+            <ContributorStrip />
+            <div className={styles.supportCard}>
+              <div className={styles.supportText}>
+                <h2 className={styles.supportTitle}>
+                  Free and open source.<br /><span className={styles.gradientText}>Kept going by you.</span>
+                </h2>
+                <p className={styles.supportDesc}>
+                  Dux Shell costs nothing to use. If it has earned a spot on your desktop,
+                  a tip helps cover the time and infrastructure that keep releases coming.
+                </p>
+              </div>
+              <div className={styles.supportActions}>
+                <a
+                  href="https://ko-fi.com/duxlabs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.primaryCTA}
+                >
+                  <span className={styles.kofiIcon} aria-hidden="true" />
+                  <span>Tip on Ko-fi</span>
+                </a>
+                <Link to="/docs/contributing" className={styles.secondaryCTA}>
+                  Contribute code
+                </Link>
               </div>
             </div>
           </section>
@@ -647,12 +703,13 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ title, description, imageDark, imageLight, imageAlign = 'center' }: {
+function FeatureCard({ title, description, imageDark, imageLight, imageAlign = 'center', href }: {
   title: string;
   description: string;
   imageDark?: string;
   imageLight?: string;
   imageAlign?: 'top' | 'center';
+  href?: string;
 }) {
   return (
     <div className={styles.featureCard}>
@@ -662,17 +719,21 @@ function FeatureCard({ title, description, imageDark, imageLight, imageAlign = '
             src={imageDark}
             alt={title}
             className={`${styles.cardImage} ${styles.darkOnly} ${imageAlign === 'top' ? styles.topAlign : ''}`}
+            loading="lazy"
+            decoding="async"
             data-zoom
           />
           <img
             src={imageLight}
             alt={title}
             className={`${styles.cardImage} ${styles.lightOnly} ${imageAlign === 'top' ? styles.topAlign : ''}`}
+            loading="lazy"
+            decoding="async"
             data-zoom
           />
         </div>
       )}
-      <h3 className={styles.cardTitle}>{title}</h3>
+      <h3 className={styles.cardTitle}>{href ? <Link to={href}>{title}<span aria-hidden="true"> ↗</span></Link> : title}</h3>
       <p className={styles.cardDesc}>{description}</p>
     </div>
   );

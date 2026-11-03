@@ -1,0 +1,168 @@
+---
+title: Notifications
+description: Send desktop notifications from scripts with notify-send compatible flags, actions, and file shortcuts
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`███╗   ██╗ ██████╗ ████████╗██╗███████╗██╗   ██╗
+████╗  ██║██╔═══██╗╚══██╔══╝██║██╔════╝╚██╗ ██╔╝
+██╔██╗ ██║██║   ██║   ██║   ██║█████╗   ╚████╔╝ 
+██║╚██╗██║██║   ██║   ██║   ██║██╔══╝    ╚██╔╝  
+██║ ╚████║╚██████╔╝   ██║   ██║██║        ██║   
+╚═╝  ╚═══╝ ╚═════╝    ╚═╝   ╚═╝╚═╝        ╚═╝   `}
+  hideTitle={true}
+/>
+
+The `dms notify` command sends a desktop notification over the standard `org.freedesktop.Notifications` D-Bus interface. Its flags mirror `notify-send`, so existing scripts can swap the binary name and keep working, and it adds a `--file` shortcut for "a file arrived" style notifications.
+
+## Quick Start
+
+```bash
+# Summary and body
+dms notify "Hello" "World"
+
+# Critical, never expires
+dms notify -u critical -t 0 "Disk almost full"
+
+# App name, icon and category
+dms notify -a "Backup" -i drive-harddisk --category transfer.complete "Backup finished"
+
+# Buttons: prints the chosen name and exits
+dms notify -A retry=Retry -A Dismiss "Build failed"
+```
+
+## Arguments
+
+| Argument | Description |
+|----------|-------------|
+| `<summary>` | Title line, required |
+| `[body]` | Optional body text |
+
+Use `--` before a summary that starts with a dash:
+
+```bash
+dms notify -- "-rf is dangerous"
+```
+
+## Appearance
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--app-name` | `-a` | Application name (default `DMS`) |
+| `--icon` | `-i` | Icon name or file path |
+| `--app-icon` | `-n` | Application icon. When set, `--icon` is sent as the `image-path` hint instead |
+| `--urgency` | `-u` | `low`, `normal` or `critical` |
+| `--category` | | Category string such as `device.added` or `transfer.complete`, comma separated |
+| `--transient` | `-e` | Mark the notification transient so it is not kept in history |
+| `--expire-time` | `-t` | Timeout in milliseconds. `0` never expires, `-1` (default) uses the shell's own timeout settings |
+
+Urgency drives the shell's popup behavior: critical notifications bypass the normal queue limit and, when the Do Not Disturb exception is enabled, still show while Do Not Disturb is on.
+
+:::note
+`-c` is taken by the global `--config` flag, so `--category` has no short form here.
+:::
+
+## Identity
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--print-id` | `-p` | Print the notification id to stdout |
+| `--id-fd` | | Write the id to this file descriptor instead |
+| `--replace-id` | `-r` | Replace an existing notification instead of creating a new one |
+
+Replacing keeps a single popup updated, which is what progress scripts want:
+
+```bash
+id=$(dms notify -p "Copying" "0%")
+for pct in 25 50 75 100; do
+  sleep 1
+  dms notify -r "$id" "Copying" "$pct%"
+done
+```
+
+## Actions and Waiting
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--action` | `-A` | Add a button as `[NAME=]Text`. Repeatable. Implies `--wait` |
+| `--wait` | `-w` | Block until the notification closes |
+| `--selected-action-fd` | | Also write the chosen action name to this file descriptor |
+
+When a button is clicked, its `NAME` is printed to stdout and the command exits. Without a `NAME`, the button's index (starting at 0) is used. If the notification closes without a click, nothing is printed. With a positive `--expire-time`, waiting also gives up after that many milliseconds and prints `Wait timeout expired` to stderr.
+
+```bash
+case "$(dms notify -A open=Open -A later=Later "Update available")" in
+  open) dms update ;;
+  later) ;;
+esac
+```
+
+The action named `default` is what the shell fires when the notification body itself is clicked, matching the Desktop Notifications spec.
+
+## File Notifications
+
+| Flag | Description |
+|------|-------------|
+| `--file` | Path to a file. Adds `Open` and `Open Folder` buttons and uses the file as the image |
+
+```bash
+dms notify "File received" "photo.jpg" --file ~/Downloads/photo.jpg
+```
+
+The buttons are handled for you: `Open` runs `xdg-open` on the file and `Open Folder` on its directory. When the shell is running, its daemon watches for the click. Otherwise a small background listener is spawned, so the command returns immediately either way. `--file` and `--action` cannot be combined.
+
+## Extra Hints
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--hint` | `-h` | Arbitrary hint as `TYPE:NAME:VALUE`. Repeatable |
+
+Supported types are `boolean`, `int`, `double`, `string` and `byte`. The `variant` type from notify-send is not supported.
+
+```bash
+# Progress value hint read by some notification servers
+dms notify -h int:value:42 "Downloading"
+
+# Show as coming from a desktop entry
+dms notify -h string:desktop-entry:org.mozilla.firefox "Firefox"
+```
+
+Hints given with `--hint` override the ones set by other flags. `-h` is the hint flag like in notify-send, so use `--help` for help.
+
+## Scripting
+
+Errors go to stderr with a non-zero exit code, and stdout only ever carries what you asked for (the id with `--print-id`, the action name with `--action`), so the command composes cleanly in shell scripts and plugin hooks.
+
+```bash
+# Notify when a long job finishes, critical on failure
+make all; rc=$?
+dms notify -u "$([ "$rc" -eq 0 ] && echo normal || echo critical)" "Build done" "exit $rc"
+
+# Drop-in for notify-send
+alias notify-send='dms notify'
+```
+
+## All Options
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--app-name` | `-a` | Application name (default `DMS`) |
+| `--icon` | `-i` | Icon name or path |
+| `--app-icon` | `-n` | Application icon; turns `--icon` into the image |
+| `--urgency` | `-u` | `low`, `normal`, `critical` |
+| `--category` | | Notification category |
+| `--transient` | `-e` | Do not keep in history |
+| `--expire-time` | `-t` | Timeout in ms (`0` never, `-1` shell default) |
+| `--hint` | `-h` | Extra hint `TYPE:NAME:VALUE` |
+| `--print-id` | `-p` | Print the notification id |
+| `--id-fd` | | Write the id to a file descriptor |
+| `--replace-id` | `-r` | Replace an existing notification |
+| `--wait` | `-w` | Wait until closed |
+| `--action` | `-A` | Add a button `[NAME=]Text`, implies `--wait` |
+| `--selected-action-fd` | | Write the chosen action to a file descriptor |
+| `--file` | | File path with Open / Open Folder buttons |
+| `--help` | | Show help |
+
+`--app` and `--timeout` from older DMS versions still work as aliases of `--app-name` and `--expire-time`.

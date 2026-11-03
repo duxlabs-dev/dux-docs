@@ -1,10 +1,7 @@
 import React, { type ReactNode } from 'react';
-import Navbar from '@theme-original/Navbar';
-import type NavbarType from '@theme/Navbar';
-import type { WrapperProps } from '@docusaurus/types';
+import NavbarLayout from '@theme/Navbar/Layout';
+import NavbarContent from './Content';
 
-type Props = WrapperProps<typeof NavbarType>;
-
-export default function NavbarWrapper(props: Props): ReactNode {
-  return <Navbar {...props} />;
+export default function NavbarWrapper(): ReactNode {
+  return <NavbarLayout><NavbarContent /></NavbarLayout>;
 }

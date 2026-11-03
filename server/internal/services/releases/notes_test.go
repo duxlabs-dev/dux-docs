@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 const boilerplate = "# Package Maintainers - PLEASE READ\n\n" +
@@ -42,7 +42,7 @@ func TestParseNotes(t *testing.T) {
 				"### Internationalization\n- i18n: sync terms by @a (1234567)\n\n" +
 				"### Documentation\n- docs: fix typo by @a in #5\n\n" +
 				"### Other Changes\n- core: bump dankgop by @bbedward (243d716)\n\n" +
-				"**Full Changelog**: https://github.com/AvengeMedia/DankMaterialShell/compare/v1.6.1...v1.6.2\n",
+				"**Full Changelog**: https://github.com/duxlabs-dev/dux-shell/compare/v1.6.1...v1.6.2\n",
 			counts:     models.ReleaseCounts{Breaking: 1, Features: 2, Fixes: 2, Other: 4},
 			highlights: []string{"Split move size hyprland windowrules", "Add flag to control HUD scale", "Niri: fix workspace updates never applying", "Preserve pinned state"},
 		},

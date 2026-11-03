@@ -11,7 +11,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
 )
 
 // for defining context keys was copied from Go 1.7's new use of context in net/http.

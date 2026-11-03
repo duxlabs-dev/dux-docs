@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/utils"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/utils"
 )
 
 type rateLimitEntry struct {

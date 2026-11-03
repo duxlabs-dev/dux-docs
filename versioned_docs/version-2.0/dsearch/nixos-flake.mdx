@@ -1,0 +1,282 @@
+---
+title: NixOS Installation (Flake)
+description: Install and configure Dux Search on NixOS using flakes with home-manager
+sidebar_position: 3
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗
+██╔══██╗██║   ██║╚██╗██╔╝    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║
+██║  ██║██║   ██║ ╚███╔╝     ███████╗█████╗  ███████║██████╔╝██║     ███████║
+██║  ██║██║   ██║ ██╔██╗     ╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║
+██████╔╝╚██████╔╝██╔╝ ██╗    ███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝`}
+  hideTitle={true}
+/>
+
+Dux Search can be installed on NixOS using home-manager with flakes. This guide covers the flake-based installation method for per-user installation.
+
+:::info[Native nixpkgs Available]
+Dux Search is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](nixos) method is recommended and doesn't require flakes.
+:::
+
+## Installation
+
+### 1. Add Flake Inputs
+
+First, add the Dux Search flake to your `flake.nix`:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+
+    dsearch = {
+      url = "github:duxlabs-dev/dux-search";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+### 2. Import the home-manager Module
+
+Add the Dux Search home-manager module to your home-manager configuration imports:
+
+```nix
+imports = [
+  inputs.dsearch.homeModules.dsearch
+];
+```
+
+If using home-manager as a NixOS module, you can also use the `default` module which is an alias:
+
+```nix
+imports = [
+  inputs.dsearch.homeModules.default
+];
+```
+
+### 3. Enable Dux Search
+
+In your home-manager configuration, enable Dux Search:
+
+```nix
+programs.dsearch.enable = true;
+```
+
+That's it! Rebuild your system (or standalone home-manager configuration) and Dux Search will be installed with sensible defaults.
+
+## Configuration Options
+
+Dux Search provides several configuration options to customize your installation:
+
+### Basic Configuration
+
+```nix
+programs.dsearch = {
+  enable = true;
+
+  # Use a custom package (optional)
+  package = pkgs.dsearch;
+
+  # Custom configuration (TOML format)
+  config = {
+    # Server configuration
+    listen_addr = ":43654";
+    
+    # Index settings
+    index_path = "~/.cache/dsearch/index";
+    max_file_bytes = 2097152;  # 2MB
+    worker_count = 4;
+    index_all_files = true;
+    
+    # Auto-reindex settings
+    auto_reindex = false;
+    reindex_interval_hours = 24;
+    
+    # Text file extensions
+    text_extensions = [
+      ".txt" ".md" ".go" ".py" ".js" ".ts"
+      ".jsx" ".tsx" ".json" ".yaml" ".yml"
+      ".toml" ".html" ".css" ".rs"
+    ];
+    
+    # Index paths configuration
+    index_paths = [
+      {
+        path = "~/Documents";
+        max_depth = 6;
+        exclude_hidden = true;
+        exclude_dirs = [ "node_modules" "venv" "target" ];
+      }
+      {
+        path = "~/Projects";
+        max_depth = 8;
+        exclude_hidden = true;
+        exclude_dirs = [ "node_modules" ".git" "target" "dist" ];
+      }
+    ];
+  };
+};
+```
+
+The configuration follows the TOML format and will be written to `~/.config/dsearch/config.toml`. The structure directly maps to the TOML configuration - see the [Configuration](configuration) guide for all available options.
+
+### Systemd Service
+
+The home-manager module automatically creates a systemd user service that:
+
+- Runs the Dux Search API server with `dsearch serve`
+- Automatically starts on login (when `default.target` is reached)
+- Restarts on failure with a 5-second delay
+- Logs output to the systemd journal
+
+Check service status and logs:
+
+```bash
+# Check service status
+systemctl --user status dsearch
+
+# View logs
+journalctl --user -u dsearch -f
+
+# Restart service
+systemctl --user restart dsearch
+```
+
+### Example: Custom Paths Configuration
+
+```nix
+programs.dsearch = {
+  enable = true;
+  
+  config = {
+    listen_addr = ":43654";
+    max_file_bytes = 5242880;  # 5MB
+    worker_count = 8;
+    
+    index_paths = [
+      {
+        path = "~/Documents";
+        max_depth = 0;  # No limit
+        exclude_hidden = false;
+        exclude_dirs = [ ];
+      }
+      {
+        path = "~/Projects";
+        max_depth = 8;
+        exclude_hidden = true;
+        exclude_dirs = [ "node_modules" "venv" "target" ".git" "dist" "build" ];
+      }
+      {
+        path = "/mnt/shared";
+        max_depth = 5;
+        watch = false;  # Disable watchers for network mount
+        exclude_dirs = [ ".cache" ];
+      }
+    ];
+  };
+};
+```
+
+## Rebuilding
+
+After making configuration changes, rebuild your system:
+
+```bash
+# For home-manager standalone
+home-manager switch
+
+# For NixOS with home-manager as a module
+sudo nixos-rebuild switch
+```
+
+The systemd service will automatically restart with the new configuration.
+
+## Troubleshooting
+
+### Service doesn't start automatically
+
+The service is automatically enabled by default. Check that the service is running:
+
+```bash
+systemctl --user status dsearch
+```
+
+If the service failed to start, check the logs:
+
+```bash
+journalctl --user -u dsearch -f
+```
+
+### Port already in use
+
+If port 43654 is already in use, customize the port in your configuration:
+
+```nix
+programs.dsearch = {
+  enable = true;
+  config.listen_addr = ":9876";  # Use a different port
+};
+```
+
+### Index not updating
+
+The service monitors filesystem changes automatically. To manually rebuild the index:
+
+```bash
+dsearch index generate
+```
+
+### Configuration not applied
+
+Ensure your configuration is valid TOML and rebuild your home-manager configuration:
+
+```bash
+home-manager switch --show-trace
+```
+
+The `--show-trace` flag will show detailed error messages if there are issues.
+
+## Advanced Configuration
+
+### Using a Custom Package
+
+You can use a specific version or custom build of Dux Search:
+
+```nix
+programs.dsearch = {
+  enable = true;
+  package = pkgs.dsearch.overrideAttrs (oldAttrs: {
+    version = "0.2.0";
+    # Custom package attributes
+  });
+};
+```
+
+### Multiple Index Paths
+
+Configure Dux Search to index multiple directory trees:
+
+```nix
+programs.dsearch = {
+  enable = true;
+  config.index = {
+    paths = [
+      "~"
+      "/mnt/storage"
+      "/opt/projects"
+    ];
+    max_depth = 8;
+  };
+};
+```
+
+## Next Steps
+
+- Learn more about [Configuration](configuration) options
+- Explore [Usage](usage) guide for CLI and API usage
+- Check out [Dux Shell integration](../dms/overview)

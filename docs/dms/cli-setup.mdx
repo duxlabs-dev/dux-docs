@@ -1,0 +1,123 @@
+---
+title: Setup
+description: Deploy default DMS configuration files for your compositor
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`███████╗███████╗████████╗██╗   ██╗██████╗
+██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗
+███████╗█████╗     ██║   ██║   ██║██████╔╝
+╚════██║██╔══╝     ██║   ██║   ██║██╔═══╝
+███████║███████╗   ██║   ╚██████╔╝██║
+╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝`}
+  hideTitle={true}
+/>
+
+The `dms setup` command generates default configuration files for your compositor (niri, Hyprland, or MangoWC). It only writes files that don't already exist or are empty, so it won't clobber anything you've customized.
+
+Running `dms setup` with no arguments deploys all defaults at once. You can also deploy individual configs one at a time.
+
+:::note[Image-based systems]
+`dms setup` works unchanged on Fedora Atomic, bootc, and other image-based systems because it only writes to your home directory. On those hosts the [Dux Installer](../duxinstall) runs this same config deployment once the packages have been layered and the system rebooted. See [Fedora Atomic & bootc images](./installation#fedora-atomic--bootc-images).
+:::
+
+## Quick Start
+
+Deploy all default configs:
+
+```bash
+dms setup
+```
+
+Deploy just keybinds:
+
+```bash
+dms setup binds
+```
+
+## Subcommands
+
+| Subcommand | Description | niri | Hyprland | MangoWC |
+|---|---|---|---|---|
+| `binds` | Default keybinds config | `~/.config/niri/dms/binds.kdl` | `~/.config/hypr/dms/binds.lua` | `~/.config/mango/dms/binds.conf` |
+| `colors` | Default colors config | `~/.config/niri/dms/colors.kdl` | `~/.config/hypr/dms/colors.lua` | `~/.config/mango/dms/colors.conf` |
+| `layout` | Default layout config | `~/.config/niri/dms/layout.kdl` | `~/.config/hypr/dms/layout.lua` | `~/.config/mango/dms/layout.conf` |
+| `outputs` | Default outputs config | `~/.config/niri/dms/outputs.kdl` | `~/.config/hypr/dms/outputs.lua` | `~/.config/mango/dms/outputs.conf` |
+| `cursor` | Default cursor config | `~/.config/niri/dms/cursor.kdl` | `~/.config/hypr/dms/cursor.lua` | `~/.config/mango/dms/cursor.conf` |
+| `windowrules` | Default window rules config | `~/.config/niri/dms/windowrules.kdl` | `~/.config/hypr/dms/windowrules.lua` | `~/.config/mango/dms/windowrules.conf` |
+| `alttab` | Default alt-tab config (niri only) | `~/.config/niri/dms/alttab.kdl` | — | — |
+
+Running `dms setup` with no subcommand deploys all of the above, plus the input fragment (`dms/input.kdl` on niri, `dms/input.lua` on Hyprland, `dms/input.conf` on MangoWC) and, on Hyprland, `dms/binds-user.lua`. The input fragment has no subcommand of its own.
+
+:::note[niri binds-next.kdl]
+On niri, `dms setup` and `dms setup binds` also write `~/.config/niri/dms/binds-next.kdl`, the binds that depend on the niri version (the Keyboard Shortcuts cheatsheet, and a Mod tap for the overview on the next niri release). Unlike the other files, DMS owns this one: it is replaced whenever its content no longer matches the installed niri, and DMS checks it again each time it starts. If your `config.kdl` doesn't include it, setup prints the line to add above `dms/binds.kdl`. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
+:::
+
+:::note[Hyprland 0.55 or newer]
+DMS writes Hyprland config in Lua only. When the installed Hyprland reports a version older than 0.55, `dms setup` stops with `hyprland.lua is not loaded by Hyprland <version>; DMS needs 0.55 or newer` instead of writing a config Hyprland would ignore. If the version can't be detected, it deploys anyway.
+:::
+
+:::note[MangoWC 0.18 or newer]
+Everything `dms setup` writes for MangoWC uses the snake_case keys of MangoWC 0.18 and newer. With no subcommand, your existing `config.conf` is backed up to `config.conf.backup.<timestamp>` and replaced. Its bind, `monitor_rule` and `window_rule` lines move into `dms/binds.conf`, `dms/outputs.conf` and `dms/windowrules.conf` when those are empty, converted to snake_case. If you use `config.toml` instead, it is backed up to `config.toml.backup.<timestamp>` and replaced with a stock `config.toml`; DMS never creates a `config.conf` next to it, which would shadow it. Your TOML binds and rules are not moved into the fragments and stay in the backup. Fragments that already have content are kept as they are; if they predate 0.18, convert them with MangoWC's `migrate-config-keys.sh` (see [MangoWC Configuration](./compositors.mdx#mangowc-configuration)).
+:::
+
+:::tip
+If you installed DMS from packages (not through the interactive installer), run `dms setup` after install to get working compositor and terminal configs right away.
+:::
+
+## Existing Keybinds
+
+When `dms setup` finds your own keybinds (a non-empty `dms/binds.kdl` on niri; a non-empty `dms/binds.conf` or bind lines in `config.conf` on MangoWC), it asks before deploying:
+
+```
+  1) Keep my binds as they are
+  2) Start from the DMS stock binds
+```
+
+Keeping is the default. Either way, an existing `binds.conf` or `binds.kdl` is backed up with a timestamp first. Hyprland is not asked, since your own binds live in `dms/binds-user.lua`. DMS owns `dms/binds.lua` and refreshes it on every Hyprland setup: `dms setup binds`, `dms setup headless --skip-existing`, and the installer when you keep your `hyprland.lua`. If you edited it, the old copy goes to `~/.config/hypr/.dms-backups/<timestamp>/dms/binds.lua` first; move those edits into `binds-user.lua`. `dms setup headless` keeps them unless you pass `--stock-binds`.
+
+## Headless
+
+`dms setup headless` deploys configs without any prompts, for installers and scripts.
+
+```bash
+dms setup headless --compositor niri
+```
+
+| Flag | Description |
+|---|---|
+| `--compositor` | Required. `niri`, `hyprland`, or `mango` |
+| `--terminal` | Also deploy a terminal config and wire it into the keybinds: `ghostty`, `kitty`, or `alacritty` |
+| `--force` | Overwrite existing configs. Existing files get timestamped backups first |
+| `--skip-existing` | Log a warning and skip anything that already has a config, instead of failing |
+| `--no-systemd` | Deploy the session config without systemd integration |
+| `--stock-binds` | Replace existing keybinds with the DMS stock set instead of keeping them. A backup is kept |
+
+With systemd, setup binds `dms.service` to the compositor's session unit (the same step as [`dms systemd enable`](./cli-systemd.mdx)) and the deployed config does not start DMS itself. If that binding fails, the config falls back to starting `dms run`.
+
+If a config already exists and you pass neither `--force` nor `--skip-existing`, the command fails with a non-zero exit so scripts notice. The two flags can't be combined.
+
+`dms` refuses to run as root, so from an install hook run it as the target user:
+
+```bash
+runuser -u youruser -- dms setup headless --compositor niri --skip-existing
+```
+
+## NixOS Home-Manager Users
+
+If you manage your niri or Hyprland config through home-manager, you probably don't want `dms setup` writing files that conflict with your declarative config. Instead, use the individual subcommands to generate only the pieces you need.
+
+For example, if you handle keybinds through the niri home-manager module but want DMS defaults for colors and layout:
+
+```bash
+dms setup colors
+dms setup layout
+```
+
+The niri home-manager module's `niri.includes` option references these same files under `~/.config/niri/dms/`. See the [niri integration docs](nixos-flake#config-includes) for the full list of included files.
+
+:::info
+The individual subcommands are safe to run at any time — they skip files that already have content, except Hyprland's DMS-owned `binds.lua`, which `dms setup binds` always refreshes. To force a reset, delete or empty the file first, then run the subcommand again.
+:::

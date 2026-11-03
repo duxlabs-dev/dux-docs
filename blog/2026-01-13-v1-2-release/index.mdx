@@ -188,7 +188,7 @@ DMS 1.2 introduces Desktop Widgets - small applets that live on your desktop, be
   </div>
 </div>
 
-The plugin system makes building your own widgets straightforward - see the [plugin development guide](/docs/dankmaterialshell/plugin-development#desktop-plugins) to get started.
+The plugin system makes building your own widgets straightforward - see the [plugin development guide](/docs/dms/plugin-development#desktop-plugins) to get started.
 
 ### Theme Registry
 
@@ -204,7 +204,7 @@ The plugin system makes building your own widgets straightforward - see the [plu
   <figcaption>Theme browser integrated into DMS settings.</figcaption>
 </figure>
 
-DMS 1.2 introduces a theme system where a single theme can have multiple variants and accent colors. The plugin registry now includes a [Theme Registry](https://danklinux.com/plugins?tab=themes) with community-developed themes available for easy installation. Learn how to [contribute your own themes](https://github.com/AvengeMedia/dms-plugin-registry/blob/master/CONTRIBUTING.md#contributing-a-theme).
+DMS 1.2 introduces a theme system where a single theme can have multiple variants and accent colors. The plugin registry now includes a [Theme Registry](https://danklinux.com/plugins?tab=themes) with community-developed themes available for easy installation. Learn how to [contribute your own themes](https://github.com/duxlabs-dev/dux-plugin-registry/blob/master/CONTRIBUTING.md#contributing-a-theme).
 
 ### Native Clipboard and History
 
@@ -363,7 +363,7 @@ New settings search makes it easier to find what you want to change. Includes in
 
 DMS 1.2 introduces proper support for right-to-left languages with proper layout mirroring across components. DMS currently has translations for Hebrew and Farsi.
 
-To contribute to translations see the [pinned github issue](https://github.com/AvengeMedia/DankMaterialShell/issues/324)
+To contribute to translations see the [pinned github issue](https://github.com/duxlabs-dev/dux-shell/issues/324)
 
 ### Launcher Improvements
 
@@ -679,7 +679,7 @@ DMS 1.2 brings significant improvements to NixOS integration and the flake-based
 - Added support for config includes with niri-flake. DMS-generated configuration files now work seamlessly with niri's flake-based setup
 
 **Plugin Registry Flake**
-- New [dms-plugin-registry](https://github.com/AvengeMedia/dms-plugin-registry) Nix flake provides all community plugins as packages
+- New [dms-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) Nix flake provides all community plugins as packages
 - Plugins are automatically updated daily from the registry
 - Simple declarative installation - just enable plugins by their ID
 - Works with both NixOS and Home Manager modules
@@ -690,10 +690,10 @@ While the old module names will still work, you'll receive a deprecation warning
 :::
 
 :::info
-The documentation for the [nixpkgs module](/docs/dankmaterialshell/nixos) will get updated as soon as DMS 1.2 gets into `nixos-unstable`.
+The documentation for the [nixpkgs module](/docs/dms/nixos) will get updated as soon as DMS 1.2 gets into `nixos-unstable`.
 :::
 
-Please check [the documentation](/docs/dankmaterialshell/nixos-flake) for more information in how to configure DMS 1.2 with the new features.
+Please check [the documentation](/docs/dms/nixos-flake) for more information in how to configure DMS 1.2 with the new features.
 
 ## Bug Fixes and Improvements
 
@@ -939,9 +939,9 @@ Since the v1.0 release, DMS has received extensive bug fixes and stability impro
 </a>
 
 <div className={styles.linksRow}>
-  <a href="https://github.com/AvengeMedia/DankMaterialShell" className={styles.supportLink}>GitHub</a>
+  <a href="https://github.com/duxlabs-dev/dux-shell" className={styles.supportLink}>GitHub</a>
   <span className={styles.linkDivider}>•</span>
-  <a href="https://danklinux.com/docs/" className={styles.supportLink}>Documentation</a>
+  <a href="https://duxlabs.dev/docs/" className={styles.supportLink}>Documentation</a>
   <span className={styles.linkDivider}>•</span>
   <a href="https://plugins.danklinux.com" className={styles.supportLink}>Plugins</a>
   <span className={styles.linkDivider}>•</span>
@@ -949,7 +949,7 @@ Since the v1.0 release, DMS has received extensive bug fixes and stability impro
   <span className={styles.linkDivider}>•</span>
   <a href="https://github.com/sponsors/AvengeMedia" className={styles.supportLink}>Sponsor on GitHub</a>
   <span className={styles.linkDivider}>•</span>
-  <a href="https://ko-fi.com/danklinux" className={styles.supportLink}>Support on Ko-fi</a>
+  <a href="https://ko-fi.com/duxlabs" className={styles.supportLink}>Support on Ko-fi</a>
 </div>
 
 <div className={styles.niriThanks}>

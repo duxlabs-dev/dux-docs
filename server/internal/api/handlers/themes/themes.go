@@ -3,8 +3,8 @@ package themes_handler
 import (
 	"net/http"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/api/server"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/api/server"
 )
 
 type HandlerGroup struct {
@@ -21,7 +21,7 @@ func RegisterHandlers(server *server.Server, grp *huma.Group) {
 		huma.Operation{
 			OperationID: "get-themes",
 			Summary:     "Get All Themes",
-			Description: "Get All Themes from the Dank Linux Registry",
+			Description: "Get All Themes from the Dux Registry",
 			Path:        "",
 			Method:      http.MethodGet,
 		},

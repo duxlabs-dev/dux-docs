@@ -14,5 +14,5 @@
     "lib": ["DOM"],
     "skipLibCheck": true
   },
-  "include": ["src/ImageRenderers.tsx"]
+  "include": ["src/ImageRenderers.tsx", "src/components/ExpressiveShape/paths.ts"]
 }

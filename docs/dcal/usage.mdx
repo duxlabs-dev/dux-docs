@@ -1,0 +1,87 @@
+---
+title: Usage
+description: Control the Dux Calendar window, sync, and reminders from the CLI
+sidebar_position: 4
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ██████╗  █████╗ ██╗     ███████╗███╗   ██╗██████╗  █████╗ ██████╗ 
+██╔══██╗██║   ██║╚██╗██╔╝    ██╔════╝ ██╔══██╗██║     ██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔══██╗
+██║  ██║██║   ██║ ╚███╔╝     ██║     ███████║██║     █████╗  ██╔██╗ ██║██║  ██║███████║██████╔╝
+██║  ██║██║   ██║ ██╔██╗     ██║     ██╔══██║██║     ██╔══╝  ██║╚██╗██║██║  ██║██╔══██║██╔══██╗
+██████╔╝╚██████╔╝██╔╝ ██╗    ╚██████╗██║  ██║███████╗███████╗██║ ╚████║██████╔╝██║  ██║██║  ██║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝`}
+  hideTitle={true}
+/>
+
+# Usage
+
+Dux Calendar is a daemon with a window attached. Closing the window only hides it. The daemon and tray icon keep running, so sync and reminders continue. Reopen from the tray icon, the desktop entry, or `dcal show`.
+
+## Window & Daemon
+
+```bash
+dcal                  # launch, or show/focus the window if already running
+dcal show             # show/focus the window
+dcal show --view week # show the window on a specific view (month|week|day|agenda)
+dcal toggle           # toggle window visibility
+dcal toggle --view day  # toggle, opening on a specific view
+dcal open <url>       # open a webcal:// subscription link (no url just shows the window)
+dcal run              # run in the foreground (logs to the terminal)
+dcal run -d           # run as a background daemon
+dcal run -d --hidden  # run hidden, tray only (used by autostart)
+dcal restart          # restart the running instance
+dcal kill             # stop everything
+```
+
+`dcal run` also accepts `--session` (for a systemd-managed unit), `--log-level <debug|info|warn|error|fatal>`, and `--log-file <path>`. Use `--config <dir>` on any command to point at a custom UI config directory instead of the embedded one.
+
+## Sync
+
+```bash
+dcal sync             # force a sync of all accounts
+dcal sync <account-id>  # sync a single account
+```
+
+See [Accounts](accounts) for connecting and managing calendars.
+
+## Reminders
+
+List your upcoming event reminders:
+
+```bash
+dcal reminders            # list upcoming reminders (default 20)
+dcal reminders --limit 5  # cap the list
+dcal reminders test       # send a test desktop notification
+```
+
+Reminders fire as native desktop notifications. Configure them globally, per-calendar, or per-event from the GUI (**Settings → Notifications**, and each calendar's reminder overrides).
+
+## Invitations
+
+Respond to a meeting invitation from the CLI. Pass the event's ID (from `dcal ipc events.list`) and your reply:
+
+```bash
+dcal events rsvp <event-id> accept
+dcal events rsvp <event-id> decline
+dcal events rsvp <event-id> tentative
+```
+
+Your response is pushed back to the provider. You can also respond from the event's details window in the GUI, which shows the full attendee list and their statuses.
+
+## JSON Output
+
+Most commands accept `--json` for scripting:
+
+```bash
+dcal account list --json
+dcal reminders --json
+dcal version --json
+```
+
+## Next Steps
+
+- [Keyboard & Navigation](navigation) - Views, shortcuts, and jumping around quickly
+- [IPC](ipc) - Drive dcal from keybinds and scripts

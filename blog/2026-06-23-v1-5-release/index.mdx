@@ -162,7 +162,7 @@ DMS 1.5 adds the option to draw the shell surfaces as one connected surface, tyi
   <figcaption>Create, edit, and navigate events right from the shell calendar overview.</figcaption>
 </figure>
 
-DMS 1.5 brings native support for [DankCalendar](/blog/dankcalendar-release) ([docs](/docs/dankcalendar)) as a calendar backend over IPC. This is a major new application addition that unifies Local, Google, Microsoft, CalDAV, and iCloud accounts into a single agenda.
+DMS 1.5 brings native support for [DankCalendar](/blog/dankcalendar-release) ([docs](/docs/dcal)) as a calendar backend over IPC. This is a major new application addition that unifies Local, Google, Microsoft, CalDAV, and iCloud accounts into a single agenda.
 
 When the `dcal` daemon is active, DMS detects it and establishes a bidirectional IPC connection. That connection enables several shell integrations:
 
@@ -173,11 +173,11 @@ When the `dcal` daemon is active, DMS detects it and establishes a bidirectional
 - **Keyboard Navigation:** Full arrow-key navigation for managing calendar events.
 - **Fully On Device:** DankCalendar runs entirely on-device, connecting directly to your providers.
 
-The DMS calendar provider is configurable for backwards compatibility with [Khal](/docs/dankmaterialshell/calendar-integration), so users can continue to use the `khal` backend if desired.
+The DMS calendar provider is configurable for backwards compatibility with [Khal](/docs/dms/calendar-integration), so users can continue to use the `khal` backend if desired.
 
 ### Integrated Task Planner
 
-In addition to task/reminder/VTODO integration from DankCalendar, a local to-do and task planner widget has been added to the calendar overview, contributed by **[goatnath](https://github.com/goatnath)** ([PR #2583](https://github.com/AvengeMedia/DankMaterialShell/pull/2583)). It manages your to-do lists and task states from within the shell calendar panel.
+In addition to task/reminder/VTODO integration from DankCalendar, a local to-do and task planner widget has been added to the calendar overview, contributed by **[goatnath](https://github.com/goatnath)** ([PR #2583](https://github.com/duxlabs-dev/dux-shell/pull/2583)). It manages your to-do lists and task states from within the shell calendar panel.
 
 ## Greeter Enhancements
 
@@ -193,7 +193,7 @@ In addition to task/reminder/VTODO integration from DankCalendar, a local to-do 
   <figcaption>The DMS greeter with user selection, session picker, and auto-login.</figcaption>
 </figure>
 
-DMS 1.5 adds a settings GUI, multi-user account management, and per-user theme sync to the [greeter](/docs/dankgreeter).
+DMS 1.5 adds a settings GUI, multi-user account management, and per-user theme sync to the [greeter](/docs/dms-greeter).
 
 - **Settings GUI:** Manage dms-greeter and greetd settings without editing config files by hand.
 - **Improved PAM Support:** PAM authentication for fingerprint readers and U2F devices, with timeout recovery and unlock-state sync.
@@ -223,7 +223,7 @@ DMS 1.5 adds a settings GUI, multi-user account management, and per-user theme s
 
 DMS 1.5 adds a **Window Rules Manager** for controlling window behaviors across Hyprland, Niri, and MangoWM.
 
-A dedicated settings page allows viewing, editing, and creating window rules. A new [IPC](https://danklinux.com/docs/dankmaterialshell/keybinds-ipc#window-rules) allows creating a window rule for the currently focused window.
+A dedicated settings page allows viewing, editing, and creating window rules. A new [IPC](https://duxlabs.dev/docs/dms/keybinds-ipc#window-rules) allows creating a window rule for the currently focused window.
 
 ## Display Profiles
 
@@ -248,11 +248,11 @@ DMS 1.5 adds Display Profiles: saved monitor layouts that DMS can switch between
 
 ## Hyprland Lua Configuration
 
-DMS 1.5 moves all Hyprland default configurations to the new [Lua format](https://hypr.land/news/26_lua/). When DMS deploys configs for Hyprland (via `dms setup` or `dankinstall`), it generates native Lua files instead of the older `.conf` format. This applies to all DMS-managed configurations such as key binds and monitor/output configurations. See the [Hyprland configuration guide](/docs/dankmaterialshell/compositors#hyprland-configuration) for details.
+DMS 1.5 moves all Hyprland default configurations to the new [Lua format](https://hypr.land/news/26_lua/). When DMS deploys configs for Hyprland (via `dms setup` or `dankinstall`), it generates native Lua files instead of the older `.conf` format. This applies to all DMS-managed configurations such as key binds and monitor/output configurations. See the [Hyprland configuration guide](/docs/dms/compositors#hyprland-configuration) for details.
 
 ## Enhanced MangoWM Support
 
-DMS 1.5 adds better support for the [MangoWM compositor](/docs/dankmaterialshell/compositors#mangowc-configuration) across the shell, installer, and UI tools. `dms setup` now deploys MangoWM configurations and `dankinstall` supports MangoWM as a compositor option.
+DMS 1.5 adds better support for the [MangoWM compositor](/docs/dms/compositors#mangowc-configuration) across the shell, installer, and UI tools. `dms setup` now deploys MangoWM configurations and `dankinstall` supports MangoWM as a compositor option.
 
 ## Material 3 Shadows & Elevation
 
@@ -286,8 +286,8 @@ To support Frame Mode, the Material 3 elevation and shadow system was reworked s
 
 DMS 1.5 introduces **Spotlight**, a lightweight overlay launcher for minimalist setups. It sits in the center of your screen and searches files, folders, applications, and settings.
 
-- **Search Persistence:** Spotlight persists your last search query and highlights it on open, contributed by **[Legend-017](https://github.com/Legend-017)** ([PR #2726](https://github.com/AvengeMedia/DankMaterialShell/pull/2726)).
-- **Prefix Queries:** Use `/d` and `/f` prefix tags to narrow the search to directories and files when [dsearch](https://danklinux.com/docs/danksearch/) is installed.
+- **Search Persistence:** Spotlight persists your last search query and highlights it on open, contributed by **[Legend-017](https://github.com/Legend-017)** ([PR #2726](https://github.com/duxlabs-dev/dux-shell/pull/2726)).
+- **Prefix Queries:** Use `/d` and `/f` prefix tags to narrow the search to directories and files when [dsearch](https://duxlabs.dev/docs/dsearch/) is installed.
 
 ## Notepad Rewritten with Standalone Window & Mime-Type Registration
 
@@ -330,7 +330,7 @@ DMS 1.5 adds native **Tailscale** support inside the Control Center. Instead of 
 
 DMS 1.5 pulls more of the system into the shell, so you can manage updates, power, autostart, and default apps without leaving your desktop.
 
-- **[System Updater](/docs/dankmaterialshell/cli-system-updater):** Check for and apply system updates from the shell, with multiple package-manager backends and polkit authentication for privileged operations.
+- **[System Updater](/docs/dms/cli-system-updater):** Check for and apply system updates from the shell, with multiple package-manager backends and polkit authentication for privileged operations.
 - **Power Profiles:** Switch between power-saver, balanced, and performance profiles from the Control Center or by scrolling the battery widget. A `cycleProfile` IPC command is bound to `Mod+P` by default.
 - **XDG Autostart:** A new Autostart tab in Settings manages the applications that launch at login, following the XDG autostart specification.
 - **Default Apps:** A Default Apps page in Settings sets your preferred applications for file types and URL schemes.
@@ -338,7 +338,7 @@ DMS 1.5 pulls more of the system into the shell, so you can manage updates, powe
 
 ## Plugin Ranking, Moderation, and Community Feedback
 
-With 230+ community plugins in the registry, DMS 1.5 introduces a ranking and feedback system so the best plugins rise to the top. Every plugin now has a tracking issue in the [dms-plugin-registry](https://github.com/AvengeMedia/dms-plugin-registry/issues) that doubles as a forum and voting surface, and the [plugins directory](https://plugins.danklinux.com) displays all of the new metadata affiliated with plugins.
+With 230+ community plugins in the registry, DMS 1.5 introduces a ranking and feedback system so the best plugins rise to the top. Every plugin now has a tracking issue in the [dms-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry/issues) that doubles as a forum and voting surface, and the [plugins directory](https://plugins.danklinux.com) displays all of the new metadata affiliated with plugins.
 
 - **Upvotes:** Anyone with a GitHub account can 👍 a plugin's issue to upvote it. The plugins page ranks by upvotes by default, so popular plugins surface first.
 - **Sorting & Filtering:** Sort by upvotes, last updated, date added, name, or random, with an ascending/descending toggle, plus filters for reviewed-only and first-party-only plugins.
@@ -349,7 +349,7 @@ Browse and vote on plugins at **[plugins.danklinux.com](https://plugins.danklinu
 
 **Huge thanks to [hthienloc](https://github.com/hthienloc) for working through the existing plugin registry to review and significantly improve the quality of the plugin ecosystem!**
 
-If you wish to contribute as a plugin moderator, refer to [this ticket](https://github.com/AvengeMedia/dms-plugin-registry/issues/573) for details.
+If you wish to contribute as a plugin moderator, refer to [this ticket](https://github.com/duxlabs-dev/dux-plugin-registry/issues/573) for details.
 
 ## Other Notable Features
 
@@ -357,31 +357,31 @@ DMS 1.5 also brings a wide array of enhancements and options across other compon
 
 ### Launcher & Clipboard
 - **Plugin Browser Screenshot Previews:** The plugin browser now displays inline screenshot previews while browsing, alongside brand new sorting and filtering controls.
-- **Launcher QOL Improvements:** Grid mode now supports `Ctrl+H/L` navigation (contributed by **[kanghengliu](https://github.com/kanghengliu)**, [PR #2688](https://github.com/AvengeMedia/DankMaterialShell/pull/2688)), toggleable color-picker entries (**[lambdaclan](https://github.com/lambdaclan)**, [PR #2667](https://github.com/AvengeMedia/DankMaterialShell/pull/2667)), and the option to hide package source badges (**[hthienloc](https://github.com/hthienloc)**, [PR #2676](https://github.com/AvengeMedia/DankMaterialShell/pull/2676)).
-- **Clipboard Type Filtering:** The clipboard history popout can now filter between Text, Image, and pinned entries, contributed by **[dionjoshualobo](https://github.com/dionjoshualobo)** ([PR #2640](https://github.com/AvengeMedia/DankMaterialShell/pull/2640)).
-- **Launcher History:** The launcher keeps a history of recent entries ([PR #2086](https://github.com/AvengeMedia/DankMaterialShell/pull/2086)).
-- **Terminal Multiplexer Launcher:** A launcher mode for opening and attaching to terminal multiplexer sessions ([PR #1687](https://github.com/AvengeMedia/DankMaterialShell/pull/1687)).
-- **Clipboard Editor & Search:** Edit saved clipboard entries and search or filter clipboard history ([PR #2492](https://github.com/AvengeMedia/DankMaterialShell/pull/2492), [PR #2464](https://github.com/AvengeMedia/DankMaterialShell/pull/2464)).
+- **Launcher QOL Improvements:** Grid mode now supports `Ctrl+H/L` navigation (contributed by **[kanghengliu](https://github.com/kanghengliu)**, [PR #2688](https://github.com/duxlabs-dev/dux-shell/pull/2688)), toggleable color-picker entries (**[lambdaclan](https://github.com/lambdaclan)**, [PR #2667](https://github.com/duxlabs-dev/dux-shell/pull/2667)), and the option to hide package source badges (**[hthienloc](https://github.com/hthienloc)**, [PR #2676](https://github.com/duxlabs-dev/dux-shell/pull/2676)).
+- **Clipboard Type Filtering:** The clipboard history popout can now filter between Text, Image, and pinned entries, contributed by **[dionjoshualobo](https://github.com/dionjoshualobo)** ([PR #2640](https://github.com/duxlabs-dev/dux-shell/pull/2640)).
+- **Launcher History:** The launcher keeps a history of recent entries ([PR #2086](https://github.com/duxlabs-dev/dux-shell/pull/2086)).
+- **Terminal Multiplexer Launcher:** A launcher mode for opening and attaching to terminal multiplexer sessions ([PR #1687](https://github.com/duxlabs-dev/dux-shell/pull/1687)).
+- **Clipboard Editor & Search:** Edit saved clipboard entries and search or filter clipboard history ([PR #2492](https://github.com/duxlabs-dev/dux-shell/pull/2492), [PR #2464](https://github.com/duxlabs-dev/dux-shell/pull/2464)).
 
 ### Network & Power
 - **Secret Service Integration:** Auto-retrieves and unlocks WiFi/VPN credentials directly from D-Bus Secret Service backends.
-- **Saved Wi-Fi & Progress:** WiFi connection progress indicators (contributed by **[NihilDigit](https://github.com/NihilDigit)**, [PR #2684](https://github.com/AvengeMedia/DankMaterialShell/pull/2684)) and a dedicated saved-networks editor tab (contributed by **[jbwfu](https://github.com/jbwfu)**, [PR #2648](https://github.com/AvengeMedia/DankMaterialShell/pull/2648)) are now integrated, alongside a subtab network layout ([PR #2633](https://github.com/AvengeMedia/DankMaterialShell/pull/2633)).
+- **Saved Wi-Fi & Progress:** WiFi connection progress indicators (contributed by **[NihilDigit](https://github.com/NihilDigit)**, [PR #2684](https://github.com/duxlabs-dev/dux-shell/pull/2684)) and a dedicated saved-networks editor tab (contributed by **[jbwfu](https://github.com/jbwfu)**, [PR #2648](https://github.com/duxlabs-dev/dux-shell/pull/2648)) are now integrated, alongside a subtab network layout ([PR #2633](https://github.com/duxlabs-dev/dux-shell/pull/2633)).
 - **Network Link Rate Reporting:** DMS now reports the negotiated link speed when connected, providing accurate bandwidth context rather than theoretical maximums.
-- **Battery Settings Tab:** A new battery management section in settings with toggles for remaining time, percentage display, and critical alerts was designed by **[hthienloc](https://github.com/hthienloc)** ([PR #2634](https://github.com/AvengeMedia/DankMaterialShell/pull/2634)).
-- **Battery Refresh Rate:** Automatically lower display refresh rates on battery power to conserve energy, contributed by **[atimofeev](https://github.com/atimofeev)** ([PR #2428](https://github.com/AvengeMedia/DankMaterialShell/pull/2428)).
-- **Bluetooth Status:** Added a visual bar indicator for connected Bluetooth devices, contributed by **[yechielw](https://github.com/yechielw)** ([PR #2662](https://github.com/AvengeMedia/DankMaterialShell/pull/2662)).
+- **Battery Settings Tab:** A new battery management section in settings with toggles for remaining time, percentage display, and critical alerts was designed by **[hthienloc](https://github.com/hthienloc)** ([PR #2634](https://github.com/duxlabs-dev/dux-shell/pull/2634)).
+- **Battery Refresh Rate:** Automatically lower display refresh rates on battery power to conserve energy, contributed by **[atimofeev](https://github.com/atimofeev)** ([PR #2428](https://github.com/duxlabs-dev/dux-shell/pull/2428)).
+- **Bluetooth Status:** Added a visual bar indicator for connected Bluetooth devices, contributed by **[yechielw](https://github.com/yechielw)** ([PR #2662](https://github.com/duxlabs-dev/dux-shell/pull/2662)).
 - **Bluetooth Trust/Untrust:** Control trusted status of Bluetooth devices directly from the Control Center.
 
 ### Privacy & Security
-- **Screen Casting Detection on Niri:** The privacy indicator now correctly detects active screen casting sessions on the Niri compositor via PipeWire ([PR #2185](https://github.com/AvengeMedia/DankMaterialShell/pull/2185)).
-- **Night Mode & OSD Restoration:** Night mode and OSD surfaces are now correctly restored after system resume from suspend ([PR #2254](https://github.com/AvengeMedia/DankMaterialShell/pull/2254)).
+- **Screen Casting Detection on Niri:** The privacy indicator now correctly detects active screen casting sessions on the Niri compositor via PipeWire ([PR #2185](https://github.com/duxlabs-dev/dux-shell/pull/2185)).
+- **Night Mode & OSD Restoration:** Night mode and OSD surfaces are now correctly restored after system resume from suspend ([PR #2254](https://github.com/duxlabs-dev/dux-shell/pull/2254)).
 
 ### Lock Screen
-- **Lock Screen IME Bypass:** Implemented a direct keyboard layout and input method bypass for lock screen password fields, avoiding login failure due to layout mismatches (contributed by **[awerty-noob](https://github.com/awerty-noob)**, [PR #2609](https://github.com/AvengeMedia/DankMaterialShell/pull/2609)).
-- **Lockout Feedback:** Rather than showing generic errors, the lock screen now queries and displays explicit faillock lockout reasons, contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** ([PR #2669](https://github.com/AvengeMedia/DankMaterialShell/pull/2669)).
-- **Fingerprint/U2F Auth:** Lock screen fingerprint and U2F authentication has been restored and hardened with timeout recovery and unlock-state sync ([PR #2052](https://github.com/AvengeMedia/DankMaterialShell/pull/2052)).
+- **Lock Screen IME Bypass:** Implemented a direct keyboard layout and input method bypass for lock screen password fields, avoiding login failure due to layout mismatches (contributed by **[awerty-noob](https://github.com/awerty-noob)**, [PR #2609](https://github.com/duxlabs-dev/dux-shell/pull/2609)).
+- **Lockout Feedback:** Rather than showing generic errors, the lock screen now queries and displays explicit faillock lockout reasons, contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** ([PR #2669](https://github.com/duxlabs-dev/dux-shell/pull/2669)).
+- **Fingerprint/U2F Auth:** Lock screen fingerprint and U2F authentication has been restored and hardened with timeout recovery and unlock-state sync ([PR #2052](https://github.com/duxlabs-dev/dux-shell/pull/2052)).
 - **Video Wallpapers:** Support for video files as a screen-saving background when the lock screen activates.
-- **Declarative NixOS Auto-Login:** Added native support for configuring greeter auto-login declaratively within NixOS modules ([PR #2734](https://github.com/AvengeMedia/DankMaterialShell/pull/2734)).
+- **Declarative NixOS Auto-Login:** Added native support for configuring greeter auto-login declaratively within NixOS modules ([PR #2734](https://github.com/duxlabs-dev/dux-shell/pull/2734)).
 
 
 ### Odds & Ends
@@ -389,20 +389,20 @@ DMS 1.5 also brings a wide array of enhancements and options across other compon
 A handful of smaller fixes and quality-of-life touches, several from the community:
 
 - **DankDash Drag-n-Drop:** Rearrange dashboard tabs and widget layout, with visibility toggles in Settings.
-- **System Tray Icon Tinting:** Tint overrides keep tray icons consistent with your Material theme ([PR #2266](https://github.com/AvengeMedia/DankMaterialShell/pull/2266)).
-- **Animated GIF Profile Pictures:** The user avatar now supports animated GIFs ([PR #1804](https://github.com/AvengeMedia/DankMaterialShell/pull/1804)).
-- **Tilde Expansion in Config Paths:** `~` now expands in all user-provided file paths ([PR #2242](https://github.com/AvengeMedia/DankMaterialShell/pull/2242)).
+- **System Tray Icon Tinting:** Tint overrides keep tray icons consistent with your Material theme ([PR #2266](https://github.com/duxlabs-dev/dux-shell/pull/2266)).
+- **Animated GIF Profile Pictures:** The user avatar now supports animated GIFs ([PR #1804](https://github.com/duxlabs-dev/dux-shell/pull/1804)).
+- **Tilde Expansion in Config Paths:** `~` now expands in all user-provided file paths ([PR #2242](https://github.com/duxlabs-dev/dux-shell/pull/2242)).
 - **`dms randr` Command:** Query physical monitor scale factors without opening the display configurator.
-- **Per-Screen Focus:** The focused app widget tracks only the focused window on its own screen in multi-monitor setups ([PR #2152](https://github.com/AvengeMedia/DankMaterialShell/pull/2152)).
-- **Do Not Disturb & Idle Inhibitor Indicators:** New Control Center button indicators for do-not-disturb and idle-inhibitor state ([PR #2513](https://github.com/AvengeMedia/DankMaterialShell/pull/2513)).
-- **Microphone Volume OSD:** An interactive microphone volume OSD with IPC controls ([PR #2406](https://github.com/AvengeMedia/DankMaterialShell/pull/2406)).
-- **Locale Hot-Reload:** Change the shell locale and have it apply without a restart ([PR #1817](https://github.com/AvengeMedia/DankMaterialShell/pull/1817)).
-- **Neovim Theme Engine:** A rebuilt Neovim theme engine for Matugen color sync ([PR #1985](https://github.com/AvengeMedia/DankMaterialShell/pull/1985)).
-- **GeoClue2 Location:** Optional GeoClue2 location as an alternative to IP-based location ([PR #1856](https://github.com/AvengeMedia/DankMaterialShell/pull/1856)).
+- **Per-Screen Focus:** The focused app widget tracks only the focused window on its own screen in multi-monitor setups ([PR #2152](https://github.com/duxlabs-dev/dux-shell/pull/2152)).
+- **Do Not Disturb & Idle Inhibitor Indicators:** New Control Center button indicators for do-not-disturb and idle-inhibitor state ([PR #2513](https://github.com/duxlabs-dev/dux-shell/pull/2513)).
+- **Microphone Volume OSD:** An interactive microphone volume OSD with IPC controls ([PR #2406](https://github.com/duxlabs-dev/dux-shell/pull/2406)).
+- **Locale Hot-Reload:** Change the shell locale and have it apply without a restart ([PR #1817](https://github.com/duxlabs-dev/dux-shell/pull/1817)).
+- **Neovim Theme Engine:** A rebuilt Neovim theme engine for Matugen color sync ([PR #1985](https://github.com/duxlabs-dev/dux-shell/pull/1985)).
+- **GeoClue2 Location:** Optional GeoClue2 location as an alternative to IP-based location ([PR #1856](https://github.com/duxlabs-dev/dux-shell/pull/1856)).
 
 ## Headless Installation
 
-The [`dankinstall`](/docs/dankinstall) installer can now run **fully unattended** - no TUI, scriptable for provisioning, dotfile bootstraps, and CI. Passing `--compositor` and `--term` switches it into headless mode:
+The [`dankinstall`](/docs/duxinstall) installer can now run **fully unattended** - no TUI, scriptable for provisioning, dotfile bootstraps, and CI. Passing `--compositor` and `--term` switches it into headless mode:
 
 ```bash
 dankinstall --compositor niri --term ghostty --yes
@@ -452,84 +452,84 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 <details>
 <summary>View Details (309 fixes in v1.4.6..v1.5.0)</summary>
 
-- Add complete bundled PAM services (contributed by **[awerty-noob](https://github.com/awerty-noob)** [PR #2685](https://github.com/AvengeMedia/DankMaterialShell/pull/2685)).
-- Add match rule for new version of Gnome Calculator app ID (contributed by **[CodeWithAlamin](https://github.com/CodeWithAlamin)** [PR #2157](https://github.com/AvengeMedia/DankMaterialShell/pull/2157)).
-- Add middle mouse click to close running applications in vertical orientation (contributed by **[kostiato](https://github.com/kostiato)** [PR #2386](https://github.com/AvengeMedia/DankMaterialShell/pull/2386)).
-- Add missing qs.Common import (contributed by **[cwelsys](https://github.com/cwelsys)** [PR #1926](https://github.com/AvengeMedia/DankMaterialShell/pull/1926)).
-- Add missing vertical anchor for cava/music icon (contributed by **[kanghengliu](https://github.com/kanghengliu)** [PR #2742](https://github.com/AvengeMedia/DankMaterialShell/pull/2742)).
+- Add complete bundled PAM services (contributed by **[awerty-noob](https://github.com/awerty-noob)** [PR #2685](https://github.com/duxlabs-dev/dux-shell/pull/2685)).
+- Add match rule for new version of Gnome Calculator app ID (contributed by **[CodeWithAlamin](https://github.com/CodeWithAlamin)** [PR #2157](https://github.com/duxlabs-dev/dux-shell/pull/2157)).
+- Add middle mouse click to close running applications in vertical orientation (contributed by **[kostiato](https://github.com/kostiato)** [PR #2386](https://github.com/duxlabs-dev/dux-shell/pull/2386)).
+- Add missing qs.Common import (contributed by **[cwelsys](https://github.com/cwelsys)** [PR #1926](https://github.com/duxlabs-dev/dux-shell/pull/1926)).
+- Add missing vertical anchor for cava/music icon (contributed by **[kanghengliu](https://github.com/kanghengliu)** [PR #2742](https://github.com/duxlabs-dev/dux-shell/pull/2742)).
 - Add newline at end of JSON file and output file (`1c0245f`).
-- Add TrayRecoveryService with bidirectional SNI dedup (Go server) (contributed by **[Dimariqe](https://github.com/Dimariqe)** [PR #2137](https://github.com/AvengeMedia/DankMaterialShell/pull/2137)).
-- Add window rule for the new version of Gnome Calculator (contributed by **[CodeWithAlamin](https://github.com/CodeWithAlamin)** [PR #2125](https://github.com/AvengeMedia/DankMaterialShell/pull/2125)).
+- Add TrayRecoveryService with bidirectional SNI dedup (Go server) (contributed by **[Dimariqe](https://github.com/Dimariqe)** [PR #2137](https://github.com/duxlabs-dev/dux-shell/pull/2137)).
+- Add window rule for the new version of Gnome Calculator (contributed by **[CodeWithAlamin](https://github.com/CodeWithAlamin)** [PR #2125](https://github.com/duxlabs-dev/dux-shell/pull/2125)).
 - Add wireplumber state directory & update U2F env variables (`e86227f`).
 - Adjust the Popout/Control Center motion (`f2d5ee4`).
-- Align dimensions to whole pixels to avoid blurry rendering (contributed by **[gbPagano](https://github.com/gbPagano)** [PR #2494](https://github.com/AvengeMedia/DankMaterialShell/pull/2494)).
+- Align dimensions to whole pixels to avoid blurry rendering (contributed by **[gbPagano](https://github.com/gbPagano)** [PR #2494](https://github.com/duxlabs-dev/dux-shell/pull/2494)).
 - Allow duplicate history entry management w/unique IDs & source tracking (`1bf66ee`).
 - Allow empty password submits to reach PAM (`ded2c38`).
 - Allow region capture over shell overlays (`7c2d5ce`).
 - Anchor cc and notification center to top and bottom (`9417eda`).
 - Animated Image warnings (`b8014fd`).
 - Apply appIdSubs to iconFrImage fallback path - Consistent with the appIcon PR changes in #1880 (`971a511`).
-- Apply file path substitutions in launcher icon resolution (contributed by **[odtgit](https://github.com/odtgit)** [PR #1877](https://github.com/AvengeMedia/DankMaterialShell/pull/1877)).
-- Apply stored icon theme at startup (contributed by **[lingdiansr](https://github.com/lingdiansr)** [PR #2511](https://github.com/AvengeMedia/DankMaterialShell/pull/2511)).
+- Apply file path substitutions in launcher icon resolution (contributed by **[odtgit](https://github.com/odtgit)** [PR #1877](https://github.com/duxlabs-dev/dux-shell/pull/1877)).
+- Apply stored icon theme at startup (contributed by **[lingdiansr](https://github.com/lingdiansr)** [PR #2511](https://github.com/duxlabs-dev/dux-shell/pull/2511)).
 - Auto-rebuild font cache when configured fonts are missing (`8155970`).
 - Avoid event loop termination core: bump go to 1.26 (`46aaf5f`).
 - Avoid pinning auto-login session commands (`fdbbcaf`).
-- Avoid U2F PAM polling in OR mode (contributed by **[Cloud0310](https://github.com/Cloud0310)** [PR #2459](https://github.com/AvengeMedia/DankMaterialShell/pull/2459)).
-- Awk in new greeter (contributed by **[ewtodd](https://github.com/ewtodd)** [PR #2508](https://github.com/AvengeMedia/DankMaterialShell/pull/2508)).
+- Avoid U2F PAM polling in OR mode (contributed by **[Cloud0310](https://github.com/Cloud0310)** [PR #2459](https://github.com/duxlabs-dev/dux-shell/pull/2459)).
+- Awk in new greeter (contributed by **[ewtodd](https://github.com/ewtodd)** [PR #2508](https://github.com/duxlabs-dev/dux-shell/pull/2508)).
 - Blur handling on the header layer to remain in sync - Fixes #2372 (`ee16047`).
-- Bucket WiFi signal for stable list order (contributed by **[domenkozar](https://github.com/domenkozar)** [PR #2449](https://github.com/AvengeMedia/DankMaterialShell/pull/2449)).
-- Bypass IME for password input (contributed by **[awerty-noob](https://github.com/awerty-noob)** [PR #2609](https://github.com/AvengeMedia/DankMaterialShell/pull/2609)).
+- Bucket WiFi signal for stable list order (contributed by **[domenkozar](https://github.com/domenkozar)** [PR #2449](https://github.com/duxlabs-dev/dux-shell/pull/2449)).
+- Bypass IME for password input (contributed by **[awerty-noob](https://github.com/awerty-noob)** [PR #2609](https://github.com/duxlabs-dev/dux-shell/pull/2609)).
 - Charging state binding loop (`fd65a8c`).
 - Clean up edge cases & updated popout handling (`2026ba5`).
-- Clean up orphaned idle inhibitor processes on startup (contributed by **[ksp-apoc](https://github.com/ksp-apoc)** [PR #2324](https://github.com/AvengeMedia/DankMaterialShell/pull/2324)).
-- Clear blur region when the bar is hidden (auto-hide) (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2658](https://github.com/AvengeMedia/DankMaterialShell/pull/2658)).
+- Clean up orphaned idle inhibitor processes on startup (contributed by **[ksp-apoc](https://github.com/ksp-apoc)** [PR #2324](https://github.com/duxlabs-dev/dux-shell/pull/2324)).
+- Clear blur region when the bar is hidden (auto-hide) (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2658](https://github.com/duxlabs-dev/dux-shell/pull/2658)).
 - Clipboard button widget alignment (`c425e35`).
-- Clipboard confirmation keyboard safety (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2623](https://github.com/AvengeMedia/DankMaterialShell/pull/2623)).
-- Clipboard pinned recents dedupe (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2605](https://github.com/AvengeMedia/DankMaterialShell/pull/2605)).
-- Clock off-center with single hour digit (contributed by **[scottmckendry](https://github.com/scottmckendry)** [PR #2745](https://github.com/AvengeMedia/DankMaterialShell/pull/2745)).
-- Close control center on lock and power actions (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2598](https://github.com/AvengeMedia/DankMaterialShell/pull/2598)).
-- Close notification center after clicking action buttons (contributed by **[nficca](https://github.com/nficca)** [PR #2276](https://github.com/AvengeMedia/DankMaterialShell/pull/2276)).
-- Coerce optional chain to bool in VolumeOSD enabled bindings (contributed by **[GraemeF](https://github.com/GraemeF)** [PR #2101](https://github.com/AvengeMedia/DankMaterialShell/pull/2101)).
+- Clipboard confirmation keyboard safety (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2623](https://github.com/duxlabs-dev/dux-shell/pull/2623)).
+- Clipboard pinned recents dedupe (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2605](https://github.com/duxlabs-dev/dux-shell/pull/2605)).
+- Clock off-center with single hour digit (contributed by **[scottmckendry](https://github.com/scottmckendry)** [PR #2745](https://github.com/duxlabs-dev/dux-shell/pull/2745)).
+- Close control center on lock and power actions (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2598](https://github.com/duxlabs-dev/dux-shell/pull/2598)).
+- Close notification center after clicking action buttons (contributed by **[nficca](https://github.com/nficca)** [PR #2276](https://github.com/duxlabs-dev/dux-shell/pull/2276)).
+- Coerce optional chain to bool in VolumeOSD enabled bindings (contributed by **[GraemeF](https://github.com/GraemeF)** [PR #2101](https://github.com/duxlabs-dev/dux-shell/pull/2101)).
 - Color handling w/animation transition (`69d7c1f`).
 - Correct Lua keybind writes (`3118e7b`).
-- Correct parameter name in Hyprland windowrule (no_initial_focus) (contributed by **[beluch-dev](https://github.com/beluch-dev)** [PR #1726](https://github.com/AvengeMedia/DankMaterialShell/pull/1726)).
+- Correct parameter name in Hyprland windowrule (no_initial_focus) (contributed by **[beluch-dev](https://github.com/beluch-dev)** [PR #1726](https://github.com/duxlabs-dev/dux-shell/pull/1726)).
 - Correctly handle Sway named workspaces (`7178563`).
-- Cover edge cases of compact focused app widget (contributed by **[marcinjahn](https://github.com/marcinjahn)** [PR #1918](https://github.com/AvengeMedia/DankMaterialShell/pull/1918)).
-- Dash and dankdash commands work without clock widget (contributed by **[rochacbruno](https://github.com/rochacbruno)** [PR #2392](https://github.com/AvengeMedia/DankMaterialShell/pull/2392)).
-- Decode path URI when saving/creating a file (contributed by **[Silzinc](https://github.com/Silzinc)** [PR #1805](https://github.com/AvengeMedia/DankMaterialShell/pull/1805)).
-- Dedupe search index tab entries (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2643](https://github.com/AvengeMedia/DankMaterialShell/pull/2643)).
+- Cover edge cases of compact focused app widget (contributed by **[marcinjahn](https://github.com/marcinjahn)** [PR #1918](https://github.com/duxlabs-dev/dux-shell/pull/1918)).
+- Dash and dankdash commands work without clock widget (contributed by **[rochacbruno](https://github.com/rochacbruno)** [PR #2392](https://github.com/duxlabs-dev/dux-shell/pull/2392)).
+- Decode path URI when saving/creating a file (contributed by **[Silzinc](https://github.com/Silzinc)** [PR #1805](https://github.com/duxlabs-dev/dux-shell/pull/1805)).
+- Dedupe search index tab entries (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2643](https://github.com/duxlabs-dev/dux-shell/pull/2643)).
 - Defer DankCircularImage saving until the window is available (`2796c1c`).
 - Defer keyboard hold actions to key release (`a73380b`).
-- Detect screen casting on Niri (contributed by **[tkroll-ionos](https://github.com/tkroll-ionos)** [PR #2185](https://github.com/AvengeMedia/DankMaterialShell/pull/2185)).
-- Detect Zed Linux binary aliases (contributed by **[nekwebdev](https://github.com/nekwebdev)** [PR #1982](https://github.com/AvengeMedia/DankMaterialShell/pull/1982)).
-- Dismiss fade-to-lock overlay when using a custom lock command (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2653](https://github.com/AvengeMedia/DankMaterialShell/pull/2653)).
-- Dismiss popup reliably on user-initiated close paths (contributed by **[louzt](https://github.com/louzt)** [PR #2761](https://github.com/AvengeMedia/DankMaterialShell/pull/2761)).
-- Display Configurator in Hyprland (contributed by **[Stodtyy](https://github.com/Stodtyy)** [PR #2506](https://github.com/AvengeMedia/DankMaterialShell/pull/2506)).
-- Dock flickering when having cursor floating by the side (contributed by **[lakapple](https://github.com/lakapple)** [PR #1897](https://github.com/AvengeMedia/DankMaterialShell/pull/1897)).
+- Detect screen casting on Niri (contributed by **[tkroll-ionos](https://github.com/tkroll-ionos)** [PR #2185](https://github.com/duxlabs-dev/dux-shell/pull/2185)).
+- Detect Zed Linux binary aliases (contributed by **[nekwebdev](https://github.com/nekwebdev)** [PR #1982](https://github.com/duxlabs-dev/dux-shell/pull/1982)).
+- Dismiss fade-to-lock overlay when using a custom lock command (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2653](https://github.com/duxlabs-dev/dux-shell/pull/2653)).
+- Dismiss popup reliably on user-initiated close paths (contributed by **[louzt](https://github.com/louzt)** [PR #2761](https://github.com/duxlabs-dev/dux-shell/pull/2761)).
+- Display Configurator in Hyprland (contributed by **[Stodtyy](https://github.com/Stodtyy)** [PR #2506](https://github.com/duxlabs-dev/dux-shell/pull/2506)).
+- Dock flickering when having cursor floating by the side (contributed by **[lakapple](https://github.com/lakapple)** [PR #1897](https://github.com/duxlabs-dev/dux-shell/pull/1897)).
 - Don't stop greeter immediately upon uninstallation (`baa956c`).
-- Don't treat DPMS off/on as a screen-reconnect recovery storm (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2654](https://github.com/AvengeMedia/DankMaterialShell/pull/2654)).
+- Don't treat DPMS off/on as a screen-reconnect recovery storm (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2654](https://github.com/duxlabs-dev/dux-shell/pull/2654)).
 - Dsearch references (`60118c5`).
 - Dup crash handlers (`95c4aa9`).
 - Enable overlay layer for for auth popups (`6c58367`).
 - Enhance column movement functions to focus on specified monitor (`a2513e9`).
 - Ensure blurRegion is cleared if BackgroundEffect exists (`cde0d83`).
-- Ensure OSD appears on all monitors after resume (contributed by **[klesh](https://github.com/klesh)** [PR #2453](https://github.com/AvengeMedia/DankMaterialShell/pull/2453)).
+- Ensure OSD appears on all monitors after resume (contributed by **[klesh](https://github.com/klesh)** [PR #2453](https://github.com/duxlabs-dev/dux-shell/pull/2453)).
 - Ensure timeouts can never be 0 (`e78ba77`).
 - Epic RAM Growth - Closes #1920 (`7840294`).
-- Exclude niri from fullscreen toplevel detection (contributed by **[cwelsys](https://github.com/cwelsys)** [PR #2091](https://github.com/AvengeMedia/DankMaterialShell/pull/2091)).
-- Exclude virtual ether links and prune stale ones from networkd (contributed by **[GraemeF](https://github.com/GraemeF)** [PR #2505](https://github.com/AvengeMedia/DankMaterialShell/pull/2505)).
-- Exit saved filter when pinned entries are empty (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2604](https://github.com/AvengeMedia/DankMaterialShell/pull/2604)).
-- Expand tilde from config paths (contributed by **[salah-walid](https://github.com/salah-walid)** [PR #2242](https://github.com/AvengeMedia/DankMaterialShell/pull/2242)).
+- Exclude niri from fullscreen toplevel detection (contributed by **[cwelsys](https://github.com/cwelsys)** [PR #2091](https://github.com/duxlabs-dev/dux-shell/pull/2091)).
+- Exclude virtual ether links and prune stale ones from networkd (contributed by **[GraemeF](https://github.com/GraemeF)** [PR #2505](https://github.com/duxlabs-dev/dux-shell/pull/2505)).
+- Exit saved filter when pinned entries are empty (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2604](https://github.com/duxlabs-dev/dux-shell/pull/2604)).
+- Expand tilde from config paths (contributed by **[salah-walid](https://github.com/salah-walid)** [PR #2242](https://github.com/duxlabs-dev/dux-shell/pull/2242)).
 - External management toggle & partial monitor DPMS recovery (`4d0aab7`).
-- Fallback icon does not dim when not focused (contributed by **[kanghengliu](https://github.com/kanghengliu)** [PR #2063](https://github.com/AvengeMedia/DankMaterialShell/pull/2063)).
+- Fallback icon does not dim when not focused (contributed by **[kanghengliu](https://github.com/kanghengliu)** [PR #2063](https://github.com/duxlabs-dev/dux-shell/pull/2063)).
 - Fix accent colors in light mode fixes #2711 (`d1eb655`).
-- Fix action buttons hover cursor shape (contributed by **[hthienloc](https://github.com/hthienloc)** [PR #2744](https://github.com/AvengeMedia/DankMaterialShell/pull/2744)).
+- Fix action buttons hover cursor shape (contributed by **[hthienloc](https://github.com/hthienloc)** [PR #2744](https://github.com/duxlabs-dev/dux-shell/pull/2744)).
 - Fix animation speed binding in notifications tab fixes #1974 (`d445d18`).
 - Fix blur (`5adc0c4`).
 - Fix blur error message (`b117c80`).
 - Fix blur for goth corners in dankbar fixes #2666 (`85fa332`).
 - Fix blur on popout fixes #2288 (`8b79d1d`).
-- Fix charger plugged/unplugged sound playing while the battery is full (contributed by **[IrisHormoviti](https://github.com/IrisHormoviti)** [PR #1859](https://github.com/AvengeMedia/DankMaterialShell/pull/1859)).
+- Fix charger plugged/unplugged sound playing while the battery is full (contributed by **[IrisHormoviti](https://github.com/IrisHormoviti)** [PR #1859](https://github.com/duxlabs-dev/dux-shell/pull/1859)).
 - Fix check scheduling - deadline-based, fixes the issue before that would reset the interval   without accounting for prior time waited (`73f3a72`).
 - Fix clock index hardcoded at tab 0 (`cc0bec2`).
 - Fix codec parsing names (`7c991bc`).
@@ -539,15 +539,15 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Fix cycle output, improve icon resolution for sink fixes #1808 (`05eaf59`).
 - Fix DankDash Wallpaper call (`46d4288`).
 - Fix dbar autohide w/xray blur (`5594ec2`).
-- Fix ddc brightness not applying because process exits before debounce timer runs (contributed by **[DavutHaxor](https://github.com/DavutHaxor)** [PR #2217](https://github.com/AvengeMedia/DankMaterialShell/pull/2217)).
+- Fix ddc brightness not applying because process exits before debounce timer runs (contributed by **[DavutHaxor](https://github.com/DavutHaxor)** [PR #2217](https://github.com/duxlabs-dev/dux-shell/pull/2217)).
 - Fix Debian ARM64 detection (`d219d3b`).
 - Fix dev flake for go 1.25 and ashellchheck (`526e242`).
 - Fix display of named workspace + icon set on vertical bars fixes #2067 (`3253adb`).
 - Fix DMS binding to ext-workspace-v1 even when we don't use it (`2fc3b8e`).
 - Fix dms-git Go versioning to restore builds (`95c66b4`).
-- Fix dock visible when theres no app (contributed by **[lakapple](https://github.com/lakapple)** [PR #1797](https://github.com/AvengeMedia/DankMaterialShell/pull/1797)).
+- Fix dock visible when theres no app (contributed by **[lakapple](https://github.com/lakapple)** [PR #1797](https://github.com/duxlabs-dev/dux-shell/pull/1797)).
 - Fix editing in popout (`12a744e`).
-- Fix emacs template constant line number size (contributed by **[zgibberish](https://github.com/zgibberish)** [PR #2317](https://github.com/AvengeMedia/DankMaterialShell/pull/2317)).
+- Fix emacs template constant line number size (contributed by **[zgibberish](https://github.com/zgibberish)** [PR #2317](https://github.com/duxlabs-dev/dux-shell/pull/2317)).
 - Fix escape in keybinds modal (`8e4a63d`).
 - Fix excessive network prompting on failures, add VPN connection statuses (`28f40af`).
 - Fix fallback temporarily (`b9e9da5`).
@@ -555,28 +555,28 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Fix files tab actions fixes #2357 (`d8835f2`).
 - Fix flaky test (`7a566e1`).
 - Fix focus regression on close (`21ddc3c`).
-- Fix focused app when switching to empty workspace (contributed by **[salah-walid](https://github.com/salah-walid)** [PR #2259](https://github.com/AvengeMedia/DankMaterialShell/pull/2259)).
+- Fix focused app when switching to empty workspace (contributed by **[salah-walid](https://github.com/salah-walid)** [PR #2259](https://github.com/duxlabs-dev/dux-shell/pull/2259)).
 - Fix focusing of password prompts when popout is open undesired effect of closing the popout but its probably the best solution (`9578d6d`).
 - Fix frecency ranking in search results fixes #1799 (`6ee419b`).
-- Fix fullscreen-detection race during cross-monitor focus moves (contributed by **[joshsymonds](https://github.com/joshsymonds)** [PR #2373](https://github.com/AvengeMedia/DankMaterialShell/pull/2373)).
+- Fix fullscreen-detection race during cross-monitor focus moves (contributed by **[joshsymonds](https://github.com/joshsymonds)** [PR #2373](https://github.com/duxlabs-dev/dux-shell/pull/2373)).
 - Fix gentoo parsing and use guru overlays for DMS/dgop (`7143853`).
 - Fix geoclue IP fallback (`3600e03`).
 - Fix GitHub issue labels (`401b409`).
 - Fix go regex matching (`04555db`).
 - Fix Go versioning on dms-git builds (`e931829`).
-- Fix greeter loading priority (contributed by **[ramblingenzyme](https://github.com/ramblingenzyme)** [PR #2341](https://github.com/AvengeMedia/DankMaterialShell/pull/2341)).
+- Fix greeter loading priority (contributed by **[ramblingenzyme](https://github.com/ramblingenzyme)** [PR #2341](https://github.com/duxlabs-dev/dux-shell/pull/2341)).
 - Fix gtk3 checkboxes in light mode fixes #1555 (`8f10096`).
 - Fix hardcoded branch in vendor workflow (`aad7011`).
 - Fix hardcoded font weight to use configured value fixes #2076 (`8e71264`).
 - Fix hide device not working (`6ceb1b1`).
 - Fix hiding index numbers on sway fixes #2768 (`6f298d3`).
-- Fix html elements get parsed in clipboard entry (contributed by **[lakapple](https://github.com/lakapple)** [PR #1798](https://github.com/AvengeMedia/DankMaterialShell/pull/1798)).
+- Fix html elements get parsed in clipboard entry (contributed by **[lakapple](https://github.com/lakapple)** [PR #1798](https://github.com/duxlabs-dev/dux-shell/pull/1798)).
 - Fix hyprland focus on context menu fixes #2714 (`1611181`).
-- Fix hyprland focus window (contributed by **[arfan21](https://github.com/arfan21)** [PR #2426](https://github.com/AvengeMedia/DankMaterialShell/pull/2426)).
-- Fix Hyprland Lua dispatch helpers (contributed by **[kevichi7](https://github.com/kevichi7)** [PR #2443](https://github.com/AvengeMedia/DankMaterialShell/pull/2443)).
-- Fix Hyprland scrolling overview geometry (contributed by **[kevichi7](https://github.com/kevichi7)** [PR #2442](https://github.com/AvengeMedia/DankMaterialShell/pull/2442)).
+- Fix hyprland focus window (contributed by **[arfan21](https://github.com/arfan21)** [PR #2426](https://github.com/duxlabs-dev/dux-shell/pull/2426)).
+- Fix Hyprland Lua dispatch helpers (contributed by **[kevichi7](https://github.com/kevichi7)** [PR #2443](https://github.com/duxlabs-dev/dux-shell/pull/2443)).
+- Fix Hyprland scrolling overview geometry (contributed by **[kevichi7](https://github.com/kevichi7)** [PR #2442](https://github.com/duxlabs-dev/dux-shell/pull/2442)).
 - Fix idle monitors firing when bar isnt visible + keep awake is active fixes #2698 (`ae52062`).
-- Fix imageformats detection (contributed by **[LuckShiba](https://github.com/LuckShiba)** [PR #1811](https://github.com/AvengeMedia/DankMaterialShell/pull/1811)).
+- Fix imageformats detection (contributed by **[LuckShiba](https://github.com/LuckShiba)** [PR #1811](https://github.com/duxlabs-dev/dux-shell/pull/1811)).
 - Fix inconsistent transparency (`8ef1d95`).
 - Fix inconsistent transparency fixes #2330 (`50f0cbb`).
 - Fix index conflict on battery tab (`9a4cff4`).
@@ -586,7 +586,7 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Fix launcher button color override fixes #2530 (`dfe309a`).
 - Fix Light/Dark mode portal sync (`65516e8`).
 - Fix list delegates (`ebc77b6`).
-- Fix list gaps and overlap when searching (contributed by **[Bodify](https://github.com/Bodify)** [PR #2315](https://github.com/AvengeMedia/DankMaterialShell/pull/2315)).
+- Fix list gaps and overlap when searching (contributed by **[Bodify](https://github.com/Bodify)** [PR #2315](https://github.com/duxlabs-dev/dux-shell/pull/2315)).
 - Fix locale override persisting even when not explicitly set (`fbc1ff6`).
 - Fix location search with han characters fixes #2274 (`518cc93`).
 - Fix lua parsing on Hyprland for non-static configuration fixes #2753 (`36ad34a`).
@@ -597,11 +597,11 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Fix moddedAppID consistency (`fb66eff`).
 - Fix mouse area to edges fixes #2108 (`fb02f72`).
 - Fix mouse wheel keysims on Hyprland and Mango fixes #2683 (`0e7901e`).
-- Fix multi-monitor cycling not working (contributed by **[beckend](https://github.com/beckend)** [PR #2042](https://github.com/AvengeMedia/DankMaterialShell/pull/2042)).
+- Fix multi-monitor cycling not working (contributed by **[beckend](https://github.com/beckend)** [PR #2042](https://github.com/duxlabs-dev/dux-shell/pull/2042)).
 - Fix named workspace icons (`414d81a`).
 - Fix named workspaces hiding from widget fixes #2047 (`31efe9b`).
 - Fix new session hint fixes #2556 (`2723022`).
-- Fix night mode and OSD recovery after suspend/resume (contributed by **[kristijanribaric](https://github.com/kristijanribaric)** [PR #2254](https://github.com/AvengeMedia/DankMaterialShell/pull/2254)).
+- Fix night mode and OSD recovery after suspend/resume (contributed by **[kristijanribaric](https://github.com/kristijanribaric)** [PR #2254](https://github.com/duxlabs-dev/dux-shell/pull/2254)).
 - Fix occupied color in niri fixes #2538 (`09ca37c`).
 - Fix opening popouts across monitors cc/brightness: fix delegate bindings and pinning (`cdc1102`).
 - Fix output config on delete & popup height (`51f6f37`).
@@ -626,7 +626,7 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Fix sub-modals and power menu keyboard focus in connected mode fixes #2346 (`cc47703`).
 - Fix syncing settings to new bars (`1f26092`).
 - Fix syncWallpaperForCurrentMode (`521a3fa`).
-- Fix text truncation in some section of settings and update icons (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2618](https://github.com/AvengeMedia/DankMaterialShell/pull/2618)).
+- Fix text truncation in some section of settings and update icons (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2618](https://github.com/duxlabs-dev/dux-shell/pull/2618)).
 - Fix texture sizing during animation (`a874f76`).
 - Fix thumbnail load & modal bottom margin (`cf4c4b7`).
 - Fix tls openvpn connection types related #1344 (`eedba0e`).
@@ -634,59 +634,59 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Fix tooltip positioning (`df2ba3a`).
 - Fix transparency setting fixes #1739 (`5490731`).
 - Fix undefined icon warnings (`59fec88`).
-- Fix VPN UI for active transient entries (contributed by **[louzt](https://github.com/louzt)** [PR #2312](https://github.com/AvengeMedia/DankMaterialShell/pull/2312)).
+- Fix VPN UI for active transient entries (contributed by **[louzt](https://github.com/louzt)** [PR #2312](https://github.com/duxlabs-dev/dux-shell/pull/2312)).
 - Fix vscode text legibility on auto-complete menu fixes #2198 (`1c5965f`).
 - Fix weather location sync fixes #2303 (`e7bd8e4`).
 - Fix widget registration during visibility changes fixes #1956 (`70fa0ec`).
 - Fix widgets across different bar section fixes #1764s (`a0283b3`).
 - Fix words (`bdfd565`).
 - Fix(Clipboard) remove unused copyServe logic (`c984b0b`).
-- Fixed batterylevel shown zero in case of unknown state (contributed by **[Tobi-maru](https://github.com/Tobi-maru)** [PR #2436](https://github.com/AvengeMedia/DankMaterialShell/pull/2436)).
-- Fixed mux tab having same id as locale tab (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2031](https://github.com/AvengeMedia/DankMaterialShell/pull/2031)).
+- Fixed batterylevel shown zero in case of unknown state (contributed by **[Tobi-maru](https://github.com/Tobi-maru)** [PR #2436](https://github.com/duxlabs-dev/dux-shell/pull/2436)).
+- Fixed mux tab having same id as locale tab (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2031](https://github.com/duxlabs-dev/dux-shell/pull/2031)).
 - Fixes autohide + click through edge case (`7d1519f`).
 - Fixes for updatesEnable handling (`0a8c111`).
-- Follow symlinks when scanning wallpaper directory (contributed by **[CaptainSpof](https://github.com/CaptainSpof)** [PR #1947](https://github.com/AvengeMedia/DankMaterialShell/pull/1947)).
+- Follow symlinks when scanning wallpaper directory (contributed by **[CaptainSpof](https://github.com/CaptainSpof)** [PR #1947](https://github.com/duxlabs-dev/dux-shell/pull/1947)).
 - Gate mango matugen and Cosmic config sync on active session (`aea5189`).
 - Guard missing fields in cheatsheet search filter (`5943186`).
-- Hide pin action while keeping saved indicator (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2626](https://github.com/AvengeMedia/DankMaterialShell/pull/2626)).
+- Hide pin action while keeping saved indicator (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2626](https://github.com/duxlabs-dev/dux-shell/pull/2626)).
 - Honor $XDG_CONFIG_HOME for config paths (`6f387b0`).
-- Honor plugin ccDetailHeight for detail section sizing (contributed by **[gbPagano](https://github.com/gbPagano)** [PR #2559](https://github.com/AvengeMedia/DankMaterialShell/pull/2559)).
-- Honour _preScored for no-query when value exceeds typeBonus (contributed by **[devnullvoid](https://github.com/devnullvoid)** [PR #2065](https://github.com/AvengeMedia/DankMaterialShell/pull/2065)).
+- Honor plugin ccDetailHeight for detail section sizing (contributed by **[gbPagano](https://github.com/gbPagano)** [PR #2559](https://github.com/duxlabs-dev/dux-shell/pull/2559)).
+- Honour _preScored for no-query when value exceeds typeBonus (contributed by **[devnullvoid](https://github.com/devnullvoid)** [PR #2065](https://github.com/duxlabs-dev/dux-shell/pull/2065)).
 - Hyprland import for scrolling workspace sync (`dd3eb71`).
-- Ignore keyboard shortcuts of disabled powermenu actions (contributed by **[pathmann](https://github.com/pathmann)** [PR #2580](https://github.com/AvengeMedia/DankMaterialShell/pull/2580)).
+- Ignore keyboard shortcuts of disabled powermenu actions (contributed by **[pathmann](https://github.com/pathmann)** [PR #2580](https://github.com/duxlabs-dev/dux-shell/pull/2580)).
 - Improve cache management & file handling (`583e46f`).
 - Improve clipping logic for connected chrome - Fixes #2397 (`c878ffb`).
 - Improve error handling for plugin settings loading (`7113afe`).
 - Improve menu position boundaries (`fefc0af`).
 - Improve save-to-file handling w/safety override diags (`1df7e47`).
-- Keep first item selected when navigating upward (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2622](https://github.com/AvengeMedia/DankMaterialShell/pull/2622)).
-- Keep Hyprland focus during close (contributed by **[awerty-noob](https://github.com/awerty-noob)** [PR #2655](https://github.com/AvengeMedia/DankMaterialShell/pull/2655)).
-- Keep Wi-Fi when password prompt is canceled (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2651](https://github.com/AvengeMedia/DankMaterialShell/pull/2651)).
-- Launcher launched via appdrawer doesnt respect size setting (contributed by **[lakapple](https://github.com/lakapple)** [PR #1960](https://github.com/AvengeMedia/DankMaterialShell/pull/1960)).
+- Keep first item selected when navigating upward (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2622](https://github.com/duxlabs-dev/dux-shell/pull/2622)).
+- Keep Hyprland focus during close (contributed by **[awerty-noob](https://github.com/awerty-noob)** [PR #2655](https://github.com/duxlabs-dev/dux-shell/pull/2655)).
+- Keep Wi-Fi when password prompt is canceled (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2651](https://github.com/duxlabs-dev/dux-shell/pull/2651)).
+- Launcher launched via appdrawer doesnt respect size setting (contributed by **[lakapple](https://github.com/lakapple)** [PR #1960](https://github.com/duxlabs-dev/dux-shell/pull/1960)).
 - Lua config for display setup writes (`4bfb08f`).
-- Make bluetoothBattery detection actually work (contributed by **[CongLuanTran](https://github.com/CongLuanTran)** [PR #2486](https://github.com/AvengeMedia/DankMaterialShell/pull/2486)).
-- Make desktop widget group delete button clickable (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2512](https://github.com/AvengeMedia/DankMaterialShell/pull/2512)).
-- Make matugen switch pywalfox dark/light mode (contributed by **[miguelsaliba](https://github.com/miguelsaliba)** [PR #2537](https://github.com/AvengeMedia/DankMaterialShell/pull/2537)).
+- Make bluetoothBattery detection actually work (contributed by **[CongLuanTran](https://github.com/CongLuanTran)** [PR #2486](https://github.com/duxlabs-dev/dux-shell/pull/2486)).
+- Make desktop widget group delete button clickable (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2512](https://github.com/duxlabs-dev/dux-shell/pull/2512)).
+- Make matugen switch pywalfox dark/light mode (contributed by **[miguelsaliba](https://github.com/miguelsaliba)** [PR #2537](https://github.com/duxlabs-dev/dux-shell/pull/2537)).
 - Missing appID references (`8d0f256`).
 - Missing import in Hyprland service (`a58037b`).
-- Missing vpn confirm delete modal (contributed by **[scottmckendry](https://github.com/scottmckendry)** [PR #2759](https://github.com/AvengeMedia/DankMaterialShell/pull/2759)).
+- Missing vpn confirm delete modal (contributed by **[scottmckendry](https://github.com/scottmckendry)** [PR #2759](https://github.com/duxlabs-dev/dux-shell/pull/2759)).
 - Multi-distro reliability updates - Merge duplicate niri input/output KDL nodes instead of appending. Allows more overrides - Guard AppArmor install/uninstall behind IsAppArmorEnabled() check (`acf63c5`).
-- Open Wi-Fi password modal upfront for enterprise networks (contributed by **[domenkozar](https://github.com/domenkozar)** [PR #2414](https://github.com/AvengeMedia/DankMaterialShell/pull/2414)).
-- Parse niri configs with leading-underscore identifiers (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2646](https://github.com/AvengeMedia/DankMaterialShell/pull/2646)).
-- Paste selected history entry (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2660](https://github.com/AvengeMedia/DankMaterialShell/pull/2660)).
-- Patch U2F PAM config with full Nix store path (contributed by **[xPathin](https://github.com/xPathin)** [PR #2071](https://github.com/AvengeMedia/DankMaterialShell/pull/2071)).
-- Play/pause icon flipped in MediaPlaybackOSD (contributed by **[lakapple](https://github.com/lakapple)** [PR #1889](https://github.com/AvengeMedia/DankMaterialShell/pull/1889)).
-- Popout first-click and AUR package listing (contributed by **[tkroll-ionos](https://github.com/tkroll-ionos)** [PR #2183](https://github.com/AvengeMedia/DankMaterialShell/pull/2183)).
-- Prefer image MIME types over text fallbacks (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2551](https://github.com/AvengeMedia/DankMaterialShell/pull/2551)).
-- Preserve per-monitor cycling when changing interval (contributed by **[nekwebdev](https://github.com/nekwebdev)** [PR #1981](https://github.com/AvengeMedia/DankMaterialShell/pull/1981)).
-- Prevent 100% CPU EOF spin loop by using temp file (contributed by **[Angerion](https://github.com/Angerion)** [PR #2471](https://github.com/AvengeMedia/DankMaterialShell/pull/2471)).
+- Open Wi-Fi password modal upfront for enterprise networks (contributed by **[domenkozar](https://github.com/domenkozar)** [PR #2414](https://github.com/duxlabs-dev/dux-shell/pull/2414)).
+- Parse niri configs with leading-underscore identifiers (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2646](https://github.com/duxlabs-dev/dux-shell/pull/2646)).
+- Paste selected history entry (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2660](https://github.com/duxlabs-dev/dux-shell/pull/2660)).
+- Patch U2F PAM config with full Nix store path (contributed by **[xPathin](https://github.com/xPathin)** [PR #2071](https://github.com/duxlabs-dev/dux-shell/pull/2071)).
+- Play/pause icon flipped in MediaPlaybackOSD (contributed by **[lakapple](https://github.com/lakapple)** [PR #1889](https://github.com/duxlabs-dev/dux-shell/pull/1889)).
+- Popout first-click and AUR package listing (contributed by **[tkroll-ionos](https://github.com/tkroll-ionos)** [PR #2183](https://github.com/duxlabs-dev/dux-shell/pull/2183)).
+- Prefer image MIME types over text fallbacks (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2551](https://github.com/duxlabs-dev/dux-shell/pull/2551)).
+- Preserve per-monitor cycling when changing interval (contributed by **[nekwebdev](https://github.com/nekwebdev)** [PR #1981](https://github.com/duxlabs-dev/dux-shell/pull/1981)).
+- Prevent 100% CPU EOF spin loop by using temp file (contributed by **[Angerion](https://github.com/Angerion)** [PR #2471](https://github.com/duxlabs-dev/dux-shell/pull/2471)).
 - Prevent negative WaitGroup counter on rapid brightness changes (`cf0fa7d`).
 - Prevent security risk HTML in window titles from fetching remote URLs (`98844a3`).
-- Pywalfox template light theme colors (contributed by **[Desdaemon](https://github.com/Desdaemon)** [PR #2075](https://github.com/AvengeMedia/DankMaterialShell/pull/2075)).
-- Raise CLI IPC scanner limit for large entry payloads (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2550](https://github.com/AvengeMedia/DankMaterialShell/pull/2550)).
-- Record numpad keys as KP_* keysyms (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2645](https://github.com/AvengeMedia/DankMaterialShell/pull/2645)).
-- Redraw wallpaper after DMS lock screen is dismissed (contributed by **[Dimariqe](https://github.com/Dimariqe)** [PR #2037](https://github.com/AvengeMedia/DankMaterialShell/pull/2037)).
-- Redraw wallpaper layers when fill mode changes (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2542](https://github.com/AvengeMedia/DankMaterialShell/pull/2542)).
+- Pywalfox template light theme colors (contributed by **[Desdaemon](https://github.com/Desdaemon)** [PR #2075](https://github.com/duxlabs-dev/dux-shell/pull/2075)).
+- Raise CLI IPC scanner limit for large entry payloads (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2550](https://github.com/duxlabs-dev/dux-shell/pull/2550)).
+- Record numpad keys as KP_* keysyms (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2645](https://github.com/duxlabs-dev/dux-shell/pull/2645)).
+- Redraw wallpaper after DMS lock screen is dismissed (contributed by **[Dimariqe](https://github.com/Dimariqe)** [PR #2037](https://github.com/duxlabs-dev/dux-shell/pull/2037)).
+- Redraw wallpaper layers when fill mode changes (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2542](https://github.com/duxlabs-dev/dux-shell/pull/2542)).
 - Refactor & Fix Dock in FrameModes. Updates to Zone offset in Standalone & Connected modes - Fixed hairline seam in some connected mode variants - Moved dock-related properties to a new DockGeometry component for a future base (`7f6486b`).
 - Refactor & update hover tracking w/context menus (`c554d97`).
 - Reintroduce texture sizing during animation to prevent content shift (`32e2d96`).
@@ -694,41 +694,41 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Remove recent duplicate IPC bindings (`b75453c`).
 - Repair crash introduced in Automatic configs PR (`3989c7f`).
 - Replace hardcoded max height mask in vertical mode (`be8326f`).
-- Resolve tray freeze and wallpaper loss after DPMS resume (contributed by **[abcfy2](https://github.com/abcfy2)** [PR #2457](https://github.com/AvengeMedia/DankMaterialShell/pull/2457)).
-- Resolve ui inconsistencies and missing i18n strings (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2719](https://github.com/AvengeMedia/DankMaterialShell/pull/2719)).
-- Respect Animation Duration setting for DankDropdown popups (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2661](https://github.com/AvengeMedia/DankMaterialShell/pull/2661)).
+- Resolve tray freeze and wallpaper loss after DPMS resume (contributed by **[abcfy2](https://github.com/abcfy2)** [PR #2457](https://github.com/duxlabs-dev/dux-shell/pull/2457)).
+- Resolve ui inconsistencies and missing i18n strings (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2719](https://github.com/duxlabs-dev/dux-shell/pull/2719)).
+- Respect Animation Duration setting for DankDropdown popups (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2661](https://github.com/duxlabs-dev/dux-shell/pull/2661)).
 - Respect legacy conf configs before migrating to lua (`81a1bb1`).
 - Respect niri mod-key when capturing binds (`b34941e`).
 - Restore Blur on Overview mode on niri (`368536f`).
 - Restore Darken Modal Background ops in Standalone mode (`80c853f`).
 - Restore jump windows (`cf641b4`).
 - Restore legacy remembered sessions by desktop id (`b0edccb`).
-- Restore lock screen U2F/fingerprint auth to working state (contributed by **[xPathin](https://github.com/xPathin)** [PR #2052](https://github.com/AvengeMedia/DankMaterialShell/pull/2052)).
+- Restore lock screen U2F/fingerprint auth to working state (contributed by **[xPathin](https://github.com/xPathin)** [PR #2052](https://github.com/duxlabs-dev/dux-shell/pull/2052)).
 - Restore login config fallback (`185284d`).
 - Restore long message content from overflowing (`a44bef5`).
 - Restore system PAM fallback, faillock support, and auth feedback (`d5ceea8`).
 - Retain user dbar standalone configs while in framemode fullscreen (`6679458`).
-- Robust location resolution with parallel fetch and multi-tier fallback (contributed by **[lingdiansr](https://github.com/lingdiansr)** [PR #2638](https://github.com/AvengeMedia/DankMaterialShell/pull/2638)).
+- Robust location resolution with parallel fetch and multi-tier fallback (contributed by **[lingdiansr](https://github.com/lingdiansr)** [PR #2638](https://github.com/duxlabs-dev/dux-shell/pull/2638)).
 - Select first file search result by default fixes #1967 (`25dce29`).
-- Select last query text on open; last-query persistence in connected frame mode (contributed by **[Legend-017](https://github.com/Legend-017)** [PR #2726](https://github.com/AvengeMedia/DankMaterialShell/pull/2726)).
-- Set default value for matugenTemplateNeovimSetBackground (contributed by **[Silzinc](https://github.com/Silzinc)** [PR #2081](https://github.com/AvengeMedia/DankMaterialShell/pull/2081)).
-- Set TextInput 'fontFamily' (contributed by **[euletheia](https://github.com/euletheia)** [PR #2399](https://github.com/AvengeMedia/DankMaterialShell/pull/2399)).
-- Show bar when scrolling away from fullscreen window (contributed by **[kanghengliu](https://github.com/kanghengliu)** [PR #2089](https://github.com/AvengeMedia/DankMaterialShell/pull/2089)).
+- Select last query text on open; last-query persistence in connected frame mode (contributed by **[Legend-017](https://github.com/Legend-017)** [PR #2726](https://github.com/duxlabs-dev/dux-shell/pull/2726)).
+- Set default value for matugenTemplateNeovimSetBackground (contributed by **[Silzinc](https://github.com/Silzinc)** [PR #2081](https://github.com/duxlabs-dev/dux-shell/pull/2081)).
+- Set TextInput 'fontFamily' (contributed by **[euletheia](https://github.com/euletheia)** [PR #2399](https://github.com/duxlabs-dev/dux-shell/pull/2399)).
+- Show bar when scrolling away from fullscreen window (contributed by **[kanghengliu](https://github.com/kanghengliu)** [PR #2089](https://github.com/duxlabs-dev/dux-shell/pull/2089)).
 - Show percentage amount in titles & performance improvements (`510269d`).
-- Show the faillock lockout reason instead of "incorrect password" (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2669](https://github.com/AvengeMedia/DankMaterialShell/pull/2669)).
-- Show WiFi connection progress (contributed by **[NihilDigit](https://github.com/NihilDigit)** [PR #2684](https://github.com/AvengeMedia/DankMaterialShell/pull/2684)).
+- Show the faillock lockout reason instead of "incorrect password" (contributed by **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** [PR #2669](https://github.com/duxlabs-dev/dux-shell/pull/2669)).
+- Show WiFi connection progress (contributed by **[NihilDigit](https://github.com/NihilDigit)** [PR #2684](https://github.com/duxlabs-dev/dux-shell/pull/2684)).
 - Simplify model binding for filtered plugins (`a3ecef7`).
 - Simplify wallpaper rendering logic & reliability (`bae98da`).
-- Size from PanelWindow.screen (contributed by **[cwelsys](https://github.com/cwelsys)** [PR #2582](https://github.com/AvengeMedia/DankMaterialShell/pull/2582)).
-- Skip invalid customThemeFile in preStart (contributed by **[z1-0](https://github.com/z1-0)** [PR #1997](https://github.com/AvengeMedia/DankMaterialShell/pull/1997)).
-- Stabilize control center numeric widths (contributed by **[0xdeafbeef](https://github.com/0xdeafbeef)** [PR #1943](https://github.com/AvengeMedia/DankMaterialShell/pull/1943)).
+- Size from PanelWindow.screen (contributed by **[cwelsys](https://github.com/cwelsys)** [PR #2582](https://github.com/duxlabs-dev/dux-shell/pull/2582)).
+- Skip invalid customThemeFile in preStart (contributed by **[z1-0](https://github.com/z1-0)** [PR #1997](https://github.com/duxlabs-dev/dux-shell/pull/1997)).
+- Stabilize control center numeric widths (contributed by **[0xdeafbeef](https://github.com/0xdeafbeef)** [PR #1943](https://github.com/duxlabs-dev/dux-shell/pull/1943)).
 - Stale image entry handling (`a34fda9`).
-- Startup tray scan to prevent duplicate icons on boot (contributed by **[Dimariqe](https://github.com/Dimariqe)** [PR #2225](https://github.com/AvengeMedia/DankMaterialShell/pull/2225)).
-- Support declarative greeter auto-login ([PR #2734](https://github.com/AvengeMedia/DankMaterialShell/pull/2734)).
+- Startup tray scan to prevent duplicate icons on boot (contributed by **[Dimariqe](https://github.com/Dimariqe)** [PR #2225](https://github.com/duxlabs-dev/dux-shell/pull/2225)).
+- Support declarative greeter auto-login ([PR #2734](https://github.com/duxlabs-dev/dux-shell/pull/2734)).
 - Support legacy QT 6.xx decoding & large clipboard data (`a366bf3`).
-- Support localized settings search (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2521](https://github.com/AvengeMedia/DankMaterialShell/pull/2521)).
+- Support localized settings search (contributed by **[jbwfu](https://github.com/jbwfu)** [PR #2521](https://github.com/duxlabs-dev/dux-shell/pull/2521)).
 - Surface Windows Rules Tab for Hyprland (`6991b45`).
-- UI polishes, uptime formatting, and missing i18n strings (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2686](https://github.com/AvengeMedia/DankMaterialShell/pull/2686)).
+- UI polishes, uptime formatting, and missing i18n strings (contributed by **[Youseffo13](https://github.com/Youseffo13)** [PR #2686](https://github.com/duxlabs-dev/dux-shell/pull/2686)).
 - Unify compositor output profiles (`713ce5f`).
 - Unused imports removed (`4ecdba9`).
 - Update card registration logic to fix binded crash (`c7d44cf`).
@@ -745,7 +745,7 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Update logic to hide the dbar/dock upon maximized windows/apps/games (`31e60a3`).
 - Update modal state management w/ownership Id (`1c01774`).
 - Update NixOS declarative configuration (`e423e17`).
-- Update resizeactive binding to include height to make it work (contributed by **[CodeWithAlamin](https://github.com/CodeWithAlamin)** [PR #2126](https://github.com/AvengeMedia/DankMaterialShell/pull/2126)).
+- Update resizeactive binding to include height to make it work (contributed by **[CodeWithAlamin](https://github.com/CodeWithAlamin)** [PR #2126](https://github.com/duxlabs-dev/dux-shell/pull/2126)).
 - Update rfkill to allow backend management (`7dffe85`).
 - Update Separate mode render to remove connected layer (`05c7a77`).
 - Update tabIndex reordering for media & weather widgets (`590555d`).
@@ -754,12 +754,12 @@ DMS 1.5 requires Quickshell 0.3.0 or newer; support for 0.2 has been dropped. If
 - Update user cursor theme support (`74d2207`).
 - Use explicit mouse params in modal MouseArea handlers (`0bc8942`).
 - Use overlay layer in standalone mode (`e7221ec`).
-- Use primaryText instead of primary for text and icons displayed on primaryContainer background in the launcher (contributed by **[Silzinc](https://github.com/Silzinc)** [PR #2586](https://github.com/AvengeMedia/DankMaterialShell/pull/2586)).
-- Use single quotes for zed template paths (contributed by **[Adarsh219](https://github.com/Adarsh219)** [PR #1972](https://github.com/AvengeMedia/DankMaterialShell/pull/1972)).
+- Use primaryText instead of primary for text and icons displayed on primaryContainer background in the launcher (contributed by **[Silzinc](https://github.com/Silzinc)** [PR #2586](https://github.com/duxlabs-dev/dux-shell/pull/2586)).
+- Use single quotes for zed template paths (contributed by **[Adarsh219](https://github.com/Adarsh219)** [PR #1972](https://github.com/duxlabs-dev/dux-shell/pull/1972)).
 - Use surfaceVariantText color for line numbers (`2fade1a`).
-- Use UnsetWorkspaceName to fix  empty input in workspace rename (contributed by **[Tobi-maru](https://github.com/Tobi-maru)** [PR #2094](https://github.com/AvengeMedia/DankMaterialShell/pull/2094)).
+- Use UnsetWorkspaceName to fix  empty input in workspace rename (contributed by **[Tobi-maru](https://github.com/Tobi-maru)** [PR #2094](https://github.com/duxlabs-dev/dux-shell/pull/2094)).
 - Wait for forked child to register Wayland source before returning (`62c6090`).
-- Wake monitors on input when powered off by lock (contributed by **[nabaco](https://github.com/nabaco)** [PR #2572](https://github.com/AvengeMedia/DankMaterialShell/pull/2572)).
+- Wake monitors on input when powered off by lock (contributed by **[nabaco](https://github.com/nabaco)** [PR #2572](https://github.com/duxlabs-dev/dux-shell/pull/2572)).
 - Workflow dput & SFTP (`1b9d1c6`).
 
 </details>
@@ -778,102 +778,102 @@ DMS 1.5, and the hotfix series leading up to it, would not be possible without t
 
 | Contributor | Contribution |
 |---|---|
-| **[0xdeafbeef](https://github.com/0xdeafbeef)** | Highlight active workspace app tiles ([PR #1957](https://github.com/AvengeMedia/DankMaterialShell/pull/1957)) |
-| **[Adarsh219](https://github.com/Adarsh219)** | Add Zed editor theming support ([PR #1954](https://github.com/AvengeMedia/DankMaterialShell/pull/1954)) |
-| **[andrhua](https://github.com/andrhua)** | Persist last active player ([PR #2184](https://github.com/AvengeMedia/DankMaterialShell/pull/2184)) |
-| **[arfan21](https://github.com/arfan21)** | Added Settings Tab Autostart App (XDG Autostart) ([PR #2535](https://github.com/AvengeMedia/DankMaterialShell/pull/2535)) |
-| **[arora-archit](https://github.com/arora-archit)** | Add icon tinting ([PR #2266](https://github.com/AvengeMedia/DankMaterialShell/pull/2266)) |
-| **[augustocdias](https://github.com/augustocdias)** | • Enable use of videos as screensaver in the lock screen ([PR #1819](https://github.com/AvengeMedia/DankMaterialShell/pull/1819))<br/>• Add toggle to enable/disable auto connecting ([PR #1925](https://github.com/AvengeMedia/DankMaterialShell/pull/1925))<br/>• Show notification only on current focused display ([PR #1923](https://github.com/AvengeMedia/DankMaterialShell/pull/1923)) |
-| **[b0o](https://github.com/b0o)** | • Add openColor IPC handler to set color on open ([PR #2017](https://github.com/AvengeMedia/DankMaterialShell/pull/2017))<br/>• Separate workspace appearance for unfocused displays ([PR #2687](https://github.com/AvengeMedia/DankMaterialShell/pull/2687)) |
-| **[Bodify](https://github.com/Bodify)** | Add search/filter to saved clipboard entries & animation states ([PR #2464](https://github.com/AvengeMedia/DankMaterialShell/pull/2464)) |
-| **[Bogdan-Torkhov](https://github.com/Bogdan-Torkhov)** | Updated dynamic width options for DiskUsage widget ([PR #2517](https://github.com/AvengeMedia/DankMaterialShell/pull/2517)) |
-| **[bogdan-velicu](https://github.com/bogdan-velicu)** | Add opt-in timeout progress bar on popups ([PR #2587](https://github.com/AvengeMedia/DankMaterialShell/pull/2587)) |
-| **[cwelsys](https://github.com/cwelsys)** | Add 'Hide When Fullscreen' opt-out toggles ([PR #2349](https://github.com/AvengeMedia/DankMaterialShell/pull/2349)) |
-| **[dionjoshualobo](https://github.com/dionjoshualobo)** | Add type filters to clipboard history ([PR #2640](https://github.com/AvengeMedia/DankMaterialShell/pull/2640)) |
-| **[DK0280705](https://github.com/DK0280705)** | Fix and implement display auto-switching with JSON profile storage ([PR #2275](https://github.com/AvengeMedia/DankMaterialShell/pull/2275)) |
-| **[domenkozar](https://github.com/domenkozar)** | Blink WiFi/Bluetooth icons while connecting ([PR #2448](https://github.com/AvengeMedia/DankMaterialShell/pull/2448)) |
-| **[dvjn](https://github.com/dvjn)** | • Add cycleProfile IPC command and default Mod+P keybind ([PR #2411](https://github.com/AvengeMedia/DankMaterialShell/pull/2411))<br/>• Add Display Profiles builtin control center widget ([PR #2410](https://github.com/AvengeMedia/DankMaterialShell/pull/2410)) |
-| **[gbPagano](https://github.com/gbPagano)** | Add DiskUsage widget config overlay with showMountPath toggle and standardized tile sizing ([PR #2507](https://github.com/AvengeMedia/DankMaterialShell/pull/2507)) |
-| **[Gdetrane](https://github.com/Gdetrane)** | • Add manual printer by IP/hostname ([PR #1868](https://github.com/AvengeMedia/DankMaterialShell/pull/1868))<br/>• Add Tailscale control center widget ([PR #1875](https://github.com/AvengeMedia/DankMaterialShell/pull/1875)) |
-| **[hthienloc](https://github.com/hthienloc)** | • Add expandable search bar to plugins settings tab ([PR #2377](https://github.com/AvengeMedia/DankMaterialShell/pull/2377))<br/>• Consolidate plugin directory management into a single dynamic button ([PR #2400](https://github.com/AvengeMedia/DankMaterialShell/pull/2400))<br/>• Implement interactive microphone volume OSD and IPC controls ([PR #2406](https://github.com/AvengeMedia/DankMaterialShell/pull/2406))<br/>• Unify media controls dropdown interactions, hover behavior and cycle controls ([PR #2470](https://github.com/AvengeMedia/DankMaterialShell/pull/2470))<br/>• Add native powerprofile target for power profiles management ([PR #2515](https://github.com/AvengeMedia/DankMaterialShell/pull/2515))<br/>• Support scroll and right-click on audio output devices in media popout ([PR #2615](https://github.com/AvengeMedia/DankMaterialShell/pull/2615))<br/>• Add battery settings tab and update battery widget interactions ([PR #2634](https://github.com/AvengeMedia/DankMaterialShell/pull/2634))<br/>• Port critical battery alert from DankBatteryAlerts plugin ([PR #2664](https://github.com/AvengeMedia/DankMaterialShell/pull/2664))<br/>• Add option to hide package source badges in launcher ([PR #2676](https://github.com/AvengeMedia/DankMaterialShell/pull/2676))<br/>• Support configurable background color ([PR #2671](https://github.com/AvengeMedia/DankMaterialShell/pull/2671))<br/>• Add options to toggle percentage and remaining time ([PR #2672](https://github.com/AvengeMedia/DankMaterialShell/pull/2672))<br/>• Allow excluding specific media players by identity ([PR #2712](https://github.com/AvengeMedia/DankMaterialShell/pull/2712))<br/>• Add update all CLI flag and settings updates dialog ([PR #2682](https://github.com/AvengeMedia/DankMaterialShell/pull/2682)) |
-| **[IrisHormoviti](https://github.com/IrisHormoviti)** | • Add login sound functionality and settings entry ([PR #2155](https://github.com/AvengeMedia/DankMaterialShell/pull/2155))<br/>• Added Default Apps page to settings ([PR #2416](https://github.com/AvengeMedia/DankMaterialShell/pull/2416)) |
-| **[JamesFromFL](https://github.com/JamesFromFL)** | Add default app IPC actions ([PR #2546](https://github.com/AvengeMedia/DankMaterialShell/pull/2546)) |
-| **[jbwfu](https://github.com/jbwfu)** | • Add clipboard entry action visibility controls ([PR #2621](https://github.com/AvengeMedia/DankMaterialShell/pull/2621))<br/>• Expose saved WiFi networks in settings ([PR #2648](https://github.com/AvengeMedia/DankMaterialShell/pull/2648)) |
-| **[kanghengliu](https://github.com/kanghengliu)** | • Animate dock apps on entry addition/deletion ([PR #2064](https://github.com/AvengeMedia/DankMaterialShell/pull/2064))<br/>• Add FullscreenToplevel detection ([PR #2069](https://github.com/AvengeMedia/DankMaterialShell/pull/2069))<br/>• FileBrowser video thumbnail ([PR #2077](https://github.com/AvengeMedia/DankMaterialShell/pull/2077))<br/>• Expose accept keyboard focus to desktop widgets ([PR #2285](https://github.com/AvengeMedia/DankMaterialShell/pull/2285))<br/>• Expose screen var to desktop plugins ([PR #2300](https://github.com/AvengeMedia/DankMaterialShell/pull/2300)) |
-| **[klesh](https://github.com/klesh)** | User-configurable font size for notification summary and body ([PR #2461](https://github.com/AvengeMedia/DankMaterialShell/pull/2461)) |
-| **[lakapple](https://github.com/lakapple)** | • Have selected item at dropdown beginning on launch ([PR #1968](https://github.com/AvengeMedia/DankMaterialShell/pull/1968))<br/>• Add show week number option ([PR #1990](https://github.com/AvengeMedia/DankMaterialShell/pull/1990))<br/>• Add launcher history ([PR #2086](https://github.com/AvengeMedia/DankMaterialShell/pull/2086))<br/>• Add --raw flag ([PR #2103](https://github.com/AvengeMedia/DankMaterialShell/pull/2103)) |
-| **[lambdaclan](https://github.com/lambdaclan)** | Make dms color picker entry toggleable ([PR #2667](https://github.com/AvengeMedia/DankMaterialShell/pull/2667)) |
-| **[lichie567](https://github.com/lichie567)** | Improve content width calculation and add size options ([PR #2444](https://github.com/AvengeMedia/DankMaterialShell/pull/2444)) |
-| **[louzt](https://github.com/louzt)** | Expose scan/rescan/reload IPC handlers for runtime plugin discovery ([PR #2611](https://github.com/AvengeMedia/DankMaterialShell/pull/2611)) |
-| **[lpv11](https://github.com/lpv11)** | Add --no-confirm and --reset flags ([PR #2059](https://github.com/AvengeMedia/DankMaterialShell/pull/2059)) |
-| **[LuckShiba](https://github.com/LuckShiba)** | Improve context keyboard navigation and mode persistence ([PR #2467](https://github.com/AvengeMedia/DankMaterialShell/pull/2467)) |
-| **[merdely](https://github.com/merdely)** | Better keybinds ([PR #2002](https://github.com/AvengeMedia/DankMaterialShell/pull/2002)) |
-| **[mihem](https://github.com/mihem)** | Stronger active app highlight ([PR #2190](https://github.com/AvengeMedia/DankMaterialShell/pull/2190)) |
-| **[Mikilio](https://github.com/Mikilio)** | Retrieve WiFi/VPN secrets from D-Bus Secret Service with unlock support ([PR #2402](https://github.com/AvengeMedia/DankMaterialShell/pull/2402)) |
-| **[nemu626](https://github.com/nemu626)** | Show power rate (W) in DankBar battery widget. ([PR #1814](https://github.com/AvengeMedia/DankMaterialShell/pull/1814)) |
-| **[NikSneMC](https://github.com/NikSneMC)** | Add new includes for dms 1.4 ([PR #1998](https://github.com/AvengeMedia/DankMaterialShell/pull/1998)) |
-| **[odtgit](https://github.com/odtgit)** | Support file path substitutions for PWA icons ([PR #1867](https://github.com/AvengeMedia/DankMaterialShell/pull/1867)) |
-| **[philjackson](https://github.com/philjackson)** | Rewind to track start on previous when past 8 seconds ([PR #2136](https://github.com/AvengeMedia/DankMaterialShell/pull/2136)) |
-| **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** | • Add connect/disconnect, exit-node and LAN-access controls ([PR #2644](https://github.com/AvengeMedia/DankMaterialShell/pull/2644))<br/>• Make muting sounds during media playback configurable ([PR #2652](https://github.com/AvengeMedia/DankMaterialShell/pull/2652)) |
-| **[rollecode](https://github.com/rollecode)** | Add optional monochrome icons setting ([PR #2241](https://github.com/AvengeMedia/DankMaterialShell/pull/2241)) |
-| **[ronharel02](https://github.com/ronharel02)** | • Add color picker to launcher ([PR #1999](https://github.com/AvengeMedia/DankMaterialShell/pull/1999))<br/>• Add configurable control center group ordering ([PR #2006](https://github.com/AvengeMedia/DankMaterialShell/pull/2006))<br/>• Add adaptive sizing for the media widget ([PR #2165](https://github.com/AvengeMedia/DankMaterialShell/pull/2165))<br/>• Add optional inline expansion for system tray overflow ([PR #2171](https://github.com/AvengeMedia/DankMaterialShell/pull/2171))<br/>• Improve media seekbar scrubbing feedback and wave preview behavior ([PR #2181](https://github.com/AvengeMedia/DankMaterialShell/pull/2181)) |
-| **[scottmckendry](https://github.com/scottmckendry)** | Lockscreen screen filter ([PR #2740](https://github.com/AvengeMedia/DankMaterialShell/pull/2740)) |
-| **[SHORiN-KiWATA](https://github.com/SHORiN-KiWATA)** | Allow CatOS to run DMS installer ([PR #1768](https://github.com/AvengeMedia/DankMaterialShell/pull/1768)) |
-| **[Silzinc](https://github.com/Silzinc)** | • Add support for animated gifs as profile pictures ([PR #1804](https://github.com/AvengeMedia/DankMaterialShell/pull/1804))<br/>• Add setting to change and hotreload locale ([PR #1817](https://github.com/AvengeMedia/DankMaterialShell/pull/1817))<br/>• Add setting for first day of the week ([PR #1854](https://github.com/AvengeMedia/DankMaterialShell/pull/1854)) |
-| **[TheSynt4x](https://github.com/TheSynt4x)** | • Improve icon resolution and align switcher fallback styling ([PR #1823](https://github.com/AvengeMedia/DankMaterialShell/pull/1823))<br/>• Show memory widget in gb ([PR #1825](https://github.com/AvengeMedia/DankMaterialShell/pull/1825))<br/>• Add more disk usage viewing options ([PR #1833](https://github.com/AvengeMedia/DankMaterialShell/pull/1833)) |
-| **[xPathin](https://github.com/xPathin)** | Add FIDO2/U2F security key support for lock screen ([PR #1842](https://github.com/AvengeMedia/DankMaterialShell/pull/1842)) |
-| **[yechielw](https://github.com/yechielw)** | Add visual indication for connected bluetooth ([PR #2662](https://github.com/AvengeMedia/DankMaterialShell/pull/2662)) |
+| **[0xdeafbeef](https://github.com/0xdeafbeef)** | Highlight active workspace app tiles ([PR #1957](https://github.com/duxlabs-dev/dux-shell/pull/1957)) |
+| **[Adarsh219](https://github.com/Adarsh219)** | Add Zed editor theming support ([PR #1954](https://github.com/duxlabs-dev/dux-shell/pull/1954)) |
+| **[andrhua](https://github.com/andrhua)** | Persist last active player ([PR #2184](https://github.com/duxlabs-dev/dux-shell/pull/2184)) |
+| **[arfan21](https://github.com/arfan21)** | Added Settings Tab Autostart App (XDG Autostart) ([PR #2535](https://github.com/duxlabs-dev/dux-shell/pull/2535)) |
+| **[arora-archit](https://github.com/arora-archit)** | Add icon tinting ([PR #2266](https://github.com/duxlabs-dev/dux-shell/pull/2266)) |
+| **[augustocdias](https://github.com/augustocdias)** | • Enable use of videos as screensaver in the lock screen ([PR #1819](https://github.com/duxlabs-dev/dux-shell/pull/1819))<br/>• Add toggle to enable/disable auto connecting ([PR #1925](https://github.com/duxlabs-dev/dux-shell/pull/1925))<br/>• Show notification only on current focused display ([PR #1923](https://github.com/duxlabs-dev/dux-shell/pull/1923)) |
+| **[b0o](https://github.com/b0o)** | • Add openColor IPC handler to set color on open ([PR #2017](https://github.com/duxlabs-dev/dux-shell/pull/2017))<br/>• Separate workspace appearance for unfocused displays ([PR #2687](https://github.com/duxlabs-dev/dux-shell/pull/2687)) |
+| **[Bodify](https://github.com/Bodify)** | Add search/filter to saved clipboard entries & animation states ([PR #2464](https://github.com/duxlabs-dev/dux-shell/pull/2464)) |
+| **[Bogdan-Torkhov](https://github.com/Bogdan-Torkhov)** | Updated dynamic width options for DiskUsage widget ([PR #2517](https://github.com/duxlabs-dev/dux-shell/pull/2517)) |
+| **[bogdan-velicu](https://github.com/bogdan-velicu)** | Add opt-in timeout progress bar on popups ([PR #2587](https://github.com/duxlabs-dev/dux-shell/pull/2587)) |
+| **[cwelsys](https://github.com/cwelsys)** | Add 'Hide When Fullscreen' opt-out toggles ([PR #2349](https://github.com/duxlabs-dev/dux-shell/pull/2349)) |
+| **[dionjoshualobo](https://github.com/dionjoshualobo)** | Add type filters to clipboard history ([PR #2640](https://github.com/duxlabs-dev/dux-shell/pull/2640)) |
+| **[DK0280705](https://github.com/DK0280705)** | Fix and implement display auto-switching with JSON profile storage ([PR #2275](https://github.com/duxlabs-dev/dux-shell/pull/2275)) |
+| **[domenkozar](https://github.com/domenkozar)** | Blink WiFi/Bluetooth icons while connecting ([PR #2448](https://github.com/duxlabs-dev/dux-shell/pull/2448)) |
+| **[dvjn](https://github.com/dvjn)** | • Add cycleProfile IPC command and default Mod+P keybind ([PR #2411](https://github.com/duxlabs-dev/dux-shell/pull/2411))<br/>• Add Display Profiles builtin control center widget ([PR #2410](https://github.com/duxlabs-dev/dux-shell/pull/2410)) |
+| **[gbPagano](https://github.com/gbPagano)** | Add DiskUsage widget config overlay with showMountPath toggle and standardized tile sizing ([PR #2507](https://github.com/duxlabs-dev/dux-shell/pull/2507)) |
+| **[Gdetrane](https://github.com/Gdetrane)** | • Add manual printer by IP/hostname ([PR #1868](https://github.com/duxlabs-dev/dux-shell/pull/1868))<br/>• Add Tailscale control center widget ([PR #1875](https://github.com/duxlabs-dev/dux-shell/pull/1875)) |
+| **[hthienloc](https://github.com/hthienloc)** | • Add expandable search bar to plugins settings tab ([PR #2377](https://github.com/duxlabs-dev/dux-shell/pull/2377))<br/>• Consolidate plugin directory management into a single dynamic button ([PR #2400](https://github.com/duxlabs-dev/dux-shell/pull/2400))<br/>• Implement interactive microphone volume OSD and IPC controls ([PR #2406](https://github.com/duxlabs-dev/dux-shell/pull/2406))<br/>• Unify media controls dropdown interactions, hover behavior and cycle controls ([PR #2470](https://github.com/duxlabs-dev/dux-shell/pull/2470))<br/>• Add native powerprofile target for power profiles management ([PR #2515](https://github.com/duxlabs-dev/dux-shell/pull/2515))<br/>• Support scroll and right-click on audio output devices in media popout ([PR #2615](https://github.com/duxlabs-dev/dux-shell/pull/2615))<br/>• Add battery settings tab and update battery widget interactions ([PR #2634](https://github.com/duxlabs-dev/dux-shell/pull/2634))<br/>• Port critical battery alert from DankBatteryAlerts plugin ([PR #2664](https://github.com/duxlabs-dev/dux-shell/pull/2664))<br/>• Add option to hide package source badges in launcher ([PR #2676](https://github.com/duxlabs-dev/dux-shell/pull/2676))<br/>• Support configurable background color ([PR #2671](https://github.com/duxlabs-dev/dux-shell/pull/2671))<br/>• Add options to toggle percentage and remaining time ([PR #2672](https://github.com/duxlabs-dev/dux-shell/pull/2672))<br/>• Allow excluding specific media players by identity ([PR #2712](https://github.com/duxlabs-dev/dux-shell/pull/2712))<br/>• Add update all CLI flag and settings updates dialog ([PR #2682](https://github.com/duxlabs-dev/dux-shell/pull/2682)) |
+| **[IrisHormoviti](https://github.com/IrisHormoviti)** | • Add login sound functionality and settings entry ([PR #2155](https://github.com/duxlabs-dev/dux-shell/pull/2155))<br/>• Added Default Apps page to settings ([PR #2416](https://github.com/duxlabs-dev/dux-shell/pull/2416)) |
+| **[JamesFromFL](https://github.com/JamesFromFL)** | Add default app IPC actions ([PR #2546](https://github.com/duxlabs-dev/dux-shell/pull/2546)) |
+| **[jbwfu](https://github.com/jbwfu)** | • Add clipboard entry action visibility controls ([PR #2621](https://github.com/duxlabs-dev/dux-shell/pull/2621))<br/>• Expose saved WiFi networks in settings ([PR #2648](https://github.com/duxlabs-dev/dux-shell/pull/2648)) |
+| **[kanghengliu](https://github.com/kanghengliu)** | • Animate dock apps on entry addition/deletion ([PR #2064](https://github.com/duxlabs-dev/dux-shell/pull/2064))<br/>• Add FullscreenToplevel detection ([PR #2069](https://github.com/duxlabs-dev/dux-shell/pull/2069))<br/>• FileBrowser video thumbnail ([PR #2077](https://github.com/duxlabs-dev/dux-shell/pull/2077))<br/>• Expose accept keyboard focus to desktop widgets ([PR #2285](https://github.com/duxlabs-dev/dux-shell/pull/2285))<br/>• Expose screen var to desktop plugins ([PR #2300](https://github.com/duxlabs-dev/dux-shell/pull/2300)) |
+| **[klesh](https://github.com/klesh)** | User-configurable font size for notification summary and body ([PR #2461](https://github.com/duxlabs-dev/dux-shell/pull/2461)) |
+| **[lakapple](https://github.com/lakapple)** | • Have selected item at dropdown beginning on launch ([PR #1968](https://github.com/duxlabs-dev/dux-shell/pull/1968))<br/>• Add show week number option ([PR #1990](https://github.com/duxlabs-dev/dux-shell/pull/1990))<br/>• Add launcher history ([PR #2086](https://github.com/duxlabs-dev/dux-shell/pull/2086))<br/>• Add --raw flag ([PR #2103](https://github.com/duxlabs-dev/dux-shell/pull/2103)) |
+| **[lambdaclan](https://github.com/lambdaclan)** | Make dms color picker entry toggleable ([PR #2667](https://github.com/duxlabs-dev/dux-shell/pull/2667)) |
+| **[lichie567](https://github.com/lichie567)** | Improve content width calculation and add size options ([PR #2444](https://github.com/duxlabs-dev/dux-shell/pull/2444)) |
+| **[louzt](https://github.com/louzt)** | Expose scan/rescan/reload IPC handlers for runtime plugin discovery ([PR #2611](https://github.com/duxlabs-dev/dux-shell/pull/2611)) |
+| **[lpv11](https://github.com/lpv11)** | Add --no-confirm and --reset flags ([PR #2059](https://github.com/duxlabs-dev/dux-shell/pull/2059)) |
+| **[LuckShiba](https://github.com/LuckShiba)** | Improve context keyboard navigation and mode persistence ([PR #2467](https://github.com/duxlabs-dev/dux-shell/pull/2467)) |
+| **[merdely](https://github.com/merdely)** | Better keybinds ([PR #2002](https://github.com/duxlabs-dev/dux-shell/pull/2002)) |
+| **[mihem](https://github.com/mihem)** | Stronger active app highlight ([PR #2190](https://github.com/duxlabs-dev/dux-shell/pull/2190)) |
+| **[Mikilio](https://github.com/Mikilio)** | Retrieve WiFi/VPN secrets from D-Bus Secret Service with unlock support ([PR #2402](https://github.com/duxlabs-dev/dux-shell/pull/2402)) |
+| **[nemu626](https://github.com/nemu626)** | Show power rate (W) in DankBar battery widget. ([PR #1814](https://github.com/duxlabs-dev/dux-shell/pull/1814)) |
+| **[NikSneMC](https://github.com/NikSneMC)** | Add new includes for dms 1.4 ([PR #1998](https://github.com/duxlabs-dev/dux-shell/pull/1998)) |
+| **[odtgit](https://github.com/odtgit)** | Support file path substitutions for PWA icons ([PR #1867](https://github.com/duxlabs-dev/dux-shell/pull/1867)) |
+| **[philjackson](https://github.com/philjackson)** | Rewind to track start on previous when past 8 seconds ([PR #2136](https://github.com/duxlabs-dev/dux-shell/pull/2136)) |
+| **[Rocho-EL-Locho](https://github.com/Rocho-EL-Locho)** | • Add connect/disconnect, exit-node and LAN-access controls ([PR #2644](https://github.com/duxlabs-dev/dux-shell/pull/2644))<br/>• Make muting sounds during media playback configurable ([PR #2652](https://github.com/duxlabs-dev/dux-shell/pull/2652)) |
+| **[rollecode](https://github.com/rollecode)** | Add optional monochrome icons setting ([PR #2241](https://github.com/duxlabs-dev/dux-shell/pull/2241)) |
+| **[ronharel02](https://github.com/ronharel02)** | • Add color picker to launcher ([PR #1999](https://github.com/duxlabs-dev/dux-shell/pull/1999))<br/>• Add configurable control center group ordering ([PR #2006](https://github.com/duxlabs-dev/dux-shell/pull/2006))<br/>• Add adaptive sizing for the media widget ([PR #2165](https://github.com/duxlabs-dev/dux-shell/pull/2165))<br/>• Add optional inline expansion for system tray overflow ([PR #2171](https://github.com/duxlabs-dev/dux-shell/pull/2171))<br/>• Improve media seekbar scrubbing feedback and wave preview behavior ([PR #2181](https://github.com/duxlabs-dev/dux-shell/pull/2181)) |
+| **[scottmckendry](https://github.com/scottmckendry)** | Lockscreen screen filter ([PR #2740](https://github.com/duxlabs-dev/dux-shell/pull/2740)) |
+| **[SHORiN-KiWATA](https://github.com/SHORiN-KiWATA)** | Allow CatOS to run DMS installer ([PR #1768](https://github.com/duxlabs-dev/dux-shell/pull/1768)) |
+| **[Silzinc](https://github.com/Silzinc)** | • Add support for animated gifs as profile pictures ([PR #1804](https://github.com/duxlabs-dev/dux-shell/pull/1804))<br/>• Add setting to change and hotreload locale ([PR #1817](https://github.com/duxlabs-dev/dux-shell/pull/1817))<br/>• Add setting for first day of the week ([PR #1854](https://github.com/duxlabs-dev/dux-shell/pull/1854)) |
+| **[TheSynt4x](https://github.com/TheSynt4x)** | • Improve icon resolution and align switcher fallback styling ([PR #1823](https://github.com/duxlabs-dev/dux-shell/pull/1823))<br/>• Show memory widget in gb ([PR #1825](https://github.com/duxlabs-dev/dux-shell/pull/1825))<br/>• Add more disk usage viewing options ([PR #1833](https://github.com/duxlabs-dev/dux-shell/pull/1833)) |
+| **[xPathin](https://github.com/xPathin)** | Add FIDO2/U2F security key support for lock screen ([PR #1842](https://github.com/duxlabs-dev/dux-shell/pull/1842)) |
+| **[yechielw](https://github.com/yechielw)** | Add visual indication for connected bluetooth ([PR #2662](https://github.com/duxlabs-dev/dux-shell/pull/2662)) |
 
 ### General Contributions
 
 | Contributor | Contribution |
 |---|---|
-| **[01micko](https://github.com/01micko)** | Update deprecated syntax ([PR #1928](https://github.com/AvengeMedia/DankMaterialShell/pull/1928)) |
-| **[0xdeafbeef](https://github.com/0xdeafbeef)** | Run qmllint through Quickshell tooling VFS ([PR #1958](https://github.com/AvengeMedia/DankMaterialShell/pull/1958)) |
-| **[aaronjamt](https://github.com/aaronjamt)** | Change power profile by scrolling battery ([PR #2142](https://github.com/AvengeMedia/DankMaterialShell/pull/2142)) |
-| **[adienox](https://github.com/adienox)** | Add lexical-binding to emacs theme ([PR #2649](https://github.com/AvengeMedia/DankMaterialShell/pull/2649)) |
-| **[amaanq](https://github.com/amaanq)** | • Let module callers supply pkgs so overlays reach the build ([PR #2244](https://github.com/AvengeMedia/DankMaterialShell/pull/2244))<br/>• Expose `mkDmsShell` and `buildDmsPkgs` via lib output ([PR #2409](https://github.com/AvengeMedia/DankMaterialShell/pull/2409)) |
-| **[arora-archit](https://github.com/arora-archit)** | Generate theme for Vencord ([PR #2320](https://github.com/AvengeMedia/DankMaterialShell/pull/2320)) |
-| **[artrixdotdev](https://github.com/artrixdotdev)** | Add automatic overflow popup ([PR #2629](https://github.com/AvengeMedia/DankMaterialShell/pull/2629)) |
-| **[borisbabic](https://github.com/borisbabic)** | Support Hyprland lua dispatching ([PR #2419](https://github.com/AvengeMedia/DankMaterialShell/pull/2419)) |
-| **[corcoran](https://github.com/corcoran)** | Sort Dropdown's fuzzy search results by score and fix empty results on reopen ([PR #2051](https://github.com/AvengeMedia/DankMaterialShell/pull/2051)) |
-| **[cwelsys](https://github.com/cwelsys)** | • Add cups-pk-helper to recommended dependencies ([PR #1670](https://github.com/AvengeMedia/DankMaterialShell/pull/1670))<br/>• Hide MPRIS players that have nothing to play ([PR #2509](https://github.com/AvengeMedia/DankMaterialShell/pull/2509)) |
-| **[dev-dev-dev-dev-dev-dev-dev-dev](https://github.com/dev-dev-dev-dev-dev-dev-dev-dev)** | • CpuBaseline text as "100%" to reserve enough width - previously "88%" ([PR #2135](https://github.com/AvengeMedia/DankMaterialShell/pull/2135))<br/>• README.md - Update AUR badge to Arch ([PR #2228](https://github.com/AvengeMedia/DankMaterialShell/pull/2228)) |
-| **[euletheia](https://github.com/euletheia)** | Add DoNotDisturb & IdleInhibitor Indicators for the ControlCenterButton widget + Add optional icon to KeyboardLayoutName widget ([PR #2513](https://github.com/AvengeMedia/DankMaterialShell/pull/2513)) |
-| **[EvernightFedora](https://github.com/EvernightFedora)** | Add support for 'evernight' distribution in Fedora ([PR #1786](https://github.com/AvengeMedia/DankMaterialShell/pull/1786)) |
-| **[ezemtsov](https://github.com/ezemtsov)** | • Handle recycled server object IDs for workspace/group handles ([PR #1725](https://github.com/AvengeMedia/DankMaterialShell/pull/1725))<br/>• Support generic wlr-output-management-unstable-v1 ([PR #1840](https://github.com/AvengeMedia/DankMaterialShell/pull/1840)) |
-| **[goatnath](https://github.com/goatnath)** | Add local to-do planner / tasks to calendar overvie… ([PR #2583](https://github.com/AvengeMedia/DankMaterialShell/pull/2583)) |
-| **[GraemeF](https://github.com/GraemeF)** | Classify links by Type instead of name prefix ([PR #2447](https://github.com/AvengeMedia/DankMaterialShell/pull/2447)) |
-| **[greenm01](https://github.com/greenm01)** | Wait for location capability before requesting state ([PR #2476](https://github.com/AvengeMedia/DankMaterialShell/pull/2476)) |
-| **[hthienloc](https://github.com/hthienloc)** | • Sync toggle button between saved and recent tabs ([PR #2407](https://github.com/AvengeMedia/DankMaterialShell/pull/2407))<br/>• Ensure plugin browser install button resizes correctly ([PR #2431](https://github.com/AvengeMedia/DankMaterialShell/pull/2431))<br/>• Align status layout and add individual notification types ([PR #2743](https://github.com/AvengeMedia/DankMaterialShell/pull/2743)) |
-| **[ilkecan](https://github.com/ilkecan)** | Add `package` option for `dms-shell` ([PR #1864](https://github.com/AvengeMedia/DankMaterialShell/pull/1864)) |
-| **[jbwfu](https://github.com/jbwfu)** | • Split network page into subtabs ([PR #2633](https://github.com/AvengeMedia/DankMaterialShell/pull/2633))<br/>• Enhance/clipboard history interactions ([PR #2668](https://github.com/AvengeMedia/DankMaterialShell/pull/2668)) |
-| **[jgreimann-ionos](https://github.com/jgreimann-ionos)** | SystemUpdate widget: show terminal in case of failures ([PR #1845](https://github.com/AvengeMedia/DankMaterialShell/pull/1845)) |
-| **[joshsymonds](https://github.com/joshsymonds)** | • Expose tertiary on the singleton (was undefined in dynamic mode) ([PR #2375](https://github.com/AvengeMedia/DankMaterialShell/pull/2375))<br/>• Honor freedesktop suppress-sound hint ([PR #2440](https://github.com/AvengeMedia/DankMaterialShell/pull/2440)) |
-| **[joske](https://github.com/joske)** | Labwc service ([PR #2248](https://github.com/AvengeMedia/DankMaterialShell/pull/2248)) |
-| **[kanghengliu](https://github.com/kanghengliu)** | • Call context menu fallback for legacy protocol ([PR #1839](https://github.com/AvengeMedia/DankMaterialShell/pull/1839))<br/>• Add keybind to switch tabs and toggle pinned ([PR #2262](https://github.com/AvengeMedia/DankMaterialShell/pull/2262))<br/>• Add move workspace to monitor keybinds ([PR #2268](https://github.com/AvengeMedia/DankMaterialShell/pull/2268))<br/>• Add trash bin button ([PR #2277](https://github.com/AvengeMedia/DankMaterialShell/pull/2277))<br/>• Add ctrl+H/L navigation in grid mode ([PR #2688](https://github.com/AvengeMedia/DankMaterialShell/pull/2688)) |
-| **[khpark43](https://github.com/khpark43)** | Add missing XF86 key mappings ([PR #2500](https://github.com/AvengeMedia/DankMaterialShell/pull/2500)) |
-| **[lakapple](https://github.com/lakapple)** | • Improve image thumbnail ([PR #1759](https://github.com/AvengeMedia/DankMaterialShell/pull/1759))<br/>• Parity(danktoggle): follow m3 disabled state color specs ([PR #1973](https://github.com/AvengeMedia/DankMaterialShell/pull/1973)) |
-| **[lpv11](https://github.com/lpv11)** | Restore Hyprland special workspace windows on click ([PR #1924](https://github.com/AvengeMedia/DankMaterialShell/pull/1924)) |
-| **[LuckShiba](https://github.com/LuckShiba)** | • Add more commands to detection ([PR #1792](https://github.com/AvengeMedia/DankMaterialShell/pull/1792))<br/>• Update flake.lock ([PR #1809](https://github.com/AvengeMedia/DankMaterialShell/pull/1809))<br/>• Update DankBar selection ([PR #1894](https://github.com/AvengeMedia/DankMaterialShell/pull/1894))<br/>• Allow extra QT packages in dms-shell package ([PR #1903](https://github.com/AvengeMedia/DankMaterialShell/pull/1903))<br/>• Update flake.lock ([PR #2237](https://github.com/AvengeMedia/DankMaterialShell/pull/2237))<br/>• Add blur support ([PR #2236](https://github.com/AvengeMedia/DankMaterialShell/pull/2236))<br/>• Update quickshell version ([PR #2263](https://github.com/AvengeMedia/DankMaterialShell/pull/2263))<br/>• Add VM tests for flake modules ([PR #2281](https://github.com/AvengeMedia/DankMaterialShell/pull/2281))<br/>• Use quickshell from nixpkgs-unstable pkgs ([PR #2417](https://github.com/AvengeMedia/DankMaterialShell/pull/2417))<br/>• Add descriptions for DankBar -> Settings menu ([PR #2490](https://github.com/AvengeMedia/DankMaterialShell/pull/2490))<br/>• Remove keep-max-bpc-unchanged option ([PR #2528](https://github.com/AvengeMedia/DankMaterialShell/pull/2528))<br/>• Add optional=true to niri configs ([PR #2776](https://github.com/AvengeMedia/DankMaterialShell/pull/2776)) |
-| **[marcusramberg](https://github.com/marcusramberg)** | Core(doctor): show all detected terminals ([PR #2163](https://github.com/AvengeMedia/DankMaterialShell/pull/2163)) |
-| **[merdely](https://github.com/merdely)** | • Not everyone uses paru or yay on Arch: Support pacman command ([PR #1900](https://github.com/AvengeMedia/DankMaterialShell/pull/1900))<br/>• Implement ability to cycle through launcher modes ([PR #2003](https://github.com/AvengeMedia/DankMaterialShell/pull/2003)) |
-| **[Mikilio](https://github.com/Mikilio)** | Automatic Display Profiles Enhancement & Disabled Output Support ([PR #2367](https://github.com/AvengeMedia/DankMaterialShell/pull/2367)) |
-| **[nick-linux8](https://github.com/nick-linux8)** | • Issue:(Settings)Switched Neovim Mutagen Theme To Default False ([PR #1964](https://github.com/AvengeMedia/DankMaterialShell/pull/1964))<br/>• Compositor Pause Hardening ([PR #1980](https://github.com/AvengeMedia/DankMaterialShell/pull/1980))<br/>• Change Greetd logic to pull accent color ([PR #2000](https://github.com/AvengeMedia/DankMaterialShell/pull/2000)) |
-| **[odtgit](https://github.com/odtgit)** | Centralize icon resolution into Paths.resolveIconPath/resolveIconUrl ([PR #1880](https://github.com/AvengeMedia/DankMaterialShell/pull/1880)) |
-| **[PandorasFox](https://github.com/PandorasFox)** | Shader-based scrolling wallpaper mode ([PR #1802](https://github.com/AvengeMedia/DankMaterialShell/pull/1802)) |
-| **[ParticleG](https://github.com/ParticleG)** | Add headless mode support with command-line flags ([PR #2182](https://github.com/AvengeMedia/DankMaterialShell/pull/2182)) |
-| **[rochacbruno](https://github.com/rochacbruno)** | • Add dms-plugin-dev agent skill ([PR #2394](https://github.com/AvengeMedia/DankMaterialShell/pull/2394))<br/>• Skill(dms-plugin-dev): update for composite plugins, startupCheck, IPC discovery ([PR #2699](https://github.com/AvengeMedia/DankMaterialShell/pull/2699)) |
-| **[rPlakama](https://github.com/rPlakama)** | Pasterizing neovim. ([PR #1828](https://github.com/AvengeMedia/DankMaterialShell/pull/1828)) |
-| **[salah-walid](https://github.com/salah-walid)** | • Add terminal multiplexer launcher ([PR #1687](https://github.com/AvengeMedia/DankMaterialShell/pull/1687))<br/>• Make focused app widget only show focused app on the current screen ([PR #2152](https://github.com/AvengeMedia/DankMaterialShell/pull/2152)) |
-| **[Silzinc](https://github.com/Silzinc)** | • Search keybinds fixes ([PR #1748](https://github.com/AvengeMedia/DankMaterialShell/pull/1748))<br/>• Wifi QR code generation (requires testing) ([PR #1794](https://github.com/AvengeMedia/DankMaterialShell/pull/1794))<br/>• New neovim theme engine ([PR #1985](https://github.com/AvengeMedia/DankMaterialShell/pull/1985))<br/>• Neovim template enhancements ([PR #2078](https://github.com/AvengeMedia/DankMaterialShell/pull/2078)) |
-| **[SuNNjek](https://github.com/SuNNjek)** | Add GeoClue2 integration as alternative to IP location ([PR #1856](https://github.com/AvengeMedia/DankMaterialShell/pull/1856)) |
-| **[sunworms](https://github.com/sunworms)** | Added non-flake nix compatibility with flake-compat ([PR #2009](https://github.com/AvengeMedia/DankMaterialShell/pull/2009)) |
-| **[supposede](https://github.com/supposede)** | • Update toolbar button styles with primary color on Zen browser ([PR #1879](https://github.com/AvengeMedia/DankMaterialShell/pull/1879))<br/>• Update color variables in zen-userchrome.css because it got broken again ([PR #2246](https://github.com/AvengeMedia/DankMaterialShell/pull/2246)) |
-| **[Tobi-maru](https://github.com/Tobi-maru)** | False error Fix ([PR #2109](https://github.com/AvengeMedia/DankMaterialShell/pull/2109)) |
-| **[tulilirockz](https://github.com/tulilirockz)** | Use satty screenshot tool as default ([PR #2105](https://github.com/AvengeMedia/DankMaterialShell/pull/2105)) |
-| **[xPathin](https://github.com/xPathin)** | Emit ActiveChanged on lock/unlock ([PR #1761](https://github.com/AvengeMedia/DankMaterialShell/pull/1761)) |
-| **[Youseffo13](https://github.com/Youseffo13)** | • Added Missing i18n strings ([PR #1729](https://github.com/AvengeMedia/DankMaterialShell/pull/1729))<br/>• Added missing i18n strings and changed reset button ([PR #1746](https://github.com/AvengeMedia/DankMaterialShell/pull/1746))<br/>• Added plural support ([PR #1750](https://github.com/AvengeMedia/DankMaterialShell/pull/1750))<br/>• Wrapped all missing i18n strings ([PR #2013](https://github.com/AvengeMedia/DankMaterialShell/pull/2013))<br/>• Added Missing i18n Strings ([PR #2398](https://github.com/AvengeMedia/DankMaterialShell/pull/2398))<br/>• Add context to font weight keys, wrap render settings, fix uptime prefix ([PR #2529](https://github.com/AvengeMedia/DankMaterialShell/pull/2529))<br/>• Revamp of 25% pill option ([PR #2568](https://github.com/AvengeMedia/DankMaterialShell/pull/2568)) |
+| **[01micko](https://github.com/01micko)** | Update deprecated syntax ([PR #1928](https://github.com/duxlabs-dev/dux-shell/pull/1928)) |
+| **[0xdeafbeef](https://github.com/0xdeafbeef)** | Run qmllint through Quickshell tooling VFS ([PR #1958](https://github.com/duxlabs-dev/dux-shell/pull/1958)) |
+| **[aaronjamt](https://github.com/aaronjamt)** | Change power profile by scrolling battery ([PR #2142](https://github.com/duxlabs-dev/dux-shell/pull/2142)) |
+| **[adienox](https://github.com/adienox)** | Add lexical-binding to emacs theme ([PR #2649](https://github.com/duxlabs-dev/dux-shell/pull/2649)) |
+| **[amaanq](https://github.com/amaanq)** | • Let module callers supply pkgs so overlays reach the build ([PR #2244](https://github.com/duxlabs-dev/dux-shell/pull/2244))<br/>• Expose `mkDmsShell` and `buildDmsPkgs` via lib output ([PR #2409](https://github.com/duxlabs-dev/dux-shell/pull/2409)) |
+| **[arora-archit](https://github.com/arora-archit)** | Generate theme for Vencord ([PR #2320](https://github.com/duxlabs-dev/dux-shell/pull/2320)) |
+| **[artrixdotdev](https://github.com/artrixdotdev)** | Add automatic overflow popup ([PR #2629](https://github.com/duxlabs-dev/dux-shell/pull/2629)) |
+| **[borisbabic](https://github.com/borisbabic)** | Support Hyprland lua dispatching ([PR #2419](https://github.com/duxlabs-dev/dux-shell/pull/2419)) |
+| **[corcoran](https://github.com/corcoran)** | Sort Dropdown's fuzzy search results by score and fix empty results on reopen ([PR #2051](https://github.com/duxlabs-dev/dux-shell/pull/2051)) |
+| **[cwelsys](https://github.com/cwelsys)** | • Add cups-pk-helper to recommended dependencies ([PR #1670](https://github.com/duxlabs-dev/dux-shell/pull/1670))<br/>• Hide MPRIS players that have nothing to play ([PR #2509](https://github.com/duxlabs-dev/dux-shell/pull/2509)) |
+| **[dev-dev-dev-dev-dev-dev-dev-dev](https://github.com/dev-dev-dev-dev-dev-dev-dev-dev)** | • CpuBaseline text as "100%" to reserve enough width - previously "88%" ([PR #2135](https://github.com/duxlabs-dev/dux-shell/pull/2135))<br/>• README.md - Update AUR badge to Arch ([PR #2228](https://github.com/duxlabs-dev/dux-shell/pull/2228)) |
+| **[euletheia](https://github.com/euletheia)** | Add DoNotDisturb & IdleInhibitor Indicators for the ControlCenterButton widget + Add optional icon to KeyboardLayoutName widget ([PR #2513](https://github.com/duxlabs-dev/dux-shell/pull/2513)) |
+| **[EvernightFedora](https://github.com/EvernightFedora)** | Add support for 'evernight' distribution in Fedora ([PR #1786](https://github.com/duxlabs-dev/dux-shell/pull/1786)) |
+| **[ezemtsov](https://github.com/ezemtsov)** | • Handle recycled server object IDs for workspace/group handles ([PR #1725](https://github.com/duxlabs-dev/dux-shell/pull/1725))<br/>• Support generic wlr-output-management-unstable-v1 ([PR #1840](https://github.com/duxlabs-dev/dux-shell/pull/1840)) |
+| **[goatnath](https://github.com/goatnath)** | Add local to-do planner / tasks to calendar overvie… ([PR #2583](https://github.com/duxlabs-dev/dux-shell/pull/2583)) |
+| **[GraemeF](https://github.com/GraemeF)** | Classify links by Type instead of name prefix ([PR #2447](https://github.com/duxlabs-dev/dux-shell/pull/2447)) |
+| **[greenm01](https://github.com/greenm01)** | Wait for location capability before requesting state ([PR #2476](https://github.com/duxlabs-dev/dux-shell/pull/2476)) |
+| **[hthienloc](https://github.com/hthienloc)** | • Sync toggle button between saved and recent tabs ([PR #2407](https://github.com/duxlabs-dev/dux-shell/pull/2407))<br/>• Ensure plugin browser install button resizes correctly ([PR #2431](https://github.com/duxlabs-dev/dux-shell/pull/2431))<br/>• Align status layout and add individual notification types ([PR #2743](https://github.com/duxlabs-dev/dux-shell/pull/2743)) |
+| **[ilkecan](https://github.com/ilkecan)** | Add `package` option for `dms-shell` ([PR #1864](https://github.com/duxlabs-dev/dux-shell/pull/1864)) |
+| **[jbwfu](https://github.com/jbwfu)** | • Split network page into subtabs ([PR #2633](https://github.com/duxlabs-dev/dux-shell/pull/2633))<br/>• Enhance/clipboard history interactions ([PR #2668](https://github.com/duxlabs-dev/dux-shell/pull/2668)) |
+| **[jgreimann-ionos](https://github.com/jgreimann-ionos)** | SystemUpdate widget: show terminal in case of failures ([PR #1845](https://github.com/duxlabs-dev/dux-shell/pull/1845)) |
+| **[joshsymonds](https://github.com/joshsymonds)** | • Expose tertiary on the singleton (was undefined in dynamic mode) ([PR #2375](https://github.com/duxlabs-dev/dux-shell/pull/2375))<br/>• Honor freedesktop suppress-sound hint ([PR #2440](https://github.com/duxlabs-dev/dux-shell/pull/2440)) |
+| **[joske](https://github.com/joske)** | Labwc service ([PR #2248](https://github.com/duxlabs-dev/dux-shell/pull/2248)) |
+| **[kanghengliu](https://github.com/kanghengliu)** | • Call context menu fallback for legacy protocol ([PR #1839](https://github.com/duxlabs-dev/dux-shell/pull/1839))<br/>• Add keybind to switch tabs and toggle pinned ([PR #2262](https://github.com/duxlabs-dev/dux-shell/pull/2262))<br/>• Add move workspace to monitor keybinds ([PR #2268](https://github.com/duxlabs-dev/dux-shell/pull/2268))<br/>• Add trash bin button ([PR #2277](https://github.com/duxlabs-dev/dux-shell/pull/2277))<br/>• Add ctrl+H/L navigation in grid mode ([PR #2688](https://github.com/duxlabs-dev/dux-shell/pull/2688)) |
+| **[khpark43](https://github.com/khpark43)** | Add missing XF86 key mappings ([PR #2500](https://github.com/duxlabs-dev/dux-shell/pull/2500)) |
+| **[lakapple](https://github.com/lakapple)** | • Improve image thumbnail ([PR #1759](https://github.com/duxlabs-dev/dux-shell/pull/1759))<br/>• Parity(danktoggle): follow m3 disabled state color specs ([PR #1973](https://github.com/duxlabs-dev/dux-shell/pull/1973)) |
+| **[lpv11](https://github.com/lpv11)** | Restore Hyprland special workspace windows on click ([PR #1924](https://github.com/duxlabs-dev/dux-shell/pull/1924)) |
+| **[LuckShiba](https://github.com/LuckShiba)** | • Add more commands to detection ([PR #1792](https://github.com/duxlabs-dev/dux-shell/pull/1792))<br/>• Update flake.lock ([PR #1809](https://github.com/duxlabs-dev/dux-shell/pull/1809))<br/>• Update DankBar selection ([PR #1894](https://github.com/duxlabs-dev/dux-shell/pull/1894))<br/>• Allow extra QT packages in dms-shell package ([PR #1903](https://github.com/duxlabs-dev/dux-shell/pull/1903))<br/>• Update flake.lock ([PR #2237](https://github.com/duxlabs-dev/dux-shell/pull/2237))<br/>• Add blur support ([PR #2236](https://github.com/duxlabs-dev/dux-shell/pull/2236))<br/>• Update quickshell version ([PR #2263](https://github.com/duxlabs-dev/dux-shell/pull/2263))<br/>• Add VM tests for flake modules ([PR #2281](https://github.com/duxlabs-dev/dux-shell/pull/2281))<br/>• Use quickshell from nixpkgs-unstable pkgs ([PR #2417](https://github.com/duxlabs-dev/dux-shell/pull/2417))<br/>• Add descriptions for DankBar -> Settings menu ([PR #2490](https://github.com/duxlabs-dev/dux-shell/pull/2490))<br/>• Remove keep-max-bpc-unchanged option ([PR #2528](https://github.com/duxlabs-dev/dux-shell/pull/2528))<br/>• Add optional=true to niri configs ([PR #2776](https://github.com/duxlabs-dev/dux-shell/pull/2776)) |
+| **[marcusramberg](https://github.com/marcusramberg)** | Core(doctor): show all detected terminals ([PR #2163](https://github.com/duxlabs-dev/dux-shell/pull/2163)) |
+| **[merdely](https://github.com/merdely)** | • Not everyone uses paru or yay on Arch: Support pacman command ([PR #1900](https://github.com/duxlabs-dev/dux-shell/pull/1900))<br/>• Implement ability to cycle through launcher modes ([PR #2003](https://github.com/duxlabs-dev/dux-shell/pull/2003)) |
+| **[Mikilio](https://github.com/Mikilio)** | Automatic Display Profiles Enhancement & Disabled Output Support ([PR #2367](https://github.com/duxlabs-dev/dux-shell/pull/2367)) |
+| **[nick-linux8](https://github.com/nick-linux8)** | • Issue:(Settings)Switched Neovim Mutagen Theme To Default False ([PR #1964](https://github.com/duxlabs-dev/dux-shell/pull/1964))<br/>• Compositor Pause Hardening ([PR #1980](https://github.com/duxlabs-dev/dux-shell/pull/1980))<br/>• Change Greetd logic to pull accent color ([PR #2000](https://github.com/duxlabs-dev/dux-shell/pull/2000)) |
+| **[odtgit](https://github.com/odtgit)** | Centralize icon resolution into Paths.resolveIconPath/resolveIconUrl ([PR #1880](https://github.com/duxlabs-dev/dux-shell/pull/1880)) |
+| **[PandorasFox](https://github.com/PandorasFox)** | Shader-based scrolling wallpaper mode ([PR #1802](https://github.com/duxlabs-dev/dux-shell/pull/1802)) |
+| **[ParticleG](https://github.com/ParticleG)** | Add headless mode support with command-line flags ([PR #2182](https://github.com/duxlabs-dev/dux-shell/pull/2182)) |
+| **[rochacbruno](https://github.com/rochacbruno)** | • Add dms-plugin-dev agent skill ([PR #2394](https://github.com/duxlabs-dev/dux-shell/pull/2394))<br/>• Skill(dms-plugin-dev): update for composite plugins, startupCheck, IPC discovery ([PR #2699](https://github.com/duxlabs-dev/dux-shell/pull/2699)) |
+| **[rPlakama](https://github.com/rPlakama)** | Pasterizing neovim. ([PR #1828](https://github.com/duxlabs-dev/dux-shell/pull/1828)) |
+| **[salah-walid](https://github.com/salah-walid)** | • Add terminal multiplexer launcher ([PR #1687](https://github.com/duxlabs-dev/dux-shell/pull/1687))<br/>• Make focused app widget only show focused app on the current screen ([PR #2152](https://github.com/duxlabs-dev/dux-shell/pull/2152)) |
+| **[Silzinc](https://github.com/Silzinc)** | • Search keybinds fixes ([PR #1748](https://github.com/duxlabs-dev/dux-shell/pull/1748))<br/>• Wifi QR code generation (requires testing) ([PR #1794](https://github.com/duxlabs-dev/dux-shell/pull/1794))<br/>• New neovim theme engine ([PR #1985](https://github.com/duxlabs-dev/dux-shell/pull/1985))<br/>• Neovim template enhancements ([PR #2078](https://github.com/duxlabs-dev/dux-shell/pull/2078)) |
+| **[SuNNjek](https://github.com/SuNNjek)** | Add GeoClue2 integration as alternative to IP location ([PR #1856](https://github.com/duxlabs-dev/dux-shell/pull/1856)) |
+| **[sunworms](https://github.com/sunworms)** | Added non-flake nix compatibility with flake-compat ([PR #2009](https://github.com/duxlabs-dev/dux-shell/pull/2009)) |
+| **[supposede](https://github.com/supposede)** | • Update toolbar button styles with primary color on Zen browser ([PR #1879](https://github.com/duxlabs-dev/dux-shell/pull/1879))<br/>• Update color variables in zen-userchrome.css because it got broken again ([PR #2246](https://github.com/duxlabs-dev/dux-shell/pull/2246)) |
+| **[Tobi-maru](https://github.com/Tobi-maru)** | False error Fix ([PR #2109](https://github.com/duxlabs-dev/dux-shell/pull/2109)) |
+| **[tulilirockz](https://github.com/tulilirockz)** | Use satty screenshot tool as default ([PR #2105](https://github.com/duxlabs-dev/dux-shell/pull/2105)) |
+| **[xPathin](https://github.com/xPathin)** | Emit ActiveChanged on lock/unlock ([PR #1761](https://github.com/duxlabs-dev/dux-shell/pull/1761)) |
+| **[Youseffo13](https://github.com/Youseffo13)** | • Added Missing i18n strings ([PR #1729](https://github.com/duxlabs-dev/dux-shell/pull/1729))<br/>• Added missing i18n strings and changed reset button ([PR #1746](https://github.com/duxlabs-dev/dux-shell/pull/1746))<br/>• Added plural support ([PR #1750](https://github.com/duxlabs-dev/dux-shell/pull/1750))<br/>• Wrapped all missing i18n strings ([PR #2013](https://github.com/duxlabs-dev/dux-shell/pull/2013))<br/>• Added Missing i18n Strings ([PR #2398](https://github.com/duxlabs-dev/dux-shell/pull/2398))<br/>• Add context to font weight keys, wrap render settings, fix uptime prefix ([PR #2529](https://github.com/duxlabs-dev/dux-shell/pull/2529))<br/>• Revamp of 25% pill option ([PR #2568](https://github.com/duxlabs-dev/dux-shell/pull/2568)) |
 
 ## Resources
 
@@ -882,9 +882,9 @@ DMS 1.5, and the hotfix series leading up to it, would not be possible without t
 </a>
 
 <div className={styles.linksRow}>
-  <a href="https://github.com/AvengeMedia/DankMaterialShell" className={styles.supportLink}>GitHub</a>
+  <a href="https://github.com/duxlabs-dev/dux-shell" className={styles.supportLink}>GitHub</a>
   <span className={styles.linkDivider}>•</span>
-  <a href="https://danklinux.com/docs/" className={styles.supportLink}>Documentation</a>
+  <a href="https://duxlabs.dev/docs/" className={styles.supportLink}>Documentation</a>
   <span className={styles.linkDivider}>•</span>
   <a href="https://plugins.danklinux.com" className={styles.supportLink}>Plugins</a>
   <span className={styles.linkDivider}>•</span>
@@ -892,7 +892,7 @@ DMS 1.5, and the hotfix series leading up to it, would not be possible without t
   <span className={styles.linkDivider}>•</span>
   <a href="https://github.com/sponsors/AvengeMedia" className={styles.supportLink}>Sponsor on GitHub</a>
   <span className={styles.linkDivider}>•</span>
-  <a href="https://ko-fi.com/danklinux" className={styles.supportLink}>Support on Ko-fi</a>
+  <a href="https://ko-fi.com/duxlabs" className={styles.supportLink}>Support on Ko-fi</a>
 </div>
 
 <div className={styles.niriThanks}>

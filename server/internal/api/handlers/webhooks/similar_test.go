@@ -5,7 +5,7 @@ import "testing"
 const emptyBody = "Body text\n\n" + similarStart + "\n" + similarEnd + "\n\n<!-- dms-plugin-id: worldClockMulti -->"
 
 func testRender(entries []similarEntry) string {
-	return renderSimilarBlock(entries, func(id string) string { return id }, "AvengeMedia", "dms-plugin-registry")
+	return renderSimilarBlock(entries, func(id string) string { return id }, "duxlabs-dev", "dux-plugin-registry")
 }
 
 func TestParseSimilarCommands(t *testing.T) {

@@ -3,9 +3,9 @@ package gifs_handler
 import (
 	"net/http"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/api/server"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/integrations/klipy"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/api/server"
+	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/klipy"
 )
 
 type HandlerGroup struct {

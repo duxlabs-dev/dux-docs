@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/integrations/github"
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/models"
+	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/github"
+	"github.com/duxlabs-dev/dux-docs/server/internal/models"
 )
 
 const statusLabelPrefix = "status:"
@@ -30,7 +30,7 @@ func (p *Parser) FetchFeedback(ctx context.Context) (map[string]Feedback, error)
 		return nil, err
 	}
 
-	issues, err := client.ListIssues(ctx, "AvengeMedia", "dms-plugin-registry", "plugin")
+	issues, err := client.ListIssues(ctx, "duxlabs-dev", "dux-plugin-registry", "plugin")
 	if err != nil {
 		return nil, err
 	}

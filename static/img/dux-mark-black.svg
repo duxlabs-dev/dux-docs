@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" fill="none">
+  <defs>
+    <linearGradient id="duxGradLight" x1="10%" y1="10%" x2="90%" y2="90%">
+      <stop offset="0%" stop-color="#6B21A8"/>
+      <stop offset="50%" stop-color="#581C87"/>
+      <stop offset="100%" stop-color="#3B0764"/>
+    </linearGradient>
+    <linearGradient id="duxAccentLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9333EA" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#6B21A8" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer Dux D Shape -->
+  <path d="M18 16 H54 C74 16 88 28 88 50 C88 72 74 84 54 84 H18 Z" fill="url(#duxGradLight)" />
+  <!-- Inner Cutout -->
+  <path d="M34 32 H52 C64 32 72 38 72 50 C72 62 64 68 52 68 H34 Z" fill="#FFFFFF" />
+  <!-- Modern Geometric Accent -->
+  <path d="M34 32 L56 50 L34 68 Z" fill="url(#duxAccentLight)" opacity="0.9" />
+  <path d="M34 42 L44 50 L34 58 Z" fill="#FFFFFF" />
+</svg>

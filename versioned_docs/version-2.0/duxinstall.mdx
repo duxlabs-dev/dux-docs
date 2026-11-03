@@ -1,0 +1,263 @@
+---
+title: Dux Installer
+description: Interactive installer for the full Dux suite
+sidebar_position: 2.5
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗    ██╗███╗   ██╗███████╗████████╗ █████╗ ██╗     ██╗     ███████╗██████╗ 
+██╔══██╗██║   ██║╚██╗██╔╝    ██║████╗  ██║██╔════╝╚══██╔══╝██╔══██╗██║     ██║     ██╔════╝██╔══██╗
+██║  ██║██║   ██║ ╚███╔╝     ██║██╔██╗ ██║███████╗   ██║   ███████║██║     ██║     █████╗  ██████╔╝
+██║  ██║██║   ██║ ██╔██╗     ██║██║╚██╗██║╚════██║   ██║   ██╔══██║██║     ██║     ██╔══╝  ██╔══██╗
+██████╔╝╚██████╔╝██╔╝ ██╗    ██║██║ ╚████║███████║   ██║   ██║  ██║███████╗███████╗███████╗██║  ██║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝    ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝`}
+  hideTitle={true}
+/>
+
+The **Dux Installer** (`duxinstall`) sets up the full [Dux Shell](./dms/overview.mdx) desktop experience - wallpapers, auto-theming, notifications, lock screen, and everything else you'd expect from a modern desktop. It installs packages and configures user-level settings for your compositor and terminal. If you already have niri or Hyprland set up, the installer can work around your existing config (and always backs things up before making changes).
+
+## Quickstart
+
+```bash
+curl -fsSL https://install.duxlabs.dev | sh
+```
+
+:::tip
+
+The installer is interactive and guides you through setup for your distribution. You can also download the [latest release](https://github.com/duxlabs-dev/dux-shell/releases) manually.
+
+:::
+
+## Headless Install
+
+Pass `--compositor`, `--term`, and `--yes` to run the installer unattended — no TUI, no prompts. Useful for scripting or provisioning a fresh system.
+
+```bash
+sudo -v && curl -fsSL https://install.duxlabs.dev | sh -s -- -c niri -t ghostty -y
+```
+
+Headless mode needs cached credentials or a passwordless rule for your privilege escalation tool (sudo, doas, or run0) — otherwise it errors out before doing anything. With sudo, run `sudo -v` first.
+
+On an image-based host (Fedora Atomic, bootc) headless mode never installs packages. If anything is missing it prints the `rpm-ostree` commands and exits non-zero; layer them, reboot, and rerun the same command to deploy the configuration.
+
+### Flags
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--compositor <niri\|hyprland\|mango>` | `-c` | Compositor to install. Required for headless. |
+| `--term <ghostty\|kitty\|alacritty>` | `-t` | Terminal to install. Required for headless. |
+| `--yes` | `-y` | Required for headless — confirms installation without prompts. |
+| `--privesc <sudo\|doas\|run0>` | | Privilege escalation tool. Autodetected by default. |
+| `--git` | | Install the git version of every dep that has one. |
+| `--git-deps <name,...>` | | Install the git version of specific deps (e.g. `niri,quickshell`). |
+| `--all-features` | | Enable all optional deps (`dms-greeter`, `danksearch`, `dankcalendar`). |
+| `--dms-greeter` | | Install dms-greeter (`dux-greeter` package). |
+| `--danksearch` | | Install dsearch (`dux-search` package) and enable its user indexing service. |
+| `--dankcalendar` | | Install dcal (`dux-calendar` package). |
+| `--include-deps <name,...>` | | Enable optional deps that are off by default (e.g. `dms-greeter`). |
+| `--exclude-deps <name,...>` | | Skip specific deps. |
+| `--replace-configs <name,...>` | | Replace only the listed configs: `niri`, `hyprland`, `ghostty`, `kitty`, `alacritty`. |
+| `--replace-configs-all` | | Replace all configs. Mutually exclusive with `--replace-configs`. |
+
+By default, existing compositor and terminal configs are left alone — pass one of the `--replace-configs` flags to change that. Missing configs are always deployed. Existing files are backed up before any replacement.
+
+Deps already installed as stable are reinstalled when `--git` or `--git-deps` selects their git variant.
+
+Example with greeter enabled and all configs replaced:
+
+```bash
+sudo -v && curl -fsSL https://install.duxlabs.dev | sh -s -- \
+  -c hyprland -t kitty --dms-greeter --replace-configs-all -y
+```
+
+Example with git niri and quickshell plus all optional deps:
+
+```bash
+sudo -v && curl -fsSL https://install.duxlabs.dev | sh -s -- \
+  -c niri -t ghostty --git-deps niri,quickshell --all-features -y
+```
+
+:::info[Logs]
+
+Logs are written to `/tmp/duxinstall-<timestamp>.log`. Set `DUXINSTALL_LOG_DIR` to override the directory.
+
+:::
+
+## What Gets Installed
+
+### Core Components
+- **[Dux Shell](./dms/overview.mdx)** - The desktop shell built with quickshell & Go.
+- **Compositor** - Your choice of [niri](https://github.com/niri-wm/niri) or [Hyprland](https://hypr.land). With Hyprland, duxinstall also installs `hyprland-guiutils` (Hyprland's dialogs and helper apps). DMS needs Hyprland 0.55 or newer; on an older Hyprland, duxinstall won't write the Lua config
+- **Terminal** - Ghostty, with Kitty and Alacritty as alternatives
+- **dms CLI** - Backend service providing dbus APIs, plugin management, and wayland protocol implementations
+
+### Desktop Utilities
+- **quickshell** - The QML-based shell framework powering DMS
+- **matugen** - Auto-theming engine that generates color schemes from wallpapers
+- **dsearch** - Blazingly fast filesystem search.
+- **wl-clipboard** - Clipboard utilities for Wayland
+
+### System Packages
+Build dependencies: git, jq, curl, wget, go, cmake, rustup. The exact package list varies by distribution.
+
+## Supported Distributions
+
+### Arch Linux & Derivatives
+
+**Supported:** Arch, ArchARM, Archcraft, CachyOS, EndeavourOS, Manjaro
+
+Uses `pacman` for system packages from official repos, including `dux-shell`, quickshell and matugen from extra. Builds AUR packages (git variants and the optional greeter, search and calendar) using `makepkg` - no AUR helper needed. niri, hyprland and hyprland-guiutils are available in official repos.
+
+If you're using archinstall, the `minimal` profile with `NetworkManager` for networking is a good starting point.
+
+### Fedora & Derivatives
+
+**Supported:** Fedora, Nobara, Fedora Asahi Remix
+
+Almost everything comes from official repos or COPR repositories (`duxlabs/dux-repo`, `duxlabs/dms`, `lionheartp/Hyprland` for Hyprland and hyprland-guiutils, `yalter/niri`).
+
+The installer is tested on Workstation Edition but should work fine on any Fedora flavor.
+
+### Fedora Atomic & bootc images
+
+**Supported:** Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, Zirconium, and other rpm-ostree or bootc images based on Fedora
+
+The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
+
+### Enterprise Linux 10
+
+**Supported (testing):** RHEL 10.2+, CentOS Stream 10, Rocky Linux 10.2+, AlmaLinux 10.2+ (always the latest EL 10 minor; older minors lag the Qt baseline the packages are built against)
+
+The installer enables EPEL 10 and the same COPR repositories as Fedora. **niri only** - the Hyprland COPR and Terra (mango) do not build for EL. Terminals come from EPEL (`kitty`) or the `duxlabs/dux-repo` COPR (`ghostty` on x86_64, `alacritty`), which also provides `xwayland-satellite`, `greetd`, and `cava` since EPEL 10 lacks them.
+
+Hyprland, mango and miracle-wm are not supported on EL and are not planned. A community COPR, [kmf/dank-ws-copr](https://copr.fedorainfracloud.org/coprs/kmf/dank-ws-copr/), packages that stack for EL 10, but it replaces several system libraries (lua, libxkbcommon, iniparser, pixman, libdrm) and can conflict with packages such as wireplumber. Use it at your own risk; issues with those compositors on EL should go to that project.
+
+### Ubuntu
+
+**Supported:** Ubuntu 26.04 LTS+ (Resolute Raccoon)
+
+Packages come from the [Dux Labs PPA](./repo#ubuntu) (`ppa:duxlabs/dux-repo`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
+
+### Debian
+
+**Supported:** Debian 13+ (Trixie), Debian Testing, Debian Sid
+
+Packages come from the [Dux OBS repository](./repo#debian). **niri only** - Debian doesn't have Hyprland packages yet.
+
+### PikaOS
+
+**Supported:** PikaOS 4+ (Nest, Debian Sid based)
+
+Everything comes from the PikaOS repository: PikaOS mirrors the Dux Labs packages (dms, dms-greeter, danksearch, dankcalendar) and builds its own quickshell, niri, Hyprland, matugen and ghostty. duxinstall adds no third-party repositories on PikaOS.
+
+PikaOS also ships `pika-shell-profile-dank`, its own DMS session profile applied with `pika-shell-apply`. duxinstall writes its own compositor configs instead; pick one or the other.
+
+### openSUSE Tumbleweed
+
+Good package availability out of the box. niri, hyprland, hyprland-guiutils, ghostty, and most tools are in standard repos. Additional packages come from the [Dux Labs OBS repository](./repo#opensuse).
+
+### Gentoo
+
+:::warning
+
+Gentoo requires a **systemd** installation. OpenRC is not supported.
+
+:::
+
+**Special Notes:**
+- Gentoo installs are **highly variable** and user-specific, success is not guaranteed.
+  - The installer is most likely to succeed on a fresh stage3/systemd system
+- Uses Portage package manager with GURU overlay for additional packages
+- Automatically configures global USE flags in `/etc/portage/make.conf`
+  - Will create or append to your existing USE flags.
+- Automatically configures package-specific USE flags in `/etc/portage/package.use/danklinux`
+- Unmasks packages as-needed with architecture keywords in `/etc/portage/package.accept_keywords/danklinux`
+- Supports both `amd64` and `arm64` architectures dynamically
+- If not using bin packages, prepare for long compilation times
+- **Ghostty** is removed from the options, due to extremely long compilation time of its
+
+**Package Sources:**
+| Package | Source | Notes |
+|---------|---------|-------|
+| System packages (git, etc.) | Official repos | Via `emerge` |
+| niri | GURU overlay | With dbus and screencast USE flags |
+| hyprland | Official repos (GURU for -git) | Depends on variant selection, with X USE flag |
+| quickshell | GURU overlay | Always uses live ebuild (`**` keywords), full feature set |
+| matugen | GURU overlay | Color generation tool |
+| xdg-desktop-portal-gtk | Official repos | With wayland and X USE flags |
+| mate-polkit | Official repos | PolicyKit authentication agent |
+| accountsservice | Official repos | User account management |
+| xwayland-satellite | Manual | For niri X11 app support |
+| Dux Shell | Manual | Git clone to `~/.config/quickshell/dms` |
+
+**Global USE Flags:**
+`dbus udev alsa policykit jpeg png webp gif tiff svg brotli gdbm accessibility gtk qt6 egl gbm`
+
+**Package-Specific USE Flags:**
+- `sys-apps/xdg-desktop-portal-gtk`: wayland X
+- `gui-wm/niri`: dbus screencast
+- `gui-wm/hyprland`: X
+- `dev-qt/qtbase`: wayland opengl vulkan widgets
+- `dev-qt/qtdeclarative`: opengl vulkan
+- `media-libs/mesa`: opengl vulkan
+- `gui-apps/quickshell`: breakpad jemalloc sockets wayland layer-shell session-lock toplevel-management screencopy X pipewire tray mpris pam hyprland hyprland-global-shortcuts hyprland-focus-grab i3 i3-ipc bluetooth
+
+## What About Manual Building?
+
+Most distros now have pre-built packages via the [Dux Repository](./repo). The installer handles any remaining builds automatically:
+
+- **Gentoo** - Still builds most packages from source via Portage (see above).
+
+## Managing Your Setup
+
+The Dux Installer configures DMS as a **systemd user service** by default. The shell starts automatically when you log in - no need to add anything to your compositor config.
+
+```bash
+# Restart the shell (works with both systemd and manual setups)
+dms restart
+
+# Check service status
+systemctl --user status dms
+
+# View logs
+journalctl --user -u dms -f
+
+# Interactive management TUI
+dms
+
+# Send IPC commands to running shell
+dms ipc <command>
+```
+
+:::tip
+
+See [Managing Your Installation](./dms/managing) for details on switching between systemd and manual startup, environment variable configuration, and more.
+
+:::
+
+### Environment Variables
+
+The installer creates `~/.config/environment.d/90-dms.conf` with environment variables for Qt/GTK theming and Wayland compatibility. If you need to change Qt platform theming (e.g., switching from `gtk3` to `qt6ct`), edit this file and log out/in for changes to take effect.
+
+You can also run `systemctl --user edit dms` and add `Environment=VAR=Value` lines under `[Service]`. This only affects DMS and apps it launches, whereas `90-dms.conf` applies to all user sessions.
+
+### Privilege Escalation
+
+Any `dms` CLI command that needs root - `duxinstall`, `dms-greeter sync`, `dms-greeter install`, and the like - will prompt when both `sudo` and `run0` are detected:
+
+```
+Multiple privilege escalation tools detected:
+  [1] sudo
+  [2] run0
+Choose one [1-2] (default 1, or set DMS_PRIVESC=<tool> to skip)
+```
+
+Set `DMS_PRIVESC` to pin one tool and skip the prompt everywhere:
+
+```bash
+export DMS_PRIVESC=sudo   # or: run0
+```
+
+Drop it in your shell profile (`.bashrc`, `.zshrc`, etc.) if you want it permanent. Optional — if only one tool is installed, it's picked automatically.

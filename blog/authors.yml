@@ -1,6 +1,13 @@
 danklinux:
-  name: Dank Linux Team
-  url: https://github.com/AvengeMedia
+  name: Dux Labs
+  url: https://github.com/duxlabs-dev
   image_url: /img/apple-touch-icon.png
   socials:
-    github: AvengeMedia
+    github: duxlabs-dev
+
+duxlabs:
+  name: Dux Labs
+  url: https://github.com/duxlabs-dev
+  image_url: /img/apple-touch-icon.png
+  socials:
+    github: duxlabs-dev

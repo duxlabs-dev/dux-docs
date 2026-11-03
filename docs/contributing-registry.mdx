@@ -1,6 +1,6 @@
 ---
 title: Contributing to the Registry
-description: How to contribute plugins and themes to the DankMaterialShell registry
+description: How to contribute plugins and themes to the Dux Shell registry
 ---
 
 import Hero from '@site/src/components/Hero';
@@ -15,14 +15,14 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Thank you for contributing to the DankMaterialShell registry! This guide covers how to submit plugins and themes to the [dms-plugin-registry](https://github.com/AvengeMedia/dms-plugin-registry) repository.
+Thank you for contributing to the Dux Shell registry! This guide covers how to submit plugins and themes to the [dms-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) repository.
 
 ## Contributing a Plugin
 
 ### How to Add Your Plugin
 
 1. **Fork the repository**
-   - Go to [AvengeMedia/dms-plugin-registry](https://github.com/AvengeMedia/dms-plugin-registry) and click Fork
+   - Go to [duxlabs-dev/dux-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) and click Fork
 
 2. **Create a new JSON file** in the `plugins/` directory:
    ```
@@ -57,8 +57,8 @@ Thank you for contributing to the DankMaterialShell registry! This guide covers 
 |-------|----------|-------------|
 | `id` | Yes | Unique identifier in camelCase (e.g., `worldClock`). Must match your `plugin.json` |
 | `name` | Yes | Display name. Must match your `plugin.json` |
-| `capabilities` | Yes | Array like `["dankbar-widget"]` |
-| `category` | Yes | One of: `monitoring`, `utilities`, `appearance`, `system`, etc. |
+| `capabilities` | Yes | Plugin types, used by the directory's Type filter: `dankbar-widget`, `control-center`, `launcher`, `daemon`, `desktop-widget`, `dash-tab`, `dash-card`. Types declared in your `plugin.json` (`type` or `components`) are added automatically. Extra free-form entries are allowed |
+| `category` | Yes | One of: `utilities`, `monitoring`, `system`, `appearance`, `productivity`, `media`, `networking` |
 | `repo` | Yes | Full GitHub URL to your plugin repository |
 | `path` | No | Subdirectory path if plugin is in a monorepo |
 | `author` | Yes | Your name or GitHub username |
@@ -86,7 +86,7 @@ python3 .github/validate_links.py
 
 When your plugin is merged, a tracking issue is automatically opened for it in the registry. This issue is the plugin's home for feedback:
 
-- **Upvoting** — anyone can give the issue a 👍 reaction. The [plugin directory](https://danklinux.com/plugins) ranks plugins by upvotes, so reactions directly affect visibility.
+- **Upvoting** — anyone can give the issue a 👍 reaction. The [plugin directory](https://duxlabs.dev/plugins) ranks plugins by upvotes, so reactions directly affect visibility.
 - **Status** — maintainers flag plugins by commenting commands on the issue, shown as badges in the directory:
 
   | Command | Badge |
@@ -107,7 +107,7 @@ The directory links to each plugin's issue from its **Discuss** button.
 
 ### Plugin Translations
 
-Any plugin can ship its own translations — a `translations/` directory with one JSON file per locale, loaded by DMS automatically. No approval needed, no registry involvement. See [Translations](dankmaterialshell/plugin-development#translations) in the development guide for the file format and the `I18n.trFor` API.
+Any plugin can ship its own translations — a `translations/` directory with one JSON file per locale, loaded by DMS automatically. No approval needed, no registry involvement. See [Translations](dms/plugin-development#translations) in the development guide for the file format and the `I18n.trFor` API.
 
 On top of that, registry plugins can apply to join the central DMS POEditor project — the same one community translators use for DMS itself, currently covering 21 languages. Approved plugins get their strings translated alongside the shell, and finished translations come back to the plugin repo as PRs.
 
@@ -133,7 +133,7 @@ Once your strings are in POEditor, renaming a term is a delete-plus-add — the 
 ### How to Add Your Theme
 
 1. **Fork the repository**
-   - Go to [AvengeMedia/dms-plugin-registry](https://github.com/AvengeMedia/dms-plugin-registry) and click Fork
+   - Go to [duxlabs-dev/dux-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) and click Fork
 
 2. **Create a new folder** in the `themes/` directory:
    ```
@@ -234,12 +234,12 @@ Both `dark` and `light` objects require these color properties:
 
 :::note[Not all colors are used by DMS itself]
 `surfaceContainerLowest`, `surfaceContainerLow`, and `backgroundText` are not rendered by
-DankMaterialShell's own UI. They complete the Material palette and are exported to matugen
+Dux Shell's own UI. They complete the Material palette and are exported to matugen
 templates (VS Code, KDE, Firefox, Zed, etc.), so external apps themed via DMS use them. They
 are still required for a valid theme — pick sensible values that fit your palette.
 :::
 
-For more details on how these colors are used, see [Custom Themes](/docs/dankmaterialshell/custom-themes).
+For more details on how these colors are used, see [Custom Themes](/docs/dms/custom-themes).
 
 4. **Validate your theme locally**:
 
@@ -272,4 +272,4 @@ python3 .github/generate.py --validate
 
 ## Questions?
 
-If you have questions about the contribution process, please [open an issue](https://github.com/AvengeMedia/dms-plugin-registry/issues) in the registry repository.
+If you have questions about the contribution process, please [open an issue](https://github.com/duxlabs-dev/dux-plugin-registry/issues) in the registry repository.

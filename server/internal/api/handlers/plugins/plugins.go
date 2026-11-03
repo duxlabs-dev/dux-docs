@@ -5,8 +5,8 @@ package plugins_handler
 import (
 	"net/http"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/api/server"
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/duxlabs-dev/dux-docs/server/internal/api/server"
 )
 
 type HandlerGroup struct {
@@ -24,7 +24,7 @@ func RegisterHandlers(server *server.Server, grp *huma.Group) {
 		huma.Operation{
 			OperationID: "get-plugins",
 			Summary:     "Get All Plugins",
-			Description: "Get All Plugins from the Dank Linux Registry",
+			Description: "Get All Plugins from the Dux Registry",
 			Path:        "",
 			Method:      http.MethodGet,
 		},

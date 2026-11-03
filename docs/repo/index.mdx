@@ -1,0 +1,441 @@
+---
+title: Dux Labs Package Repository
+description: Pre-built packages for Fedora, CentOS, Debian, Ubuntu, OpenSUSE, and Void Linux
+---
+
+import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗    ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
+██╔══██╗██║   ██║╚██╗██╔╝    ██║     ██║████╗  ██║██║   ██║╚██╗██╔╝
+██║  ██║██║   ██║ ╚███╔╝     ██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝
+██║  ██║██║   ██║ ██╔██╗     ██║     ██║██║╚██╗██║██║   ██║ ██╔██╗
+██████╔╝╚██████╔╝██╔╝ ██╗    ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝    ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝`}
+  hideTitle={true}
+/>
+
+# Dux Labs Package Repository
+
+The **Dux Labs Repository** provides pre-built packages for **Dux Shell** and **niri**! \
+Dux Shell is now available on more distributions than ever before!
+
+- [**Fedora**](https://fedoraproject.org/) | [**CentOS**](https://www.centos.org/) | [**OpenSUSE**](https://www.opensuse.org/)
+- [**Debian**](https://www.debian.org/) | [**Ubuntu**](https://ubuntu.com/) | [**Void Linux**](https://voidlinux.org/)
+
+### Desktop Environment
+- **Dux Shell (dms)**: The complete desktop shell with widgets and CLI tools
+- **Dux Shell (dms-git)**: Development build with latest features
+
+### Compositors
+- [**Niri**](https://github.com/niri-wm/niri): Scrollable-tiling Wayland compositor
+- [**Niri-git**](https://github.com/niri-wm/niri): Development build of niri
+
+### Core Framework
+- [**Quickshell**](https://github.com/quickshell-mirror/quickshell): QtQuick-based Wayland desktop shell framework — on **Debian**, use the native package (see below); Dux Labs builds remain for other distros
+- [**Quickshell-git**](https://github.com/quickshell-mirror/quickshell): Development build of Quickshell (Dux Labs repositories)
+
+### Utilities
+- [**dgop**](https://github.com/duxlabs-dev/dux-gop): Stateless CPU/GPU monitor system by Dux Labs
+- [**dsearch**](https://github.com/duxlabs-dev/dux-search): a Blazingly fast filesystem search tool by Dux Labs
+- [**Dux Calendar**](https://github.com/duxlabs-dev/dux-calendar) (`dcal`): Standalone calendar app for Local, Google, Microsoft, CalDAV, and iCloud — packages **`dcal`** and **`dcal-git`**
+- [**Dux Files**](https://github.com/duxlabs-dev/dux-files) (`dfiles`): File manager with the Dux Shell look — packages **`dux-files`** and **`dux-files-git`**
+- [**matugen**](https://github.com/InioX/matugen): Material Design 3 color palette generator for themes
+- [**xWayland-Satellite**](https://github.com/Supreeeme/xwayland-satellite): XWayland integration tool
+- [**xWayland-Satellite-git**](https://github.com/Supreeeme/xwayland-satellite): Development build of xWayland-Satellite
+
+## How to Install
+
+### Installing Dux Shell (DMS)
+
+For complete DMS installation instructions including repository setup, see the [Dux Shell Installation Guide](../dms/installation).
+
+:::tip[Quick Start]
+
+- **Fedora / Enterprise Linux**: See the [Fedora & Enterprise Linux](../dms/installation#fedora--enterprise-linux) section in the installation guide
+- **Ubuntu/Debian**: See the [Ubuntu & Debian](../dms/installation#debian--ubuntu) section in the installation guide
+- **OpenSUSE**: See the [OpenSUSE](../dms/installation#opensuse--derivatives) section in the installation guide
+- **Void Linux**: See the [Void Linux](../dms/installation#void-linux) section in the installation guide
+
+:::
+
+:::note[Renamed packages]
+
+The new names exist only in the `duxlabs` repositories (`home:duxlabs-dev` on OBS); the legacy `avengemedia` repositories (`home:AvengeMedia` on OBS) keep the old names. After `dms migrate dux`, an existing install moves to the new names on its next upgrade, because the old names are kept as obsoleted or transitional packages. The commands themselves (`dgop`, `dsearch`, `dcal`, `dms-greeter`) do not change.
+
+| Old package | New package |
+| --- | --- |
+| `dankcalendar` | `dux-calendar` |
+| `dankcalendar-git` | `dux-calendar-git` |
+| `danksearch` | `dux-search` |
+| `dgop` | `dux-gop` |
+| `dms-greeter` | `dux-greeter` |
+| `dms-greeter-git` | `dux-greeter-git` |
+
+:::
+
+### Installing Standalone Packages
+
+All packages in the Dux Labs repository can be installed independently. First, add the Dux Labs repository for your distribution, then install the packages you need.
+
+:::note
+
+**xWayland-Satellite** is automatically installed as a dependency when installing **niri** or **niri-git**. You don't need to install it separately.
+
+:::
+
+### Debian
+
+Stable **quickshell** should come from Debian (trixie-backports on Debian 13; main on testing/sid). The Dux Labs OBS `quickshell` package for Debian is **deprecated** and will be removed in the future — migrate with `sudo apt remove quickshell` then install the Debian package below. Dux Labs OBS remains for **niri**, **quickshell-git**, and other companions.
+
+Select your release, then choose stable or development packages.
+
+<Tabs groupId="debian-release">
+<TabItem value="trixie" label="Debian 13 (Trixie)" default>
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+# Native quickshell from Debian backports
+echo "deb http://deb.debian.org/debian trixie-backports main" | \
+  sudo tee /etc/apt/sources.list.d/trixie-backports.list
+sudo apt update
+sudo apt install -t trixie-backports quickshell
+
+# Dux OBS for niri and other companions
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="testing" label="Debian Testing">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+# Native quickshell from Debian
+sudo apt update
+sudo apt install quickshell
+
+# Dux OBS for niri and other companions
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="sid" label="Debian Sid">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+# Native quickshell from Debian
+sudo apt update
+sudo apt install quickshell
+
+# Dux OBS for niri and other companions
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Ubuntu
+
+#### Step 1: Add the Dux Labs PPA
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo apt update
+```
+
+#### Step 2: Install packages
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo apt install quickshell niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo apt install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+### Void Linux
+
+Add the Dux Labs XBPS repository, synchronize it, and install whichever
+standalone packages you need:
+
+```bash
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -S
+sudo xbps-install -S dux-gop dux-search dux-calendar dux-files
+```
+
+The package names are `dux-gop`, `dux-search`, `dux-calendar`, and `dux-files`; they install
+the `dgop`, `dsearch`, `dcal`, and `dfiles` commands respectively. To install DMS itself,
+also configure the separate repository in the [Void Linux DMS installation
+guide](../dms/installation#void-linux).
+
+### OpenSUSE
+
+Select your distribution, then choose stable or development packages.
+
+<Tabs groupId="opensuse-distro">
+<TabItem value="tumbleweed" label="Tumbleweed" default>
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="leap16" label="Leap 16">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="leap161" label="Leap 16.1">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+<TabItem value="slowroll" label="Slowroll">
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+</TabItem>
+</Tabs>
+
+### Fedora & Enterprise Linux
+
+The COPR repositories provide packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10 (RHEL, CentOS Stream, Rocky Linux, AlmaLinux) on the latest 10.x minor. Enable EPEL first on Enterprise Linux.
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install quickshell niri
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install quickshell-git niri-git
+```
+
+</TabItem>
+</Tabs>
+
+:::note
+
+Package availability may vary by distribution. Some packages may only be available on Debian, Ubuntu, and OpenSUSE via OBS/PPA.
+
+:::
+
+### Niri Scrollable-Tiling Wayland Compositor
+
+Niri packages are available in both stable and development variants. Supported on distributions where niri is not available in the official repositories.
+
+**xWayland-Satellite** is automatically installed as a dependency when installing **niri** or **niri-git**, providing XWayland integration out of the box.
+
+[**Wiki**](https://yalter.github.io/niri/) | [**GitHub**](https://github.com/niri-wm/niri)
+
+## Repository Links
+
+### Fedora COPR
+
+The COPR provides packages for Fedora 43/44/45, Rawhide, and Enterprise Linux 10. On EL the `dux-repo` COPR also carries packages missing from EPEL 10: `greetd`, `xwayland-satellite`, `alacritty`, `gtk4-layer-shell`, `cava`, and `ghostty` (x86_64 only).
+
+- **Dux Core Repository**: [duxlabs/dux-repo](https://copr.fedorainfracloud.org/coprs/duxlabs/dux-repo/)
+- **DMS Stable**: [duxlabs/dms](https://copr.fedorainfracloud.org/coprs/duxlabs/dms/)
+- **DMS Development**: [duxlabs/dms-git](https://copr.fedorainfracloud.org/coprs/duxlabs/dms-git/)
+
+### Open Build Service (OBS)
+
+The OBS provides packages for OpenSUSE and Debian based distributions:
+
+- **Dux Labs OBS Home**: [home:duxlabs-dev](https://build.opensuse.org/project/show/home:duxlabs-dev)
+- **Dux Core Repository**: [home:duxlabs-dev:dux-repo](https://build.opensuse.org/project/show/home:duxlabs-dev:dux-repo)
+- **DMS Stable**: [home:duxlabs-dev:dms](https://build.opensuse.org/project/show/home:duxlabs-dev:dms)
+- **DMS Development**: [home:duxlabs-dev:dms-git](https://build.opensuse.org/project/show/home:duxlabs-dev:dms-git)
+
+### Launchpad PPA
+
+The Launchpad PPAs provide packages for Ubuntu distributions:
+
+- **Dux Labs Team Page**: [~duxlabs](https://launchpad.net/~duxlabs)
+- **Dux Core PPA**: [ppa:duxlabs/dux-repo](https://launchpad.net/~duxlabs/+archive/ubuntu/dux-repo)
+- **DMS Stable PPA**: [ppa:duxlabs/dms](https://launchpad.net/~duxlabs/+archive/ubuntu/dms)
+- **DMS Development PPA**: [ppa:duxlabs/dms-git](https://launchpad.net/~duxlabs/+archive/ubuntu/dms-git)
+
+## GitHub Repository
+
+The packaging configurations and build scripts are maintained in the official Dux Labs repository:
+
+**Repository**: [github.com/duxlabs-dev/dux-repo](https://github.com/duxlabs-dev/dux-repo)
+
+:::note
+
+**Official Dux Labs packages**: `dms`, `dms-cli`, `dux-gop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dux-greeter`, `dux-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
+Packages retain their upstream licenses: Niri (GPL-3.0), Quickshell (LGPL-3.0), Matugen (GPL-2.0), Cliphist (GPL-3.0).
+
+:::
+
+## Support
+
+If you encounter issues with the repositories or packages:
+
+1. Check the [Dux Shell Installation Guide](../dms/installation) for common solutions
+2. Visit the [Support Page](../support) for community resources
+3. Report packaging issues on the [Dux Labs Repository](https://github.com/duxlabs-dev/dux-repo/issues)
+4. Report application issues on the [Dux Shell Repository](https://github.com/duxlabs-dev/dux-shell/issues)
+
+## Contributing
+
+Interested in maintaining packages for other distributions? Contributions to the Dux Labs repository are welcome! Check out the [Contributing Guide](../contributing) to get started.

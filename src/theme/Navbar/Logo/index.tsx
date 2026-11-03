@@ -2,9 +2,9 @@ import React from 'react';
 import Link from '@docusaurus/Link';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {useThemeConfig} from '@docusaurus/theme-common';
+import { useThemeConfig } from '@docusaurus/theme-common';
 import ThemedImage from '@theme/ThemedImage';
-import type {WrapperProps} from '@docusaurus/types';
+import type { WrapperProps } from '@docusaurus/types';
 import type LogoType from '@theme/Navbar/Logo';
 import styles from './styles.module.css';
 
@@ -12,10 +12,10 @@ type Props = WrapperProps<typeof LogoType>;
 
 export default function LogoWrapper(props: Props): React.JSX.Element {
   const {
-    siteConfig: {title},
+    siteConfig: { title },
   } = useDocusaurusContext();
   const {
-    navbar: {logo},
+    navbar: { logo },
   } = useThemeConfig();
 
   const logoLink = useBaseUrl(logo?.href || '/');
@@ -23,7 +23,7 @@ export default function LogoWrapper(props: Props): React.JSX.Element {
   const logoImageUrlDark = useBaseUrl(logo?.srcDark || logo?.src || '');
 
   return (
-    <Link to={logoLink} className={styles.logoWrapper}>
+    <Link to={logoLink} className={`${styles.logoWrapper} navbar__brand`}>
       <div className="navbar__logo">
         <ThemedImage
           sources={{
@@ -34,7 +34,7 @@ export default function LogoWrapper(props: Props): React.JSX.Element {
           className={styles.logo}
         />
       </div>
-      <span className={`${styles.brandText} navbar-brand-text`}>DANK LINUX</span>
+      <span className={`${styles.brandText} navbar-brand-text`}>dux</span>
     </Link>
   );
 }

@@ -1,0 +1,200 @@
+---
+title: IPC
+description: Scriptable IPC surface for keybinds and automation
+sidebar_position: 8
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# IPC
+
+The dfiles daemon exposes every operation the UI uses over a unix socket. Invoke a method and pass params as `key=value` pairs:
+
+```bash
+dfiles ipc ui.toggle
+dfiles ipc ui.open path=~/Downloads newWindow=true
+dfiles ipc files.list path=/home/me sort=mtime desc=true limit=20
+dfiles ipc trash.count
+```
+
+List every available method and its params:
+
+```bash
+dfiles ipc list
+```
+
+Results print as JSON. Params marked `*` are required. List params take a JSON array.
+
+## UI
+
+| Method | Params |
+| --- | --- |
+| `ui.show` | Show the last used window, opening one if none is open |
+| `ui.hide` | Hide every window |
+| `ui.toggle` | Toggle the windows |
+| `ui.open` | `path` or `paths` (absolute paths or URIs, one tab each; an archive is extracted beside itself), `select` (paths to select, grouped by folder), `newWindow` |
+| `ui.properties` | `paths*` |
+| `ui.quit` | Quit the running daemon |
+
+## Location
+
+| Method | Params |
+| --- | --- |
+| `location.resolve` | `text*` (what was typed: paths, `~`, relative paths and URIs; a file resolves to its folder with it selected), `cwd` |
+| `location.missing` | `paths*` (at most 500): which are no longer folders |
+
+## Files
+
+| Method | Params |
+| --- | --- |
+| `files.list` | `path*`, `watchId`, `includeHidden`, `sort` (`name\|size\|mtime\|type`), `desc`, `dirsFirst` (default true), `limit` (default 500), `cursor`, `filters` (case-insensitive name globs; directories always pass) |
+| `files.watch` | Same as `files.list` without `cursor`; streams changes on `files:<watchId>` |
+| `files.unwatch` | `watchId*` |
+| `files.stat` | `path*` |
+| `files.preview` | `path*`, `maxBytes` (default 16384, max 262144): head of a text file; binary content is flagged instead of returned |
+| `files.imageSize` | `path*`: pixel size from the header for png, jpeg, gif, webp, bmp and tiff |
+| `files.count` | `paths*`, `includeHidden`: child counts, capped at 10000 |
+| `files.thumbnail` | `paths*`, `size` (`normal\|large\|x-large\|xx-large`), `watchId`: cache paths, generating what is missing |
+| `files.userDirs` | XDG user directories, home first |
+| `files.icon` | `paths` or `mimes`: icon name ladders |
+| `files.size` | `paths*`: recursive scan, totals stream on the `sizes` topic |
+| `files.sizeCancel` | `scanId*` |
+| `files.mkdir`, `files.rename`, `files.trash` | Direct variants without undo: `path*`; `path*`, `name*`; `paths*` |
+
+## File Operations
+
+Operations run as jobs. Each takes an optional `scope`, the undo stack key, one per window. Progress, conflicts and prompts stream on the `jobs` topic.
+
+| Method | Params |
+| --- | --- |
+| `files.op.copy`, `files.op.move`, `files.op.link` | `paths*`, `dest*` |
+| `files.op.rename` | `path*`, `name*` |
+| `files.op.newFolder` | `path*` (parent), `name*`, `unique` (number the name when taken) |
+| `files.op.newFile` | `path*`, `name*`, `template`, `unique` |
+| `files.op.newFolderWith` | `paths*` (to move), `path*` (parent), `name*`, `unique`: one undoable step |
+| `files.op.duplicate` | `paths*`: copies beside themselves with a (copy) name |
+| `files.op.pasteImage` | `path*` (target directory), `name` (default `Pasted image`): answers `image=false` when the clipboard holds none |
+| `files.op.trash` | `paths*` |
+| `files.op.restore` | `names*` (inside the trash files dir), `trashDir*` |
+| `files.op.delete` | `paths*`: permanent |
+| `files.op.emptyTrash` | |
+| `files.op.compress` | `paths*`, `dest*`, `name*` (without extension), `format` (`zip\|tar.gz\|tar.xz\|tar.zst`, default zip), `password` (AES-256, zip only) |
+| `files.op.extract` | `paths*`, `dest*`: zip, tar (gz, bz2, xz, zst, lzma, lz), 7z, rar and cpio into folders named after them; a protected archive pauses for its password |
+| `files.op.setPermissions` | `paths*`, `mode*` (octal), `recursive` |
+| `files.op.setOwner` | `paths*`, `owner`, `group`, `recursive` |
+| `files.op.respond` | `jobId*`, `id*` (prompt id), `action*` (`skip\|replace\|keepBoth\|merge\|retry\|retryElevated\|unlock\|cancel`), `applyToAll`, `password` |
+| `files.op.cancel` | `jobId*` |
+| `files.op.jobs` | Running, queued and recently finished jobs |
+| `files.op.dropAction` | `paths*`, `dest*`: what a plain drag would do |
+| `files.op.undo`, `files.op.redo` | `scope` |
+| `files.op.forget` | `scope`: drop a closed window's history |
+
+## Applications
+
+| Method | Params |
+| --- | --- |
+| `files.open` | `paths*`, `cwd`, `activationToken`, `terminal`: open with the default application |
+| `files.openWith` | `paths*`, `desktopId*`, `cwd`, `activationToken`, `record` (false skips the mimeapps.list update) |
+| `files.run` | `path*`, `cwd`, `activationToken`: run an executable or a trusted desktop entry |
+| `files.openTerminal` | `path*`, `terminal` (defaults to `$TERMINAL`, then autodetection) |
+| `files.apps.forMime` | `mime` or `path`: handlers, most preferred first |
+| `files.apps.sections` | `mimes` or `paths`: Open With sections: recent, recommended, other |
+| `files.apps.all` | Every launchable application |
+| `files.apps.setDefault` | `mime*`, `desktopId*` |
+| `files.apps.terminals` | Installed terminal emulators |
+
+## Search
+
+| Method | Params |
+| --- | --- |
+| `search.start` | `root*`, `query` (space-separated terms; `*` and `?` make a glob), `scope` (`folder\|home\|everywhere`), `includeHidden`, `includeIgnored`, `fuzzy`, `contents` (needs Dux Search), `direct`, `crossDevice`, `types` (`documents\|images\|video\|audio\|archives\|folders`), `modifiedAfterMs`, `minSize`, `maxSize`, `limit` (at most 10000): results stream on `search:<searchId>` |
+| `search.cancel` | `searchId*` |
+
+A running [Dux Search](../dsearch/) answers when its index covers the search (names only, no gitignore). Otherwise a live walk honours gitignore and matches terms against the path too.
+
+## Bookmarks
+
+| Method | Params |
+| --- | --- |
+| `bookmarks.list` | Saved folders in sidebar order, plus whether a GTK import is on offer |
+| `bookmarks.add` | `path*`, `label`, `icon` |
+| `bookmarks.remove` | `path*` |
+| `bookmarks.rename` | `path*`, `label*` |
+| `bookmarks.reorder` | `paths*` (every bookmark once, in the new order) |
+| `bookmarks.importGtk` | Import GTK file chooser bookmarks not saved yet |
+
+## Devices
+
+| Method | Params |
+| --- | --- |
+| `devices.list` | Drives and volumes udisks2 knows about |
+| `devices.usage` | `paths` (mount points), `force`: disk usage, cached 30 s |
+| `devices.mount`, `devices.unmount`, `devices.eject`, `devices.powerOff`, `devices.lock` | `id*` (`unmount` also takes `force`) |
+| `devices.unlock` | `id*`, `passphrase*` (never stored), `mount` |
+
+## Network
+
+| Method | Params |
+| --- | --- |
+| `network.mounts` | gvfs mounts, connectable schemes and portable devices waiting to be mounted |
+| `network.connect` | `uri*` (a password inside it is moved out first), `password` |
+| `network.disconnect` | `id*` (mount id, uri or path) |
+| `network.answer` | `id*`, `password`, `user`, `domain`, `anonymous`, `save` (0 never, 1 session, 2 permanently), `choice`, `abort` |
+| `network.recent` | Servers connected to before |
+| `network.forget` | `uri*` |
+| `network.mountPortable` | `monitor*`, `id*`: a phone or camera gvfs detected |
+
+## Trash and Recent
+
+| Method | Params |
+| --- | --- |
+| `trash.list` | Items across the home trash and every mounted volume's trash |
+| `trash.count` | Count plus a stamp that changes when the trash changes |
+| `trash.entries` | Items as file entries for the trash view, newest first |
+| `recent.entries` | `stamp`: recently used files, newest first; answers unchanged when nothing moved |
+| `recent.remove` | `paths*` |
+| `recent.clear` | |
+
+## Clipboard
+
+| Method | Params |
+| --- | --- |
+| `clipboard.copy` | `paths*`, `cut` |
+| `clipboard.paths` | The file selection on the clipboard |
+| `clipboard.clear` | |
+
+## System
+
+| Method | Params |
+| --- | --- |
+| `system.capabilities` | Sandbox state, host access, bus policies, portal versions, thumbnailers and the per-feature table with reason codes |
+| `system.colorScheme.get` | `0` no preference, `1` dark, `2` light |
+| `system.elevation` | Whether failed operations can be retried as administrator, and why not |
+| `system.fileManager.get`, `system.fileManager.set` | `enabled*` on set: own or release `org.freedesktop.FileManager1`; another owner is never replaced |
+| `system.openUri` | `uri*` |
+| `system.portal.get`, `system.portal.install`, `system.portal.uninstall`, `system.portal.restart` | The portal file chooser state and the three actions behind `dfiles portal` |
+
+## Live Updates
+
+Subscribe to push events instead of polling:
+
+| Method | Params |
+| --- | --- |
+| `subscribe` | `topics`: `ui`, `colorScheme`, `jobs`, `devices`, `network`, `sizes`, `bookmarks`, `search:<id>`, `files:<watchId>` |
+| `unsubscribe` | `topics` |
+| `ping`, `version`, `describe` | Liveness, daemon and API version, the method list |
+
+## Next Steps
+
+- [Usage](usage) - The CLI wrappers around these methods
+- [Keyboard](keyboard) - What the window binds by default

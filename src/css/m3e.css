@@ -1,0 +1,67 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../";
+
+@theme inline {
+  --color-primary: var(--md-sys-color-primary);
+  --color-on-primary: var(--md-sys-color-on-primary);
+  --color-primary-container: var(--md-sys-color-primary-container);
+  --color-on-primary-container: var(--md-sys-color-on-primary-container);
+  --color-secondary: var(--md-sys-color-secondary);
+  --color-secondary-container: var(--md-sys-color-secondary-container);
+  --color-on-secondary-container: var(--md-sys-color-on-secondary-container);
+  --color-tertiary-container: var(--md-sys-color-tertiary-container);
+  --color-surface: var(--md-sys-color-surface);
+  --color-surface-container-low: var(--md-sys-color-surface-container-low);
+  --color-surface-container: var(--md-sys-color-surface-container);
+  --color-surface-container-high: var(--md-sys-color-surface-container-high);
+  --color-on-surface: var(--md-sys-color-on-surface);
+  --color-on-surface-variant: var(--md-sys-color-on-surface-variant);
+  --color-outline: var(--md-sys-color-outline);
+  --color-outline-variant: var(--md-sys-color-outline-variant);
+  --color-error: #ff5449;
+}
+
+@theme static {
+  --ease-spring: cubic-bezier(0.42, 1.67, 0.21, 0.9);
+  --ease-effect: cubic-bezier(0.34, 0.8, 0.34, 1);
+  --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+}
+
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility state-layer-8 {
+  box-shadow: inset 0 0 0 999px color-mix(in srgb, currentColor 8%, transparent);
+}
+
+@utility state-layer-12 {
+  box-shadow: inset 0 0 0 999px color-mix(in srgb, currentColor 12%, transparent);
+}
+
+/* Note: the border-radius part only animates between finite radii. Never put
+   `rounded-full` (`calc(infinity * 1px)`) on a `.morph` element -- use
+   `rounded-[50%]` for circular buttons instead. */
+@utility morph {
+  transition:
+    border-radius 380ms var(--ease-spring),
+    background-color 200ms var(--ease-effect),
+    color 200ms var(--ease-effect),
+    box-shadow 200ms var(--ease-effect);
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+    outline-offset: 2px;
+  }
+}

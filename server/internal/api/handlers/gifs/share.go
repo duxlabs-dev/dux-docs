@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/integrations/klipy"
+	"github.com/duxlabs-dev/dux-docs/server/internal/integrations/klipy"
 )
 
 type ShareInput struct {

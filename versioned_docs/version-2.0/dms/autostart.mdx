@@ -1,0 +1,99 @@
+---
+title: Autostart Apps
+description: Start applications and commands at login through XDG autostart entries
+sidebar_position: 5
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+DMS manages startup applications through XDG in `~/.config/autostart/`. Entries are ordinary
+`.desktop` files, so entries created by other tools show up in DMS, and entries created in DMS
+work in any desktop that reads XDG autostart.
+
+Entries are handled in **Settings → Applications → Autostart apps**.
+
+## Adding an entry
+
+Pick a **Type** in the **Add entry** card:
+
+- **Desktop app** starts an installed application. Choose it under **App**. The **Command**
+  field wraps the app's command, and `%command%` is replaced by it. For example,
+  `env GDK_SCALE=2 %command%` launches the chosen app with `GDK_SCALE` set to `2`.
+- **Command line** starts any command. Give it a **Name** and the **Command** to run.
+
+**Add to autostart** writes the entry.
+
+In the **Entries** card, the toggle disables an entry without deleting it by setting
+`Hidden=true` in its file, and the delete button removes the file.
+
+## How entries start
+
+DMS only writes the files, it does not launch them.
+
+On systemd, `systemd-xdg-autostart-generator` turns each entry into an
+`app-<name>@autostart.service` unit at login. These units start when the session activates
+`xdg-desktop-autostart.target`.
+
+Without systemd, something else has to run the entries, for example `dex -a` started from your
+compositor config.
+
+## Target not active
+
+If the page says `xdg-desktop-autostart.target` is not active, your session does not start the
+target, so no entry runs at login. Check it with:
+
+```bash
+systemctl --user is-active xdg-desktop-autostart.target
+```
+
+The target cannot be started by hand (`RefuseManualStart=yes`), a session has to pull it in.
+Run your compositor as a systemd session if it supports one, or add the target to your
+compositor session target. Find the session target with:
+
+```bash
+systemctl --user list-units --type=target --state=active
+```
+
+Then add a drop-in to it, replacing `<session>` with its name, for example `hyprland-session`:
+
+```bash
+systemctl --user edit <session>.target
+```
+
+```ini
+[Unit]
+Wants=xdg-desktop-autostart.target
+```
+
+Log out and back in. DMS checks the target once at startup.
+
+## Tray icons
+
+If apps started at login are missing from the system tray, they probably started before DMS.
+**Tray icon fix → Generate override** writes
+`~/.config/systemd/user/app-@autostart.service.d/override.conf` with `After=dms.service`, so
+autostart entries wait for DMS. The card is only shown on systemd.
+
+## Troubleshooting
+
+### An entry does not start
+
+List the units the generator created:
+
+```bash
+systemctl --user list-units 'app-*@autostart.service' --all
+```
+
+If an entry has no unit, the generator skipped it. It skips entries that have `Hidden=true`
+(disabled in DMS), an `OnlyShowIn` or `NotShowIn` that excludes your `$XDG_CURRENT_DESKTOP`,
+or a `TryExec` binary that is not installed.

@@ -1,6 +1,6 @@
 ---
 title: Getting Started
-description: Get started with Dank Linux installation and configuration
+description: Get started with Dux installation and configuration
 sidebar_position: 2
 image: img/dankinstall.png
 ---
@@ -10,45 +10,45 @@ import ThemedImage from '@theme/ThemedImage';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 <Hero
-  asciiArt={`██████╗  █████╗ ███╗   ██╗██╗  ██╗    ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
-██╔══██╗██╔══██╗████╗  ██║██║ ██╔╝    ██║     ██║████╗  ██║██║   ██║╚██╗██╔╝
-██║  ██║███████║██╔██╗ ██║█████╔╝     ██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝
-██║  ██║██╔══██║██║╚██╗██║██╔═██╗     ██║     ██║██║╚██╗██║██║   ██║ ██╔██╗
-██████╔╝██║  ██║██║ ╚████║██║  ██╗    ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗
-╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝    ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝`}
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗
+██╔══██╗██║   ██║╚██╗██╔╝
+██║  ██║██║   ██║ ╚███╔╝ 
+██║  ██║██║   ██║ ██╔██╗ 
+██████╔╝╚██████╔╝██╔╝ ██╗
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝`}
   hideTitle={true}
 />
 
-Welcome to Dank Linux! This guide will help you get started with installing and configuring the Dank Linux suite on your system.
+Welcome to Dux! This guide will help you get started with installing and configuring the Dux suite on your system.
 
 ## Quick Installation
 
 The fastest way to get started is with our one-line installer:
 
 ```bash
-curl -fsSL https://install.danklinux.com | sh
+curl -fsSL https://install.duxlabs.dev | sh
 ```
 
 <figure style={{ textAlign: 'center' }}>
   <ThemedImage
-    alt="DankInstall Installer"
+    alt="Dux Installer"
     sources={{
       light: useBaseUrl('/img/dankinstalallight.png'),
       dark: useBaseUrl('/img/dankinstall.png'),
     }}
     style={{ maxWidth: '800px', width: '100%' }}
   />
-  <figcaption>dankinstall interactive installer</figcaption>
+  <figcaption>Dux interactive installer</figcaption>
 </figure>
 
 This will:
 - Install all dependencies for your distribution
-- Set up DankMaterialShell, dgop, dsearch, matugen, and other optional enrichments.
+- Set up Dux Shell, dsearch, matugen, and other optional enrichments.
 - Configure your chosen compositor (niri, Hyprland) and terminal (Ghostty, Kitty, Alacritty)
 
 :::tip
 
-The installer adds the appropriate repository (AUR, COPR, OBS, or PPA) for your distro—updates are managed through your normal package manager afterwards. If you install DMS directly from packages, run [`dms setup`](dankmaterialshell/cli-setup) to generate starter compositor and terminal configs (niri/Hyprland only). You can also deploy individual configs like `dms setup binds` or `dms setup colors`. Other compositors like sway, MangoWC, labwc, and Miracle WM are supported—see [manual configuration](dankmaterialshell/installation#post-install).
+The installer adds the appropriate repository (AUR, COPR, OBS, or PPA) for your distro—updates are managed through your normal package manager afterwards. If you install DMS directly from packages, run [`dms setup`](dms/cli-setup) to generate starter compositor and terminal configs (niri/Hyprland only). You can also deploy individual configs like `dms setup binds` or `dms setup colors`. Other compositors like sway, MangoWC, labwc, and Miracle WM are supported—see [manual configuration](dms/installation#post-install).
 
 :::
 
@@ -56,15 +56,14 @@ The installer adds the appropriate repository (AUR, COPR, OBS, or PPA) for your 
 
 Manual installation is also supported, and simple. See the installation section for each component:
 
-- [DankMaterialShell Installation](dankmaterialshell/installation/)
-- [dgop Installation](dgop/installation/)
-- [dsearch Installation](danksearch/installation/)
+- [Dux Shell Installation](dms/installation/)
+- [dsearch Installation](dsearch/installation/)
 
 ## Getting Help
 
 - **Documentation**: Browse these docs for detailed guides
-- **GitHub**: Report issues at [DankMaterialShell](https://github.com/AvengeMedia/DankMaterialShell/issues)
-- **Discord**: `DankMaterialShell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
+- **GitHub**: Report issues at [Dux Shell](https://github.com/duxlabs-dev/dux-shell/issues)
+- **Discord**: `Dux Shell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
   - [niri discord](https://discord.gg/ppWTpKmPgT)
 
 ---

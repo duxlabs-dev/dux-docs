@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"time"
 
-	"github.com/AvengeMedia/DankLinux-Docs/server/internal/log"
+	"github.com/duxlabs-dev/dux-docs/server/internal/log"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 

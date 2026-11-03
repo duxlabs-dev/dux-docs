@@ -1,13 +1,21 @@
 diff --git a/node_modules/@acid-info/docusaurus-og/lib/server/blog.plugin.js b/node_modules/@acid-info/docusaurus-og/lib/server/blog.plugin.js
-index 56d7746..e1b6bc4 100644
+index 56d7746..47f21f3 100644
 --- a/node_modules/@acid-info/docusaurus-og/lib/server/blog.plugin.js
 +++ b/node_modules/@acid-info/docusaurus-og/lib/server/blog.plugin.js
-@@ -53,7 +53,7 @@ class BlogPlugin {
+@@ -53,7 +53,15 @@ class BlogPlugin {
      loadInstance = async (plugin) => {
          const content = plugin.content;
          const options = plugin.options;
 -        content.blogListPaginated.forEach((value) => {
-+        (content.blogListPaginated || []).forEach((value) => {
++        const blogListPaginated = content.blogListPaginated ?? require('@docusaurus/plugin-content-blog/lib/blogUtils.js').paginateBlogPosts({
++            blogPosts: content.blogPosts.filter(post => !post.metadata.unlisted),
++            blogTitle: content.blogTitle,
++            blogDescription: content.blogDescription,
++            postsPerPageOption: options.postsPerPage,
++            basePageUrl: path.posix.join(this.context.baseUrl, options.routeBasePath),
++            pageBasePath: options.pageBasePath,
++        });
++        blogListPaginated.forEach((value) => {
              this.pages.push({
                  data: value,
                  plugin: options,

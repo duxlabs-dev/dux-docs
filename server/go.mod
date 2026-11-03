@@ -1,4 +1,4 @@
-module github.com/AvengeMedia/DankLinux-Docs/server
+module github.com/duxlabs-dev/dux-docs/server
 
 go 1.25.3
 

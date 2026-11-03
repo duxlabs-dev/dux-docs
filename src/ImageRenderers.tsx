@@ -2,6 +2,7 @@ import type { ImageRenderer, DocsPageData, BlogPageData } from '@acid-info/docus
 import { readFileSync } from 'fs'
 import { join } from 'path'
 import React from 'react'
+import {shapePath} from './components/ExpressiveShape/paths'
 
 interface PagesPageData {
   route?: string
@@ -16,41 +17,41 @@ const BASE_HEIGHT = 630
 
 const fonts = [
   {
-    name: 'Adwaita Sans',
+    name: 'Google Sans Flex',
     data: readFileSync(
-      join(__dirname, '../static/fonts/AdwaitaSans-Regular.ttf'),
+      join(__dirname, '../static/fonts/GoogleSansFlex-400.ttf'),
     ),
     weight: 400 as const,
     style: 'normal' as const,
   },
   {
-    name: 'Adwaita Sans',
+    name: 'Google Sans Flex',
     data: readFileSync(
-      join(__dirname, '../static/fonts/AdwaitaSans-Medium.ttf'),
+      join(__dirname, '../static/fonts/GoogleSansFlex-500.ttf'),
     ),
     weight: 500 as const,
     style: 'normal' as const,
   },
   {
-    name: 'Adwaita Sans',
+    name: 'Google Sans Flex',
     data: readFileSync(
-      join(__dirname, '../static/fonts/AdwaitaSans-SemiBold.ttf'),
+      join(__dirname, '../static/fonts/GoogleSansFlex-600.ttf'),
     ),
     weight: 600 as const,
     style: 'normal' as const,
   },
   {
-    name: 'Adwaita Sans',
+    name: 'Google Sans Flex',
     data: readFileSync(
-      join(__dirname, '../static/fonts/AdwaitaSans-Bold.ttf'),
+      join(__dirname, '../static/fonts/GoogleSansFlex-700.ttf'),
     ),
     weight: 700 as const,
     style: 'normal' as const,
   },
   {
-    name: 'Adwaita Sans',
+    name: 'Google Sans Flex',
     data: readFileSync(
-      join(__dirname, '../static/fonts/AdwaitaSans-ExtraBold.ttf'),
+      join(__dirname, '../static/fonts/GoogleSansFlex-800.ttf'),
     ),
     weight: 800 as const,
     style: 'normal' as const,
@@ -73,30 +74,40 @@ const fonts = [
   },
 ]
 
-const logoPng = readFileSync(
-  join(__dirname, '../static/img/path32.png')
+const logoSvg = readFileSync(
+  join(__dirname, '../static/img/dux-labs-logo-dark.svg')
 )
 
-const logoDataUrl = `data:image/png;base64,${logoPng.toString('base64')}`
+const logoDataUrl = `data:image/svg+xml;base64,${logoSvg.toString('base64')}`
 
-export const docs: ImageRenderer<DocsPageData> = (data) => {
-  const getCategoryFromPath = (permalink: string): string => {
-    const segments = permalink.split('/').filter(Boolean)
-    if (segments.length > 1 && segments[0] === 'docs') {
-      const categorySlug = segments[1]
-      const categoryMap: Record<string, string> = {
-        'dankmaterialshell': 'DMS',
-        'dankgreeter': 'DMS Greeter',
-        'dgop': 'dgop',
-        'danksearch': 'dsearch',
-      }
-      return categoryMap[categorySlug] || 'Dank Linux'
-    }
-    return 'Dank Linux'
+const projectCategories: Record<string, string> = {
+  dms: 'DMS',
+  dankmaterialshell: 'DMS',
+  'dms-greeter': 'DMS Greeter',
+  dankgreeter: 'DMS Greeter',
+  dcal: 'Dux Calendar',
+  dankcalendar: 'Dux Calendar',
+  duxinstall: 'Dux Install',
+  dankinstall: 'Dux Install',
+  dgop: 'dgop',
+  dsearch: 'dsearch',
+  danksearch: 'dsearch',
+  packaging: 'Packaging',
+  danklinux: 'Packaging',
+}
+
+function getCategoryFromPath(permalink: string): string {
+  const segments = permalink.split('/').filter(Boolean)
+  if (segments[0] !== 'docs') return 'Dux Labs'
+
+  const project = /^\d+(?:\.\d+)*$/.test(segments[1]) ? segments[2] : segments[1]
+  return projectCategories[project] || 'Dux Labs'
+}
+
+function titleCard(category: string, title: string): ReturnType<ImageRenderer> {
+  if (title.toLowerCase().startsWith(category.toLowerCase())) {
+    category = 'Dux Labs'
   }
-
-  const category = getCategoryFromPath(data.metadata.permalink)
-  const title = data.metadata.title
 
   return [
     <div
@@ -139,7 +150,7 @@ export const docs: ImageRenderer<DocsPageData> = (data) => {
             top: '50px',
             right: '50px',
             opacity: 0.6,
-            width: '120px',
+            width: '90px',
             height: '120px',
           }}
         />
@@ -156,7 +167,7 @@ export const docs: ImageRenderer<DocsPageData> = (data) => {
             style={{
               fontSize: '54px',
               color: '#B794F4',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               fontWeight: 500,
               marginLeft: '4px',
               marginBottom: '18px',
@@ -170,7 +181,7 @@ export const docs: ImageRenderer<DocsPageData> = (data) => {
             style={{
               fontSize: '96px',
               color: '#ffffff',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               fontWeight: 700,
               lineHeight: 1.15,
               maxWidth: '1000px',
@@ -193,11 +204,11 @@ export const docs: ImageRenderer<DocsPageData> = (data) => {
             style={{
               fontSize: '36px',
               color: '#ffffff',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               fontWeight: 500,
             }}
           >
-            Dank Linux
+            Dux
           </div>
         </div> */}
       </div>
@@ -210,10 +221,18 @@ export const docs: ImageRenderer<DocsPageData> = (data) => {
   ]
 }
 
+export const docs: ImageRenderer<DocsPageData> = (data) =>
+  titleCard(getCategoryFromPath(data.metadata.permalink), data.metadata.title)
+
 export const pages: ImageRenderer<PagesPageData> = (data) => {
   const route = data.route || data.metadata?.permalink || '/'
   const isHomePage = route === '/'
   const isPluginsPage = route === '/plugins' || route === '/plugins/'
+
+  if (!isHomePage && !isPluginsPage) {
+    const title = data.metadata?.title?.replace(/\s+\|\s+Dux$/, '') || 'Dux Labs'
+    return titleCard('Dux Labs', title)
+  }
 
   if (isPluginsPage) {
     return [
@@ -274,17 +293,17 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
             <img
               src={logoDataUrl}
               style={{
-                width: '80px',
-                height: '80px',
+                width: '72px',
+                height: '96px',
               }}
             />
             <div
               style={{
                 fontSize: '48px',
-                fontFamily: 'Adwaita Sans',
+                fontFamily: 'Google Sans Flex',
                 fontWeight: 800,
                 color: '#fffffff2',
-                letterSpacing: '0.08em',
+                letterSpacing: '0.02em',
                 textRendering: 'optimizeLegibility',
                 fontSmooth: 'always',
                 WebkitFontSmoothing: 'antialiased',
@@ -292,7 +311,7 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
                 lineHeight: 1,
               }}
             >
-              DANK LINUX
+              Dux Labs
             </div>
           </div>
 
@@ -313,7 +332,7 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
               textAlign: 'center',
             }}
           >
-            Plugin Registry
+            Plugins &amp; Themes
           </div>
         </div>
       </div>,
@@ -384,17 +403,17 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
           <img
             src={logoDataUrl}
             style={{
-              width: '80px',
-              height: '80px',
+              width: '72px',
+              height: '96px',
             }}
           />
           <div
             style={{
               fontSize: '48px',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               fontWeight: 800,
               color: '#fffffff2',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.02em',
               textRendering: 'optimizeLegibility',
               fontSmooth: 'always',
               WebkitFontSmoothing: 'antialiased',
@@ -402,7 +421,7 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
               lineHeight: 1,
             }}
           >
-            DANK LINUX
+            Dux Labs
           </div>
         </div>
 
@@ -413,7 +432,7 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '8px',
-            fontFamily: 'Adwaita Sans',
+            fontFamily: 'Google Sans Flex',
             lineHeight: 1.1,
             textAlign: 'center',
             width: '100%',
@@ -480,12 +499,47 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
   ]
 }
 
+const heisenbergShapes = [
+  {shape: 'Cookie12Sided', size: 724, left: 751, top: -304, rotation: 12, fill: 'rgba(208, 188, 255, 0.16)'},
+  {shape: 'SoftBurst', size: 504, left: -191, top: 338, rotation: -8, fill: 'rgba(116, 68, 94, 0.6)'},
+  {shape: 'Flower', size: 144, left: 36, top: 40, rotation: 0, fill: 'rgba(234, 223, 255, 0.08)'},
+  {shape: 'Pill', size: 180, left: 960, top: 392, rotation: -40, fill: 'rgba(205, 194, 219, 0.16)'},
+] as const
+
+const heisenbergShapesSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${BASE_WIDTH}" height="${BASE_HEIGHT}">${heisenbergShapes
+  .map(({shape, size, left, top, rotation, fill}) => `<path d="${shapePath(shape)}" fill="${fill}" transform="translate(${left} ${top}) rotate(${rotation} ${size / 2} ${size / 2}) scale(${size})"/>`)
+  .join('')}</svg>`
+
+const heisenbergShapesDataUrl = `data:image/svg+xml;base64,${Buffer.from(heisenbergShapesSvg).toString('base64')}`
+
+export const heisenberg = (): ReturnType<ImageRenderer> => [
+  <div style={{display: 'flex', width: BASE_WIDTH, height: BASE_HEIGHT, position: 'relative', overflow: 'hidden', backgroundColor: '#493168', color: '#eadfff', fontFamily: 'Google Sans Flex'}}>
+    <img src={heisenbergShapesDataUrl} width={BASE_WIDTH} height={BASE_HEIGHT} style={{position: 'absolute', left: 0, top: 0}} />
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 36, width: '100%', height: '100%', position: 'relative'}}>
+      <div style={{display: 'flex', gap: 40, fontSize: 210, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.04em'}}>
+        <span>DMS</span>
+        <span style={{color: '#d0bcff'}}>2.0</span>
+      </div>
+      <div style={{display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 80, fontWeight: 700, lineHeight: 1}}>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 8, position: 'relative', width: 128, height: 128, borderRadius: 16, backgroundColor: '#d0bcff', color: '#381e72'}}>
+          <span style={{position: 'absolute', top: 9, left: 9, fontSize: 19, fontWeight: 500}}>2</span>
+          <span style={{marginTop: 4}}>He</span>
+          <span style={{position: 'absolute', bottom: 6, left: 0, right: 0, display: 'flex', justifyContent: 'center', fontSize: 14, fontWeight: 400}}>4.0026</span>
+        </div>
+        <span>isenberg</span>
+      </div>
+    </div>
+  </div>,
+  {width: BASE_WIDTH, height: BASE_HEIGHT, fonts},
+]
+
 export const blog: ImageRenderer<BlogPageData> = (data) => {
   // Handle different blog page types
-  let title = 'Blog'
+  let title = 'Updates'
   let isV1Release = false
   let isV12Release = false
   let isV14Release = false
+  let isV20Release = false
   let isDankCalendar = false
   let hasStaticImage = false
 
@@ -493,15 +547,16 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
     const postData = data.data as Record<string, unknown>
     const metadata = postData.metadata as Record<string, unknown> | undefined
     title = String(metadata?.title || postData.title || 'Blog')
-    // Check for v1 release post
     const id = String(postData.id || '')
     const permalink = String(metadata?.permalink || '')
-    isV1Release = id === 'v1-release' || permalink.includes('v1-release') || title.includes('1.0')
-    isV12Release = id === 'v1-2-release' || permalink.includes('v1-2-release') || title.includes('1.2')
-    isV14Release = id === 'v1-4-release' || permalink.includes('v1-4-release') || title.includes('1.4')
+    const slug = permalink.split('/').filter(Boolean).pop() || id
+    isV1Release = slug === 'v1-release'
+    isV12Release = slug === 'v1-2-release'
+    isV14Release = slug === 'v1-4-release'
+    isV20Release = slug === 'v2-0-release'
     const frontMatter = metadata?.frontMatter as Record<string, unknown> | undefined
     hasStaticImage = Boolean(frontMatter?.image)
-    isDankCalendar = id === 'dankcalendar-release' || permalink.includes('dankcalendar-release') || title.includes('DankCalendar')
+    isDankCalendar = slug === 'dankcalendar-release'
   } else if (data.pageType === 'tag' && 'label' in data.data) {
     title = `Tag: ${String(data.data.label)}`
   } else if (data.pageType === 'archive') {
@@ -514,6 +569,8 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
   if (hasStaticImage) {
     return undefined
   }
+
+  if (isV20Release) return heisenberg()
 
   // Special OG image for v1 release - matches blog hero with bats and confetti
   if (isV1Release) {
@@ -632,7 +689,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               display: 'flex',
               alignItems: 'baseline',
               gap: '24px',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
             }}
           >
             <div
@@ -666,7 +723,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               fontSize: '32px',
               fontWeight: 600,
               color: 'rgba(208, 188, 255, 0.4)',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               marginTop: '16px',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
@@ -767,7 +824,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               display: 'flex',
               alignItems: 'baseline',
               gap: '24px',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
             }}
           >
             <div
@@ -801,7 +858,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               fontSize: '32px',
               fontWeight: 600,
               color: 'rgba(198, 93, 59, 0.4)',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               marginTop: '16px',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
@@ -902,7 +959,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               display: 'flex',
               alignItems: 'baseline',
               gap: '24px',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
             }}
           >
             <div
@@ -936,7 +993,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               fontSize: '32px',
               fontWeight: 600,
               color: 'rgba(252, 165, 165, 0.4)',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               marginTop: '16px',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
@@ -972,7 +1029,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
           border: '2px solid rgba(128, 90, 213, 0.45)',
           background: 'rgba(128, 90, 213, 0.12)',
           color: '#B794F4',
-          fontFamily: 'Adwaita Sans',
+          fontFamily: 'Google Sans Flex',
           fontWeight: 700,
           fontSize: size * 0.42,
           transform: `rotate(${rot}deg)`,
@@ -1044,7 +1101,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
             style={{
               display: 'flex',
               alignItems: 'baseline',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
             }}
           >
             <div
@@ -1078,7 +1135,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
               fontSize: '32px',
               fontWeight: 600,
               color: 'rgba(183, 148, 244, 0.5)',
-              fontFamily: 'Adwaita Sans',
+              fontFamily: 'Google Sans Flex',
               marginTop: '16px',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
@@ -1096,93 +1153,5 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
     ]
   }
 
-  return [
-    <div
-      style={{
-        display: 'flex',
-        width: BASE_WIDTH,
-        height: BASE_HEIGHT,
-        background: 'linear-gradient(135deg, #1a1318 0%, #2d1b3d 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-        fontSmooth: 'always',
-        WebkitFontSmoothing: 'antialiased',
-        MozOsxFontSmoothing: 'grayscale',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          background: 'radial-gradient(circle at 20% 50%, rgba(128, 90, 213, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(208, 188, 255, 0.12) 0%, transparent 50%)',
-        }}
-      />
-
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          height: '100%',
-          padding: '60px',
-          position: 'relative',
-          zIndex: 1,
-        }}
-      >
-        <img
-          src={logoDataUrl}
-          style={{
-            position: 'absolute',
-            top: '50px',
-            right: '50px',
-            opacity: 0.6,
-            width: '120px',
-            height: '120px',
-          }}
-        />
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            flex: 1,
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            style={{
-              fontSize: '54px',
-              color: '#B794F4',
-              fontFamily: 'Adwaita Sans',
-              fontWeight: 500,
-              marginLeft: '4px',
-              marginBottom: '18px',
-              letterSpacing: '0.5px',
-            }}
-          >
-            Blog
-          </div>
-
-          <div
-            style={{
-              fontSize: '96px',
-              color: '#ffffff',
-              fontFamily: 'Adwaita Sans',
-              fontWeight: 700,
-              lineHeight: 1.15,
-              maxWidth: '1000px',
-            }}
-          >
-            {title}
-          </div>
-        </div>
-      </div>
-    </div>,
-    {
-      width: BASE_WIDTH,
-      height: BASE_HEIGHT,
-      fonts,
-    },
-  ]
+  return titleCard('Updates', title)
 }

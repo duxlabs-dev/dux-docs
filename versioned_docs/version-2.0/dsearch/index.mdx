@@ -1,0 +1,65 @@
+---
+title: Dux Search
+description: Native file system search with fuzzy search capabilities
+sidebar_position: 1
+image: img/dsearch.png
+---
+
+import Hero from '@site/src/components/Hero';
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗
+██╔══██╗██║   ██║╚██╗██╔╝    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║
+██║  ██║██║   ██║ ╚███╔╝     ███████╗█████╗  ███████║██████╔╝██║     ███████║
+██║  ██║██║   ██║ ██╔██╗     ╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║
+██████╔╝╚██████╔╝██╔╝ ██╗    ███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝`}
+/>
+
+# Dux Search
+
+`dsearch` is a native file system search tool with configurable indexes and a CLI + REST API for searching files with various parameters.
+
+<figure style={{ textAlign: 'center' }}>
+  <ThemedImage
+    alt="Dux Search"
+    sources={{
+      light: useBaseUrl('/img/dsearchlight.png'),
+      dark: useBaseUrl('/img/dsearch.png'),
+    }}
+    style={{ maxWidth: '600px', width: '100%' }}
+  />
+  <figcaption>Dux Search file search interface</figcaption>
+</figure>
+
+## Overview
+
+Dux Search integrates seamlessly with Dux Shell's Spotlight launcher, offering:
+
+- **Instant Search**: Blazingly fast filesystem search
+- **Fuzzy Matching**: Intelligent search that finds files even with typos
+= **Content Searching**: Search for files by content instead of just filename.
+- **Efficient**: Indexes are loaded into memory on-demand, not held there indefinitely.
+- **Fast**: Extremely fast, for tens of thousands of files.
+- **Zero Dependency**: Zero dependencies, compiles to a single portable binary.
+
+## Documentation
+
+- [Installation](./installation.mdx) - Detailed setup instructions and requirements
+- [Configuration](./configuration.mdx) - Configuration options
+- [Usage](./usage.mdx) - Learn CLI commands and API endpoints
+
+## Contributing
+
+`dsearch` is open source and welcomes contributions:
+
+- **Source Code**: [GitHub Repository](https://github.com/duxlabs-dev/dux-search)
+- **Issues**: Report bugs and request features on GitHub
+- **Documentation**: Help improve the documentation
+- **Testing**: Test on different Linux distributions and hardware
+
+## License
+
+`dsearch` is released under the MIT License. See the [LICENSE](https://github.com/duxlabs-dev/dux-search/blob/master/LICENSE) file for details.

@@ -1,8 +1,8 @@
 ---
 title: Welcome
-description: Welcome to Dank Linux
+description: Welcome to Dux
 sidebar_position: 1
-image: img/danklinux-docs.png
+image: img/homepage/dux-preview.png
 ---
 
 import Hero from '@site/src/components/Hero';
@@ -10,54 +10,57 @@ import ThemedImage from '@theme/ThemedImage';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 <Hero
-  asciiArt={`██████╗  █████╗ ███╗   ██╗██╗  ██╗    ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗
-██╔══██╗██╔══██╗████╗  ██║██║ ██╔╝    ██║     ██║████╗  ██║██║   ██║╚██╗██╔╝
-██║  ██║███████║██╔██╗ ██║█████╔╝     ██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝
-██║  ██║██╔══██║██║╚██╗██║██╔═██╗     ██║     ██║██║╚██╗██║██║   ██║ ██╔██╗
-██████╔╝██║  ██║██║ ╚████║██║  ██╗    ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗
-╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝    ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝`}
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗
+██╔══██╗██║   ██║╚██╗██╔╝
+██║  ██║██║   ██║ ╚███╔╝
+██║  ██║██║   ██║ ██╔██╗
+██████╔╝╚██████╔╝██╔╝ ██╗
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝`}
   hideTitle={true}
 />
 
 ## Quick Start
 
-*This will set up Dank Linux on your system, including all dependencies, the DankMaterialShell™, and default compositor and terminal configurations.*
+*This will set up Dux on your system, including all dependencies, the Dux Shell™, and default compositor and terminal configurations.*
 
 ```bash
-curl -fsSL https://install.danklinux.com | sh
+curl -fsSL https://install.duxlabs.dev | sh
 ```
 
-Supports Arch Linux + Derivatives, Fedora + Derivatives, Ubuntu, Debian, openSUSE, and Gentoo.
+Supports Arch Linux + Derivatives, Fedora + Derivatives, Ubuntu, Debian, PikaOS, openSUSE, and Gentoo.
 
 :::tip
 
-The installer adds the appropriate repository (COPR, OBS, or PPA) or installs from official repos and installs packages through your distro's package manager. Future updates come through normal system updates. If you install DMS directly from packages, run `dms setup` to generate starter compositor and terminal configs (niri/Hyprland only). Other compositors like sway, MangoWC, labwc, and Miracle WM are supported—see [manual configuration](dankmaterialshell/installation#post-install).
+The installer adds the appropriate repository (COPR, OBS, or PPA) or installs from official repos and installs packages through your distro's package manager. Future updates come through normal system updates. If you install DMS directly from packages, run `dms setup` to generate starter compositor and terminal configs (niri/Hyprland only). Other compositors like sway, MangoWC, labwc, and Miracle WM are supported—see [manual configuration](dms/installation#post-install).
 
 :::
 
 <figure style={{ textAlign: 'center' }}>
   <ThemedImage
-    alt="DankDash Overview"
+    alt="Dash Overview"
     sources={{
       light: useBaseUrl('/img/dankdashlight.png'),
       dark: useBaseUrl('/img/dankdash.png'),
     }}
     style={{ maxWidth: '600px', width: '100%' }}
   />
-  <figcaption>DankMaterialShell's DankDash with a Suite of DankBar Widgets</figcaption>
+  <figcaption>Dux Shell's Dash with a Suite of Widgets</figcaption>
 </figure>
 
 ## The Suite
 
-- **[DankMaterialShell](dankmaterialshell/overview)** - A feature-rich desktop shell built with [Quickshell](https://quickshell.org/) and [Go](https://golang.org/).
-- **[dgop](dgop/)** - A stateless, cursor-based system and process monitoring tool with a tui, cli, and REST API.
-- **[dsearch](danksearch/)** - Extremely fast, configurable, zero-dependency indexed filesystem search service.
-- **[dankinstall](dankinstall/)** - An automated installer and management tool for the entire Dank Linux suite
-- **[dcal](dankcalendar/)** - A standalone calendar app that unifies Local, Google, Microsoft, CalDAV, and iCloud calendars.
+- **[Dux Shell](dms/overview)** - A feature-rich desktop shell built with [Quickshell](https://quickshell.org/) and [Go](https://golang.org/).
+- **[Dux Greeter](dms-greeter/)** - An aesthetically pleasing greetd greeter for your desktop.
+- **[Dux GOP](dgop/)** - A stateless, cursor-based system and process monitoring tool with a tui, cli, and REST API.
+- **[Dux Search](dsearch/)** - Extremely fast, configurable, zero-dependency indexed filesystem search service.
+- **[Dux Installer](duxinstall)** - An automated installer and management tool for the entire Dux suite.
+- **[Dux Calendar](dcal/)** - A standalone calendar app that unifies Local, Google, Microsoft, CalDAV, and iCloud calendars.
+- **[Dux Files](dfiles/)** - A standalone file manager with tabs, split view, search, trash, devices, and network shares.
+- **[Dux Labs Package Repository](repo/)** - Pre-built packages for Fedora, CentOS, Debian, Ubuntu, openSUSE, and Void Linux.
 
 ## Batteries Included
 
-The age of assembling your desktop from dozens of separate tools and spending hours trying to make it feel cohesive is over. While traditional Wayland setups require you to hunt down, configure, and maintain a sprawling collection of utilities, Dank Linux delivers everything in one cohesive package with minimal dependencies.
+The age of assembling your desktop from dozens of separate tools and spending hours trying to make it feel cohesive is over. While traditional Wayland setups require you to hunt down, configure, and maintain a sprawling collection of utilities, Dux delivers everything in one cohesive package with minimal dependencies.
 
 ### The Traditional Way: Package Hunting Simulator
 
@@ -90,7 +93,7 @@ Preconfigured "dotfiles" are often shared so others can replicate a working setu
 
 *Note:* The community does an **incredible** job at sharing incredibly unique setups, and we highly encourage exploring those! They can provide incredibly unique things that dms cannot, but they are just often very opinionated and touch a lot of system configurations - while dms doesn't.
 
-### The Dank Way: Completely Integrated
+### The Dux Way: Completely Integrated
 
 <figure style={{ textAlign: 'center' }}>
   <ThemedImage
@@ -104,11 +107,11 @@ Preconfigured "dotfiles" are often shared so others can replicate a working setu
   <figcaption>Control Center with system controls and quick settings</figcaption>
 </figure>
 
-Dank Linux replaces this fragmented ecosystem with **DankMaterialShell** - a single, integrated solution built with [Quickshell](https://quickshell.org) and [Go](https://go.dev):
+Dux replaces this fragmented ecosystem with **Dux Shell** - a single, integrated solution built with [Quickshell](https://quickshell.org) and [Go](https://go.dev):
 
 - ✅ **Full Desktop Shell** - Complete panels, widgets, and system integrations
 - ✅ **Unified Configuration** - One consistent approach, not 15 different syntaxes
-- ✅ **Intelligent Search** - `danksearch` for blazingly-fast file indexing & search
+- ✅ **Intelligent Search** - `dsearch` for blazingly-fast file indexing & search
 - ✅ **System Monitoring** - `dgop` provides comprehensive system insights without additional tools, persistent daemons, or long-running samplers preventing CPU sleep states.
 - ✅ **Dynamic Theming** - Automatic color generation with `matugen`, applied everywhere
 - ✅ **All Essentials Included** - Notifications, app launcher, system tray, media controls, and more
@@ -119,11 +122,11 @@ No more late-night debugging sessions because you forgot to install a clipboard 
 
 **One install. One shell. Everything works.**
 
-That's Dank Linux - we've already done the integration work so you can focus on using your desktop, not building it.
+That's Dux - we've already done the integration work so you can focus on using your desktop, not building it.
 
 ### Pre-configured Images
 
-Want even less setup? Some distributions ship with DankMaterialShell pre-configured:
+Want even less setup? Some distributions ship with Dux Shell pre-configured:
 
 - <a href="https://github.com/zirconium-dev/zirconium/" style={{display: 'inline-flex', alignItems: 'center', gap: '0.4rem'}}><img src="/img/z.svg" alt="" style={{width: '1.1em', height: '1.1em', verticalAlign: 'middle'}} /> **Zirconium**</a> - A Fedora-based immutable OS with niri + DMS, optimized for container-focused development
 
@@ -141,7 +144,7 @@ Want even less setup? Some distributions ship with DankMaterialShell pre-configu
   <figcaption>Full desktop view with terminal, launcher, and system monitoring</figcaption>
 </figure>
 
-DankMaterialShell provides a stunning desktop experience right out of the box:
+Dux Shell provides a stunning desktop experience right out of the box:
 - **Dozens of Customizable Widgets**: Extendable launcher, workspace switcher, media player, clock, weather, system tray, notifications, lock screen, greeter, network integration, bluetooth integration, and more.
 - **Dynamic Theming**: Automatic color schemes applied across the desktop.
 - **Smooth Animations**: Polished transitions and effects throughout the desktop
@@ -149,9 +152,9 @@ DankMaterialShell provides a stunning desktop experience right out of the box:
 
 ## Innovating Solutions
 
-Dank Linux is engineering solutions to problems that have never been solved before in the Linux space.
+Dux is engineering solutions to problems that have never been solved before in the Linux space.
 
-### dgop - first-of-its-kind Stateless System & Process Status Tool 
+### dgop - first-of-its-kind Stateless System & Process Status Tool
 
 Before dgop, if you wanted to measure CPU usage - for example, you either had to:
 1. Collect samples over a substantial time period, say 1-5 seconds, and then calculate the difference between the samples to get an average CPU usage over that time, or:
@@ -179,11 +182,11 @@ dgop also provides a top-like TUI, advanced CLI, and a fully-documented OpenAPI 
   <figcaption>dgop tui interface</figcaption>
 </figure>
 
-### danksearch - Blazingly Fast Filesystem Search
+### dsearch - Blazingly Fast Filesystem Search
 
 Traditional filesystem search tools usually come as part of the [KDE](https://kde.org/) or [GNOME](https://www.gnome.org/) desktop environments. They require many dependencies, are hard to configure, difficult to search in a programmatic way, and often users opt to just disable them.
 
-DankSearch is a zero-dependency, blazingly-fast, fully configurable in 1 file, indexed filesystem search service that works as a standalone tool.
+Dux Search is a zero-dependency, blazingly-fast, fully configurable in 1 file, indexed filesystem search service that works as a standalone tool.
 
 - **Zero Dependencies**: Written in Go, runs anywhere
 - **Configurable**: One simple configuration file, populated with sensible defaults.
@@ -194,21 +197,21 @@ DankSearch is a zero-dependency, blazingly-fast, fully configurable in 1 file, i
 
 <figure style={{ textAlign: 'center' }}>
   <ThemedImage
-    alt="DankSearch"
+    alt="Dux Search"
     sources={{
       light: useBaseUrl('/img/dsearchlight.png'),
       dark: useBaseUrl('/img/dsearch.png'),
     }}
     style={{ maxWidth: '600px', width: '100%' }}
   />
-  <figcaption>DankSearch file search interface</figcaption>
+  <figcaption>Dux Search file search interface</figcaption>
 </figure>
 
-### dankcalendar - All Your Calendars in One Place
+### dcal - All Your Calendars in One Place
 
-Calendars on Linux usually mean wrestling with `vdirsyncer` and `khal` config files just to see your Google or iCloud events. DankCalendar replaces that with a single standalone app.
+Calendars on Linux usually mean wrestling with `vdirsyncer` and `khal` config files just to see your Google or iCloud events. Dux Calendar replaces that with a single standalone app.
 
-`dcal` brings Local, Google, Microsoft, CalDAV, and iCloud calendars together in one unified agenda. It runs as a lightweight daemon with a tray icon, keeps everything synced in the background, and fires native reminders for upcoming events — all with the look and feel of DankMaterialShell.
+`dcal` brings Local, Google, Microsoft, CalDAV, and iCloud calendars together in one unified agenda. It runs as a lightweight daemon with a tray icon, keeps everything synced in the background, and fires native reminders for upcoming events — all with the look and feel of Dux Shell.
 
 - **Unified Agenda**: Every account and calendar in one view.
 - **Background Sync**: A lightweight daemon keeps accounts synced and serves the UI over IPC.
@@ -217,24 +220,26 @@ Calendars on Linux usually mean wrestling with `vdirsyncer` and `khal` config fi
 
 ## Open Source
 
-Dank Linux and all its components are open source and MIT-licensed.
+Dux and all its components are open source and MIT-licensed.
 
 Source code:
-- [DankMaterialShell/dms](https://github.com/AvengeMedia/DankMaterialShell)
-- [DankMaterialShell/dms backend (core) + dankinstall](https://github.com/AvengeMedia/DankMaterialShell/core)
-- [dms first-party plugins](https://github.com/AvengeMedia/dms-plugins)
-- [dgop GitHub](https://github.com/AvengeMedia/dgop)
-- [danksearch GitHub](https://github.com/AvengeMedia/danksearch)
-- [dankcalendar GitHub](https://github.com/AvengeMedia/dankcalendar)
+- [Dux Shell (dms)](https://github.com/duxlabs-dev/dux-shell)
+- [Dux Shell backend (core) + Dux Installer](https://github.com/duxlabs-dev/dux-shell/tree/master/core)
+- [dms first-party plugins](https://github.com/duxlabs-dev/dux-plugins)
+- [dgop GitHub](https://github.com/duxlabs-dev/dux-gop)
+- [Dux Search GitHub](https://github.com/duxlabs-dev/dux-search)
+- [Dux Calendar GitHub](https://github.com/duxlabs-dev/dux-calendar)
+- [Dux Files GitHub](https://github.com/duxlabs-dev/dux-files)
+- [Dux Labs Packaging GitHub](https://github.com/duxlabs-dev/dux-repo)
 
 ## Get Started
 
-Ready to dive in? Head over to the [Getting Started](./getting-started.mdx) guide to begin your Dank Linux journey!
+Ready to dive in? Head over to the [Getting Started](./getting-started.mdx) guide to begin your Dux journey!
 
 ## Join the Community
 
-- **GitHub**: [github.com/AvengeMedia](https://github.com/AvengeMedia)
-- **Discord**: `DankMaterialShell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
+- **GitHub**: [github.com/duxlabs-dev](https://github.com/duxlabs-dev)
+- **Discord**: `Dux Shell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
   - [niri discord](https://discord.gg/ppWTpKmPgT)
 - **Documentation**: You're already here!
-- **Support Development**: [Ko-fi](https://ko-fi.com/danklinux) - Tip us if you'd like to support the project!
+- **Support Development**: [Ko-fi](https://ko-fi.com/duxlabs) - Tip us if you'd like to support the project!

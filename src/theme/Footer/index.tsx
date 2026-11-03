@@ -11,7 +11,7 @@ export default function FooterWrapper(props: Props): React.JSX.Element {
       <Footer {...props} />
       <div className="footer-icon-links">
         <a
-          href="https://github.com/AvengeMedia"
+          href="https://github.com/duxlabs-dev"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-github-link"
@@ -25,7 +25,7 @@ export default function FooterWrapper(props: Props): React.JSX.Element {
           aria-label="Discord community"
         />
         <a
-          href="https://ko-fi.com/danklinux"
+          href="https://ko-fi.com/duxlabs"
           target="_blank"
           rel="noopener noreferrer"
           className="footer-kofi-link"
