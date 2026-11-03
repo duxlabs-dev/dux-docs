@@ -1,7 +1,10 @@
 # Dux
 
 <div align="center">
-  <img src="static/img/dux-mark.svg" alt="Dux Logo" width="200">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="static/img/dux-labs-logo-dark.svg">
+    <img src="static/img/dux-labs-logo-light.svg" alt="Dux Labs Logo" width="160">
+  </picture>
   
   ### A modern Linux desktop suite with beautiful widgets and powerful monitoring
   
