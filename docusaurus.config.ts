@@ -422,7 +422,7 @@ const config: Config = {
     announcementBar: {
       id: 'v2-1-release',
       content:
-        '<b>DMS 2.1: Stormborn.</b> <span class="announcement-detail">New system monitor, video wallpapers, revamped media player, interface density, numerous dux files enhancements, and more.</span> <a class="announcement-cta" href="/blog/v2-1-release">Read the announcement</a>',
+        '<b>DMS 2.1 Stormborn.</b> <span class="announcement-detail">New system monitor, video wallpapers, revamped media player, interface density, numerous dux files enhancements, and more.</span> <a class="announcement-cta" href="/blog/v2-1-release">Read the announcement</a>',
       backgroundColor: '#6B46C1',
       textColor: '#ffffff',
       isCloseable: true,
