@@ -93,7 +93,7 @@ The shell can now play video wallpapers ([KadirJeager](https://github.com/KadirJ
   <figcaption>Keyboard layout and input method OSDs.</figcaption>
 </figure>
 
-## Dash
+## Dashboard
 
 - A live user info card.
 - The clock card's font weight can be adjusted to match the desktop and lock screen clocks.
@@ -187,9 +187,9 @@ The [Wallpaper Generator](https://wallpaper.duxlabs.dev) gets a color scheme pic
 
 ## niri
 
-niri is the compositor we drive every day, so DMS 2.1 already supports everything coming in niri's next stable release. DMS asks the installed niri once with `niri validate` and only shows the newer options when your niri accepts them, so niri 26.04 keeps working as it does today.
+As niri is our daily driver, DMS 2.1 already supports some of the upcoming features in niri's next stable release. DMS probes the installed niri once with `niri validate` and only shows the newer options when your niri accepts them, so niri 26.04 keeps working as it does today for the time being. Note: as these features are in active development, they are subject to change.
 
-- **Keyboard shortcuts:** **Release** and **Non-consuming** bind options, and binds on a lone modifier. On the next release, tapping `Mod` on its own toggles the overview and `Mod+Shift+?` opens the cheatsheet.
+- **Keyboard shortcuts:** **Release** and **Non-consuming** bind options, and binds on a lone modifier. On the next release, tapping `Mod` on its own toggles the overview, and `Mod+Shift+/` still opens the cheatsheet.
 - **Window rules:** **VRR Fullscreen Only**, **On activation** (Focus, Ignore, or Mark urgent), and **Pinch sensitivity**.
 - **Input and displays:** touchpad pinch sensitivity and **Max bits per channel** for each output.
 - **Conflict detection** understands modifier order and left and right modifiers, so it catches the same clashes niri does.
@@ -336,7 +336,7 @@ Dux Search no longer serves its HTTP API unless you ask. DMS and the `dsearch` C
 
 ## The people behind it
 
-DMS was founded by **[bbedward](https://github.com/bbedward)** and **[purian23](https://github.com/purian23)**. We're grateful for the passion and contributions from each **[Huỳnh Thiện Lộc](https://github.com/hthienloc)**, **[apollo79](https://github.com/apollo79)**, and **[georgestafilidis](https://github.com/georgestafilidis)**, whose design ideas and code show up all over the shell. Thank you to everyone else contributing code, plugins, translations, packaging, testing, and bug reports.
+DMS was founded by **[bbedward](https://github.com/bbedward)** and **[purian23](https://github.com/purian23)**. We're grateful for the passion and contributions from each **[Huỳnh Thiện Lộc](https://github.com/hthienloc)**, **[apollo79](https://github.com/apollo79)**, and **[georgestafilidis](https://github.com/georgestafilidis)**, whose design ideas and code show up all over the shell. Their work has been vital! Thank you to everyone else contributing code, plugins, translations, packaging, testing, and bug reports.
 
 A special thank you to everyone who supports Dux Labs through GitHub Sponsors and [Ko-fi](https://ko-fi.com/duxlabs). Your support keeps this project going, and we're grateful for every one of you! Meet them on our new [sponsors page](https://duxlabs.dev/sponsors), and everyone who has built DMS with us on the [contributors page](https://duxlabs.dev/contributors).
 
@@ -359,7 +359,15 @@ Browse and upvote them all on the [plugins page](/plugins).
 
 **[Huỳnh Thiện Lộc](https://github.com/hthienloc)** landed 23 pull requests across DMS, Dux QML Common, and the first-party plugins, including the screenshot selector's island snap targets, themable tooltip colors, the keyboard layout OSD and Num Lock indicator, square resizing in the widget editor, the dock's middle-click setting, and a long run of dock, dash, screenshot, and OSD fixes.
 
-Also: performance work on workspace indicators, dock tooltips, and the lock screen, plus synced lyrics in the island ([PandorasFox](https://github.com/PandorasFox)), the reworked system monitor ([Conava](https://github.com/Conava)), the Expressive media player and lyrics features ([apollo79](https://github.com/apollo79)), video wallpapers ([KadirJeager](https://github.com/KadirJeager)), seven fixes across the dock, settings, brightness, and privacy indicators ([Mario-Mohar](https://github.com/Mario-Mohar)), and administrator lock settings ([alvarosth](https://github.com/alvarosth)).
+**[Conava](https://github.com/Conava)** rebuilt the system monitor window, backed by new data from Dux GOP, and fixed notification popups on screens that stop showing them, along with Tailscale, Matugen, and display profile fixes.
+
+**[Mario-Mohar](https://github.com/Mario-Mohar)** sent seven fixes, from island brightness for the devices pinned to its screen and a steadier dock spring to the muted-mic privacy icon, local week day names, and wallpaper cycling.
+
+**[KadirJeager](https://github.com/KadirJeager)** brought video wallpapers to the shell, then fixed the island's default reservation, dock widget ordering in settings, and wired network profile refreshes.
+
+**[PandorasFox](https://github.com/PandorasFox)** made workspace indicators, dock tooltips, app icons, and the lock screen faster, and added synced lyrics to the island's media slot.
+
+Also: widget overflow priority and dmenu navigation in the launcher ([colonelpanic8](https://github.com/colonelpanic8)), MET Norway and provider fallback for weather ([joshii-h](https://github.com/joshii-h)), the Expressive media player and lyrics features ([apollo79](https://github.com/apollo79)), and administrator lock settings ([alvarosth](https://github.com/alvarosth)).
 
 Across the suite: folder appearance, previews, game libraries, and view options in Dux Files ([is-suzart](https://github.com/is-suzart)), sidebar sections ([phantomeye1931](https://github.com/phantomeye1931)), calendar sync fixes ([LazyWare](https://github.com/LazyWare), [alin742](https://github.com/alin742)), build docs ([mattmars3](https://github.com/mattmars3)), and ARM CPU temperatures in Dux GOP ([junknewera](https://github.com/junknewera)).
 
