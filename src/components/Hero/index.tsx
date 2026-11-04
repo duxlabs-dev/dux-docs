@@ -6,6 +6,8 @@ import styles from './styles.module.css';
 interface HeroProps {
   asciiArt?: string;
   hideTitle?: boolean;
+  /** Replaces the default shape composition on the right of the hero. */
+  visual?: React.ReactNode;
 }
 
 const projects: Record<string, string> = {
@@ -22,7 +24,7 @@ const projects: Record<string, string> = {
   dankinstall: 'Dux Install',
 };
 
-export default function Hero({hideTitle = true}: HeroProps) {
+export default function Hero({hideTitle = true, visual}: HeroProps) {
   const {metadata, contentTitle} = useDoc();
   const project = projects[metadata.id.split('/')[0]] ?? 'Dux Labs';
   const title = contentTitle ?? metadata.title;
@@ -31,12 +33,16 @@ export default function Hero({hideTitle = true}: HeroProps) {
   const Title = replacesTitle ? 'h1' : 'p';
 
   return (
-    <div className={styles.hero} data-replaces-title={replacesTitle} data-content-title={Boolean(contentTitle)}>
+    <div className={styles.hero} data-replaces-title={replacesTitle} data-content-title={Boolean(contentTitle)} data-has-visual={Boolean(visual)}>
       <div className={styles.heroContent}>
         {showProject && <p className={styles.project}>{project}</p>}
         <Title className={styles.title}>{title}</Title>
       </div>
-      <Composition variant="header" className={styles.shapes} />
+      {visual ? (
+        <div className={styles.visual}>{visual}</div>
+      ) : (
+        <Composition variant="header" className={styles.shapes} />
+      )}
     </div>
   );
 }

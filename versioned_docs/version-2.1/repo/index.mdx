@@ -1,9 +1,10 @@
 ---
 title: Dux Labs Package Repository
-description: Pre-built packages for Fedora, CentOS, Debian, Ubuntu, OpenSUSE, and Void Linux
+description: Pre-built packages for Arch Linux, Fedora, Enterprise Linux, Debian, Ubuntu, PikaOS, OpenSUSE, and Void Linux
 ---
 
 import Hero from '@site/src/components/Hero';
+import DistroOrbit from '@site/src/components/DistroOrbit';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -15,6 +16,7 @@ import TabItem from '@theme/TabItem';
 ██████╔╝╚██████╔╝██╔╝ ██╗    ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗
 ╚═════╝  ╚═════╝ ╚═╝  ╚═╝    ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝`}
   hideTitle={true}
+  visual={<DistroOrbit />}
 />
 
 # Dux Labs Package Repository
@@ -22,8 +24,10 @@ import TabItem from '@theme/TabItem';
 The **Dux Labs Repository** provides pre-built packages for **Dux Modular Shell** and **niri**! \
 Dux Modular Shell is now available on more distributions than ever before!
 
-- [**Fedora**](https://fedoraproject.org/) | [**CentOS**](https://www.centos.org/) | [**OpenSUSE**](https://www.opensuse.org/)
+- [**Arch Linux**](https://archlinux.org/) | [**Fedora**](https://fedoraproject.org/) | [**Enterprise Linux 10**](https://www.centos.org/) | [**OpenSUSE**](https://www.opensuse.org/)
 - [**Debian**](https://www.debian.org/) | [**Ubuntu**](https://ubuntu.com/) | [**Void Linux**](https://voidlinux.org/)
+- [**PikaOS**](https://wiki.pika-os.com/) (packages ship in PikaOS's own repository)
+
 
 ### Desktop Environment
 - **Dux Modular Shell (dms)**: The complete desktop shell with widgets and CLI tools
@@ -55,15 +59,22 @@ For complete DMS installation instructions including repository setup, see the [
 :::tip[Quick Start]
 
 - **Fedora / Enterprise Linux**: See the [Fedora & Enterprise Linux](../dms/installation#fedora--enterprise-linux) section in the installation guide
+- **Arch Linux**: See the [Arch & Derivatives](../dms/installation#arch--derivatives) section in the installation guide
 - **Ubuntu/Debian**: See the [Ubuntu & Debian](../dms/installation#debian--ubuntu) section in the installation guide
 - **OpenSUSE**: See the [OpenSUSE](../dms/installation#opensuse--derivatives) section in the installation guide
 - **Void Linux**: See the [Void Linux](../dms/installation#void-linux) section in the installation guide
+- **PikaOS**: See the [PikaOS](../dms/installation#pikaos) section in the installation guide
 
 :::
 
 :::note[Renamed packages]
 
 The new names exist only in the `duxlabs` repositories (`home:duxlabs-dev` on OBS); the legacy `avengemedia` repositories (`home:AvengeMedia` on OBS) keep the old names. After `dms migrate dux`, an existing install moves to the new names on its next upgrade, because the old names are kept as obsoleted or transitional packages. The commands themselves (`dgop`, `dsearch`, `dcal`, `dms-greeter`) do not change.
+
+<div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(20rem, 1fr))', gap: '0 1.5rem', alignItems: 'start'}}>
+<div>
+
+**Fedora, Debian, Ubuntu, openSUSE, Void**
 
 | Old package | New package |
 | --- | --- |
@@ -73,6 +84,24 @@ The new names exist only in the `duxlabs` repositories (`home:duxlabs-dev` on OB
 | `dgop` | `dux-gop` |
 | `dms-greeter` | `dux-greeter` |
 | `dms-greeter-git` | `dux-greeter-git` |
+
+</div>
+<div>
+
+**Arch Linux (official repositories and AUR)**
+
+| Old package | New package |
+| --- | --- |
+| `dms-shell`, `dms-shell-git` | `dux-shell`, `dux-shell-git` |
+| `dgop`, `dgop-git` | `dux-gop`, `dux-gop-git` |
+| `dsearch-bin`, `dsearch-git` | `dux-search-bin`, `dux-search-git` |
+| `dankcalendar-bin`, `dankcalendar-git` | `dux-calendar-bin`, `dux-calendar-git` |
+| `greetd-dms-greeter-bin`, `greetd-dms-greeter-git` | `dux-greeter-bin`, `dux-greeter-git` |
+
+</div>
+</div>
+
+`dms migrate dux` makes no changes on Arch, so switch those packages yourself: remove the old package, then install the new one.
 
 :::
 
@@ -85,6 +114,38 @@ All packages in the Dux Labs repository can be installed independently. First, a
 **xWayland-Satellite** is automatically installed as a dependency when installing **niri** or **niri-git**. You don't need to install it separately.
 
 :::
+
+### Arch Linux
+
+Arch packages come from the official repositories (`extra`) and the [AUR](https://aur.archlinux.org/), not from the Dux Labs build services. Use an AUR helper such as `paru` or `yay` for the AUR packages.
+
+<Tabs groupId="dms-channel">
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+sudo pacman -S dux-shell dux-gop
+paru -S dux-search-bin dux-calendar-bin dux-greeter-bin
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+paru -S dux-shell-git dux-gop-git dux-search-git dux-calendar-git dux-greeter-git
+```
+
+</TabItem>
+</Tabs>
+
+| Package | Stable | Development |
+| --- | --- | --- |
+| Dux Modular Shell | `dux-shell` (extra) | `dux-shell-git` (AUR) |
+| Dux GOP | `dux-gop` (extra) | `dux-gop-git` (AUR) |
+| Dux Search | `dux-search-bin` (AUR) | `dux-search-git` (AUR) |
+| Dux Calendar | `dux-calendar-bin` (AUR) | `dux-calendar-git` (AUR) |
+| Dux Greeter | `dux-greeter-bin` (AUR) | `dux-greeter-git` (AUR) |
+
+`niri`, `quickshell`, and the other compositors are available from the official Arch repositories. See the [Arch & Derivatives](../dms/installation#arch--derivatives) installation guide for details.
 
 ### Debian
 
