@@ -1,0 +1,293 @@
+---
+title: Installation
+description: Install Dux Files, run it at login, and make it the default file manager
+sidebar_position: 2
+---
+
+import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Dux Files Installation
+
+Dux Files installs a single `dfiles` binary with the Quickshell UI embedded, a desktop entry, a D-Bus activation file for `org.freedesktop.FileManager1`, a polkit policy for the administrator retry, and the portal file chooser backend files.
+
+## Requirements
+
+- [Quickshell](https://quickshell.org) (`qs`): `quickshell-git` or `quickshell` from the [Dux repository](../repo/)
+- Go 1.27+ (build from source only; the binary is pure Go with no cgo)
+
+Optional, picked up from `PATH` when the daemon starts:
+
+| Package | Binary | Enables |
+| --- | --- | --- |
+| `bubblewrap` | `bwrap` | runs every external thumbnailer in a sandbox |
+| `ffmpegthumbnailer` | `ffmpegthumbnailer` | video thumbnails |
+| `poppler` (`poppler-utils` on Debian) | `pdftoppm` | PDF thumbnails |
+| `gvfs` | | network shares, phones and cameras, `trash://` on removable media |
+| `udisks2` | | the Devices section of the sidebar |
+
+Images in png, jpeg, gif, bmp, tiff and webp are decoded in-process. Every other format goes through the freedesktop `thumbnailers/*.thumbnailer` entries under the XDG data dirs, so packages that ship one (glycin for heif, avif, jxl and ico, gsf for office documents, evince or totem on GNOME) work without configuration. `dfiles ipc system.capabilities` lists what was found under `thumbnailers`.
+
+## Installation Methods
+
+Choose the installation method that best fits your system. Dux Files is not on Flathub yet.
+
+### Distribution Packages
+
+Each Dux repository ships two packages: `dux-files` follows tagged releases, and `dux-files-git` builds from upstream `master`. They conflict, so install one.
+
+### Fedora & CentOS
+
+```bash
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-files        # or dux-files-git for the latest development build
+```
+
+### Debian & Ubuntu
+
+#### Debian
+
+Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
+
+Select your release:
+
+<Tabs groupId="debian-release">
+<TabItem value="trixie" label="Debian 13 (Trixie)" default>
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="testing" label="Debian Testing">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="sid" label="Debian Sid">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+</Tabs>
+
+#### Ubuntu
+
+Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo apt update
+sudo apt install dux-files        # or dux-files-git for the latest development build
+```
+
+### openSUSE & Derivatives
+
+Dux Files is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+
+Select your distribution:
+
+<Tabs groupId="opensuse-distro">
+<TabItem value="tumbleweed" label="Tumbleweed" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="leap16" label="Leap 16">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="leap161" label="Leap 16.1">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="slowroll" label="Slowroll">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-files        # or dux-files-git for the latest development build
+```
+
+</TabItem>
+</Tabs>
+
+### Void Linux
+
+:::note
+
+Install Dux Files from our R2-backed XBPS repository or build it from source. Void only carries the stable `dux-files` package.
+
+:::
+
+<Tabs groupId="void-install-method">
+<TabItem value="repo" label="Dux Repository" default>
+
+```bash
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -Su
+sudo xbps-install -S dux-files
+```
+
+:::note
+
+On the first sync, `xbps-install` will output our signing key fingerprint and ask you to type `y` to trust and import it. Verify that the key matches our official signing fingerprint.
+
+:::
+
+</TabItem>
+<TabItem value="source" label="Build from Source">
+
+If you prefer to build from source using `xbps-src`:
+
+```bash
+# Set up the Void packages tree (one time)
+git clone --depth 1 https://github.com/void-linux/void-packages.git
+cd void-packages
+./xbps-src binary-bootstrap
+
+# Copy in the template (adjust paths as needed)
+cp -R ../Dux/distro/void/srcpkgs/dux-files srcpkgs/
+
+# Build the package
+./xbps-src pkg dux-files
+
+# Install the result
+sudo xbps-install --repository=hostdir/binpkgs dux-files
+```
+
+</TabItem>
+</Tabs>
+
+Distribution packages install:
+
+- `dfiles` to `/usr/bin/dfiles` (the Quickshell UI is embedded in the binary)
+- Desktop entry, icon, metainfo and shell completions
+- Polkit policy, the `FileManager1` D-Bus activation file and the portal file chooser backend files
+- `dfiles.service` under `/usr/lib/systemd/user/`, not enabled (Void skips the unit)
+
+### From Source
+
+The Quickshell UI is embedded into the `dfiles` binary at build time, and part of it lives in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule, so clone with `--recurse-submodules` (or run `git submodule update --init` in an existing clone):
+
+```bash
+git clone --recurse-submodules https://github.com/duxlabs-dev/dux-files
+cd dux-files
+make
+sudo make install
+```
+
+This installs:
+
+- `dfiles` binary to `/usr/local/bin` (UI embedded)
+- Desktop entry, icon and metainfo
+- Polkit policy for the administrator retry
+- `FileManager1` D-Bus activation file
+- Portal file chooser backend files, not preferred until you ask (see [Open and save dialogs](desktop-integration#open-and-save-dialogs))
+
+Override the prefix with `PREFIX=/usr sudo make install`. `make install-systemd` adds the user unit, `make uninstall-dbus` removes the activation file.
+
+### Release Binary
+
+Each tagged release publishes static `linux-amd64` and `linux-arm64` binaries with the UI embedded, plus a tarball of shell completions, on the [GitHub releases page](https://github.com/duxlabs-dev/dux-files/releases).
+
+```bash
+curl -fsSLO https://github.com/duxlabs-dev/dux-files/releases/latest/download/dfiles-linux-amd64.tar.gz
+tar -xzf dfiles-linux-amd64.tar.gz
+sudo install -Dm755 dfiles-linux-amd64 /usr/local/bin/dfiles
+```
+
+The binary alone gives you the app and the CLI. The desktop entry, D-Bus activation, polkit policy and portal files come from `make install` in a source checkout.
+
+### NixOS and home-manager
+
+The repository is a flake with a package, a NixOS module and a home-manager module. See [NixOS Installation](nixos-flake).
+
+### Flatpak
+
+A manifest lives in the repository under `distro/flatpak` as `dev.duxlabs.files`. It is not published on Flathub. `make flatpak-build` builds and installs it locally with `org.flatpak.Builder`; the manifest pins a git commit, so for a working-tree build follow the notes in `distro/flatpak/README.md`.
+
+:::note
+
+A file manager needs the host filesystem, so the Flatpak grants `--filesystem=host`. Settings, trash and thumbnails land in the same places as a native install. Three things the sandbox cannot do: answer `FileManager1` calls while it is not running, serve the portal file chooser (Flatpak exports no portal backend files), and retry operations as administrator. The Settings page explains each when it applies.
+
+:::
+
+## Running at Login
+
+Dux Files does not have to run in the background. Opening a folder starts it, and with the activation file installed a `FileManager1` call from another app starts it too. A resident instance opens windows faster and answers the portal file chooser at once, so you can keep one around:
+
+```bash
+systemctl --user enable --now dfiles
+```
+
+The unit starts `dfiles run --session --hidden --keep-running`. Started that way, closing the last window hides it instead of quitting. Started any other way, closing the last window quits unless **Settings → General → Close behavior** says otherwise.
+
+## Default File Manager
+
+To open folders here from other apps:
+
+```bash
+xdg-mime default dev.duxlabs.files.desktop inode/directory
+```
+
+The installer does not run this. Reveal-in-file-manager requests from browsers and other apps go through `org.freedesktop.FileManager1` instead, which Dux Files owns while it runs. See [Desktop Integration](desktop-integration).
+
+## Verification
+
+```bash
+# Check version
+dfiles version
+
+# Open a window on your home folder
+dfiles
+```
+
+## Next Steps
+
+- [Usage](usage) - Learn the CLI commands
+- [Desktop Integration](desktop-integration) - Serve open and save dialogs for every app

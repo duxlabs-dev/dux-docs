@@ -1,22 +1,25 @@
 # Dux
 
 <div align="center">
-  <img src="static/img/dux-mark.svg" alt="Dux Logo" width="200">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="static/img/dux-labs-logo-dark.svg">
+    <img src="static/img/dux-labs-logo-light.svg" alt="Dux Labs Logo" width="160">
+  </picture>
   
   ### A modern Linux desktop suite with beautiful widgets and powerful monitoring
   
-  Optimized for niri, Hyprland, MangoWC, dwl, labwc, and Sway
+  Optimized for niri, Hyprland, mangowm, dwl, labwc, and Sway
 </div>
 
 ---
 
 ## Overview
 
-Dux is a modern Linux desktop suite that delivers everything you need in one cohesive package. Built with [Quickshell](https://quickshell.org/) and Go, Dux Shell (DMS) serves as the core desktop shell, providing a unified interface for launching applications, managing windows, system monitoring, notifications, and much more.
+Dux is a modern Linux desktop suite that delivers everything you need in one cohesive package. Built with [Quickshell](https://quickshell.org/) and Go, Dux Modular Shell (DMS) serves as the core desktop shell, providing a unified interface for launching applications, managing windows, system monitoring, notifications, and much more.
 
 ### Video Overview
 
-Watch Dux Shell in action:
+Watch Dux Modular Shell in action:
 
 https://github.com/user-attachments/assets/1200a739-7770-4601-8b85-695ca527819a
 
@@ -33,7 +36,7 @@ https://github.com/user-attachments/assets/1200a739-7770-4601-8b85-695ca527819a
 
 ## The Suite
 
-- **[Dux Shell](https://duxlabs.dev/docs/dms/overview)** - Feature-rich desktop shell built with Quickshell and Go
+- **[Dux Modular Shell](https://duxlabs.dev/docs/dms/overview)** - Feature-rich desktop shell built with Quickshell and Go
 - **[Dux Greeter](https://duxlabs.dev/docs/dms-greeter/)** - An aesthetically pleasing greetd greeter for your desktop
 - **[Dux GOP](https://duxlabs.dev/docs/dgop/)** - Stateless, cursor-based system and process monitoring tool
 - **[Dux Search](https://duxlabs.dev/docs/dsearch/)** - Extremely fast, configurable filesystem search service

@@ -730,7 +730,7 @@ export default function Plugins() {
   return (
     <Layout
       title="Plugins & Themes"
-      description="Discover and install plugins and themes for Dux Shell - extend your desktop with widgets, launchers, and more.">
+      description="Discover and install plugins and themes for Dux Modular Shell - extend your desktop with widgets, launchers, and more.">
       <Head>
         <link
           rel="stylesheet"
@@ -746,7 +746,7 @@ export default function Plugins() {
             </h1>
             <p className={styles.subtitle}>
               {activeTab === 'plugins'
-                ? 'Extend Dux Shell with powerful plugins for widgets, launchers, and more'
+                ? 'Extend Dux Modular Shell with powerful plugins for widgets, launchers, and more'
                 : 'Customize your desktop with beautiful color schemes'}
             </p>
             <Segmented

@@ -1,0 +1,296 @@
+---
+title: Installation
+description: Install Dux Calendar and set up the background daemon
+sidebar_position: 2
+---
+
+import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ██████╗  █████╗ ██╗     ███████╗███╗   ██╗██████╗  █████╗ ██████╗ 
+██╔══██╗██║   ██║╚██╗██╔╝    ██╔════╝ ██╔══██╗██║     ██╔════╝████╗  ██║██╔══██╗██╔══██╗██╔══██╗
+██║  ██║██║   ██║ ╚███╔╝     ██║     ███████║██║     █████╗  ██╔██╗ ██║██║  ██║███████║██████╔╝
+██║  ██║██║   ██║ ██╔██╗     ██║     ██╔══██║██║     ██╔══╝  ██║╚██╗██║██║  ██║██╔══██║██╔══██╗
+██████╔╝╚██████╔╝██╔╝ ██╗    ╚██████╗██║  ██║███████╗███████╗██║ ╚████║██████╔╝██║  ██║██║  ██║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝`}
+  hideTitle={true}
+/>
+
+# Dux Calendar Installation
+
+Dux Calendar installs a single `dcal` binary, the Quickshell UI config, and a desktop entry.
+
+## Requirements
+
+- [Quickshell](https://quickshell.org) (`qs`) — `quickshell-git` or `quickshell` from the [Dux repository](../repo/)
+- Qt 6 declarative, including `Qt.labs.platform` for the tray icon
+- Go 1.25+ (build from source only; the packaged binary is pure Go with no CGO)
+
+## Installation Methods
+
+Choose the installation method that best fits your system.
+
+### Flatpak
+
+Dux Calendar is available on [Flathub](https://flathub.org/apps/com.danklinux.dankcalendar) as `com.danklinux.dankcalendar`. The Flatpak bundles its runtime dependencies, so you do not need a separate Quickshell install on the host.
+
+```bash
+flatpak install flathub com.danklinux.dankcalendar
+flatpak run com.danklinux.dankcalendar
+```
+
+:::note
+
+Notifications and credentials use XDG desktop portals. To sync [Dux Modular Shell](../dms/overview) theme colors from the host, grant read access to the cache:
+
+```bash
+flatpak override --user \
+  --filesystem=xdg-cache/dms:ro \
+  com.danklinux.dankcalendar
+```
+
+Local ICS calendar directories also need an explicit filesystem grant (or the equivalent in Flatseal).
+
+:::
+
+### Distribution Packages
+
+Each Dux repository ships two packages: `dux-calendar` follows tagged releases, and `dux-calendar-git` builds from upstream `master`. They conflict, so install one.
+
+### Arch & Derivatives
+
+<Tabs>
+<TabItem value="stable" label="Stable Release" default>
+
+```bash
+paru -S dux-calendar-bin
+```
+
+</TabItem>
+<TabItem value="git" label="Latest Development Build">
+
+```bash
+paru -S dux-calendar-git
+```
+
+</TabItem>
+</Tabs>
+
+### Fedora & CentOS
+
+```bash
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+### Debian & Ubuntu
+
+#### Debian
+
+Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
+
+Select your release:
+
+<Tabs groupId="debian-release">
+<TabItem value="trixie" label="Debian 13 (Trixie)" default>
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="testing" label="Debian Testing">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="sid" label="Debian Sid">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+</Tabs>
+
+#### Ubuntu
+
+Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo apt update
+sudo apt install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+### openSUSE & Derivatives
+
+Dux Calendar is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+
+Select your distribution:
+
+<Tabs groupId="opensuse-distro">
+<TabItem value="tumbleweed" label="Tumbleweed" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="leap16" label="Leap 16">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="leap161" label="Leap 16.1">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="slowroll" label="Slowroll">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-calendar        # or dux-calendar-git for the latest development build
+```
+
+</TabItem>
+</Tabs>
+
+### Void Linux
+
+:::note
+
+Install Dux Calendar from our R2-backed XBPS repository or build it from source.
+
+:::
+
+<Tabs groupId="void-install-method">
+<TabItem value="repo" label="Dux Repository" default>
+
+```bash
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -Su
+sudo xbps-install -S dux-calendar
+```
+
+:::note
+
+On the first sync, `xbps-install` will output our signing key fingerprint and ask you to type `y` to trust and import it. Verify that the key matches our official signing fingerprint.
+
+:::
+
+</TabItem>
+<TabItem value="source" label="Build from Source">
+
+If you prefer to build from source using `xbps-src`:
+
+```bash
+# Set up the Void packages tree (one time)
+git clone --depth 1 https://github.com/void-linux/void-packages.git
+cd void-packages
+./xbps-src binary-bootstrap
+
+# Copy in the templates (adjust paths as needed)
+cp -R ../Dux/distro/void/srcpkgs/dux-calendar* srcpkgs/
+
+# Build the package
+./xbps-src pkg dux-calendar
+
+# Install the results
+sudo xbps-install --repository=hostdir/binpkgs dux-calendar
+```
+
+</TabItem>
+</Tabs>
+
+Distribution packages install:
+
+- `dcal` to `/usr/bin/dcal` (the Quickshell UI is embedded in the binary)
+- Desktop entry, icon, shell completions, and `dcal.service` under `/usr/lib/systemd/user/`
+
+### From Source
+
+The Quickshell UI is embedded into the `dcal` binary at build time, and part of it lives in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule — clone with `--recurse-submodules` (or run `git submodule update --init` in an existing clone):
+
+```bash
+git clone --recurse-submodules https://github.com/duxlabs-dev/dux-calendar
+cd dux-calendar
+make
+sudo make install
+```
+
+This installs:
+
+- `dcal` binary to `/usr/local/bin` (UI embedded)
+- Desktop entry + icon
+
+Override the prefix with `PREFIX=/usr sudo make install`.
+
+## Running at Login
+
+Dux Calendar runs as a background daemon, and the window is just a view onto it. To keep it running across logins, choose one of:
+
+### systemd user service
+
+The distribution package and `make install-systemd` both provide a user unit. After installing from a distribution package or building from source:
+
+```bash
+systemctl --user enable --now dcal
+```
+
+When building from source without the systemd install target:
+
+```bash
+make install-systemd
+systemctl --user enable --now dcal
+```
+
+### Start at login (XDG autostart)
+
+Toggle **Start at login** from **Settings → General**. This manages an XDG autostart entry that launches `dcal run -d --hidden`, so the daemon starts hidden and waits in the tray.
+
+## Verification
+
+```bash
+# Check version
+dcal version
+
+# Launch the calendar window
+dcal
+```
+
+## Next Steps
+
+- [Accounts](accounts) - Connect your calendars
+- [Usage](usage) - Learn the CLI commands

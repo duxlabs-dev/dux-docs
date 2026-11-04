@@ -1,6 +1,6 @@
 ---
 title: Keybinds & IPC
-description: Comprehensive IPC functionality for external control of Dux Shell
+description: Comprehensive IPC functionality for external control of Dux Modular Shell
 sidebar_position: 5
 ---
 
@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Shell provides comprehensive IPC (Inter-Process Communication) functionality that allows external control of the shell through command-line commands. All IPC commands follow the format:
+Dux Modular Shell provides comprehensive IPC (Inter-Process Communication) functionality that allows external control of the shell through command-line commands. All IPC commands follow the format:
 
 ```bash
 dms ipc call <target> <function> [parameters...]
@@ -983,14 +983,14 @@ dms ipc call keybinds toggleWithPath sway /etc/sway/config
 **Supported Providers:**
 
 The keybinds modal supports all providers available through the `dms keybinds` CLI:
-- **Built-in providers**: niri, Hyprland, Sway, Scroll, MangoWC, Miracle WM, Aqueous (automatically parse compositor configs)
+- **Built-in providers**: niri, Hyprland, Sway, Scroll, mangowm, Miracle WM, Aqueous (automatically parse compositor configs)
 - **Custom cheatsheets**: Any JSON-based cheatsheet in `~/.config/dms/cheatsheets/`
 
 The modal automatically parses configuration files and displays keybinds organized by category with optional subcategories. See the [Keybinds & Cheatsheets](/docs/dms/cli-keybinds-cheatsheets) documentation for more details on providers and creating custom cheatsheets.
 
 ### window-rules
 
-**niri, Hyprland, and MangoWC only**
+**niri, Hyprland, and mangowm only**
 
 Window rules editor modal for managing compositor window rules.
 
@@ -1008,7 +1008,7 @@ dms ipc call window-rules toggle
 ```
 
 :::note
-This feature is only available on niri, Hyprland, and MangoWC compositors. Other compositors return `WINDOW_RULES_UNSUPPORTED_COMPOSITOR`.
+This feature is only available on niri, Hyprland, and mangowm compositors. Other compositors return `WINDOW_RULES_UNSUPPORTED_COMPOSITOR`.
 :::
 
 ### workspace-rename
@@ -1068,7 +1068,7 @@ dms ipc call outputs refresh
 ```
 
 :::note
-This feature is only available on niri, Hyprland, and MangoWC compositors.
+This feature is only available on niri, Hyprland, and mangowm compositors.
 :::
 
 #### Cycling connected displays

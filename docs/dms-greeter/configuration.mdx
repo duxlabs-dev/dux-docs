@@ -523,6 +523,22 @@ dms-greeter sync --profile
 # If the slot is already live, grant access to the new wallpaper folder by re-running the same command
 ```
 
+**Session exits right after login or never appears:**
+```bash
+# The greeter sends the session's output to the journal instead of the login VT
+journalctl -t dms-greeter/session -b
+# Greeter compositor output uses the compositor name, for example:
+journalctl -t dms-greeter/niri -b
+```
+
+Without journald the session log is appended to `~/.local/state/dms-greeter/session.log` for the user who signed in.
+
+## Remembered user and session
+
+With **Remember last user** and **Remember last session** enabled (the defaults under **Settings → Greeter**), the greeter preselects the account that signed in last and, once you pick a user, the session that account used last. Each account keeps its own entry, so a Gnome user and a niri user on the same machine both land in the right session without touching the session picker. An account that has not signed in since this was introduced starts on the session used most recently on the machine until its first login.
+
+Picking a session by hand overrides the remembered one for that login and is saved as the new default for that account once the session starts. The entries live in `/var/cache/dms-greeter/.local/state/memory.json` and are cleared when the corresponding toggle is turned off.
+
 ## Auto-login on startup
 
 Auto-login skips the greeter password after boot - similar to the auto-login option in SDDM or GDM - until you sign out. It uses greetd's native `[initial_session]`, so:
@@ -583,7 +599,7 @@ The greeter does not read `config.d/*.json` files.
 
 ### Colors
 
-Colors can be configured in the exact same way described in [Dux Shell Custom Themes](/docs/dms/custom-themes)
+Colors can be configured in the exact same way described in [Dux Modular Shell Custom Themes](/docs/dms/custom-themes)
 
 ### Settings
 

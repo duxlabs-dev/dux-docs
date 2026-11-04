@@ -533,6 +533,83 @@ export const heisenberg = (): ReturnType<ImageRenderer> => [
   {width: BASE_WIDTH, height: BASE_HEIGHT, fonts},
 ]
 
+// 2.1 Stormborn: the blog hero's forked lightning framing "DMS 2.1 / STORMBORN".
+// Bolt geometry mirrors blog/2026-11-04-v2-1-release/StormHero.tsx (dark theme colors).
+type StormPt = [number, number]
+
+const stormBolt = (pts: StormPt[], halfW: number): string => {
+  const n = pts.length - 1
+  const width = (i: number) => {
+    const t = i / n
+    return halfW * Math.pow(1 - t, 0.85) * Math.min(1, 0.35 + t * 6)
+  }
+  const side = (s: 1 | -1) => pts.map(([x, y], i) => `${(x + s * width(i)).toFixed(1)} ${y.toFixed(1)}`)
+  const right = side(1)
+  const left = side(-1).reverse()
+  return `M ${right[0]} ${right.slice(1).map((p) => `L ${p}`).join(' ')} ${left.map((p) => `L ${p}`).join(' ')} Z`
+}
+
+const stormPaths = [
+  stormBolt([[60, 0], [80, 38], [50, 76], [86, 118], [56, 150], [92, 196], [70, 228], [98, 262]], 13),
+  stormBolt([[50, 76], [26, 104], [38, 126], [8, 172]], 7),
+  stormBolt([[86, 118], [118, 138], [106, 164], [138, 204]], 6),
+  stormBolt([[56, 150], [34, 176], [44, 194], [26, 218]], 3.5),
+]
+const stormSparks = [[6, 178, 1.8], [140, 210, 2.2], [124, 96, 1.5], [100, 268, 2], [22, 224, 1.4], [30, 60, 1.2]]
+
+// one bolt in its own 146x272 box, optionally mirrored
+const stormBoltGroup = (mirror: boolean) =>
+  `<g transform="${mirror ? 'translate(146,0) scale(-1,1)' : ''}">` +
+  stormPaths.map((d) => `<path d="${d}" fill="url(#sg)"/><path d="${d}" fill="none" stroke="url(#sr)" stroke-width="0.8"/>`).join('') +
+  stormSparks.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#sr)" opacity="0.75"/>`).join('') +
+  `</g>`
+
+// strike box: 300px wide (aspect 146:272), placed like the hero's .strikeLeft/.strikeRight
+const STORM_W = 300
+const STORM_H = (STORM_W * 272) / 146
+const STORM_SCALE = STORM_W / 146
+const stormStrikes = [
+  // top-left: origin top-left, rotate -30deg
+  `translate(${-0.09 * BASE_WIDTH} ${-0.24 * BASE_HEIGHT}) rotate(-30) scale(${STORM_SCALE})`,
+  // bottom-right: origin bottom-right, rotate -30deg, mirrored
+  `translate(${BASE_WIDTH * 1.12} ${BASE_HEIGHT * 1.32}) rotate(-30) translate(${-STORM_W} ${-STORM_H}) scale(${STORM_SCALE})`,
+]
+
+const stormSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${BASE_WIDTH}" height="${BASE_HEIGHT}">
+<defs>
+  <radialGradient id="bgTop" cx="50%" cy="-20%" r="80%" fx="50%" fy="-20%"><stop offset="0%" stop-color="rgb(70,96,150)" stop-opacity="0.45"/><stop offset="60%" stop-color="rgb(70,96,150)" stop-opacity="0"/></radialGradient>
+  <radialGradient id="bgBottom" cx="50%" cy="100%" r="90%"><stop offset="0%" stop-color="rgb(110,160,255)" stop-opacity="0.12"/><stop offset="70%" stop-color="rgb(110,160,255)" stop-opacity="0"/></radialGradient>
+  <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0"/><stop offset="18%" stop-color="#ffffff" stop-opacity="0.98"/><stop offset="50%" stop-color="#9fd2ff" stop-opacity="0.95"/><stop offset="80%" stop-color="#5b6cff" stop-opacity="0.8"/><stop offset="100%" stop-color="#5b6cff" stop-opacity="0"/></linearGradient>
+  <linearGradient id="sr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f4faff" stop-opacity="0"/><stop offset="30%" stop-color="#f4faff" stop-opacity="1"/><stop offset="75%" stop-color="#9fd2ff" stop-opacity="0.85"/><stop offset="100%" stop-color="#9fd2ff" stop-opacity="0"/></linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b"/><feColorMatrix in="b" type="matrix" values="0 0 0 0 0.51  0 0 0 0 0.73  0 0 0 0 1  0 0 0 0.75 0" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="100%" height="100%" fill="#0b0f17"/>
+<rect width="100%" height="100%" fill="url(#bgTop)"/>
+<rect width="100%" height="100%" fill="url(#bgBottom)"/>
+<g filter="url(#glow)" opacity="0.9">
+  <g transform="${stormStrikes[0]}">${stormBoltGroup(false)}</g>
+  <g transform="${stormStrikes[1]}">${stormBoltGroup(true)}</g>
+</g>
+</svg>`
+
+const stormDataUrl = `data:image/svg+xml;base64,${Buffer.from(stormSvg).toString('base64')}`
+
+export const stormborn = (): ReturnType<ImageRenderer> => [
+  <div style={{display: 'flex', width: BASE_WIDTH, height: BASE_HEIGHT, position: 'relative', overflow: 'hidden', backgroundColor: '#0b0f17', color: '#f2f8ff', fontFamily: 'Google Sans Flex'}}>
+    <img src={stormDataUrl} width={BASE_WIDTH} height={BASE_HEIGHT} style={{position: 'absolute', left: 0, top: 0}} />
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 34, width: '100%', height: '100%', position: 'relative'}}>
+      <div style={{display: 'flex', gap: 44, fontSize: 210, fontWeight: 800, lineHeight: 1, letterSpacing: '-0.04em', textShadow: '0 0 24px rgba(5, 7, 11, 0.85), 0 4px 12px rgba(5, 7, 11, 0.9)'}}>
+        <span>DMS</span>
+        <span style={{paddingRight: 10, backgroundImage: 'linear-gradient(135deg, #f2f8ff 0%, #9fd2ff 45%, #6f7dff 100%)', backgroundClip: 'text', color: 'transparent', textShadow: 'none'}}>2.1</span>
+      </div>
+      <div style={{display: 'flex', fontSize: 64, fontWeight: 700, lineHeight: 1, letterSpacing: '0.25em', marginRight: '-0.25em', color: '#b8dcff', textShadow: '0 0 16px rgba(5, 7, 11, 0.95), 0 2px 6px rgba(5, 7, 11, 0.95)'}}>
+        STORMBORN
+      </div>
+    </div>
+  </div>,
+  {width: BASE_WIDTH, height: BASE_HEIGHT, fonts},
+]
+
 export const blog: ImageRenderer<BlogPageData> = (data) => {
   // Handle different blog page types
   let title = 'Updates'
@@ -540,6 +617,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
   let isV12Release = false
   let isV14Release = false
   let isV20Release = false
+  let isV21Release = false
   let isDankCalendar = false
   let hasStaticImage = false
 
@@ -554,6 +632,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
     isV12Release = slug === 'v1-2-release'
     isV14Release = slug === 'v1-4-release'
     isV20Release = slug === 'v2-0-release'
+    isV21Release = slug === 'v2-1-release'
     const frontMatter = metadata?.frontMatter as Record<string, unknown> | undefined
     hasStaticImage = Boolean(frontMatter?.image)
     isDankCalendar = slug === 'dankcalendar-release'
@@ -571,6 +650,7 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
   }
 
   if (isV20Release) return heisenberg()
+  if (isV21Release) return stormborn()
 
   // Special OG image for v1 release - matches blog hero with bats and confetti
   if (isV1Release) {

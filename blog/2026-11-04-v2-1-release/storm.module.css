@@ -1,0 +1,209 @@
+/* ===== STORMBORN HERO =====
+   Same construction as the 1.5 "Wolverine" hero: a dark surface with two strikes
+   cracking in from opposite corners. Claws become forked lightning, molten amber
+   becomes Storm's white-hot core fading to electric blue. */
+
+.hero {
+  --core: #ffffff;
+  --rim: #f4faff;
+  --mid: #9fd2ff;
+  --deep: #5b6cff;
+  --glow: rgb(130 185 255 / 0.6);
+  --recess: #05070b;
+
+  position: relative;
+  padding: 3rem 2rem;
+  margin: 1rem -1rem 3rem;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgb(70 96 150 / 0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 120% 60% at 50% 100%, rgb(110 160 255 / 0.08) 0%, transparent 70%),
+    linear-gradient(180deg, rgb(30 42 66 / 0.1) 0%, transparent 100%);
+}
+
+:global([data-theme='light']) .hero {
+  --core: #8cc0ff;
+  --rim: #ffffff;
+  --mid: #3d7be0;
+  --deep: #2a2f9e;
+  --glow: rgb(60 110 220 / 0.45);
+  --recess: #1a2340;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgb(70 96 150 / 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 120% 60% at 50% 100%, rgb(60 110 220 / 0.06) 0%, transparent 70%),
+    linear-gradient(180deg, rgb(30 42 66 / 0.06) 0%, transparent 100%);
+}
+
+.stopCore { stop-color: var(--core); }
+.stopRim { stop-color: var(--rim); }
+.stopMid { stop-color: var(--mid); }
+.stopDeep { stop-color: var(--deep); }
+.recess { flood-color: var(--recess); flood-opacity: 0.85; }
+
+.strikes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.strikeSet {
+  position: absolute;
+  width: clamp(120px, 20vw, 220px);
+  aspect-ratio: 146 / 272;
+}
+
+.strikeSet svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Anchored off-canvas so the bolts frame the title diagonally instead of crossing it */
+.strikeLeft {
+  top: -24%;
+  left: -9%;
+  transform: rotate(-30deg);
+  transform-origin: top left;
+}
+
+.strikeRight {
+  bottom: -32%;
+  right: -12%;
+  transform: rotate(-30deg);
+  transform-origin: bottom right;
+}
+
+.flicker1,
+.flicker2 {
+  filter: drop-shadow(0 0 14px var(--glow));
+  animation: flicker 8s ease-in-out infinite;
+}
+
+.flicker2 {
+  animation-duration: 9.5s;
+  animation-delay: 2.3s;
+}
+
+/* A slow charge like the 1.5 claw shimmer, with one sharp double strike per cycle */
+@keyframes flicker {
+  0%, 100% { opacity: 0.9; }
+  40% { opacity: 1; }
+  68% { opacity: 0.92; }
+  69% { opacity: 0.3; }
+  70% { opacity: 1; }
+  71.5% { opacity: 0.45; }
+  73% { opacity: 1; }
+  80% { opacity: 0.94; }
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(3.5rem, 10vw, 6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-shadow: 0 0 10px rgb(5 7 11 / 0.85), 0 2px 6px rgb(5 7 11 / 0.9);
+}
+
+:global([data-theme='light']) .heroTitle {
+  text-shadow: 0 0 10px rgb(255 255 255 / 0.8), 0 2px 6px rgb(255 255 255 / 0.7);
+}
+
+.gradientText {
+  padding-right: 0.05em;
+  background: linear-gradient(135deg, #f2f8ff 0%, #9fd2ff 45%, #6f7dff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+}
+
+:global([data-theme='light']) .gradientText {
+  background: linear-gradient(135deg, #4f8fe8 0%, #3340b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.heroSubtitle {
+  display: inline-block;
+  margin: 0.75rem 0 0;
+  padding: 0.15em 0.6em;
+  font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #b8dcff;
+  text-shadow: 0 0 8px rgb(5 7 11 / 0.95), 0 1px 3px rgb(5 7 11 / 0.95);
+}
+
+:global([data-theme='light']) .heroSubtitle {
+  color: #2a46a8;
+  text-shadow: 0 0 8px rgb(255 255 255 / 0.95), 0 1px 3px rgb(255 255 255 / 0.85);
+}
+
+/* ===== THANK YOU ===== */
+.thankYou {
+  padding: 2.2rem 2rem;
+  margin: 3rem -1rem 1rem;
+}
+
+/* Scrim so the centered text stays legible over a bolt's white-hot core */
+.thankYou .heroContent::before {
+  content: '';
+  position: absolute;
+  inset: -18% -8%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 65% 75% at 50% 50%, rgb(8 11 16 / 0.82) 0%, rgb(8 11 16 / 0.55) 45%, transparent 75%);
+}
+
+:global([data-theme='light']) .thankYou .heroContent::before {
+  background: radial-gradient(ellipse 65% 75% at 50% 50%, rgb(244 246 250 / 0.85) 0%, rgb(244 246 250 / 0.55) 45%, transparent 75%);
+}
+
+/* beats the site's `.markdown h2 { color: primary }` */
+.thankYou .thankYouTitle {
+  margin: 0;
+  border: 0;
+  color: var(--ifm-font-color-base);
+  padding-bottom: 1rem;
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.thankYouText {
+  max-width: 34rem;
+  margin: 0 auto;
+  font-size: 1.05rem;
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 3rem 1.5rem;
+    margin: -0.5rem -0.5rem 2rem;
+  }
+
+  .thankYou {
+    margin: 2rem -0.5rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flicker1,
+  .flicker2 {
+    animation: none;
+    opacity: 0.95;
+  }
+}

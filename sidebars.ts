@@ -23,7 +23,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Dux Shell (DMS)',
+      label: 'Dux Modular Shell (DMS)',
       collapsed: false,
       items: [
         {

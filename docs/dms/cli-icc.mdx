@@ -51,7 +51,7 @@ dms icc remove DP-1
 | `dms icc remove <output>` | Remove the profile from a specific output |
 | `dms icc set-temp <output> <kelvin>` | Set a per-output color temperature (1000-10000K), independently of the night light schedule; `0` removes the override |
 
-Profiles are looked up in the DMS config directory for the running compositor, `<config dir>/<compositor>/dms/icc` — for example `~/.config/niri/dms/icc` on niri, `~/.config/hypr/dms/icc` on Hyprland and `~/.config/mango/dms/icc` on MangoWC. Output names are connector names as reported by the compositor, such as `DP-1`, `DP-2`, `HDMI-A-1` or `eDP-1`.
+Profiles are looked up in the DMS config directory for the running compositor, `<config dir>/<compositor>/dms/icc` — for example `~/.config/niri/dms/icc` on niri, `~/.config/hypr/dms/icc` on Hyprland and `~/.config/mango/dms/icc` on mangowm. Output names are connector names as reported by the compositor, such as `DP-1`, `DP-2`, `HDMI-A-1` or `eDP-1`.
 
 ## Settings UI
 
@@ -66,7 +66,7 @@ Per-output values win over the night light schedule: a display with its own temp
 
 ## Configuration
 
-Assignments live in the night light configuration of the running compositor, `~/.config/niri/dms/wayland.json` on niri (Hyprland and MangoWC use their own directory):
+Assignments live in the night light configuration of the running compositor, `~/.config/niri/dms/wayland.json` on niri (Hyprland and mangowm use their own directory):
 
 ```json
 {

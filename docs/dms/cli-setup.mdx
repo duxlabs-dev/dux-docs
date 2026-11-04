@@ -15,7 +15,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-The `dms setup` command generates default configuration files for your compositor (niri, Hyprland, or MangoWC). It only writes files that don't already exist or are empty, so it won't clobber anything you've customized.
+The `dms setup` command generates default configuration files for your compositor (niri, Hyprland, or mangowm). It only writes files that don't already exist or are empty, so it won't clobber anything you've customized.
 
 Running `dms setup` with no arguments deploys all defaults at once. You can also deploy individual configs one at a time.
 
@@ -39,7 +39,7 @@ dms setup binds
 
 ## Subcommands
 
-| Subcommand | Description | niri | Hyprland | MangoWC |
+| Subcommand | Description | niri | Hyprland | mangowm |
 |---|---|---|---|---|
 | `binds` | Default keybinds config | `~/.config/niri/dms/binds.kdl` | `~/.config/hypr/dms/binds.lua` | `~/.config/mango/dms/binds.conf` |
 | `colors` | Default colors config | `~/.config/niri/dms/colors.kdl` | `~/.config/hypr/dms/colors.lua` | `~/.config/mango/dms/colors.conf` |
@@ -49,7 +49,7 @@ dms setup binds
 | `windowrules` | Default window rules config | `~/.config/niri/dms/windowrules.kdl` | `~/.config/hypr/dms/windowrules.lua` | `~/.config/mango/dms/windowrules.conf` |
 | `alttab` | Default alt-tab config (niri only) | `~/.config/niri/dms/alttab.kdl` | — | — |
 
-Running `dms setup` with no subcommand deploys all of the above, plus the input fragment (`dms/input.kdl` on niri, `dms/input.lua` on Hyprland, `dms/input.conf` on MangoWC) and, on Hyprland, `dms/binds-user.lua`. The input fragment has no subcommand of its own.
+Running `dms setup` with no subcommand deploys all of the above, plus the input fragment (`dms/input.kdl` on niri, `dms/input.lua` on Hyprland, `dms/input.conf` on mangowm) and, on Hyprland, `dms/binds-user.lua`. The input fragment has no subcommand of its own.
 
 :::note[niri binds-next.kdl]
 On niri, `dms setup` and `dms setup binds` also write `~/.config/niri/dms/binds-next.kdl`, the binds that depend on the niri version (the Keyboard Shortcuts cheatsheet, and a Mod tap for the overview on the next niri release). Unlike the other files, DMS owns this one: it is replaced whenever its content no longer matches the installed niri, and DMS checks it again each time it starts. If your `config.kdl` doesn't include it, setup prints the line to add above `dms/binds.kdl`. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
@@ -59,8 +59,8 @@ On niri, `dms setup` and `dms setup binds` also write `~/.config/niri/dms/binds-
 DMS writes Hyprland config in Lua only. When the installed Hyprland reports a version older than 0.55, `dms setup` stops with `hyprland.lua is not loaded by Hyprland <version>; DMS needs 0.55 or newer` instead of writing a config Hyprland would ignore. If the version can't be detected, it deploys anyway.
 :::
 
-:::note[MangoWC 0.18 or newer]
-Everything `dms setup` writes for MangoWC uses the snake_case keys of MangoWC 0.18 and newer. With no subcommand, your existing `config.conf` is backed up to `config.conf.backup.<timestamp>` and replaced. Its bind, `monitor_rule` and `window_rule` lines move into `dms/binds.conf`, `dms/outputs.conf` and `dms/windowrules.conf` when those are empty, converted to snake_case. If you use `config.toml` instead, it is backed up to `config.toml.backup.<timestamp>` and replaced with a stock `config.toml`; DMS never creates a `config.conf` next to it, which would shadow it. Your TOML binds and rules are not moved into the fragments and stay in the backup. Fragments that already have content are kept as they are; if they predate 0.18, convert them with MangoWC's `migrate-config-keys.sh` (see [MangoWC Configuration](./compositors.mdx#mangowc-configuration)).
+:::note[mangowm 0.18 or newer]
+Everything `dms setup` writes for mangowm uses the snake_case keys of mangowm 0.18 and newer. With no subcommand, your existing `config.conf` is backed up to `config.conf.backup.<timestamp>` and replaced. Its bind, `monitor_rule` and `window_rule` lines move into `dms/binds.conf`, `dms/outputs.conf` and `dms/windowrules.conf` when those are empty, converted to snake_case. If you use `config.toml` instead, it is backed up to `config.toml.backup.<timestamp>` and replaced with a stock `config.toml`; DMS never creates a `config.conf` next to it, which would shadow it. Your TOML binds and rules are not moved into the fragments and stay in the backup. Fragments that already have content are kept as they are; if they predate 0.18, convert them with mangowm's `migrate-config-keys.sh` (see [mangowm Configuration](./compositors.mdx#mangowc-configuration)).
 :::
 
 :::tip
@@ -69,7 +69,7 @@ If you installed DMS from packages (not through the interactive installer), run 
 
 ## Existing Keybinds
 
-When `dms setup` finds your own keybinds (a non-empty `dms/binds.kdl` on niri; a non-empty `dms/binds.conf` or bind lines in `config.conf` on MangoWC), it asks before deploying:
+When `dms setup` finds your own keybinds (a non-empty `dms/binds.kdl` on niri; a non-empty `dms/binds.conf` or bind lines in `config.conf` on mangowm), it asks before deploying:
 
 ```
   1) Keep my binds as they are

@@ -17,7 +17,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Shell (dms) is a Wayland desktop shell built with [Quickshell](https://quickshell.org/) and [Go](https://go.dev/). It serves a purpose similar to GNOME Shell or KDE Plasma, providing a unified interface for launching applications, managing windows, managing hardware interfaces, notifications, and much more.
+Dux Modular Shell (dms) is a Wayland desktop shell built with [Quickshell](https://quickshell.org/) and [Go](https://go.dev/). It serves a purpose similar to GNOME Shell or KDE Plasma, providing a unified interface for launching applications, managing windows, managing hardware interfaces, notifications, and much more.
 
 ## General Features
 
@@ -46,7 +46,7 @@ Dux Shell (dms) is a Wayland desktop shell built with [Quickshell](https://quick
 
 ## Architecture
 
-Dux Shell uses a client-server architecture where a Go backend (`dms`) manages system integrations and spawns the Quickshell-based UI as a child process. Communication happens over Unix socket using REQ/REP and PUB/SUB patterns.
+Dux Modular Shell uses a client-server architecture where a Go backend (`dms`) manages system integrations and spawns the Quickshell-based UI as a child process. Communication happens over Unix socket using REQ/REP and PUB/SUB patterns.
 
 <div style={{overflowX: 'auto', maxWidth: '100%'}}>
 
@@ -123,14 +123,14 @@ flowchart TB
 
 | Component | Role |
 | --- | --- |
-| **Dux Shell - Quickshell** | Frontend powering widgets, modals, and user experience. |
-| **Dux Shell - Backend (cli)** | Bridges DBus, Wayland, and plugin APIs - also a management CLI |
+| **Dux Modular Shell - Quickshell** | Frontend powering widgets, modals, and user experience. |
+| **Dux Modular Shell - Backend (cli)** | Bridges DBus, Wayland, and plugin APIs - also a management CLI |
 | **dgop** | System telemetry library built into the backend for resource widgets. |
 | **dsearch** | Optional filesystem search engine used by the Spotlight launcher. |
 
 ## Desktop Integration
 
-Dux Shell includes a browser picker modal that appears when URLs are activated within the shell.
+Dux Modular Shell includes a browser picker modal that appears when URLs are activated within the shell.
 
 ### Opening URLs
 
@@ -140,11 +140,11 @@ You can open URLs directly from the terminal using the `dms open` command:
 dms open https://duxlabs.dev
 ```
 
-When a URL is opened, Dux Shell displays a modal dialog with a list of installed web browsers, allowing you to select your preferred browser or set a default for future URL openings.
+When a URL is opened, Dux Modular Shell displays a modal dialog with a list of installed web browsers, allowing you to select your preferred browser or set a default for future URL openings.
 
 ### Setting Default Web Browser
 
-To set Dux Shell as your default web browser handler:
+To set Dux Modular Shell as your default web browser handler:
 
 ```bash
 xdg-settings set default-web-browser dms-open.desktop
@@ -152,7 +152,7 @@ xdg-settings set default-web-browser dms-open.desktop
 
 ### File Associations
 
-You can configure file type associations using `xdg-mime` commands. For example, to set Dux Shell as the default handler for specific MIME types:
+You can configure file type associations using `xdg-mime` commands. For example, to set Dux Modular Shell as the default handler for specific MIME types:
 
 ```bash
 # Set as default for HTTP/HTTPS URLs
@@ -162,10 +162,10 @@ xdg-mime default dms-open.desktop x-scheme-handler/https
 
 ### Desktop Entry
 
-The desktop entry file (`dms-open.desktop`) follows the [freedesktop.org Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html) and allows Dux Shell to be launched from application menus and integrated with desktop environments.
+The desktop entry file (`dms-open.desktop`) follows the [freedesktop.org Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.html) and allows Dux Modular Shell to be launched from application menus and integrated with desktop environments.
 
 ## Next Steps
 
-Continue with [Installation](./installation.mdx) to get Dux Shell running on your system.
+Continue with [Installation](./installation.mdx) to get Dux Modular Shell running on your system.
 
-Dux Shell is open source and welcomes contributions ranging from core code changes to new widgets and plugins to documentation improvements.
+Dux Modular Shell is open source and welcomes contributions ranging from core code changes to new widgets and plugins to documentation improvements.
