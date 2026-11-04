@@ -42,6 +42,7 @@ Dux Modular Shell supports the following plugin types, defined in `plugin.json`.
 | Desktop widget | `desktop` | `desktop-widget` | [Browse](/plugins?type=desktop-widget) |
 | Dash tab | `dash` | `dash-tab` | [Browse](/plugins?type=dash-tab) |
 | Dash card | `dashCard` | `dash-card` | [Browse](/plugins?type=dash-card) |
+| Lyrics provider | `lyrics` | `lyrics-provider` | [Browse](/plugins?type=lyrics-provider) |
 | Composite | `composite` | one per surface | |
 
 ### 1. Bar Widget (`type: "widget"`)
@@ -120,7 +121,18 @@ A card in the dash Overview grid. Add it from the dash (three-dot menu → Edit 
 
 > Dash tabs and cards require DMS &ge; 2.0.0. A plugin can ship both; clicking the card then opens the tab.
 
-### 8. Composite Plugin (`type: "composite"`)
+### 8. Lyrics Provider (`type: "lyrics"`)
+
+A lyrics source for the media player. The plugin ships a program that DMS runs with the track's title and artist, and it prints the lyrics. Users switch it on under Settings → Sound & media → Media player → Lyrics providers. A plugin with only a `lyrics` block needs no QML, and the block also works alongside any other surface.
+
+**Capabilities:**
+- `lyrics-provider` - Adds a lyrics source
+
+**Example use cases:** A lyrics site or a local player's API
+
+> Lyrics providers require DMS &ge; 2.0.0. See [Lyrics Providers](plugin-development#lyrics-providers) in the development guide.
+
+### 9. Composite Plugin (`type: "composite"`)
 
 A single plugin that provides several of the above surfaces at once — for example a daemon plus a bar widget plus a desktop widget. Instead of one `component`, it declares a `components` map pointing each surface at its own QML file.
 

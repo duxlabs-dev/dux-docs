@@ -132,6 +132,7 @@ const pluginTypes = [
   { id: 'desktop-widget', label: 'Desktop Widget' },
   { id: 'dash-tab', label: 'Dash Tab' },
   { id: 'dash-card', label: 'Dash Card' },
+  { id: 'lyrics-provider', label: 'Lyrics Provider' },
 ];
 
 const pluginTypeLabel = (capability: string): string =>

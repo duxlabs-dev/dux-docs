@@ -33,6 +33,11 @@ type PluginMetadata struct {
 	Components  map[string]string `json:"components,omitempty"`
 	Settings    string            `json:"settings,omitempty"`
 	Permissions []string          `json:"permissions"`
+	Lyrics      *LyricsProvider   `json:"lyrics,omitempty"`
+}
+
+type LyricsProvider struct {
+	Command string `json:"command"`
 }
 
 type Plugin struct {

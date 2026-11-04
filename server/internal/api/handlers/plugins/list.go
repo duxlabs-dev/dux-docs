@@ -63,7 +63,7 @@ type ListPluginsInput struct {
 	Category      string          `query:"category" doc:"Filter by category, comma-separated for any of several (utilities, monitoring, system, appearance, productivity, media, networking)"`
 	Compositor    string          `query:"compositor" doc:"Filter by compositor, comma-separated for any of several (niri, hyprland, sway, any)"`
 	FirstParty    bool            `query:"firstParty" doc:"Only show first-party plugins"`
-	Capability    string          `query:"capability" doc:"Filter by capability, comma-separated for any of several. Plugin types: dankbar-widget, control-center, launcher, daemon, desktop-widget, dash-tab, dash-card. Types declared by the plugin manifest (type or components) are merged into each plugin's capabilities"`
+	Capability    string          `query:"capability" doc:"Filter by capability, comma-separated for any of several. Plugin types: dankbar-widget, control-center, launcher, daemon, desktop-widget, dash-tab, dash-card, lyrics-provider. Types declared by the plugin manifest (type, components or lyrics) are merged into each plugin's capabilities"`
 	ExcludeStatus []string        `query:"excludeStatus" doc:"Exclude plugins with these status labels (e.g. broken, deprecated)"`
 	SortBy        PluginSortBy    `query:"sortBy" doc:"Sort plugins by field"`
 	Order         PluginSortOrder `query:"order" doc:"Sort direction (asc or desc); defaults to descending, ascending for name"`

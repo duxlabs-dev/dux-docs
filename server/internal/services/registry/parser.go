@@ -255,21 +255,24 @@ var surfaceCapabilities = map[string]string{
 	"desktop":  "desktop-widget",
 	"dash":     "dash-tab",
 	"dashCard": "dash-card",
+	"lyrics":   "lyrics-provider",
 }
 
 func manifestSurfaces(metadata models.PluginMetadata) []string {
-	if len(metadata.Components) > 0 {
-		surfaces := make([]string, 0, len(metadata.Components))
+	var surfaces []string
+	switch {
+	case len(metadata.Components) > 0:
 		for surface := range metadata.Components {
 			surfaces = append(surfaces, surface)
 		}
 		sort.Strings(surfaces)
-		return surfaces
+	case metadata.Type != "":
+		surfaces = append(surfaces, metadata.Type)
 	}
-	if metadata.Type == "" {
-		return nil
+	if metadata.Lyrics != nil && metadata.Lyrics.Command != "" && !slices.Contains(surfaces, "lyrics") {
+		surfaces = append(surfaces, "lyrics")
 	}
-	return []string{metadata.Type}
+	return surfaces
 }
 
 func withSurfaceCapabilities(capabilities []string, metadata models.PluginMetadata) []string {
