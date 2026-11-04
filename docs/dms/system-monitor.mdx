@@ -47,6 +47,12 @@ warns that this usually ends the session and offers a restart instead.
 | Any other program | Quits it and starts it again with the same command, environment and working directory |
 | A program in a terminal | Not available, restart it from the terminal |
 
+## Pausing and priority
+
+**Pause** freezes a process and everything it started until **Resume**, which can save power while a game sits idle. Paused rows are dimmed and show a pause icon. Session processes and DMS itself can't be paused. Pausing a single program inside a terminal hands the terminal back to the shell, the same as pressing Ctrl+Z.
+
+**Priority** sets the nice value of a process and all its threads, from **Highest** (-20) to **Lowest** (19). On a merged row it applies to every process in the row. The expanded row shows the current level, and the optional **Priority** column sorts by it. Raising the priority or changing another user's process needs authentication, or [Unlock](#unlock).
+
 ## Unlock
 
 Linux only lets the owner or root read a process's disk and network activity, so most values of other users'
