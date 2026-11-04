@@ -12,11 +12,6 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import styles from './styles.module.css';
 import StormHero, {StormThankYou, stormStyles} from './StormHero';
 
-{/*
-  SCAFFOLD NOTES (delete before publishing)
-  - Contributor table generated from: scripts/release-notes.py v2.0.0..HEAD --format blog (dms repo). Regenerate against the release tag.
-*/}
-
 <StormHero />
 
 DMS 2.1 "Stormborn" is here, two weeks after 2.0. It adds an interface density setting, the DMS Classic style, a reworked media player and system monitor, video wallpapers, new on-screen displays, Fedora Atomic support in the Dux installer, updates across Dux Files, Dux Calendar, Dux GOP, Dux Search, and Dux Greeter, and deeper niri, Hyprland, and mangowm support. It also moves installs and updates onto the new Dux Labs repositories: see [Upgrade Notes](/blog/v2-1-release#upgrade-notes).
@@ -253,14 +248,13 @@ Dux Dot gets major performance and stability improvements. Dragging, flinging, a
 - **Widget editor:** hold Shift to resize as a square ([Huỳnh Thiện Lộc](https://github.com/hthienloc)).
 - **Battery:** scaled battery level display ([Huỳnh Thiện Lộc](https://github.com/hthienloc)).
 - **Brightness:** pin devices on screen and group them so they move together. See [brightness](/docs/dms/cli-brightness).
+- **Lock screen:** **Settings → Security → Lock screen** shows a live preview of your lock layout over the lock wallpaper, with its blur and fill mode.
 - **Power menu:** reboot into firmware setup ([matthewyjiang](https://github.com/matthewyjiang)).
 - **Weather:** MET Norway as a provider, with an ordered fallback list when one is unavailable ([joshii-h](https://github.com/joshii-h)).
 - **Launcher:** <kbd>Ctrl</kbd>+<kbd>N</kbd> and <kbd>Ctrl</kbd>+<kbd>P</kbd> move by item in dmenu mode ([colonelpanic8](https://github.com/colonelpanic8)).
 - **System updates:** a "never" option for the update check interval.
 
 ## Fixes and polish
-
-{/* Counts from dux-shell v2.0.0..origin/master on 2026-11-02 (209 commits; 238 by 2026-11-03): ~103 fixes, ~31 polish/QoL, ~40 features, 21 CI/deps/packaging. Refresh against the release tag. */}
 
 2.0 shipped two weeks ago, and 2.1 already carries 100+ bug fixes and 30+ quality-of-life and polish changes. Some of the ones you may notice:
 
@@ -361,9 +355,7 @@ Browse and upvote them all on the [plugins page](/plugins).
 
 ## Community Contributions
 
-{/* Counts from v2.0.0..origin/master on 2026-11-03 (250 commits); suite from `release-notes.py --suite`. Refresh at release. */}
-
-250 commits from 37 contributors to DMS since 2.0, including 87 community pull requests from 35 people, plus 22 more pull requests from 12 people across the rest of the Dux suite. Time for a callout:
+257 commits from 37 contributors to DMS since 2.0, including 87 community pull requests from 35 people, plus 22 more pull requests from 12 people across the rest of the Dux suite. Time for a callout:
 
 **[Huỳnh Thiện Lộc](https://github.com/hthienloc)** landed 23 pull requests across DMS, Dux QML Common, and the first-party plugins, including the screenshot selector's island snap targets, themable tooltip colors, the keyboard layout OSD and Num Lock indicator, square resizing in the widget editor, the dock's middle-click setting, and a long run of dock, dash, screenshot, and OSD fixes.
 
@@ -418,8 +410,6 @@ Across the suite: folder appearance, previews, game libraries, and view options 
 | **[WyInnovate](https://github.com/WyInnovate)** | Screenshot: bind the first wl_seat so the region selector receives input ([PR #4049](https://github.com/duxlabs-dev/dux-shell/pull/4049)) |
 
 ### Translators
-
-{/* Counts from `release-notes.py <range> --format translators`; rerun at release. */}
 
 Translators on [POEditor](https://poeditor.com/join/project/kyeCPTpmJM) added 5,100+ new translations across 12 languages this release. Thank you!
 
