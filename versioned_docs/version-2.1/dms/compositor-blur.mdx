@@ -9,7 +9,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Compositor Blur
 
-On compositors that support the `ext-background-effect-v1` protocol (niri, Hyprland 0.56+, aqueous), DMS can ask the compositor to blur whatever sits behind its surfaces, bars, popouts, modals, notifications, and DMS's floating windows (Settings, Notepad, Process List, and friends).
+On compositors that support the `ext-background-effect-v1` protocol (niri, Hyprland 0.56+), DMS can ask the compositor to blur whatever sits behind its surfaces, bars, popouts, modals, notifications, and DMS's floating windows (Settings, Notepad, Process List, and friends).
 
 ## Enabling
 
@@ -32,13 +32,12 @@ Hyprland 0.55 and older, and mangowm, don't support the protocol. On those you c
 
 ## Blur Strength
 
-The **Blur strength** slider sits directly under **Background blur** and is shown on every compositor that supports the protocol. It sets how far the blur reaches, in logical pixels, and DMS translates that into each compositor's own options:
+The **Blur strength** slider sits directly under **Background blur** on niri and Hyprland, where DMS can write the compositor's blur options. It sets how far the blur reaches, in logical pixels, and DMS translates that into each compositor's own options:
 
 | Compositor | What DMS writes | Default |
 | --- | --- | --- |
 | niri | a global `blur { offset; passes }` block in `~/.config/niri/dms/layout.kdl` | niri's own defaults (about 42px), nothing written |
 | Hyprland | `decoration:blur:size` and `passes` in `~/.config/hypr/dms/layout.lua` | `passes = 2` |
-| aqueous | `blur.radius` through the `aqueous-config` apply contract | the packaged `wm.toml` radius, nothing written |
 
 Hyprland's own default (size 8, 1 pass) only reaches about 16px and looks like plain transparency, so DMS sets 2 passes, which is close to niri.
 

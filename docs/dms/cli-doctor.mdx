@@ -152,10 +152,6 @@ When niri is installed, doctor reads `~/.config/niri/config.kdl` and every `.kdl
 
 Reports whether the compositor supports `ext-background-effect-v1`, which DMS uses for background blur. See [Compositor Blur](./compositor-blur.mdx).
 
-### aqueous-config
-
-In an Aqueous session, warns when the `aqueous-config` helper is missing. Keybind and display edits from Settings need it.
-
 ### Mango config
 
 When the installed mangowm is older than 0.18, doctor reports a **Mango config format** error, `Mango <version> is older than 0.18`: DMS writes Mango config with the snake_case keys of 0.18 and newer, which that release rejects. Upgrade mangowm.
@@ -193,7 +189,7 @@ Used to prevent the system from idling or sleeping.
 
 ### ShortcutInhibitor
 
-Used to manage keyboard shortcuts on niri and Aqueous.
+Used to manage keyboard shortcuts on niri.
 
 ---
 
