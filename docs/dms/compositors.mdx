@@ -32,24 +32,12 @@ DMS will automatically apply key binds, gaps, window radius, and colors if you i
 include optional=true "dms/colors.kdl"
 include optional=true "dms/layout.kdl"
 include optional=true "dms/alttab.kdl"
-include optional=true "dms/binds-next.kdl"
 include optional=true "dms/binds.kdl"
 ```
 
 :::tip
 `optional=true` lets niri start while a file is still missing. [`dms setup`](./cli-setup.mdx) creates them.
 :::
-
-#### Version-dependent binds
-
-`dms/binds-next.kdl` holds the DMS binds that depend on your niri version. DMS writes it at `dms setup` and rewrites it each time it starts, so don't edit it; put your own binds in `dms/binds.kdl`. Keep its include **above** `dms/binds.kdl` so your binds override it.
-
-| niri | What `binds-next.kdl` binds |
-|------|-----------------------------|
-| 26.04 | `Mod+Shift+Slash` opens the Keyboard Shortcuts cheatsheet |
-| Next release (niri main) | `Mod+Shift+Slash` opens the cheatsheet, and tapping `Mod` on its own toggles the overview |
-
-DMS doesn't add the include to an existing `config.kdl`. If yours predates this file, add the `binds-next.kdl` line yourself; [`dms doctor`](./cli-doctor.mdx#niri-config) warns while it's missing or below `dms/binds.kdl`.
 
 For manual configuration recommendations, continue below.
 
@@ -224,7 +212,8 @@ Some settings use niri syntax newer than 26.04. DMS shows them only when the ins
 - **Settings → Window rules**: **VRR Fullscreen Only**, **On activation** (Focus, Ignore or Mark urgent) and **Pinch sensitivity**.
 - **Settings → Input → Mouse & touchpad**: touchpad **Pinch sensitivity**.
 - **Settings → Displays → Configuration**: **Max bits per channel** per output.
-- **Settings → Input → Keyboard shortcuts**: **Release** and **Non-consuming** bind options, and binds on a lone modifier such as `Mod`.
+
+**Settings → Input → Keyboard shortcuts** always offers the **Release** and **Non-consuming** bind options and binds on a lone modifier such as `Mod`. Every save runs `niri validate` on the new `dms/binds.kdl`, so a bind the installed niri rejects fails to save with niri's error and the previous file stays.
 
 ## Hyprland Configuration
 

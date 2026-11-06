@@ -146,11 +146,7 @@ On Hyprland, doctor warns when:
 
 When niri is installed, doctor reads `~/.config/niri/config.kdl` and every `.kdl` file in `~/.config/niri/dms/`. DMS never rewrites `config.kdl` or `dms/binds.kdl`, so each warning names the line to fix by hand.
 
-- **binds-next include**, `config.kdl does not include dms/binds-next.kdl`: add `include optional=true "dms/binds-next.kdl"` above the `dms/binds.kdl` include, or run `dms setup`. Without it you lose the DMS binds that depend on the niri version, including Keyboard Shortcuts. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
-- **binds-next include**, `config.kdl:<line> includes dms/binds-next.kdl after dms/binds.kdl`: move it above, so your binds in `dms/binds.kdl` override the DMS defaults.
-- **Mod+Shift+Slash**, `<file>:<line> binds Mod+Shift+Slash`: on the next niri release, this bind also fires for `Mod+Shift+7` on German, Spanish and Swedish layouts. Rename it to `Mod+Shift+question`, which `dms/binds-next.kdl` already binds to Keyboard Shortcuts.
-- **keep-max-bpc**, `<file>:<line> sets keep-max-bpc-unchanged`: niri after 26.04 removed this debug flag and rejects the whole config. Delete the line and set max-bpc in the output section instead.
-- **binds-next.kdl**, `dms/binds-next.kdl is rejected by the installed niri`: niri then rejects the whole config. Delete the file; DMS rewrites it for your niri on its next start.
+- **keep-max-bpc**, `<file>:<line> sets keep-max-bpc-unchanged`: niri after 26.04 removed this debug flag and rejects the whole config. Delete the line and set max-bpc in the output section instead. Lines inside `//`, `/* */` and slashdash (`/-`) comments are ignored.
 
 ### Background Blur
 
@@ -429,20 +425,22 @@ Optional environment variable to set the icon theme for DMS only. Will not effec
 
 Required by KDE applications under a non-Plasma compositor. Without it, `KService` cannot build the XDG menu tree and Dolphin's "Open with…" dialog appears empty; double-clicking files also don't open them, and if they do, is with the wrong application.
 
-Set `plasma-` in your compositor's environment. The matching `/etc/xdg/menus/plasma-applications.menu` is provided by `plasma-workspace`.
+Set it to `plasma-`. The matching `/etc/xdg/menus/plasma-applications.menu` is provided by `plasma-workspace`.
 
-Example in niri's `config.kdl`:
+Where it has to live depends on who spawns the app. A compositor environment block only reaches processes the compositor spawns. `dms.service` runs from the systemd user environment, and so does everything launched from DMS, so with `dms.service` set it in `~/.config/environment.d/`:
+
+```ini
+XDG_MENU_PREFIX=plasma-
+```
+
+The doctor reports `not in the systemd user environment` when the variable is set where the doctor runs but missing there.
+
+Without `dms.service`, when the compositor spawns `dms run` itself, the compositor's environment block is enough. Example in niri's `config.kdl`:
 
 ```kdl
 environment {
   XDG_MENU_PREFIX "plasma-"
 }
-```
-
-Or globally via `~/.config/environment.d/`:
-
-```ini
-XDG_MENU_PREFIX=plasma-
 ```
 
 uwsm sets the variable to the compositor's name (for example `hyprland-`), which overrides `environment.d`. Under uwsm, set it in `~/.config/uwsm/env-<compositor>` instead:
