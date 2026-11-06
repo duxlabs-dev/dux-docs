@@ -123,6 +123,13 @@ is not merged into the frame and instead renders as a standalone `overlay`
 surface stacked above it. Fullscreen windows are still handled by the compositor
 and by the per-surface layer choices above.
 
+Bars and island satellites can have the connected look without a Frame.
+**Connected popouts** connects popouts to the bar or satellite they opened from
+and respects its opacity, goth corners and custom radius. It is in the bar's
+appearance settings, under Surface for a bar, where it replaces the popup gap,
+and under Satellites for the island, where it needs the satellite background. It is off by default
+and not available while Frame is on.
+
 ### DMS_DANKBAR_LAYER
 
 Controls Wayland layer for the bar panel. Valid values: `bottom`, `overlay`, `background`, or `top` (default). Useful for window stacking issues.
