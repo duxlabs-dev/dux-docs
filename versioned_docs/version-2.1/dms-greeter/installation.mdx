@@ -403,7 +403,7 @@ On Fedora Atomic, Universal Blue, bootc, and similar rpm-ostree systems the gree
 3. Run `dms-greeter install --yes` as your normal user, **without sudo**. The command escalates itself where needed and refuses to run under sudo, because the group membership, ACLs, and theme sync would otherwise land on root.
 4. Reboot again to land on the Dux greeter.
 
-The installer writes only `/etc/greetd/config.toml`, `/etc/pam.d/greetd`, your group membership, `/var/cache/dms-greeter`, the SELinux context, and the greetd service symlink. On rpm-ostree the `greeter` group lives in `/usr/lib/group`; the installer copies it into `/etc/group` so `usermod` works. `dms-greeter enable`, `uninstall`, and `sync` work the same way. To remove the greeter, run `dms-greeter uninstall`, then `sudo rpm-ostree uninstall dux-greeter` (or `dux-greeter-git`).
+The installer writes only `/etc/greetd/config.toml`, `/etc/pam.d/greetd` (when greetd ships only `/usr/lib/pam.d/greetd`, only once fingerprint or security-key login is turned on), your group membership, `/var/cache/dms-greeter`, the SELinux context, and the greetd service symlink. On rpm-ostree the `greeter` group lives in `/usr/lib/group`; the installer copies it into `/etc/group` so `usermod` works. `dms-greeter enable`, `uninstall`, and `sync` work the same way. To remove the greeter, run `dms-greeter uninstall`, then `sudo rpm-ostree uninstall dux-greeter` (or `dux-greeter-git`).
 
 Images that ship their own `/usr/share/dms/cli-policy.json`, such as [Zirconium](https://github.com/zirconium-dev/zirconium/), may still block these commands. Follow that repos documentation instead.
 
