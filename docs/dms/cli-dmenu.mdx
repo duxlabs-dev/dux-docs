@@ -73,6 +73,14 @@ The index syntax used by `--active`/`--urgent` takes comma-separated indices and
 
 > **NOTE**: `--password` does not automatically disable history. If handling sensitive data such as a password, it is advised you use *both* flags, as well as display text for each entry which differs from the passed value.
 
+### Frequency Ranking
+
+| Flag | Description |
+|------|-------------|
+| `--freq-key` | Track selection frequency for this invocation, scoped to this key, and sort results accordingly (default: no frequency tracking) |
+
+With `--freq-key <key>`, accepting a row (or, with `--multi-select`, each accepted row) bumps a per-item usage count stored under `<key>`, and unfiltered results are ordered by that count instead of input order. Invocations that pass the same key share one ranking, so a wrapper script can scope frequency tracking per use case (e.g. `--freq-key emoji-picker` vs. `--freq-key clipboard-history`) without one picker's usage skewing another's. Frequency data is kept only while the launcher's history setting is enabled (the same setting `--disable-history` overrides per-invocation), and lives in `$XDG_STATE_HOME/dms/dmenufreq.json` alongside the rest of the launcher's state.
+
 ### Reading stdin
 
 | Flag | Description |
