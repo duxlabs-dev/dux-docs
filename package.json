@@ -34,8 +34,8 @@
     "material-symbols": "npm:@nine-thirty-five/material-symbols-react@^2.5.0",
     "plugin-image-zoom": "^1.2.0",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "tailwind-merge": "^3.7.0",
     "tailwindcss": "^4.3.3"
   },
