@@ -18,7 +18,7 @@ import Hero from '@site/src/components/Hero';
 
 # Desktop Integration
 
-## Reveal in File Manager
+## Reveal in file manager
 
 While it runs, Dux Files owns `org.freedesktop.FileManager1` on the session bus, so `ShowFolders`, `ShowItems` and `ShowItemProperties` calls from other apps land here. Browsers built on Chromium ask the desktop portal's `OpenDirectory` when a portal runs, and the portal forwards that to `ShowItems`.
 
@@ -32,7 +32,7 @@ Nautilus, Dolphin, Thunar and Nemo ship activation files for the same name. `dbu
 
 :::
 
-## Default File Manager
+## Setting the default file manager
 
 ```bash
 xdg-mime default dev.duxlabs.files.desktop inode/directory
@@ -61,7 +61,7 @@ Nothing is switched on by install. The packages ship `dfiles.portal` and its act
 
 Both write the per-user files when the packaged ones are missing, put `dfiles` first in the `org.freedesktop.impl.portal.FileChooser` key (keeping the previous backend as the fallback and every other line as it was), and record what changed so **Restore** or `dfiles portal uninstall` puts it back. `dfiles portal status` shows each part.
 
-xdg-desktop-portal reads its configuration once at startup, so the change takes effect after:
+xdg-desktop-portal reads its configuration once at startup, so the change takes effect after you perform this command in your terminal:
 
 ```bash
 systemctl --user restart xdg-desktop-portal.service
