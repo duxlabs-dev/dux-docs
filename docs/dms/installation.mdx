@@ -661,21 +661,15 @@ This guide doesn't cover compositor installation. You need a compatible Wayland 
 
 #### Quickshell
 
-If your distribution does not provide a quickshell package, you'll need to build it from source. Quickshell requires:
+Install Quickshell from your distribution's repositories or the [Dux Repository](../repo/). A packaged Quickshell already ships everything it needs, so there is nothing else to install.
 
-**Base dependencies:**
-- cmake, qt6base, qt6declarative, qtshadertools, pkg-config, cli11
-- Private Qt headers for qt6declarative (and qt6wayland on Qt < 6.10)
-- Qt 6.6 or newer. Use Qt 6.10 or newer for the lock screen: on older Qt the lock client exits on an output with a fractional scale whose logical size is not a whole number (for example 2256x1504 at 1.5), and the compositor falls back to its red lockout screen.
+Only build from source if neither offers a package. Follow the upstream [Quickshell build instructions](https://git.outfoxxed.me/quickshell/quickshell/src/branch/master/BUILD.md) for the current dependency list and build options.
 
-**Key features and their dependencies:**
-- **Wayland support** (enabled by default) - qt6wayland, wayland, wayland-protocols
-- **Crash reporter** (recommended) - google-breakpad
-- **Jemalloc** (recommended for better memory management) - jemalloc
-- **System tray** - qt6dbus
-- **PAM authentication** - pam
+:::note
 
-For complete build instructions and feature flags, see the [Quickshell BUILD.md](https://git.outfoxxed.me/quickshell/quickshell/raw/branch/master/BUILD.md).
+Build against Qt 6.10 or newer. On older Qt the lock screen exits on an output with a fractional scale whose logical size is not a whole number (for example 2256x1504 at 1.5), and the compositor falls back to its red lockout screen.
+
+:::
 
 #### AccountsService
 
