@@ -162,6 +162,8 @@ hl.layer_rule({ match = { namespace = "^dms:.*$" }, blur_popups = true })
 
 #### Layer Rules
 
+DMS writes `hl.layer_rule({ match = { namespace = "^dms:dankisland$" }, no_anim = true })` to `dms/layout.lua`. Don't give the island an `animation` rule; Hyprland animating its resize throws off dragging the floating island.
+
 Add these layer rules to enable blur for DMS components (only needed below Hyprland 0.56):
 
 ```lua
