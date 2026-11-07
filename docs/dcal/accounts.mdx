@@ -76,19 +76,19 @@ In the GUI, the same option appears as **Skip certificate verification** in the 
 
 ## iCloud
 
-iCloud uses CalDAV under the hood but requires an **app-specific password**. Your regular Apple ID password will not work.
+iCloud uses CalDAV under the hood but requires an **app-specific password**. Your regular Apple Account password will not work.
 
 ```bash
-dcal account add icloud
+dcal account add icloud0
 ```
 
 :::tip
-Create an app-specific password at [account.apple.com/account/manage](https://account.apple.com/account/manage).
+Create an app-specific password at [account.apple.com/account/manage](https://account.apple.com/account/manage). Learn more about app-specific passwords in [Apple's support article](https://support.apple.com/en-us/102654).
 :::
 
 ## Google
 
-Google and Microsoft require you to create your own OAuth application (a one-time setup). Print step-by-step instructions:
+Google and Microsoft require you to create your own OAuth application (a one-time setup). Follow these instructions:
 
 ```bash
 dcal account setup google
@@ -107,7 +107,7 @@ dcal account setup microsoft
 dcal account add microsoft
 ```
 
-## iCal / webcal Subscriptions
+## Webcal Subscriptions
 
 Subscribe to a read-only external feed, such as a university timetable or a published Google/Outlook calendar. Both `https://` and `webcal://` URLs are accepted, and the feed refreshes in the background.
 
