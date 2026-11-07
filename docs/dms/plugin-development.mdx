@@ -2531,7 +2531,7 @@ Times are local wall-clock times without an offset (`2026-11-02T14:00`), dates a
 
 | Field | |
 |-------|---|
-| `current` | `time`, `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `is_day`, `weather_code` (WMO code), `surface_pressure`, `wind_speed_10m`, `wind_direction_10m`. |
+| `current` | `time`, `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `is_day`, `weather_code` (WMO code), `surface_pressure`, `wind_speed_10m`, `wind_direction_10m`, and the air quality fields below. |
 | `hourly` | `time` and arrays indexed like it: `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `dew_point_2m`, `weather_code`, `precipitation_probability`, `wind_speed_10m`, `surface_pressure`, `visibility`, `uv_index`, `is_day`. |
 | `daily` | `time` and arrays indexed like it: `sunrise`, `sunset`, `moonrise`, `moonset`, `temperature_2m_max`, `temperature_2m_min`, `weather_code`, `precipitation_probability_max`. |
 | `timezone` | Recommended. The IANA name of the zone your times are in, such as `Europe/Zurich`. |
@@ -2541,6 +2541,7 @@ Times are local wall-clock times without an offset (`2026-11-02T14:00`), dates a
 - `is_day` is 1 or 0 per hour. Without it, day and night follow the daily sunrise and sunset.
 - With `timezone` and `utc_offset_seconds`, values filled in from another provider land on the right hour even when that provider reports in a different zone. `timezone` also keeps them lined up across a DST change. Without either, hours are matched by their local time string.
 - A forecast without `current`, `hourly` or `daily`, or without any hours or days, is a failure.
+- A missing `apparent_temperature` filled in from another provider is that provider's difference between feels-like and its own temperature, added to yours, so it matches the temperature shown next to it.
 
 | Output | Means |
 |--------|-------|
@@ -2552,6 +2553,22 @@ Times are local wall-clock times without an offset (`2026-11-02T14:00`), dates a
 - Output over 2 MiB is rejected.
 - On a non-zero exit the last 512 bytes of stderr are added to the error, so say why you failed there. Otherwise stderr is dropped.
 - It runs at low priority with the environment and working directory of the `dms` process. Find your own files relative to the script.
+
+### Air Quality
+
+A provider can also report the current air quality, for example from measuring stations in its country. These `current` fields feed the air quality tile on the weather dash:
+
+| Field | |
+|-------|---|
+| `european_aqi` | European Air Quality Index (EAQI), 0 to 100 and above. |
+| `us_aqi` | US AQI, 0 to 500. |
+| `pm2_5` | PM2.5, µg/m³. |
+| `pm10` | PM10, µg/m³. |
+| `pm2_5_mean_24h` | Mean PM2.5 of the past 24 hours, µg/m³. The tile compares it with the WHO guideline. |
+
+- DMS only asks for air quality while the tile is on the weather dash. Your command runs either way, so report the fields whenever you have them.
+- Values you report win. Whatever no provider has is filled in from Open-Meteo's modelled air quality, so leave out what you do not measure rather than guessing.
+- A provider can report air quality only, with every weather field `null`. It still needs `current`, `hourly` and `daily` with at least one hour and one day, and it should not be first in the list, or it would be the forecast's source.
 
 ### Example
 
@@ -2593,6 +2610,7 @@ Then move it to the top of the provider list. Changing the first provider refres
 1. **Report your zone** - Set `timezone` and `utc_offset_seconds`, or filled-in hours can land on their neighbour
 2. **Leave out what you do not have** - `null` or a missing field is filled from the next provider, a made-up value wins over them
 3. **Answer in time** - Keep your own request timeouts well under 15 seconds, and under 3 if you want to fill in for a provider above you
+4. **Cache slow-changing data** - Stations report air quality about once an hour; reuse your last answer instead of asking your source on every lookup
 
 ## Composite Plugins
 
