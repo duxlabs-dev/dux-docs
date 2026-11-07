@@ -82,7 +82,7 @@ dms ipc call plugins list
 Use [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) to auto-reload your plugin during development. The reload command uses the plugin `id` from your `plugin.json`.
 :::
 
-:::warning New files in an update
+:::warning[New files in an update]
 Reloading picks up changes to files the shell has already loaded. A QML or JS file that is new in a directory the running shell has already loaded from fails with `File name case mismatch` until `dms restart`, because Qt keeps each directory's file list for the life of the shell. Users update plugins without restarting, so put files that a release adds in a new subdirectory, or say in the release notes that the update needs `dms restart`.
 :::
 
@@ -2457,9 +2457,9 @@ rm -rf ~/.cache/dms/lyrics
 
 A plugin can add a weather source. The provider is a program you ship in the plugin, written in anything. DMS runs it with the location and it prints the forecast. It sits next to the built-in providers (Open-Meteo, MET Norway) in the same priority list.
 
-:::note[Requires the `weather.plugins` capability]
+:::note[Requires DMS 2.1.1]
 
-Weather lookups run in the `dms` backend (`weather.get` over IPC). Plugin providers only show up when `dms` reports the `weather.plugins` capability. With an older `dms` the plugin still loads, but its provider is not listed.
+Weather provider plugins are new in 2.1.1. Declare `"requires_dms": ">=2.1.1"`. Weather lookups run in the `dms` backend (`weather.get` over IPC). Plugin providers only show up when `dms` reports the `weather.plugins` capability. With an older `dms` the plugin still loads, but its provider is not listed.
 
 :::
 
@@ -2467,7 +2467,7 @@ Weather lookups run in the `dms` backend (`weather.get` over IPC). Plugin provid
 
 - After the plugin is enabled under Settings → Plugins, the provider shows up switched off at the bottom of Settings → Date, time & region → Weather → Weather providers.
 - It only runs once the user switches it on there. Dragging it up or down sets its priority against the other providers.
-- The first enabled provider that answers is used. Readings it lacks (humidity, pressure, UV and so on) are filled in from the next enabled providers, and sunrise, sunset, moonrise and moonset are computed for the location when no provider has them.
+- Every enabled provider is asked at the same time, so an enabled plugin runs on every lookup even when it is not first. The highest one in the list that returns a forecast is used. Readings it lacks (humidity, pressure, UV and so on) are filled in from the providers below it, and sunrise, sunset, moonrise and moonset are computed for the location when no provider has them.
 - Your `name` is the row title. Provider ids are `plugin_<pluginId>`.
 
 ### Manifest
@@ -2480,6 +2480,7 @@ Weather lookups run in the `dms` backend (`weather.get` over IPC). Plugin provid
   "version": "1.0.0",
   "author": "Your Name",
   "type": "weather",
+  "requires_dms": ">=2.1.1",
   "weather": {
     "command": "./weather.py",
     "name": "Example",
@@ -2544,10 +2545,10 @@ Times are local wall-clock times without an offset (`2026-11-02T14:00`), dates a
 | Output | Means |
 |--------|-------|
 | A forecast, exit 0 | Used, or used to fill in another provider's gaps. |
-| Nothing, exit 0 | A failure (`no forecast`). The next provider is tried. |
-| Non-zero exit | A failure. The next provider is tried. |
+| Nothing, exit 0 | A failure (`no forecast`). The providers below it are used instead. |
+| Non-zero exit | A failure. The providers below it are used instead. |
 
-- The command gets 15 seconds. After that, or once the lookup is done with it, it is killed along with everything it started.
+- The command gets 15 seconds. Once a provider above yours has returned its forecast, yours has 3 more seconds to fill in gaps before it counts as failed (`too slow to fill in`). After that, or once the lookup is done with it, it is killed along with everything it started.
 - Output over 2 MiB is rejected.
 - On a non-zero exit the last 512 bytes of stderr are added to the error, so say why you failed there. Otherwise stderr is dropped.
 - It runs at low priority with the environment and working directory of the `dms` process. Find your own files relative to the script.
@@ -2575,7 +2576,7 @@ json.dump({
 }, sys.stdout)
 ```
 
-Any failure raises, exits non-zero with the traceback on stderr, and the next provider answers. Everything left out here is filled in by the other providers or computed.
+Any failure raises and exits non-zero with the traceback on stderr, and the other providers answer instead. Everything left out here is filled in by the other providers or computed.
 
 ### Testing a Provider
 
@@ -2591,7 +2592,7 @@ Then move it to the top of the provider list. Changing the first provider refres
 
 1. **Report your zone** - Set `timezone` and `utc_offset_seconds`, or filled-in hours can land on their neighbour
 2. **Leave out what you do not have** - `null` or a missing field is filled from the next provider, a made-up value wins over them
-3. **Answer in time** - Keep your own request timeouts well under 15 seconds
+3. **Answer in time** - Keep your own request timeouts well under 15 seconds, and under 3 if you want to fill in for a provider above you
 
 ## Composite Plugins
 
@@ -3145,7 +3146,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 - `"dash"` - Dash tab (requires DMS &ge; 2.0.0)
 - `"dashCard"` - Dash overview card (requires DMS &ge; 2.0.0)
 - `"lyrics"` - [Lyrics provider](#lyrics-providers) with no QML (requires DMS &ge; 2.0.0)
-- `"weather"` - [Weather provider](#weather-providers) with no QML (requires the `weather.plugins` capability)
+- `"weather"` - [Weather provider](#weather-providers) with no QML (requires DMS &ge; 2.1.1)
 - `"composite"` - Multiple surfaces in one plugin (use with `components`; requires DMS &ge; 1.5.0)
 
 ### Permissions

@@ -82,6 +82,10 @@ dms ipc call plugins list
 Use [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) to auto-reload your plugin during development. The reload command uses the plugin `id` from your `plugin.json`.
 :::
 
+:::warning[New files in an update]
+Reloading picks up changes to files the shell has already loaded. A QML or JS file that is new in a directory the running shell has already loaded from fails with `File name case mismatch` until `dms restart`, because Qt keeps each directory's file list for the life of the shell. Users update plugins without restarting, so put files that a release adds in a new subdirectory, or say in the release notes that the update needs `dms restart`.
+:::
+
 ## Quick Start
 
 ### 1. Create Plugin Directory
@@ -2449,6 +2453,147 @@ rm -rf ~/.cache/dms/lyrics
 2. **Exit 0 when nothing matches** - A non-zero exit is an error, and errors are asked again on every lookup
 3. **Answer in time** - Keep your own request timeouts well under 8 seconds
 
+## Weather Providers
+
+A plugin can add a weather source. The provider is a program you ship in the plugin, written in anything. DMS runs it with the location and it prints the forecast. It sits next to the built-in providers (Open-Meteo, MET Norway) in the same priority list.
+
+:::note[Requires DMS 2.1.1]
+
+Weather provider plugins are new in 2.1.1. Declare `"requires_dms": ">=2.1.1"`. Weather lookups run in the `dms` backend (`weather.get` over IPC). Plugin providers only show up when `dms` reports the `weather.plugins` capability. With an older `dms` the plugin still loads, but its provider is not listed.
+
+:::
+
+### How Users See Them
+
+- After the plugin is enabled under Settings → Plugins, the provider shows up switched off at the bottom of Settings → Date, time & region → Weather → Weather providers.
+- It only runs once the user switches it on there. Dragging it up or down sets its priority against the other providers.
+- Every enabled provider is asked at the same time, so an enabled plugin runs on every lookup even when it is not first. The highest one in the list that returns a forecast is used. Readings it lacks (humidity, pressure, UV and so on) are filled in from the providers below it, and sunrise, sunset, moonrise and moonset are computed for the location when no provider has them.
+- Your `name` is the row title. Provider ids are `plugin_<pluginId>`.
+
+### Manifest
+
+```json
+{
+  "id": "exampleWeather",
+  "name": "Example Weather",
+  "description": "Forecast from weather.example.com",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "type": "weather",
+  "requires_dms": ">=2.1.1",
+  "weather": {
+    "command": "./weather.py",
+    "name": "Example",
+    "url": "https://weather.example.com"
+  }
+}
+```
+
+A plugin with only a `weather` block needs no QML. The block also works next to `component` or `components`, so a widget or daemon plugin can bring its own provider.
+
+| Key | |
+|-----|---|
+| `command` | Required. The program to run, relative to the plugin directory. Commit it with the executable bit and a shebang line. |
+| `name` | The row title. Defaults to the plugin's `name`. |
+| `url` | The website of your source. |
+
+### The Command
+
+DMS runs the command once per lookup, about every 15 minutes and whenever the location or the first provider changes. The location comes in on stdin:
+
+```json
+{ "latitude": 46.95, "longitude": 7.45 }
+```
+
+Print a forecast in the shape of an [Open-Meteo forecast response](https://open-meteo.com/en/docs) on stdout:
+
+```json
+{
+  "timezone": "Europe/Zurich",
+  "utc_offset_seconds": 3600,
+  "current": { "time": "2026-11-02T14:15", "temperature_2m": 7.6, "weather_code": 3, "is_day": 1 },
+  "hourly": {
+    "time": ["2026-11-02T14:00", "2026-11-02T15:00"],
+    "temperature_2m": [7.6, 7.9],
+    "weather_code": [3, 2],
+    "is_day": [1, 1]
+  },
+  "daily": {
+    "time": ["2026-11-02"],
+    "temperature_2m_max": [8.4],
+    "temperature_2m_min": [3.6],
+    "weather_code": [3]
+  }
+}
+```
+
+Times are local wall-clock times without an offset (`2026-11-02T14:00`), dates are `2026-11-02`. `daily` starts with today, and `hourly` should cover the current hour, which is found by matching `current.time`. Any reading may be `null` or left out; missing values are filled in from the next enabled providers.
+
+| Field | |
+|-------|---|
+| `current` | `time`, `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `is_day`, `weather_code` (WMO code), `surface_pressure`, `wind_speed_10m`, `wind_direction_10m`. |
+| `hourly` | `time` and arrays indexed like it: `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `dew_point_2m`, `weather_code`, `precipitation_probability`, `wind_speed_10m`, `surface_pressure`, `visibility`, `uv_index`, `is_day`. |
+| `daily` | `time` and arrays indexed like it: `sunrise`, `sunset`, `moonrise`, `moonset`, `temperature_2m_max`, `temperature_2m_min`, `weather_code`, `precipitation_probability_max`. |
+| `timezone` | Recommended. The IANA name of the zone your times are in, such as `Europe/Zurich`. |
+| `utc_offset_seconds` | Recommended. The offset of your times from UTC. |
+
+- Units are Open-Meteo's defaults: °C, km/h, degrees, hPa, metres for visibility, percent for humidity and probabilities.
+- `is_day` is 1 or 0 per hour. Without it, day and night follow the daily sunrise and sunset.
+- With `timezone` and `utc_offset_seconds`, values filled in from another provider land on the right hour even when that provider reports in a different zone. `timezone` also keeps them lined up across a DST change. Without either, hours are matched by their local time string.
+- A forecast without `current`, `hourly` or `daily`, or without any hours or days, is a failure.
+
+| Output | Means |
+|--------|-------|
+| A forecast, exit 0 | Used, or used to fill in another provider's gaps. |
+| Nothing, exit 0 | A failure (`no forecast`). The providers below it are used instead. |
+| Non-zero exit | A failure. The providers below it are used instead. |
+
+- The command gets 15 seconds. Once a provider above yours has returned its forecast, yours has 3 more seconds to fill in gaps before it counts as failed (`too slow to fill in`). After that, or once the lookup is done with it, it is killed along with everything it started.
+- Output over 2 MiB is rejected.
+- On a non-zero exit the last 512 bytes of stderr are added to the error, so say why you failed there. Otherwise stderr is dropped.
+- It runs at low priority with the environment and working directory of the `dms` process. Find your own files relative to the script.
+
+### Example
+
+```python
+#!/usr/bin/env python3
+import json
+import sys
+import urllib.parse
+import urllib.request
+
+location = json.load(sys.stdin)
+query = urllib.parse.urlencode({"lat": location["latitude"], "lon": location["longitude"]})
+with urllib.request.urlopen(f"https://weather.example.com/forecast?{query}", timeout=10) as response:
+    found = json.load(response)
+
+json.dump({
+    "timezone": found["zone"],
+    "utc_offset_seconds": found["offset"],
+    "current": {"time": found["now"]["time"], "temperature_2m": found["now"]["temp"], "weather_code": found["now"]["wmo"]},
+    "hourly": {"time": [h["time"] for h in found["hours"]], "temperature_2m": [h["temp"] for h in found["hours"]]},
+    "daily": {"time": [d["date"] for d in found["days"]], "temperature_2m_max": [d["max"] for d in found["days"]], "temperature_2m_min": [d["min"] for d in found["days"]]},
+}, sys.stdout)
+```
+
+Any failure raises and exits non-zero with the traceback on stderr, and the other providers answer instead. Everything left out here is filled in by the other providers or computed.
+
+### Testing a Provider
+
+Run it by hand and check the JSON:
+
+```bash
+echo '{"latitude":46.95,"longitude":7.45}' | ./weather.py | python3 -m json.tool | head
+```
+
+Then move it to the top of the provider list. Changing the first provider refreshes the weather right away.
+
+### Weather Provider Best Practices
+
+1. **Report your zone** - Set `timezone` and `utc_offset_seconds`, or filled-in hours can land on their neighbour
+2. **Leave out what you do not have** - `null` or a missing field is filled from the next provider, a made-up value wins over them
+3. **Answer in time** - Keep your own request timeouts well under 15 seconds, and under 3 if you want to fill in for a provider above you
+
 ## Composite Plugins
 
 A single plugin can provide **multiple surfaces at once** — for example a background daemon, a bar widget, and a desktop widget. Each surface has a different lifecycle (the daemon is instantiated once; bar and desktop widgets are instantiated per bar/placement, per screen), so each one is its own QML file.
@@ -2981,11 +3126,16 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
     "name": "My Source",
     "url": "https://example.com",
     "wordSync": false
+  },
+  "weather": {
+    "command": "./weather.py",
+    "name": "My Source",
+    "url": "https://example.com"
   }
 }
 ```
 
-`components` replaces `component` for [composite plugins](#composite-plugins) that expose more than one surface. Provide one or the other. `dash` labels the dash surfaces and declares their options, see [Dash Options](#dash-options). `lyrics` adds a [lyrics provider](#lyrics-providers). A plugin with only `lyrics` needs no `component`.
+`components` replaces `component` for [composite plugins](#composite-plugins) that expose more than one surface. Provide one or the other. `dash` labels the dash surfaces and declares their options, see [Dash Options](#dash-options). `lyrics` adds a [lyrics provider](#lyrics-providers), `weather` a [weather provider](#weather-providers). A plugin with only `lyrics` or `weather` needs no `component`.
 
 ### Plugin Types
 
@@ -2996,6 +3146,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 - `"dash"` - Dash tab (requires DMS &ge; 2.0.0)
 - `"dashCard"` - Dash overview card (requires DMS &ge; 2.0.0)
 - `"lyrics"` - [Lyrics provider](#lyrics-providers) with no QML (requires DMS &ge; 2.0.0)
+- `"weather"` - [Weather provider](#weather-providers) with no QML (requires DMS &ge; 2.1.1)
 - `"composite"` - Multiple surfaces in one plugin (use with `components`; requires DMS &ge; 1.5.0)
 
 ### Permissions

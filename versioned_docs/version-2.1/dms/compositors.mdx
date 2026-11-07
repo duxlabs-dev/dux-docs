@@ -506,6 +506,8 @@ These Hyprland rows live on other Settings pages and are hidden unless the runni
 | **Tablet input** | Input → Mouse & touchpad → Tablet | 0.57+ | Turns drawing tablet input on or off (`input:tablet:enabled`), written to `dms/input.lua` |
 | **Warp on display change** | Wallpaper & colors → Cursor | 0.57+ | Same as workspace change, Off, On, or Force (`cursor:warp_on_monitor_change`), written to `dms/cursor.lua` |
 
+**Focus follows mouse** (Input → Mouse & touchpad → Mouse) sets `input:follow_mouse` in `dms/input.lua`: On writes `1`, Off writes `0`. Until you use the toggle, DMS shows the mode your own config sets and writes nothing, and resetting the setting removes the override again, so a mode `2` or `3` from your config comes back. The toggle needs an active Lua config and the `dms/input.lua` include; if the include is missing, use **Setup** in the First Time Setup banner. Hyprland's `input:float_switch_override_focus` can still move focus between tiled and floating windows while `follow_mouse` is `0`, and DMS leaves it alone. On niri the same toggle writes `focus-follows-mouse` to the DMS input include, and on mangowm `sloppy_focus`.
+
 ## mangowm Configuration {/* #mangowc-configuration */}
 
 [mangowm](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf` or `~/.config/mango/config.toml`. mangowm loads `config.conf` when it exists, otherwise `config.toml`, and DMS works with either.

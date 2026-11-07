@@ -475,7 +475,7 @@ Island activity surface. Requires a bar instance using the Island layout and ena
 | `toggle <activity>` | Collapse if expanded; otherwise expand into the activity | activity id |
 | `show <activity>` | Switch the compact face without expanding | activity id |
 | `close` | Collapse back to the compact face | - |
-| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when Default Opens is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
+| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when **Opens** is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
 | `status` | JSON snapshot of the island on the focused screen | - |
 | `notifications` | Toggle the notification center as an island activity | - |
 | `openOn` / `toggleOn` / `showOn` / `closeOn` / `cycleOn` / `statusOn` / `notificationsOn` | Same actions on a named monitor | activity (where required) + screen name |
@@ -496,7 +496,7 @@ When an Island or a Dot is the sole top chrome on the focused display, or an isl
 - `clipboard` `open` / `toggle` / `close`
 - `powermenu` `open` / `toggle` / `close`
 
-`spotlight` and `launcher` open the island launcher when **Launcher → Default Opens** is Island, and fall back to Spotlight if the focused screen has no island. In connected Frame mode, Spotlight is not offered and opens the Full launcher instead. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
+`spotlight` and `launcher` open the island launcher when **Launcher → Default action → Opens** is Island, and fall back to Spotlight if the focused screen has no island. In connected Frame mode, **Opens** does not offer Spotlight, and a saved Spotlight style opens the Full launcher. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
 
 **Examples:**
 ```bash
@@ -664,7 +664,7 @@ Application launcher modal with search capabilities.
 :::note
 `spotlight` and `launcher` are synonymous — both targets call the same launcher modal for backwards compatibility.
 
-When **Launcher → Default Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
+When **Launcher → Default action → Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
 :::
 
 | Function | Description | Parameters |
