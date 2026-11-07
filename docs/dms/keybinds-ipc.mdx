@@ -715,11 +715,13 @@ dms ipc call spotlight-bar toggleWith files
 All these modals support `open`, `close`, and `toggle` functions:
 
 - **clipboard** - Clipboard history manager
-- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
+- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `invokeLast`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
 - **processlist** - System process list and performance monitor (also supports `focusOrToggle`)
 - **powermenu** - Power menu for system actions
 - **control-center** - Quick settings (network, bluetooth, audio, etc.)
 - **notepad** - Quick notepad/scratchpad
+
+`invokeLast` runs the default action of the newest notification and dismisses it, like clicking its popup. It falls back to the first action and returns `NOTIFICATION_INVOKE_NO_ACTION` when there is nothing to run.
 
 When an Island is the sole top chrome on the focused display (or an island or dot there owns shared shortcuts), `control-center` and `notifications` open island activities instead of their popouts. The notification modal still opens if the island does not own the screen.
 
@@ -729,6 +731,7 @@ dms ipc call clipboard toggle
 dms ipc call notifications open
 dms ipc call notifications clearAll
 dms ipc call notifications dismiss
+dms ipc call notifications invokeLast
 dms ipc call notifications dismissAllPopups
 dms ipc call notifications toggleDoNotDisturb
 dms ipc call notifications getDoNotDisturb
