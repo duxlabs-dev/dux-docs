@@ -41,6 +41,20 @@
   text-wrap: balance;
 }
 
+.hero[data-has-visual='true'] .heroContent {
+  padding-inline-end: 14rem;
+}
+
+.visual {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 1.5rem;
+  width: 340px;
+  height: 340px;
+  transform: translateY(-50%) scale(0.6);
+  transform-origin: right center;
+}
+
 .shapes {
   position: absolute;
   width: 13rem;
@@ -57,6 +71,16 @@
 
   .heroContent {
     padding-inline-end: 2rem;
+  }
+
+  .hero[data-has-visual='true'] .heroContent {
+    padding-inline-end: 2rem;
+  }
+
+  .visual {
+    inset-inline-end: -4rem;
+    transform: translateY(-50%) scale(0.5);
+    opacity: 0.35;
   }
 
   .shapes {

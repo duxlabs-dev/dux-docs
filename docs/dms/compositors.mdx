@@ -15,11 +15,11 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Shell works with any Wayland compositor, but we provide optimized configurations for niri, Hyprland, Sway, MangoWC, labwc, and Miracle WM. These configs include DMS-specific keybindings, proper layer shell rules, and recommended settings.
+Dux Modular Shell works with any Wayland compositor, but we provide optimized configurations for niri, Hyprland, Sway, mangowm, labwc, and Miracle WM. These configs include DMS-specific keybindings, proper layer shell rules, and recommended settings.
 
 ## niri Configuration
 
-niri uses the KDL configuration format. Dux Shell integrates seamlessly with niri's scrollable tiling layout.
+niri uses the KDL configuration format. Dux Modular Shell integrates seamlessly with niri's scrollable tiling layout.
 
 
 ### Key Configuration Sections
@@ -29,18 +29,14 @@ DMS will automatically apply key binds, gaps, window radius, and colors if you i
 
 ```kdl
 // Add to the end of ~/.config/niri/config.kdl
-include "dms/colors.kdl"
-include "dms/layout.kdl"
-include "dms/alttab.kdl"
-include "dms/binds.kdl"
+include optional=true "dms/colors.kdl"
+include optional=true "dms/layout.kdl"
+include optional=true "dms/alttab.kdl"
+include optional=true "dms/binds.kdl"
 ```
 
 :::tip
-Be sure that all files exist before including them in the niri configuration.
-```bash
-mkdir -p ~/.config/niri/dms
-touch ~/.config/niri/dms/{colors,layout,alttab,binds}.kdl
-```
+`optional=true` lets niri start while a file is still missing. [`dms setup`](./cli-setup.mdx) creates them.
 :::
 
 For manual configuration recommendations, continue below.
@@ -84,9 +80,6 @@ For systemd autostart setup, see the [Installation guide](./installation#niri). 
 
 ```kdl
 spawn-at-startup "dms" "run"
-
-// Optional: Clipboard history
-spawn-at-startup "bash" "-c" "wl-paste --watch cliphist store &"
 ```
 
 #### Environment Variables
@@ -103,7 +96,7 @@ environment {
 
 #### DMS Keybindings
 
-For the full list of available IPC commands see [IPC](./keybinds-ipc.mdx)
+For the full list of available IPC commands see [IPC](./keybinds-ipc.mdx). These are a few of the stock binds `dms setup binds` writes to `dms/binds.kdl`; the stock file also closes windows with `Alt+F4` as well as `Mod+Q`.
 
 ```kdl
 binds {
@@ -114,17 +107,20 @@ binds {
     Mod+V hotkey-overlay-title="Clipboard Manager" {
         spawn "dms" "ipc" "call" "clipboard" "toggle";
     }
-    Mod+M hotkey-overlay-title="Task Manager" {
-        spawn "dms" "ipc" "call" "processlist" "focusOrToggle";
+    Mod+M hotkey-overlay-title="Media" {
+        spawn "dms" "ipc" "call" "dash" "toggle" "media";
     }
     Mod+Comma hotkey-overlay-title="Settings" {
         spawn "dms" "ipc" "call" "settings" "focusOrToggle";
     }
-    Mod+N hotkey-overlay-title="Notification Center" {
+    Mod+Ctrl+N hotkey-overlay-title="Notification Center" {
         spawn "dms" "ipc" "call" "notifications" "toggle";
     }
     Mod+Y hotkey-overlay-title="Browse Wallpapers" {
-        spawn "dms" "ipc" "call" "dankdash" "wallpaper";
+        spawn "dms" "ipc" "call" "dash" "toggle" "wallpaper";
+    }
+    Ctrl+Alt+Delete hotkey-overlay-title="Task Manager" {
+        spawn "dms" "ipc" "call" "processlist" "focusOrToggle";
     }
 
     // Security
@@ -198,20 +194,32 @@ window-rule {
 
 // Open DMS windows as floating by default (optional - DMS can manage this for you, see tip below)
 window-rule {
-    match app-id=r#"^com\.danklinux\.dms$"#
+    match app-id=r#"^dev\.duxlabs\.shell$"#
     open-floating true
 }
 ```
 
 :::tip[DMS-managed floating rule]
-DMS can manage this rule itself via **Settings → Theme & Colors → Floating Windows → Open Windows Floating** (on by default). The rule lives in a managed fragment at `~/.config/niri/dms/windowrules.kdl`; if that fragment isn't included in your config yet, a **First Time Setup** banner on the same page creates it and adds the include when you click **Setup**. DMS floating windows use app ID `com.danklinux.dms` — remove any hand-written rules targeting the old `org.quickshell` ID.
+DMS can manage this rule itself via **Settings → Interface style → Floating windows → Open floating** (on by default). The rule lives in a managed fragment at `~/.config/niri/dms/windowrules.kdl`; if that fragment isn't included in your config yet, a **First Time Setup** banner on the same page creates it and adds the include when you click **Setup**. DMS floating windows use app ID `dev.duxlabs.shell` — remove any hand-written rules targeting the old `org.quickshell` ID.
 :::
+
+Rules you edit in **Settings → Window rules** are checked with `niri validate` before `dms/windowrules.kdl` is replaced, so a rule niri rejects leaves the old file in place.
+
+### Next niri release
+
+Some settings use niri syntax newer than 26.04. DMS shows them only when the installed niri accepts them:
+
+- **Settings → Window rules**: **VRR Fullscreen Only**, **On activation** (Focus, Ignore or Mark urgent) and **Pinch sensitivity**.
+- **Settings → Input → Mouse & touchpad**: touchpad **Pinch sensitivity**.
+- **Settings → Displays → Configuration**: **Max bits per channel** per output.
+
+**Settings → Input → Keyboard shortcuts** always offers the **Release** and **Non-consuming** bind options and binds on a lone modifier such as `Mod`. Every save runs `niri validate` on the new `dms/binds.kdl`, so a bind the installed niri rejects fails to save with niri's error and the previous file stays.
 
 ## Hyprland Configuration
 
 Hyprland uses a Lua config at `~/.config/hypr/hyprland.lua`. DMS needs **Hyprland 0.55 or newer**, the first release that loads it; `dms setup` refuses to write the Lua config on older versions.
 
-On 0.55 and 0.56 an install that still runs `hyprland.conf` keeps working read-only: DMS shows your keybinds, window rules and displays, but won't edit them until you run `dms setup` to migrate, and `dms doctor` warns about it. Hyprland 0.57 drops `.conf` support entirely.
+Hyprland 0.57 reads only `hyprland.lua`; the `hyprland.conf` format is gone. DMS reads and writes Lua on every supported version, so on 0.55 and 0.56 the keybind, window rule and display pages in Settings stay read-only until `hyprland.lua` exists. See [Coming from hyprland.conf](#coming-from-hyprlandconf).
 
 ### Config layout
 
@@ -221,7 +229,7 @@ Hyprland must be started with the Lua config for any of this to apply:
 Hyprland -c ~/.config/hypr/hyprland.lua
 ```
 
-If Hyprland warns that it is using an autogenerated config, or the warning names `hyprland.conf`, the session is not on the Lua config yet.
+If Hyprland warns that it is using an autogenerated config, the session is not on the DMS config yet; run `dms setup`.
 
 `dms setup` writes the main config plus fragments under `~/.config/hypr/dms/`:
 
@@ -240,11 +248,11 @@ If Hyprland warns that it is using an autogenerated config, or the warning names
 
 Stock configs bind a 3-finger horizontal touchpad gesture to workspace switching (`hl.gesture` in `binds.lua`). Add your own `hl.gesture(...)` lines to `binds-user.lua` to change it, or drop a stock gesture with `action = "unset"` matching its fingers, direction, and modifiers.
 
-#### Migrating from hyprland.conf
+#### Coming from hyprland.conf
 
-`dms setup` moves legacy `hyprland.conf` and `dms/*.conf` into `~/.config/hypr/.dms-backups/<timestamp>/` so Hyprland never sees both formats at once. It also migrates `monitor = ...` lines into `dms/outputs.lua` when that file is empty or missing; an existing `outputs.lua` is left alone.
+Nothing is converted from a `hyprland.conf`. `dms setup` writes a fresh `hyprland.lua` and the `dms/*.lua` fragments, backing up any existing `hyprland.lua` to `~/.config/hypr/.dms-backups/<timestamp>/` first (including the stub Hyprland 0.57 autogenerates when it starts without a config). The old `hyprland.conf` is left in place and ignored.
 
-Hyprland still autogenerates `hyprland.conf` when launched without `-c`. DMS sweeps stray copies into the backup folder on the next `dms run`, so if one keeps reappearing the session is not starting from `hyprland.lua`.
+Re-add shortcuts in `dms/binds-user.lua` or **Settings → Input → Keyboard shortcuts**, window rules in **Settings → Applications → Window rules**, and displays in **Settings → Displays**.
 
 Check the result with:
 
@@ -287,9 +295,6 @@ For systemd autostart setup (recommended if you have multiple desktop environmen
 ```lua
 hl.on("hyprland.start", function()
     hl.exec_cmd("dms run")
-
-    -- Optional: Clipboard history
-    hl.exec_cmd("wl-paste --watch cliphist store")
 end)
 ```
 
@@ -417,19 +422,19 @@ hl.window_rule({ match = { class = "^(blueman-manager)$" }, float = true })
 hl.window_rule({ match = { class = "^(org\\.gnome\\.Nautilus)$" }, float = true })
 
 -- Open DMS windows as floating by default (optional — DMS can manage this for you)
-hl.window_rule({ match = { class = "^(com\\.danklinux\\.dms)$" }, float = true })
+hl.window_rule({ match = { class = "^(dev\\.duxlabs\\.shell)$" }, float = true })
 ```
 
-As on niri, **Settings → Interface style → Floating windows → Open floating** can manage this rule in `~/.config/hypr/dms/windowrules.lua` (click **Setup** on the banner if the fragment isn't included yet). DMS floating windows use app ID `com.danklinux.dms`.
+As on niri, **Settings → Interface style → Floating windows → Open floating** can manage this rule in `~/.config/hypr/dms/windowrules.lua` (click **Setup** on the banner if the fragment isn't included yet). DMS floating windows use app ID `dev.duxlabs.shell`.
 
 #### Window rule editor
 
 **Settings → Applications → Window rules** writes your rules to `~/.config/hypr/dms/windowrules.lua`. On Hyprland the editor adds:
 
 - **Match**: Group and Modal toggles, plus an **Advanced Matching** card with Initial class, Initial title, Tag, XDG tag, Workspace, Content (none, photo, video, game), Fullscreen state, and Client fullscreen state. Prefix a tag with `negative:` to match windows without it.
-- **Advanced** effects: No initial focus, Stay focused, Focus on activate, Confine pointer, No XDG drags, No glow (0.55+), No wobble (Hyprland main), No auto HDR, Tone mapping, scrolling Column Width, Border color, and Suppress events.
+- **Advanced** effects: No initial focus, Stay focused, Focus on activate, Confine pointer, No XDG drags, No glow (0.57+), No wobble (0.57+), No auto HDR, Tone mapping, scrolling Column Width, Border color, and Suppress events.
 
-Corner radius is capped at 20 because Hyprland 0.55 and 0.56 reject higher `rounding` values and drop the rule. Editing a rule keeps any fields the editor doesn't show.
+Corner radius goes up to 100 on Hyprland 0.57 and is capped at 20 on 0.55 and 0.56, which reject higher `rounding` values and drop the rule. Editing a rule keeps any fields the editor doesn't show.
 
 ### Compositor Settings (Hyprland)
 
@@ -442,7 +447,9 @@ Corner radius is capped at 20 because Hyprland 0.55 and 0.56 reject higher `roun
 | Off | Leaves `general:layout` to your own config |
 | Dwindle | Preserve split, Smart split, Force split (Follow mouse, Left, Right) |
 | Master | Master position, New windows (Stack, Master, Inherit), New windows on top of the stack, Master size |
-| Scrolling | Direction, Column Width, Fullscreen single column, Follow focus |
+| Scrolling | Direction, Column Width, Fullscreen single column, Follow focus (Off, On, Not on click) |
+
+**Not on click** (0.57+, `scrolling:follow_focus = 2`) lets focus changes move the tape but not clicks.
 
 **Layout overrides**
 
@@ -451,26 +458,54 @@ Corner radius is capped at 20 because Hyprland 0.55 and 0.56 reject higher `roun
 - **Override border size**.
 - **Resize on border**, with a **Border grab area** slider (`general:extend_border_grab_area`) for the extra space around borders that still starts a resize.
 - **Window opacity** for app windows.
+- **Center dragged windows** (0.57+, `binds:drag_center_window`): a tiled or fullscreen window dragged into floating centers on the cursor.
 - **Xray blur** and **Bar xray** / **Frame xray**. See [Layer Namespaces](./layers.mdx#xray).
 
 **Visual effects**
 
 | Setting | Hyprland | Notes |
 | --- | --- | --- |
-| **Blur** style | main | Default, Frost, Ripple, Drops, Water, Fluid jar, Prism, Heat shimmer, Acrylic, Aurora, Haze. See [Compositor Blur](./compositor-blur.mdx#hyprland-blur-styles) |
+| **Blur** style | 0.57+ | Default, Frost, Ripple, Drops, Water, Fluid jar, Prism, Heat shimmer, Acrylic, Aurora, Haze. See [Compositor Blur](./compositor-blur.mdx#hyprland-blur-styles) |
+| **Blur follows opacity** | 0.57+ | More transparent areas get less blur (`decoration:blur:proportional`) |
 | **Glow** | 0.55+ | Inner glow along window edges in the theme color, with range and **Glow falloff** sliders |
-| **Wobbly windows** | main | Intensity and **Wobble stiffness** sliders |
+| **Wobbly windows** | 0.57+ | Intensity and **Wobble stiffness** sliders |
 | **Motion blur** | 0.56+ | Sample count; more samples look smoother and cost more GPU |
 
 Effects apply to every window, including DMS floating windows such as Settings and Notepad, which also wobble. Blur reach is the **Blur strength** slider under **Interface style**, not part of this card.
 
 **Window groups**
 
-**Background blur** for the group bar, **Title padding**, **Middle click closes**, and **Hide with one window** (Hyprland main). Options your Hyprland doesn't have are not written.
+**Background blur** for the group bar, **Title padding**, **Middle click closes**, and **Hide with one window** (0.56+). Options your Hyprland doesn't have are not written.
 
-## MangoWC Configuration
+**Behavior**
 
-[MangoWC](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf`.
+| Setting | Hyprland | Notes |
+| --- | --- | --- |
+| **Workspace back and forth** | 0.55+ | Switching to the current workspace returns to the previous one (`binds:workspace_back_and_forth`). Off, All displays, or Per display (0.57+); Off or On on older releases |
+| **Keep fullscreen on close** | 0.55+ | Closing a fullscreen window makes the next focused one fullscreen (`misc:exit_window_retains_fullscreen`). Off or On; Only in groups and Only outside groups on 0.57+ |
+| **System bell** | 0.57+ | `misc:bell_sound`. Hyprland 0.57 plays a bell by default; Off writes an empty sound |
+
+**Input and cursor**
+
+These Hyprland rows live on other Settings pages and are hidden unless the running Hyprland has the option:
+
+| Setting | Page | Hyprland | Notes |
+| --- | --- | --- | --- |
+| **Swallow focus click** | Input → Mouse & touchpad → Mouse | 0.57+ | The click that focuses a window does not reach the app (`input:swallow_focus_click`), written to `dms/input.lua` |
+| **Tablet input** | Input → Mouse & touchpad → Tablet | 0.57+ | Turns drawing tablet input on or off (`input:tablet:enabled`), written to `dms/input.lua` |
+| **Warp on display change** | Wallpaper & colors → Cursor | 0.57+ | Same as workspace change, Off, On, or Force (`cursor:warp_on_monitor_change`), written to `dms/cursor.lua` |
+
+**Focus follows mouse** (Input → Mouse & touchpad → Mouse) sets `input:follow_mouse` in `dms/input.lua`: On writes `1`, Off writes `0`. Until you use the toggle, DMS shows the mode your own config sets and writes nothing, and resetting the setting removes the override again, so a mode `2` or `3` from your config comes back. The toggle needs an active Lua config and the `dms/input.lua` include; if the include is missing, use **Setup** in the First Time Setup banner. Hyprland's `input:float_switch_override_focus` can still move focus between tiled and floating windows while `follow_mouse` is `0`, and DMS leaves it alone. On niri the same toggle writes `focus-follows-mouse` to the DMS input include, and on mangowm `sloppy_focus`.
+
+## mangowm Configuration {/* #mangowc-configuration */}
+
+[mangowm](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf` or `~/.config/mango/config.toml`. mangowm loads `config.conf` when it exists, otherwise `config.toml`, and DMS works with either.
+
+:::note[mangowm 0.18 or newer]
+mangowm 0.18 renamed its config keys to snake_case and dropped the old names (`exec-once` is now `exec_once`, `windowrule` is `window_rule`, `monitorrule` is `monitor_rule`, `borderpx` is `border_px`, and so on). Lines with the old names are rejected as unknown keywords. DMS supports mangowm 0.18 and newer, and everything `dms setup` and the shell write uses the snake_case names.
+
+To convert an older config, run the `migrate-config-keys.sh` attached to [mangowm's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) over `~/.config/mango`; it rewrites `config.conf` and the DMS fragments alike. If you had that script running from a systemd `--user` path unit or a cron job to keep up with DMS, remove it: DMS writes snake_case itself now. [`dms doctor`](./cli-doctor.mdx#compositor-checks) lists any keys mangowm still rejects.
+:::
 
 ### Key Configuration Sections
 
@@ -479,14 +514,14 @@ Effects apply to every window, including DMS floating windows such as Settings a
 | Fragment | Purpose | Settings page |
 | --- | --- | --- |
 | `colors.conf` | Theme colors | Wallpaper & colors |
-| `layout.conf` | Gaps, borders, window radius | System & integrations → Compositor |
+| `layout.conf` | Gaps, borders, window radius, DMS layer rules | System & integrations → Compositor |
 | `cursor.conf` | Cursor theme, size and hide timeout | Wallpaper & colors |
 | `input.conf` | Mouse, touchpad and keyboard settings | Input → Mouse & touchpad, Keyboard |
 | `outputs.conf` | Monitors and display settings | Displays |
 | `windowrules.conf` | Window rules | Applications → Window rules |
 | `binds.conf` | Keybinds | Input → Keyboard shortcuts |
 
-If you maintain `config.conf` by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
+The fragments are `.conf` files whichever main config you use; mangowm reads each file in its own format. If you maintain your main config by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
 
 ```conf
 # Add to the end of ~/.config/mango/config.conf
@@ -504,19 +539,34 @@ mkdir -p ~/.config/mango/dms
 touch ~/.config/mango/dms/{colors,layout,cursor,input,outputs,windowrules,binds}.conf
 ```
 
-Mouse and touchpad rows map onto MangoWC's `mouse_*` and `trackpad_*` keys. Keyboard keys (`xkb_rules_*`, `repeat_*`, numlock) are written only once you set one of them, so an untouched Keyboard page keeps the keyboard lines in your own `config.conf`. The **Keymap file** row is hidden on MangoWC because it has no such option. The numlock key is spelled `numlockon` or `numlock_on` to match the installed MangoWC release.
+With `config.toml`, source them from a `[global]` table:
+
+```toml
+# Add to the end of ~/.config/mango/config.toml
+[global]
+source = [
+    "./dms/colors.conf",
+    "./dms/layout.conf",
+    "./dms/cursor.conf",
+    "./dms/input.conf",
+    "./dms/outputs.conf",
+    "./dms/windowrules.conf",
+    "./dms/binds.conf",
+]
+```
+
+Don't keep a `config.conf` next to `config.toml`: mangowm loads `config.conf` and ignores the TOML file.
+
+Mouse and touchpad rows map onto mangowm's `mouse_*` and `trackpad_*` keys. Keyboard keys (`xkb_rules_*`, `repeat_*`, numlock) are written only once you set one of them, so an untouched Keyboard page keeps the keyboard lines in your own main config. The **Keymap file** row is hidden on mangowm because it has no such option. Numlock is written as `numlock_on`.
 
 For manual configuration recommendations, continue below.
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#mangowc). If you prefer not to use systemd, add DMS directly to your MangoWC config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#mangowc). If you prefer not to use systemd, add DMS directly to your mangowm config:
 
 ```conf
-exec-once=dms run
-
-# Optional: Clipboard history
-exec-once=wl-paste --type text --watch cliphist store
+exec_once=dms run
 ```
 
 #### Environment Variables
@@ -534,15 +584,15 @@ Recommended appearance settings for DMS integration:
 ```conf
 # Window appearance
 border_radius=12
-borderpx=0
+border_px=0
 focused_opacity=1.0
 unfocused_opacity=0.9
 
 # Gaps
-gappih=5
-gappiv=5
-gappoh=5
-gappov=5
+gap_inner_horizontal=5
+gap_inner_vertical=5
+gap_outer_horizontal=5
+gap_outer_vertical=5
 
 # Shadows (optional)
 shadows=1
@@ -553,10 +603,16 @@ shadows_blur=15
 
 #### Layer Rules
 
+DMS writes these rules into `dms/layout.conf`, so mangowm skips its layer animation on the shell's own surfaces:
+
 ```conf
-# Disable animation on DMS layers
-layerrule=noanim:1,layer_name:^dms
+layer_rule=no_animation:1,layer_name:^(quickshell)$
+layer_rule=no_animation:1,layer_name:^dms:.*
 ```
+
+With `layer_animations=1`, mangowm restarts a move animation every time a layer changes size or position, so the dot and island lag behind. If you do not source `dms/layout.conf`, copy these lines into `config.conf`. A `layer_rule=no_animation:1,layer_name:^dms` line you added by hand earlier can go.
+
+Each matching `layer_rule` resets the on/off options it does not set, so the last match wins. Put your own rules for DMS layers after `source=./dms/layout.conf` and include `no_animation:1`. To let DMS layers animate instead, add the same two lines there with `no_animation:0`. mangowm applies layer rules when a layer opens, so restart the shell once after updating (`dms restart`).
 
 For more about layer rules see [layer rules](./layers.mdx).
 
@@ -590,21 +646,21 @@ bind=NONE,XF86MonBrightnessDown,spawn,dms ipc call brightness decrement 5
 
 ```conf
 # GNOME apps
-windowrule=isnoborder:1,appid:^org\.gnome\.
+window_rule=no_border:1,app_id:^org\.gnome\.
 
 # Terminal apps - no borders
-windowrule=isnoborder:1,appid:^org\.wezfurlong\.wezterm$
-windowrule=isnoborder:1,appid:^Alacritty$
-windowrule=isnoborder:1,appid:^com\.mitchellh\.ghostty$
-windowrule=isnoborder:1,appid:^kitty$
+window_rule=no_border:1,app_id:^org\.wezfurlong\.wezterm$
+window_rule=no_border:1,app_id:^Alacritty$
+window_rule=no_border:1,app_id:^com\.mitchellh\.ghostty$
+window_rule=no_border:1,app_id:^kitty$
 
 # Float DMS windows
-windowrule=isfloating:1,appid:^org\.quickshell$
+window_rule=is_floating:1,app_id:^dev\.duxlabs\.shell$
 ```
 
 ## Sway Configuration
 
-[Sway](https://swaywm.org/) is an i3-compatible Wayland compositor. Dux Shell integrates with Sway's tiling layout.
+[Sway](https://swaywm.org/) is an i3-compatible Wayland compositor. Dux Modular Shell integrates with Sway's tiling layout.
 
 ### Key Configuration Sections
 
@@ -627,9 +683,6 @@ For systemd autostart setup (recommended if you have multiple desktop environmen
 
 ```conf
 exec dms run
-
-# Optional: Clipboard history
-exec wl-paste --watch cliphist store
 ```
 
 #### DMS Keybindings
@@ -686,7 +739,7 @@ For the full list of available IPC commands see [IPC](./keybinds-ipc.mdx). Mirac
 
 ## Other Compositors
 
-Dux Shell works with any Wayland compositor that supports:
+Dux Modular Shell works with any Wayland compositor that supports:
 - Layer shell protocol (for panels and overlays)
 - Session lock protocol (for lock screen)
 - ext-workspace-v1 protocol (for workspace management)

@@ -53,7 +53,7 @@ services.displayManager.dms-greeter = {
 
   # Custom config files for non-standard config locations
   configFiles = [
-    "/home/yourusername/.config/DankMaterialShell/settings.json"
+    "/home/yourusername/.config/dms/settings.json"
   ];
 
   # Save the logs to a file
@@ -69,7 +69,7 @@ services.displayManager.dms-greeter = {
 
 ### Using Flake Package with NixOS Module
 
-You can use the package from the [dank-greeter](https://github.com/duxlabs-dev/dux-greeter) flake while still using the native NixOS module. This allows you to get quicker updates while keeping the module configuration:
+You can use the package from the [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) flake while still using the native NixOS module. This allows you to get quicker updates while keeping the module configuration:
 
 First, add the flake input to your `flake.nix`:
 
@@ -78,7 +78,7 @@ First, add the flake input to your `flake.nix`:
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-    dank-greeter = {
+    dux-greeter = {
       url = "github:duxlabs-dev/dux-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -92,7 +92,7 @@ Then use the flake package with the native module:
 services.displayManager.dms-greeter = {
   enable = true;
   compositor.name = "niri";
-  package = inputs.dank-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  package = inputs.dux-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
 };
 ```
 

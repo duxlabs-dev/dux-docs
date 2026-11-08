@@ -85,37 +85,6 @@ programs.dank-material-shell.enable = true;
 
 That's it! Rebuild your system (or standalone home-manager configuration) and Dux Shell will be installed  with sensible defaults.
 
-If you want to import dgop from the flake, first add it to your flake inputs:
-
-```nix
-{
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-
-    dms = {
-      url = "github:duxlabs-dev/dux-shell/stable";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    dgop = {
-      url = "github:duxlabs-dev/dux-gop";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-}
-```
-
-Then configure Dux Shell to use the dgop package from the flake:
-
-```nix
-programs.dank-material-shell = {
-  enable = true;
-  enableSystemMonitoring = true;
-  dgop.package = inputs.dgop.packages.${pkgs.system}.default;
-};
-```
-:::
-
 ## niri Integration
 
 If you're using the niri compositor, the home-manager module provides additional integration options including automatic keybindings and startup configuration.
@@ -250,7 +219,7 @@ programs.dank-material-shell = {
   };
 
   # Core features
-  enableSystemMonitoring = true;     # System monitoring widgets (dgop)
+  enableSystemMonitoring = true;     # System monitoring widgets
   enableVPN = true;                  # VPN management widget
   enableDynamicTheming = true;       # Wallpaper-based theming (matugen)
   enableAudioWavelength = true;      # Audio visualizer (cava)
@@ -467,7 +436,7 @@ Make sure you have either:
 
 ### Missing dependencies
 
-Each feature has its own dependency set. If a feature isn't working, ensure the corresponding `enable` option is set to `true`. For example, system monitoring requires `enableSystemMonitoring = true` which installs `dgop`.
+Each feature has its own dependency set. If a feature isn't working, ensure the corresponding `enable` option is set to `true`. For example, wallpaper-based theming requires `enableDynamicTheming = true`, which installs `matugen`.
 
 ### Custom keybindings conflict with niri defaults
 

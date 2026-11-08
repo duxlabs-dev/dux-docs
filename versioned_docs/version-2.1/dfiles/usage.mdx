@@ -1,0 +1,145 @@
+---
+title: Usage
+description: CLI commands for windows, trash, mime types, devices, search and the portal
+sidebar_position: 4
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Usage
+
+Dux Files is a daemon with windows attached. The commands below talk to the running instance when there is one and run the same code in-process otherwise. `dfiles ipc` needs the running daemon. `--json` prints machine-readable output where a command supports it.
+
+## Windows
+
+```bash
+dfiles                        # show the last used window, launching dfiles if needed
+dfiles show                   # same as above
+dfiles toggle                 # toggle window visibility
+dfiles open ~/Downloads       # open a folder in a new tab of the last used window
+dfiles open a.txt b/          # one tab each; a file opens its folder with the file selected
+dfiles open -n ~/Music        # open in a new window
+dfiles open                   # no argument always opens a new window
+dfiles select ~/x.pdf ~/y.png # open the folders holding the paths with them selected
+dfiles properties ~/x.pdf     # show the properties dialog
+```
+
+`dfiles open` also takes URIs. An archive given to it, or double clicked in a window, is extracted into a folder beside it unless **Settings → General → Extract archives on open** is off.
+
+| Location | Opens |
+| --- | --- |
+| `/path`, `relative/path`, `file:///path` | that path |
+| `trash:///` | the trash view |
+| `computer:///` | `/` |
+| `network:///` | the Connect to Server dialog |
+| `admin:///path` | the path; denied operations offer Retry as administrator |
+| `sftp:// ssh:// smb:// ftp:// ftps:// dav:// davs:// nfs:// afp://` | mounted through gvfs, then opened in a new tab at the path inside the share |
+
+## Daemon
+
+```bash
+dfiles run                    # run in the foreground (logs to the terminal)
+dfiles run -d                 # run as a background daemon
+dfiles run -d --hidden        # run without opening a window
+dfiles daemon                 # IPC only, no UI
+dfiles restart                # restart the running instance
+dfiles kill                   # stop everything
+```
+
+`dfiles run` also accepts `--session` (for a systemd-managed unit), `--log-level <debug|info|warn|error|fatal>` and `--log-file <path>`. Use `--config <dir>` on any command to point at a UI config directory instead of the embedded one (env: `DFILES_SHELL_DIR`).
+
+## Trash
+
+```bash
+dfiles trash put <path...>        # move files or directories into the trash
+dfiles trash list                 # list trashed items across every trash directory
+dfiles trash count                # print the number of trashed items
+dfiles trash restore <name...>    # restore items to where they were deleted from
+dfiles trash empty                # delete every trashed item permanently
+```
+
+`restore` takes `--trash-dir <dir>` to pick a specific trash and `--conflict keep-both|skip|replace` for when the original path is taken (default `keep-both`). An item that fails is skipped, reported, and makes the command exit 1.
+
+## Mime Types and Default Applications
+
+```bash
+dfiles mime query <path|mime-type...>     # mime type, default app and every handler
+dfiles mime default <path|mime-type>      # print the default application's desktop id
+dfiles mime set <mime-type> <desktop-id>  # set the default application
+```
+
+## Devices
+
+```bash
+dfiles devices list               # drives and volumes udisks2 knows about
+dfiles devices mount <device>     # by /dev path, label, uuid or id
+dfiles devices unmount <device>
+dfiles devices eject <device>     # unmount and eject removable media
+```
+
+## Search
+
+```bash
+dfiles search ~/Projects "invoice 2026"
+dfiles search ~ --type images --fuzzy photo
+dfiles search / --scope everywhere --limit 50 "*.iso"
+```
+
+Terms must all match the name or path. `*` and `?` make a term a glob.
+
+| Flag | What it does |
+| --- | --- |
+| `--scope folder\|home\|everywhere` | Where to look. `everywhere` is home plus mounted local drives (default `folder`) |
+| `--type <kind>` | Only `documents`, `images`, `video`, `audio`, `archives` or `folders` (repeatable) |
+| `--fuzzy` | Also accept terms whose letters appear in order |
+| `--contents` | Match indexed file contents (needs a running [Dux Search](../dsearch/)) |
+| `--hidden` | Descend into and report hidden entries |
+| `--include-ignored` | Walk heavy folders, gitignored entries and your excluded folders too |
+| `--cross-device` | Follow into other filesystems |
+| `--direct` | Walk the disk even when the Dux Search index could answer |
+| `--limit <n>` | Stop after this many results (at most and by default 10000) |
+
+Results print as they are found.
+
+## Portal File Chooser
+
+```bash
+dfiles portal status      # show whether dfiles serves the portal file chooser
+dfiles portal install     # make dfiles the portal file chooser for this user
+dfiles portal uninstall   # restore the previous portal file chooser
+```
+
+See [Open and save dialogs](desktop-integration#open-and-save-dialogs) for what this changes.
+
+## IPC
+
+```bash
+dfiles ipc list                           # every IPC method and its params
+dfiles ipc ui.toggle
+dfiles ipc files.list path=/home/me sort=mtime desc=true
+```
+
+See [IPC](ipc) for the method reference.
+
+## JSON Output
+
+```bash
+dfiles trash list --json
+dfiles devices list --json
+dfiles version --json
+```
+
+## Next Steps
+
+- [Desktop Integration](desktop-integration) - FileManager1, the portal, and URIs
+- [Keyboard](keyboard) - Every shortcut

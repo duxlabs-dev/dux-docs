@@ -24,7 +24,7 @@ The `dms keybinds` command provides a unified interface for viewing and managing
 The keybinds framework offers:
 - **Auto-discovery**: Automatically finds keybinds from application configs
 - **Custom cheatsheets**: Create JSON files for any application
-- **Multiple providers**: Built-in support for Hyprland, Sway, MangoWC, labwc, and Miracle WM, with extensibility for other applications
+- **Multiple providers**: Built-in support for niri, Hyprland, Sway, Scroll, mangowm, and Miracle WM, with extensibility for other applications
 - **XDG compliance**: Follows XDG Base Directory standards for config locations
 
 ## Quick Start
@@ -79,7 +79,7 @@ The Hyprland provider automatically parses your Hyprland configuration files and
 - Categorizes binds by type (Window, Workspace, Execute, etc.)
 - Shows per-device binds (`device = { ... }`) and keeps their device table when you edit them
 
-On Hyprland 0.55 and 0.56, an install still on `hyprland.conf` is parsed read-only (including `##!` section headers and `[hidden]` comments) until you run `dms setup` to migrate. See [Compositor Setup](./compositors.mdx#hyprland-configuration).
+`hyprland.conf` is not parsed and binds are not converted; re-add them in `dms/binds-user.lua` or **Settings → Input → Keyboard shortcuts**. See [Coming from hyprland.conf](./compositors.mdx#coming-from-hyprlandconf).
 
 **Usage**:
 
@@ -104,10 +104,12 @@ The provider generates descriptions in this order:
 Binds are automatically categorized based on their dispatcher:
 - **Workspace**: workspace navigation and management
 - **Monitor**: monitor-related actions
-- **Window**: window management (move, resize, focus, kill, etc.)
+- **Window**: window management (move, resize, focus, kill, layout messages, etc.)
 - **Execute**: launching applications and scripts
 - **System**: system actions (exit, dpms, etc.)
 - **Other**: miscellaneous dispatchers
+
+A bind whose action is a Lua function (`hl.bind("SUPER + F", my_func)` or an inline `function() ... end`) is categorized by the words in its `description`, or by the function's name when it has none. Words starting with `workspace` go to Workspace, `monitor` to Monitor, `window`, `focus`, `move`, `swap`, `resize`, `fullscreen`, `float`, `maximize` or `column` to Window, and `exit`, `reload` or `dpms` to System; anything else goes to Other.
 
 **Bind options in the editor**:
 
@@ -163,21 +165,21 @@ bindsym $mod+2 workspace number 2
 bindsym $mod+Return exec kitty # Open terminal
 ```
 
-### MangoWC
+### mangowm {/* #mangowc */}
 
-The MangoWC provider automatically parses your MangoWC (dwl) configuration and extracts keybinds.
+The mangowm provider automatically parses your mangowm (dwl) configuration and extracts keybinds.
 
 **Features**:
-- Parses MangoWC keybind definitions
+- Parses mangowm keybind definitions
 - Supports section comments with `##!` (categories) and `###!` (subcategories)
-- Auto-generates descriptions for common MangoWC actions
+- Auto-generates descriptions for common mangowm actions
 - Respects `[hidden]` comments to exclude certain binds
 - Categorizes binds by type
 
 **Usage**:
 
 ```bash
-# Use default MangoWC config path
+# Use default mangowm config path
 dms keybinds show mangowc
 
 # Specify custom path
@@ -194,7 +196,8 @@ The Niri provider parses KDL-format Niri configuration files and extracts keybin
 - Supports DMS overrides via `~/.config/niri/dms/binds.kdl`
 - Detects conflicts between DMS defaults and your binds
 - Validates config before writing using `niri validate`
-- Supports bind options: `repeat`, `cooldown-ms`, `allow-when-locked`
+- Supports bind options: `repeat`, `cooldown-ms`, `allow-when-locked`, `allow-inhibiting`, and on the next niri release, release triggers and `pass-through`
+- Marks release-only binds with a **Release** badge in the cheatsheet
 
 **Usage**:
 
@@ -232,6 +235,13 @@ dms keybinds set niri "Mod+Print" "screenshot" --cooldown-ms 500
 dms keybinds set niri "Mod+Shift+T" "spawn kitty" \
   --desc "Open terminal" \
   --replace-key "Mod+T"
+
+# Next niri release: run on key release (here, a Mod tap)
+dms keybinds set niri "Mod" "toggle-overview" --trigger release
+
+# Next niri release: one action on press, another on release (push-to-talk)
+dms keybinds set niri "Control_R" "spawn wpctl set-mute @DEFAULT_SOURCE@ 0" \
+  --trigger both --release-action "spawn wpctl set-mute @DEFAULT_SOURCE@ 1"
 ```
 
 Remove a keybind:
@@ -242,13 +252,13 @@ dms keybinds remove niri "Mod+T"
 
 #### Niri Config Setup
 
-Include the DMS binds file in your Niri config:
+Include the DMS binds files in your Niri config:
 
 ```kdl
 // ~/.config/niri/config.kdl
 
-// Include DMS keybind overrides
-include "~/.config/niri/dms/binds.kdl"
+// DMS keybind overrides
+include optional=true "dms/binds.kdl"
 
 binds {
     Mod+Q { close-window; }
@@ -256,9 +266,12 @@ binds {
 }
 ```
 
+`dms/binds-next.kdl` holds the Keyboard Shortcuts bind (`Mod+Shift+Slash`) and, on the next release, a `Mod` tap that toggles the overview. DMS rewrites it to match the installed niri, so change these binds in `dms/binds.kdl` instead. See [Next niri release](./compositors.mdx#next-niri-release).
+
 :::tip[Include Order Matters]
 - DMS include **before** your binds: Your binds override DMS defaults
 - DMS include **after** your binds: DMS binds take priority
+- `dms/binds-next.kdl` goes **before** `dms/binds.kdl`, so binds you set through DMS override it
 
 The cheatsheet output includes conflict detection showing which binds are overridden.
 :::
@@ -270,7 +283,13 @@ The cheatsheet output includes conflict detection showing which binds are overri
 | repeat | `--no-repeat` | Disable key repeat (default: enabled) |
 | cooldown-ms | `--cooldown-ms <ms>` | Minimum time between activations |
 | allow-when-locked | `--allow-when-locked` | Allow bind when screen is locked |
+| allow-inhibiting=false | `--no-inhibiting` | Keep the bind working while an app inhibits shortcuts |
 | hotkey-overlay-title | `--desc <text>` | Description shown in Niri's hotkey overlay |
+| `release { }` | `--trigger press\|release\|both` | Fire on press (default), on release, or both. Omitted keeps the existing bind's trigger. Not for scroll binds. Next niri release |
+| `press { }` `release { }` | `--release-action <action>` | Action run on release; requires `--trigger both` |
+| pass-through | `--pass-through` | Also send the key to the focused window. Keyboard binds only. Release-only binds already pass through, so `--pass-through=false` stops that. Next niri release |
+
+`--trigger`, `--release-action` and `--pass-through` only work with the niri provider. In **Settings → Input → Keyboard shortcuts** the same options are the **Release** and **Non-consuming** toggles. The editor shows a press-and-release bind's release action, but only the CLI sets it.
 
 #### Action Formats
 
@@ -325,7 +344,7 @@ $XDG_CONFIG_HOME/dms/cheatsheets/
 **With XDG_CONFIG_DIRS set** (NixOS compatibility):
 The framework searches in this order:
 1. `$XDG_CONFIG_HOME/dms/cheatsheets/`
-2. Each directory in `$XDG_CONFIG_DIRS/DankMaterialShell/cheatsheets/`
+2. Each directory in `$XDG_CONFIG_DIRS/dms/cheatsheets/`
 
 ### JSON Format
 
@@ -505,7 +524,7 @@ dms keybinds show hyprland --path /custom/path/to/hypr
 # Show Sway keybinds with custom config
 dms keybinds show sway --path /etc/sway/config
 
-# Show MangoWC keybinds with custom config
+# Show mangowm keybinds with custom config
 dms keybinds show mangowc --path /custom/mangowc/config
 
 # Show custom cheatsheet
@@ -514,44 +533,46 @@ dms keybinds show vim
 
 ## Tips & Best Practices
 
-### Organizing Hyprland Configs
+### Organizing Sway and mangowm Configs
 
 Use section headers to organize your keybinds:
 
 ```conf
 ##! Window Management
 ###! Focus
-bind = SUPER, left, movefocus, l
-bind = SUPER, right, movefocus, r
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
 
 ###! Layout
-bind = SUPER, F, fullscreen, 0
-bind = SUPER, V, togglefloating
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+space floating toggle
 
 ##! Applications
-bind = SUPER, T, exec, kitty
-bind = SUPER, B, exec, firefox
+bindsym $mod+Return exec kitty
+bindsym $mod+b exec firefox
 ```
+
+Hyprland's Lua config has no section headers; the provider categorizes binds by dispatcher.
 
 ### Hiding Internal Binds
 
-Use `[hidden]` to exclude binds from the display:
+On Sway and mangowm, use `[hidden]` to exclude binds from the display:
 
 ```conf
 # This won't appear in the keybinds list
-bind = SUPER, X, exec, secret-script # [hidden]
+bindsym $mod+x exec secret-script # [hidden]
 ```
 
 ### Descriptive Comments
 
 Add clear comments to override auto-generated descriptions:
 
-```conf
-# Auto-generated: "Launch application: kitty"
-bind = SUPER, T, exec, kitty
+```lua
+-- Auto-generated: "kitty"
+hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty"))
 
-# Custom: "Open terminal"
-bind = SUPER, T, exec, kitty # Open terminal
+-- Custom: "Open terminal"
+hl.bind("SUPER + T", hl.dsp.exec_cmd("kitty")) -- Open terminal
 ```
 
 ### Consistent Naming

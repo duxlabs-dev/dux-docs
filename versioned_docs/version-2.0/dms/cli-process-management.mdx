@@ -286,10 +286,10 @@ systemctl --user cat dms.service
 
 DMS is designed to work with Wayland compositors. The process management commands ensure DMS runs cleanly within the compositor's session:
 
-- **Hyprland**: Use `exec-once` for autostart
+- **Hyprland**: Use `hl.exec_once("dms run")` in `hyprland.lua` for autostart
 - **Sway**: Use `exec` for autostart
 - **Niri**: Use `spawn-at-startup` for autostart
-- **MangoWC**: Use compositor-specific autostart mechanism
+- **MangoWC**: Use `exec_once` for autostart
 
 When the compositor exits, the DMS backend should automatically terminate, which will also kill its Quickshell child process. If processes don't clean up properly, run `dms kill` before logging out.
 

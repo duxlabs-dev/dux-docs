@@ -44,14 +44,14 @@ For NixOS users, we recommend using the declarative installation methods:
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-paru -S dsearch-bin
+paru -S dux-search-bin
 ```
 
 </TabItem>
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-paru -S dsearch-git
+paru -S dux-search-git
 ```
 
 </TabItem>
@@ -60,8 +60,8 @@ paru -S dsearch-git
 ### Fedora & CentOS
 
 ```bash
-sudo dnf copr enable duxlabs/dux
-sudo dnf install dsearch
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-search
 ```
 
 ### Debian & Ubuntu
@@ -76,36 +76,36 @@ Select your release:
 <TabItem value="trixie" label="Debian 13 (Trixie)" default>
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install dsearch
+sudo apt install dux-search
 ```
 
 </TabItem>
 <TabItem value="testing" label="Debian Testing">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install dsearch
+sudo apt install dux-search
 ```
 
 </TabItem>
 <TabItem value="sid" label="Debian Sid">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install dsearch
+sudo apt install dux-search
 ```
 
 </TabItem>
@@ -116,9 +116,9 @@ sudo apt install dsearch
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
-sudo apt install dsearch
+sudo apt install dux-search
 ```
 
 ### openSUSE & Derivatives
@@ -131,36 +131,36 @@ Select your distribution:
 <TabItem value="tumbleweed" label="Tumbleweed" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dsearch
+sudo zypper install dux-search
 ```
 
 </TabItem>
 <TabItem value="leap16" label="Leap 16">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dsearch
+sudo zypper install dux-search
 ```
 
 </TabItem>
 <TabItem value="leap161" label="Leap 16.1">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dsearch
+sudo zypper install dux-search
 ```
 
 </TabItem>
 <TabItem value="slowroll" label="Slowroll">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dsearch
+sudo zypper install dux-search
 ```
 
 </TabItem>
@@ -178,9 +178,9 @@ Install Dux Search from our R2-backed XBPS repository or build it from source.
 <TabItem value="repo" label="Dux Repository" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
-sudo xbps-install -S danksearch
+sudo xbps-install -S dux-search
 ```
 
 :::note
@@ -201,13 +201,13 @@ cd void-packages
 ./xbps-src binary-bootstrap
 
 # Copy in the templates (adjust paths as needed)
-cp -R ../Dux/distro/void/srcpkgs/danksearch* srcpkgs/
+cp -R ../Dux/distro/void/srcpkgs/dux-search* srcpkgs/
 
 # Build the package
-./xbps-src pkg danksearch
+./xbps-src pkg dux-search
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs danksearch
+sudo xbps-install --repository=hostdir/binpkgs dux-search
 ```
 
 </TabItem>
@@ -215,12 +215,12 @@ sudo xbps-install --repository=hostdir/binpkgs danksearch
 
 ### Gentoo
 
-`gui-apps/danksearch` is available in the official [guru](https://wiki.gentoo.org/wiki/Project:GURU) community overlay.
+`dux-desktop/dux-search` is available in the official [guru](https://wiki.gentoo.org/wiki/Project:GURU) community overlay.
 
 ```bash
 sudo eselect repository enable guru
 sudo emaint sync -r guru
-sudo emerge --ask gui-apps/danksearch
+sudo emerge --ask dux-desktop/dux-search
 ```
 
 :::note
@@ -228,7 +228,7 @@ sudo emerge --ask gui-apps/danksearch
 The guru overlay package is keyworded `~amd64`, so you may need to accept the testing keyword:
 
 ```bash
-echo "gui-apps/danksearch ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/danksearch
+echo "dux-desktop/dux-search ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dux-search
 ```
 
 :::

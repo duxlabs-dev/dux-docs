@@ -10,6 +10,11 @@ Dux Greeter authenticates logins through greetd's PAM service. `dms-greeter`
 can manage the fingerprint and security-key entries in `/etc/pam.d/greetd`,
 or you can make your distribution or system configuration the policy owner.
 
+Some distributions, such as Fedora 45+, openSUSE Tumbleweed, and Leap 16, ship
+greetd's PAM file only as `/usr/lib/pam.d/greetd`. There, `dms-greeter`
+creates `/etc/pam.d/greetd` as a copy of that file plus the managed block only
+when you turn on a fingerprint or security-key toggle.
+
 Configure this in **Settings → Greeter → Authentication** in DMS, then apply
 with the Sync button (or `dms-greeter sync`).
 
@@ -33,7 +38,8 @@ An invalid greetd stack can prevent graphical login.
 
 ## Login interaction
 
-Dux Greeter always follows `/etc/pam.d/greetd`; the lock screen's **Auto** and
+Dux Greeter always follows greetd's PAM stack (`/etc/pam.d/greetd`, or
+`/usr/lib/pam.d/greetd` when there is no `/etc` file); the lock screen's **Auto** and
 **Custom** sources and its **OR**/**AND** modes do not apply at login. With
 DMS-managed greetd PAM, selecting a user automatically starts any enabled and
 available fingerprint or security-key factor, and the factor button can start
@@ -84,6 +90,20 @@ dms-greeter sync --auth
 
 The command may prompt for sudo and rewrites only the managed PAM block.
 Lock screen PAM is separate and repaired with `dms auth sync`.
+
+### Keyring not unlocked on Fedora 45+, Tumbleweed, or Leap 16
+
+Older greeter packages wrote a minimal `/etc/pam.d/greetd` that hides greetd's
+own `/usr/lib/pam.d/greetd`, which drops lines such as keyring unlock. If both
+files exist and you never edited `/etc/pam.d/greetd` yourself, remove it and
+sync again to reapply any fingerprint or security-key setting:
+
+```bash
+ls -l /etc/pam.d/greetd /usr/lib/pam.d/greetd
+sudo cp /etc/pam.d/greetd ~/greetd.pam.backup
+sudo rm /etc/pam.d/greetd
+dms-greeter sync
+```
 
 See [Dux Greeter configuration](./configuration) for the rest of the greeter
 setup, and [Lock Screen authentication](../dms/lock-screen-authentication)

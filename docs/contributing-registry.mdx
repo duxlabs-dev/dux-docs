@@ -1,6 +1,6 @@
 ---
 title: Contributing to the Registry
-description: How to contribute plugins and themes to the Dux Shell registry
+description: How to contribute plugins and themes to the Dux Modular Shell registry
 ---
 
 import Hero from '@site/src/components/Hero';
@@ -15,7 +15,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Thank you for contributing to the Dux Shell registry! This guide covers how to submit plugins and themes to the [dms-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) repository.
+Thank you for contributing to the Dux Modular Shell registry! This guide covers how to submit plugins and themes to the [dms-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) repository.
 
 ## Contributing a Plugin
 
@@ -57,8 +57,8 @@ Thank you for contributing to the Dux Shell registry! This guide covers how to s
 |-------|----------|-------------|
 | `id` | Yes | Unique identifier in camelCase (e.g., `worldClock`). Must match your `plugin.json` |
 | `name` | Yes | Display name. Must match your `plugin.json` |
-| `capabilities` | Yes | Array like `["dankbar-widget"]` |
-| `category` | Yes | One of: `monitoring`, `utilities`, `appearance`, `system`, etc. |
+| `capabilities` | Yes | Plugin types, used by the directory's Type filter: `dankbar-widget`, `control-center`, `launcher`, `daemon`, `desktop-widget`, `dash-tab`, `dash-card`, `lyrics-provider`. Types declared in your `plugin.json` (`type`, `components` or `lyrics`) are added automatically. Extra free-form entries are allowed |
+| `category` | Yes | One of: `utilities`, `monitoring`, `system`, `appearance`, `productivity`, `media`, `networking` |
 | `repo` | Yes | Full GitHub URL to your plugin repository |
 | `path` | No | Subdirectory path if plugin is in a monorepo |
 | `author` | Yes | Your name or GitHub username |
@@ -234,7 +234,7 @@ Both `dark` and `light` objects require these color properties:
 
 :::note[Not all colors are used by DMS itself]
 `surfaceContainerLowest`, `surfaceContainerLow`, and `backgroundText` are not rendered by
-Dux Shell's own UI. They complete the Material palette and are exported to matugen
+Dux Modular Shell's own UI. They complete the Material palette and are exported to matugen
 templates (VS Code, KDE, Firefox, Zed, etc.), so external apps themed via DMS use them. They
 are still required for a valid theme — pick sensible values that fit your palette.
 :::

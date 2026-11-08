@@ -5,6 +5,8 @@ import Head from '@docusaurus/Head';
 import { Check, ChevronRight } from 'material-symbols/rounded';
 import LandingBackground from '../components/LandingBackground';
 import ThemePreview from '../components/ThemePreview';
+import SponsorStrip from '../components/SponsorStrip';
+import ContributorStrip from '../components/ContributorStrip';
 import styles from './index.module.css';
 
 declare global {
@@ -17,22 +19,20 @@ declare global {
 const compositors = [
   { name: 'niri', logo: '/img/niri.svg', duration: 600 },
   { name: 'Hyprland', logo: '/img/hyprland.svg', duration: 600 },
-  { name: 'MangoWC', logo: '/img/mango.png', duration: 600 },
+  { name: 'mangowm', logo: '/img/mango.png', duration: 600 },
   { name: 'Sway', logo: '/img/sway.svg', duration: 600 },
   { name: 'labwc', logo: '/img/labwc.png', duration: 600 },
   { name: 'Miracle', logo: '/img/miraclewm.svg', duration: 600 },
-  { name: 'Aqueous', logo: '/img/aqueous.svg', duration: 600 },
   { name: 'Wayland', logo: null, duration: 0 },
 ];
 
 const compositorLinks: Record<string, string> = {
   'niri': 'https://github.com/niri-wm/niri',
   'Hyprland': 'https://hyprland.org/',
-  'MangoWC': 'https://github.com/DreamMaoMao/mangowc',
+  'mangowm': 'https://github.com/DreamMaoMao/mangowc',
   'Sway': 'https://swaywm.org/',
   'labwc': 'https://labwc.github.io/',
   'Miracle': 'https://github.com/miracle-wm-org/miracle-wm',
-  'Aqueous': 'https://www.seafoam-labs.org/aqueous/overview/',
 };
 
 export default function Home() {
@@ -252,7 +252,7 @@ export default function Home() {
     <Layout
       wrapperClassName="landing-main-wrapper"
       title="Modern Desktop Suite"
-      description="A modern Linux desktop suite with beautiful widgets and powerful monitoring - optimized for niri, Hyprland, MangoWC, Sway, Miracle WM, and Aqueous.">
+      description="A modern Linux desktop suite with beautiful widgets and powerful monitoring - optimized for niri, Hyprland, mangowm, Sway, and Miracle WM.">
       <Head>
         <meta property="og:image" content="https://duxlabs.dev/img/homepage/dux-preview.png" />
         <meta property="og:image:width" content="1200" />
@@ -292,7 +292,7 @@ export default function Home() {
                 <span className={styles.compositorRotatorWrapper}>
                   <noscript>
                     <span style={{display: 'inline', fontSize: 'inherit', color: 'inherit'}}>
-                      niri, Hyprland, Sway, Aqueous, and Wayland
+                      niri, Hyprland, Sway, and Wayland
                     </span>
                   </noscript>
                   <span className={styles.compositorRotator}>
@@ -398,7 +398,7 @@ export default function Home() {
                       <span className={styles.success}>✓ Installing dependencies</span>
                     </div>
                     <div className={`${styles.terminalLine} ${typed.length >= fullText.length ? styles.fadeIn : styles.hidden}`} style={{ animationDelay: '0.6s' }}>
-                      <span className={styles.success}>✓ Configuring Dux Shell</span>
+                      <span className={styles.success}>✓ Configuring Dux Modular Shell</span>
                     </div>
                     <div className={`${styles.terminalLine} ${typed.length >= fullText.length ? styles.fadeIn : styles.hidden}`} style={{ animationDelay: '0.9s' }}>
                       <span className={styles.success}>✓ Ready to rock!</span>
@@ -419,7 +419,7 @@ export default function Home() {
                     <img src="/img/z.svg" alt="Zirconium" className={styles.preconfiguredLogo} />
                     <div className={styles.preconfiguredInfo}>
                       <span className={styles.preconfiguredName}>Zirconium</span>
-                      <span className={styles.preconfiguredDesc}>Fedora-based immutable OS with niri + Dux Shell</span>
+                      <span className={styles.preconfiguredDesc}>Fedora-based immutable OS with niri + Dux Modular Shell</span>
                     </div>
                     <ChevronRight size={16} className={styles.preconfiguredArrow} />
                   </a>
@@ -432,7 +432,7 @@ export default function Home() {
                     <img src="/img/fedora-mark.svg" alt="Fedora" className={styles.preconfiguredLogo} />
                     <div className={styles.preconfiguredInfo}>
                       <span className={styles.preconfiguredName}>Fedora Miracle Spin</span>
-                      <span className={styles.preconfiguredDesc}>Official Fedora Spin with MiracleWM + Dux Shell</span>
+                      <span className={styles.preconfiguredDesc}>Official Fedora Spin with MiracleWM + Dux Modular Shell</span>
                     </div>
                     <ChevronRight size={16} className={styles.preconfiguredArrow} />
                   </a>
@@ -465,7 +465,7 @@ export default function Home() {
                   />
                 </div>
                 <div className={styles.screenshotLabel}>
-                  <h3>Dux Shell in Action</h3>
+                  <h3>Dux Modular Shell in Action</h3>
                   <p>Experience the fluid interface and beautiful animations</p>
                 </div>
               </div>
@@ -584,7 +584,7 @@ export default function Home() {
 
             <div className={styles.featuresGrid}>
               <FeatureCard
-                title="Dux Shell"
+                title="Dux Modular Shell"
                 description="A modern and beautiful desktop shell with dynamic theming and smooth animations."
                 imageDark="/img/desktop.webp"
                 imageLight="/img/desktoplight.webp"
@@ -637,7 +637,7 @@ export default function Home() {
                   One theme.<br /><span className={styles.gradientText}>Across your apps.</span>
                 </h2>
                 <p className={styles.showcaseDesc}>
-                  Dux Shell automatically generates matching colors for supported GTK and Qt apps,
+                  Dux Modular Shell automatically generates matching colors for supported GTK and Qt apps,
                   terminals, editors, and more.
                 </p>
                 <p className={styles.showcaseDesc}>
@@ -667,13 +667,15 @@ export default function Home() {
           </section>
 
           <section className={styles.support}>
+            <SponsorStrip />
+            <ContributorStrip />
             <div className={styles.supportCard}>
               <div className={styles.supportText}>
                 <h2 className={styles.supportTitle}>
                   Free and open source.<br /><span className={styles.gradientText}>Kept going by you.</span>
                 </h2>
                 <p className={styles.supportDesc}>
-                  Dux Shell costs nothing to use. If it has earned a spot on your desktop,
+                  Dux Modular Shell costs nothing to use. If it has earned a spot on your desktop,
                   a tip helps cover the time and infrastructure that keep releases coming.
                 </p>
               </div>

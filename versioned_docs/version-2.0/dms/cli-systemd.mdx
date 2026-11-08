@@ -34,7 +34,7 @@ This is deliberately not `systemctl --user enable dms`. That ties the service to
 
 ## disable
 
-Removes the `dms.service` wants link from all three compositor units and reloads systemd. Add `--now` to also stop the running service. If your compositor config starts DMS itself (`spawn-at-startup "dms" "run"`, `hl.exec_cmd("dms run")`, `exec-once=dms run`), it keeps doing so.
+Removes the `dms.service` wants link from all three compositor units and reloads systemd. Add `--now` to also stop the running service. If your compositor config starts DMS itself (`spawn-at-startup "dms" "run"`, `hl.exec_cmd("dms run")`, `exec_once=dms run`), it keeps doing so.
 
 ## status
 

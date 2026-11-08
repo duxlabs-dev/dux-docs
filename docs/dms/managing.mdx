@@ -1,6 +1,6 @@
 ---
 title: Managing Your Installation
-description: Update, configure, and manage Dux Shell
+description: Update, configure, and manage Dux Modular Shell
 sidebar_position: 3
 ---
 
@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-This guide covers how to manage, update, and configure Dux Shell after installation.
+This guide covers how to manage, update, and configure Dux Modular Shell after installation.
 
 ## Service Management
 
@@ -75,7 +75,7 @@ This ties the dms service to niri's session, so it won't start under other deskt
 
 #### Other Compositors
 
-Hyprland, Sway, MangoWC, and Miracle WM don't have systemd session targets. If you use multiple desktop environments and only want DMS on one of them, disable the systemd unit and start DMS from your compositor config instead:
+Sway and Miracle WM don't have systemd session targets (Hyprland 0.57+ ships `hyprland-session.target` and mangowm ships `mango-session.target`; see [Systemd service](./cli-systemd.mdx)). If you use multiple desktop environments and only want DMS on one of them, disable the systemd unit and start DMS from your compositor config instead:
 
 ```bash
 systemctl --user disable dms
@@ -100,6 +100,12 @@ exec dms run
 
 # niri (~/.config/niri/config.kdl)
 spawn-at-startup "dms" "run"
+
+# mangowm (~/.config/mango/config.conf)
+exec_once=dms run
+
+# mangowm (~/.config/mango/config.toml, under [global])
+exec_once = "dms run"
 ```
 
 **Manual control:**
@@ -225,7 +231,7 @@ This only affects DMS and apps it launches, whereas `90-dms.conf` applies to all
 ## Drop-in Settings Files
 By default, your DMS settings are stored in `settings.json`. You may opt to split them between multiple files. This can be useful for example, in conjunction with version control to keep your configuration synced between different machines.
 
-1. Create a `config.d/` directory alongside your `settings.json` file in the `~/.config/DankMaterialShell/` directory.
+1. Create a `config.d/` directory alongside your `settings.json` file in the `~/.config/dms/` directory.
 
 2. Restart DMS
 
@@ -259,7 +265,7 @@ By default, DMS omits settings which haven't been modified. If you cannot find a
 **Arch & Derivatives:**
 
 ```bash
-sudo pacman -Syu dms-shell
+sudo pacman -Syu dux-shell
 ```
 
 **Fedora & Derivatives:**
@@ -367,7 +373,7 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 - Kill stuck processes: `dms kill`
 
 **Settings not applying:**
-- Backup and remove `~/.config/DankMaterialShell/settings.json` and drop-in files under `~/.config/DankMaterialShell/config.d/*.json` (if you have any).
+- Backup and remove `~/.config/dms/settings.json` and drop-in files under `~/.config/dms/config.d/*.json` (if you have any).
 - Restart DMS to regenerate defaults
 
 **Environment variables not working:**

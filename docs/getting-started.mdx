@@ -42,13 +42,14 @@ curl -fsSL https://install.duxlabs.dev | sh
 </figure>
 
 This will:
+
 - Install all dependencies for your distribution
-- Set up Dux Shell, dgop, dsearch, matugen, and other optional enrichments.
+- Set up Dux Modular Shell, dsearch, matugen, and other optional enrichments.
 - Configure your chosen compositor (niri, Hyprland) and terminal (Ghostty, Kitty, Alacritty)
 
 :::tip
 
-The installer adds the appropriate repository (AUR, COPR, OBS, or PPA) for your distro—updates are managed through your normal package manager afterwards. If you install DMS directly from packages, run [`dms setup`](dms/cli-setup) to generate starter compositor and terminal configs (niri/Hyprland only). You can also deploy individual configs like `dms setup binds` or `dms setup colors`. Other compositors like sway, MangoWC, labwc, and Miracle WM are supported—see [manual configuration](dms/installation#post-install).
+The installer adds the appropriate repository (AUR, COPR, OBS, or PPA) for your distro—updates are managed through your normal package manager afterwards. On Fedora Atomic and bootc images, the installer does not change the system image: it prints the `rpm-ostree install` commands to run, and after you reboot and run it again it picks up with your earlier choices. See [Fedora Atomic & bootc images](duxinstall#fedora-atomic--bootc-images). If you install DMS directly from packages, run [`dms setup`](dms/cli-setup) to generate starter compositor and terminal configs (niri/Hyprland only). You can also deploy individual configs like `dms setup binds` or `dms setup colors`. Other compositors like sway, mangowm, labwc, and Miracle WM are supported—see [manual configuration](dms/installation#post-install).
 
 :::
 
@@ -56,15 +57,14 @@ The installer adds the appropriate repository (AUR, COPR, OBS, or PPA) for your 
 
 Manual installation is also supported, and simple. See the installation section for each component:
 
-- [Dux Shell Installation](dms/installation/)
-- [dgop Installation](dgop/installation/)
+- [Dux Modular Shell Installation](dms/installation/)
 - [dsearch Installation](dsearch/installation/)
 
 ## Getting Help
 
 - **Documentation**: Browse these docs for detailed guides
-- **GitHub**: Report issues at [Dux Shell](https://github.com/duxlabs-dev/dux-shell/issues)
-- **Discord**: `Dux Shell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
+- **GitHub**: Report issues at [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell/issues)
+- **Discord**: `Dux Modular Shell` has a subsection on the niri discord server, keep relevant discussions in the relevant `#dms-*` channels.
   - [niri discord](https://discord.gg/ppWTpKmPgT)
 
 ---

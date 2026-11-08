@@ -1,0 +1,165 @@
+---
+title: NixOS Installation (Flake)
+description: Install and configure Dux Files on NixOS or home-manager using the flake
+sidebar_position: 3
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██║██║     ██╔════╝██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║██║     █████╗  ███████╗
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║     ██║███████╗███████╗███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
+  hideTitle={true}
+/>
+
+Dux Files ships a flake with a package, a NixOS module and a home-manager module. Both modules expose the same `programs.dux-files` options; the home-manager module adds `settings`.
+
+## Installation
+
+### 1. Add the Flake Input
+
+Add the Dux Files flake to your `flake.nix`:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    dfiles = {
+      url = "github:duxlabs-dev/dux-files";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+}
+```
+
+### 2. Import a Module
+
+For a per-user install, import the home-manager module:
+
+```nix
+imports = [
+  inputs.dfiles.homeModules.dux-files
+];
+```
+
+For a system-wide install, import the NixOS module instead:
+
+```nix
+imports = [
+  inputs.dfiles.nixosModules.dux-files
+];
+```
+
+`homeModules.default` and `nixosModules.default` are aliases.
+
+### 3. Enable Dux Files
+
+```nix
+programs.dux-files.enable = true;
+```
+
+Rebuild and Dux Files is installed with Quickshell, the desktop entry and the `FileManager1` activation file.
+
+## Configuration Options
+
+```nix
+programs.dux-files = {
+  enable = true;
+
+  # Use a custom package (optional)
+  package = inputs.dfiles.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
+  # The Quickshell package that runs the UI
+  quickshell.package = pkgs.quickshell;
+
+  # Keep a resident instance so windows open fast and the portal answers at once
+  systemd = {
+    enable = true;
+    target = "graphical-session.target";
+    restartIfChanged = true;
+  };
+
+  # Serve other apps' open and save dialogs
+  portal = {
+    enable = true;      # register the dfiles backend with xdg-desktop-portal
+    preferred = true;   # prefer it for org.freedesktop.impl.portal.FileChooser
+    desktop = "niri";   # which xdg.portal.config entry gets the preference, "common" by default
+  };
+};
+```
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `package` | the flake package | The Dux Files package to install |
+| `quickshell.package` | `pkgs.quickshell` | Quickshell used to launch the UI |
+| `systemd.enable` | `false` | Installs and enables the `dfiles` user service |
+| `systemd.target` | `graphical-session.target` | The target the service follows. The home-manager module defaults it to `wayland.systemd.target` |
+| `systemd.restartIfChanged` | `true` | Restart the service when the package changes (NixOS module) |
+| `portal.enable` | `false` | Adds the package to `xdg.portal.extraPortals` so the `dfiles` backend is registered |
+| `portal.preferred` | `false` | Writes `dfiles` into `xdg.portal.config.<desktop>."org.freedesktop.impl.portal.FileChooser"` |
+| `portal.desktop` | `"common"` | Which portal configuration gets the preference: a lowercased `XDG_CURRENT_DESKTOP` name, or `common` |
+
+See [Open and save dialogs](desktop-integration#open-and-save-dialogs) for what the portal backend does and which apps use it.
+
+### UI Settings (home-manager)
+
+The home-manager module can write the UI settings file for you. Keys match the [Settings](settings) page and land in `~/.config/dfiles/ui-settings.json`:
+
+```nix
+programs.dux-files = {
+  enable = true;
+  settings = {
+    themeMode = "dark";
+    radiusStrength = 50;
+    defaultView = "list";
+    vimKeys = true;
+  };
+};
+```
+
+:::warning
+
+A managed settings file is read-only, so changes made in the app's Settings page do not persist across rebuilds. Leave `settings` empty if you prefer to configure Dux Files from its UI.
+
+:::
+
+## Rebuilding
+
+```bash
+# For home-manager standalone
+home-manager switch
+
+# For NixOS (with or without home-manager as a module)
+sudo nixos-rebuild switch
+```
+
+## Troubleshooting
+
+### Service doesn't start automatically
+
+The service is off unless `systemd.enable = true`. Check it:
+
+```bash
+systemctl --user status dfiles
+journalctl --user -u dfiles -f
+```
+
+### Portal dialogs still come from the old backend
+
+xdg-desktop-portal reads its configuration once at startup. After enabling `portal.preferred`, restart it:
+
+```bash
+systemctl --user restart xdg-desktop-portal.service
+```
+
+`dfiles portal status` shows which backend is active.
+
+## Next Steps
+
+- [Usage](usage) - Learn the CLI commands
+- [Settings](settings) - Every key the `settings` option accepts

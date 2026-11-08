@@ -37,8 +37,19 @@ Where Dux Search stores the index database.
 **Default:**
 - Linux/macOS/BSD: `~/.cache/dsearch/index`
 
+### `http_enabled`
+Whether to serve the HTTP REST API. Off by default. The CLI and DMS talk to the service over a unix socket in `$XDG_RUNTIME_DIR`, which only your account can reach, so most setups never need HTTP.
+
+The HTTP API has no authentication. Loopback is shared by every account on the machine, so once enabled any local user (or a web page you visit) can search your index, trigger a reindex, or stop the watcher. `dsearch serve --http` or `--listen` enables it for one run; `dsearch serve --socket` forces it off even when the config enables it.
+
+**Default:** `false`
+
+```toml
+http_enabled = true
+```
+
 ### `listen_addr`
-HTTP server address and port. The API has no authentication, so keep it bound to localhost unless you know what you are doing.
+HTTP server address and port, used when `http_enabled` is true. Keep it bound to localhost unless you know what you are doing.
 
 **Default:** `127.0.0.1:43654`
 
@@ -304,7 +315,7 @@ exclude_dirs = [
 - Run `dsearch index check <path>` to see why a path is excluded
 
 **Port already in use:**
-- Change `listen_addr` to a different port
+- Only applies when `http_enabled = true`; change `listen_addr` to a different port
 - Check what's using the port: `netstat -tlnp | grep :43654`
 
 ## Next Steps

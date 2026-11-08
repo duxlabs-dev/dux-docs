@@ -1,6 +1,6 @@
 ---
 title: Overview
-description: Create and install plugins for Dux Shell
+description: Create and install plugins for Dux Modular Shell
 sidebar_position: 6
 ---
 
@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Shell's plugin system allows extending the desktop with custom widgets, dash tabs and cards, launchers, automation, and integrations through QML components.
+Dux Modular Shell's plugin system allows extending the desktop with custom widgets, dash tabs and cards, launchers, automation, and integrations through QML components.
 
 ## Plugin Location
 
@@ -31,14 +31,26 @@ The [plugin directory](https://duxlabs.dev/plugins) ranks plugins by community �
 
 ## Plugin Types
 
-Dux Shell supports the following plugin types, defined in `plugin.json`:
+Dux Modular Shell supports the following plugin types, defined in `plugin.json`. The [plugin directory](/plugins) filters by the registry capability of each type, and several types can be combined (`/plugins?type=dash-tab,dash-card`).
+
+| Type | `plugin.json` type | Registry capability | Directory |
+|------|--------------------|---------------------|-----------|
+| Bar widget | `widget` | `dankbar-widget` | [Browse](/plugins?type=dankbar-widget) |
+| Control center widget | `widget` | `control-center` | [Browse](/plugins?type=control-center) |
+| Launcher | `launcher` | `launcher` | [Browse](/plugins?type=launcher) |
+| Daemon | `daemon` | `daemon` | [Browse](/plugins?type=daemon) |
+| Desktop widget | `desktop` | `desktop-widget` | [Browse](/plugins?type=desktop-widget) |
+| Dash tab | `dash` | `dash-tab` | [Browse](/plugins?type=dash-tab) |
+| Dash card | `dashCard` | `dash-card` | [Browse](/plugins?type=dash-card) |
+| Lyrics provider | `lyrics` | `lyrics-provider` | [Browse](/plugins?type=lyrics-provider) |
+| Composite | `composite` | one per surface | |
 
 ### 1. Bar Widget (`type: "widget"`)
 
-Widgets that appear in DankBar and in docks. Define `horizontalBarPill` and `verticalBarPill` components for different bar orientations. In a dock, a widget can also open an attached panel inside the dock instead of a popout.
+Widgets that appear in the bar and in docks. Define `horizontalBarPill` and `verticalBarPill` components for different bar orientations. In a dock, a widget can also open an attached panel inside the dock instead of a popout.
 
 **Capabilities:**
-- `dankbar-widget` - Appears in DankBar and docks
+- `dankbar-widget` - Appears in the bar and docks
 
 **Example use cases:** System monitors, media controls, weather widgets, clock displays
 
@@ -109,7 +121,18 @@ A card in the dash Overview grid. Add it from the dash (three-dot menu → Edit 
 
 > Dash tabs and cards require DMS &ge; 2.0.0. A plugin can ship both; clicking the card then opens the tab.
 
-### 8. Composite Plugin (`type: "composite"`)
+### 8. Lyrics Provider (`type: "lyrics"`)
+
+A lyrics source for the media player. The plugin ships a program that DMS runs with the track's title and artist, and it prints the lyrics. Users switch it on under Settings → Sound & media → Media player → Lyrics providers. A plugin with only a `lyrics` block needs no QML, and the block also works alongside any other surface.
+
+**Capabilities:**
+- `lyrics-provider` - Adds a lyrics source
+
+**Example use cases:** A lyrics site or a local player's API
+
+> Lyrics providers require DMS &ge; 2.0.0. See [Lyrics Providers](plugin-development#lyrics-providers) in the development guide.
+
+### 9. Composite Plugin (`type: "composite"`)
 
 A single plugin that provides several of the above surfaces at once — for example a daemon plus a bar widget plus a desktop widget. Instead of one `component`, it declares a `components` map pointing each surface at its own QML file.
 
@@ -191,7 +214,7 @@ The lockfile covers DMS-managed Git plugins. It does not include system plugins,
 1. Open **Settings → Plugins**
 2. Click **Scan for Plugins**
 3. Toggle the plugin on
-4. Add to DankBar layout if applicable
+4. Add to bar layout if applicable
 5. Restart shell: `dms restart`
 
 ## Custom Registries
@@ -251,9 +274,88 @@ With the key set, DMS never clones or pulls a registry. Installed plugins and th
 
 > Requires DMS &ge; 2.0.0.
 
+## Administrator Lock Policy
+
+An administrator can stop DMS's own interfaces from ending or weakening a lock with these keys in `/etc/dms/cli-policy.json`. Each key is off unless set to `true`:
+
+```json
+{
+  "policy_version": 1,
+  "disable_lock_ipc_unlock": true,
+  "disable_logind_unlock": true,
+  "disable_custom_lock_pam": true,
+  "disable_user_plugins": true,
+  "disable_settings_ipc_set": true
+}
+```
+
+| Key | When `true` |
+| --- | --- |
+| `disable_lock_ipc_unlock` | `dms ipc call lock unlock`, `forceReset` and `demo` do nothing, and the keybind editor no longer offers **Lock Screen: Demo**. |
+| `disable_logind_unlock` | A logind Unlock (`loginctl unlock-session`, `SetLockedHint(false)` or the DMS socket's `loginctl.unlock`) neither ends nor cancels a lock. |
+| `disable_custom_lock_pam` | Password unlock uses `/etc/pam.d/dankshell`, or `/etc/pam.d/login` when it is missing. Fingerprint uses only `/etc/pam.d/dankshell-fprint` and security keys only `/etc/pam.d/dankshell-u2f`; a factor whose service is missing is unavailable, so AND mode then unlocks with the password alone and logs a warning. Custom PAM sources, **Use system PAM authentication** and the generated stack in the user state directory are ignored. |
+| `disable_user_plugins` | Only plugins in `/etc/xdg/quickshell/dms-plugins` load. The user plugin directory is neither read nor watched; plugins installed from the plugin browser are written there and do not load. |
+| `disable_settings_ipc_set` | `dms ipc call settings set` returns `SETTINGS_SET_DISABLED` and changes nothing. `get`, `dump` and `dumpSession` keep working, and the Settings UI and `settings.json` still apply. |
+
+Distributions can ship the same keys in `/usr/share/dms/cli-policy.json`; when both files set a key, `/etc/dms/cli-policy.json` wins. `dms run` reads the keys each time it starts the shell, so a change applies at the next shell start or restart. If either file exists but cannot be read or parsed, every key above is treated as `true`.
+
+With `disable_lock_ipc_unlock`, `dms ipc call lock unlock` is no longer a way out of a lock that cannot authenticate, so test the PAM setup before setting it.
+
+With `disable_custom_lock_pam`, the administrator provides the services. `dms auth sync` writes `dankshell` and `dankshell-u2f`, except on NixOS, and never writes `dankshell-fprint`; base that one on the bundled `assets/pam/fprint` in the shell directory and keep its `max-tries=1 timeout=90`. The shell checks which services exist when it starts, and checks `dankshell-u2f` again at each lock. Keep a root shell open while testing.
+
+These keys constrain DMS's own interfaces. They are not a boundary against other programs running as the same user, and a shell started without `dms run` does not see them.
+
+> Available starting with the DMS release following 2.0.0.
+
+### Managed Lock Settings
+
+The `lock_settings` object holds values for lock settings that the user cannot change. Its keys are DMS setting names:
+
+```json
+{
+  "policy_version": 1,
+  "lock_settings": {
+    "lockBeforeSuspend": true,
+    "loginctlLockIntegration": true,
+    "customPowerActionLock": "",
+    "acLockTimeout": 300,
+    "batteryLockTimeout": 300,
+    "enableFprint": true
+  }
+}
+```
+
+| Setting | Value |
+| --- | --- |
+| `customPowerActionLock` | Command run instead of the DMS lock screen; `""` uses the lock screen |
+| `lockBeforeSuspend` | `true` or `false` |
+| `loginctlLockIntegration` | `true` or `false` |
+| `lockAtStartup` | `true` or `false` |
+| `acLockTimeout`, `batteryLockTimeout` | Idle seconds before locking; `0` never locks |
+| `fadeToLockEnabled` | `true` or `false` |
+| `fadeToLockGracePeriod` | Seconds |
+| `enableFprint` | `true` or `false` |
+| `maxFprintTries` | Fingerprint attempts |
+| `enableU2f` | `true` or `false` |
+| `u2fMode` | `"or"` lets the security key unlock on its own, `"and"` requires it after the password or fingerprint |
+
+A managed setting:
+
+- wins over `settings.json` and every file in `config.d`, including edits made while DMS runs;
+- is never written to a settings file. A value the user set before stays in its file and applies again once the setting is no longer managed;
+- shows in Settings as **Managed by administrator policy**, with its control disabled;
+- makes `dms ipc call settings set` return `SETTINGS_SET_MANAGED`, whether or not `disable_settings_ipc_set` is set;
+- is left alone by the migration of a legacy `session.json`.
+
+On the DMS socket, `loginctl.setLockBeforeSuspend` refuses any value but a managed `lockBeforeSuspend`, and `loginctl.setSleepInhibitorEnabled` refuses any value but the one a managed `lockBeforeSuspend` and `loginctlLockIntegration` decide. Manage both to keep lock before suspend in force.
+
+Settings in `/usr/share/dms/cli-policy.json` apply first, and `/etc/dms/cli-policy.json` overrides them one setting at a time; `null` counts as not set. Other keys in `lock_settings` are ignored, and so is a value whose type differs from the setting's default, such as `"true"` for `lockBeforeSuspend`; both are logged as warnings. If either file exists but cannot be read or parsed, DMS logs an error and manages no setting, so the user's settings apply; the `disable_*` keys still all turn on.
+
+> Available starting with the DMS release following 2.0.0.
+
 ## Official Plugins
 
-Maintained by the Dux Shell team at [dms-plugins](https://github.com/duxlabs-dev/dux-plugins):
+Maintained by the Dux Modular Shell team at [dms-plugins](https://github.com/duxlabs-dev/dux-plugins):
 
 - **Dank Actions** - Scriptable bar buttons and control center tiles
 - **Dank Hooks** - Event-based automation triggers

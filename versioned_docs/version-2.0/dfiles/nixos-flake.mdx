@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Files ships a flake with a package, a NixOS module and a home-manager module. Both modules expose the same `programs.dank-files` options; the home-manager module adds `settings`.
+Dux Files ships a flake with a package, a NixOS module and a home-manager module. Both modules expose the same `programs.dux-files` options; the home-manager module adds `settings`.
 
 ## Installation
 
@@ -43,7 +43,7 @@ For a per-user install, import the home-manager module:
 
 ```nix
 imports = [
-  inputs.dfiles.homeModules.dank-files
+  inputs.dfiles.homeModules.dux-files
 ];
 ```
 
@@ -51,7 +51,7 @@ For a system-wide install, import the NixOS module instead:
 
 ```nix
 imports = [
-  inputs.dfiles.nixosModules.dank-files
+  inputs.dfiles.nixosModules.dux-files
 ];
 ```
 
@@ -60,7 +60,7 @@ imports = [
 ### 3. Enable Dux Files
 
 ```nix
-programs.dank-files.enable = true;
+programs.dux-files.enable = true;
 ```
 
 Rebuild and Dux Files is installed with Quickshell, the desktop entry and the `FileManager1` activation file.
@@ -68,7 +68,7 @@ Rebuild and Dux Files is installed with Quickshell, the desktop entry and the `F
 ## Configuration Options
 
 ```nix
-programs.dank-files = {
+programs.dux-files = {
   enable = true;
 
   # Use a custom package (optional)
@@ -111,7 +111,7 @@ See [Open and save dialogs](desktop-integration#open-and-save-dialogs) for what 
 The home-manager module can write the UI settings file for you. Keys match the [Settings](settings) page and land in `~/.config/dfiles/ui-settings.json`:
 
 ```nix
-programs.dank-files = {
+programs.dux-files = {
   enable = true;
   settings = {
     themeMode = "dark";

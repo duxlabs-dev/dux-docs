@@ -1,7 +1,7 @@
 {
   "name": "Dux",
   "short_name": "Dux",
-  "description": "Dux Shell and tools: a modern Wayland desktop suite for niri, Hyprland, MangoWC, dwl, labwc, and Sway.",
+  "description": "Dux Modular Shell and tools: a modern Wayland desktop suite for niri, Hyprland, mangowm, dwl, labwc, and Sway.",
   "icons": [
     {
       "src": "/img/android-chrome-192x192.png",

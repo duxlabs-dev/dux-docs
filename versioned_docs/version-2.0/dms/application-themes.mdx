@@ -40,6 +40,22 @@ The five `--prefer` modes need matugen 4.1 or newer and fall back to Dominant on
 
 Set it at **Settings → Theme & Colors → Source Color**.
 
+## Terminal Opacity and Colors
+
+**Settings → Wallpaper & colors → App theming → Portal & terminals** has two terminal options.
+
+**Opacity** makes the terminal background translucent while text stays opaque. DMS adds the terminal's own opacity setting to the theme file it generates. At 100 it writes nothing and your terminal config applies.
+
+| Terminal | Applies |
+|---|---|
+| kitty | Live, in windows started after Opacity was first lowered. Already open windows need a restart, unless your `kitty.conf` sets `dynamic_background_opacity yes` |
+| ghostty | Live. A `background-opacity` in your own config takes precedence |
+| alacritty | Live. A `[window] opacity` in your own config takes precedence |
+| foot | New windows only, since foot does not reload its config |
+| WezTerm | Not managed. Set `config.window_background_opacity` in `wezterm.lua` |
+
+**Colors from wallpaper** pulls the red, green and yellow terminal colors toward the wallpaper's primary color. **Intensity** sets how far: Low, Medium or High. Off keeps the standard palette. The other slots already follow the primary color, see [dank16 color slots](./cli-dank16.mdx#color-slots).
+
 ## Disabling Matugen
 
 Set the environment variable `DMS_DISABLE_MATUGEN` to `1` or `true` before launching to disable theme generation entirely.
@@ -143,7 +159,7 @@ Update custom matugen templates from the old format:
 
 ## Generated Files
 
-When matugen is enabled, theme files are always generated regardless of the "Apply GTK/Qt Themes" toggle:
+When matugen is enabled, these files are regenerated on every theme change, unless their template is turned off under **Matugen templates**:
 
 - `~/.config/gtk-3.0/dank-colors.css`
 - `~/.config/gtk-4.0/dank-colors.css`
@@ -151,7 +167,7 @@ When matugen is enabled, theme files are always generated regardless of the "App
 - `~/.config/qt6ct/colors/matugen.conf`
 - `~/.config/qtengine/config.json` (when `QT_QPA_PLATFORMTHEME=qtengine`)
 
-The "Apply GTK/Qt Themes" toggles only control whether Dux Shell manages the symlinks to make applications use these files.
+The **Apply GTK colors** and **Apply Qt colors** buttons in **Settings → Wallpaper & colors → App theming** point applications at these files. You only need to press them once.
 
 ## GTK Applications
 
@@ -170,12 +186,16 @@ environment.systemPackages = [ pkgs.adw-gtk3 ];
 
 ### Enable via Settings
 
-1. Open **Settings → Theme & Colors**
-2. Toggle **Apply GTK Themes**
+1. Open **Settings → Wallpaper & colors → App theming**
+2. Click **Apply GTK colors** under **GTK & Qt**
 
-With adw-gtk3 installed, DMS copies the theme (light and dark variants) into `~/.local/share/themes` and patches the copies with your generated colors. GTK3 applications then follow the system color-scheme, switching between light and dark live without a restart. When the system theme updates, the copy refreshes on the next theme apply; a copy you created yourself is never touched.
+With adw-gtk3 installed, DMS copies the theme (light and dark variants) into `~/.local/share/themes`, patches the copies with your generated colors, and sets the GTK theme to `adw-gtk3` or `adw-gtk3-dark`. GTK3 applications then switch between light and dark live without a restart. When the system theme updates, the copy refreshes on the next theme apply; a copy you created yourself is never touched.
+
+After that first apply, DMS only swaps between `adw-gtk3` and `adw-gtk3-dark` to follow dark mode. If you pick a different GTK theme, DMS leaves it alone until you press **Apply GTK colors** again. Pressing it saves the theme it replaces to `~/.config/gtk-3.0/gtk-theme.dms-backup`, and DMS only patches an adw-gtk3 copy it made itself or one you applied to (backed up as `gtk.css.dms-backup`).
 
 Without adw-gtk3, GTK3 falls back to a global `dank-colors.css` import in `~/.config/gtk-3.0/gtk.css`, and GTK4 uses the same import mechanism in `~/.config/gtk-4.0`.
+
+With GTK 4.22 or newer, GTK4 and libadwaita apps that are already open pick up new colors right away: DMS briefly toggles the system reduced-motion setting, which makes GTK re-read its colors. With older GTK4, open apps keep their old colors until restarted, unless you opt into [`DMS_ENABLE_GTK_REFRESH`](/docs/dms/advanced-configuration#dms_enable_gtk_refresh).
 
 `dms doctor` reports which mode is active under **Optional Features → adw-gtk3**.
 
@@ -187,6 +207,8 @@ If you manage your own GTK theme but want DMS colors:
 /* In ~/.config/gtk-3.0/gtk.css or gtk-4.0/gtk.css */
 @import url("dank-colors.css");
 ```
+
+DMS treats either file carrying this import as opted in, including a `gtk.css` symlinked from home-manager or another dotfile manager, and keeps adw-gtk3 and the GNOME accent color in sync. It never rewrites a symlinked `gtk.css`.
 
 ## Qt Applications
 
@@ -208,7 +230,7 @@ You can also run `systemctl --user edit dms` and add `Environment=QT_QPA_PLATFOR
 
 ### Option 1: GTK Passthrough (Simple)
 
-Best for users who primarily run GTK applications. Qt apps will use the GTK theme. This is the default for Dux Installer setups.
+Best for users who primarily run GTK applications. Qt apps will use the GTK theme. The Dux Installer sets this up for non-systemd sessions; with the default systemd setup, set the variables yourself.
 
 **niri Configuration:**
 ```kdl
@@ -292,8 +314,8 @@ hl.env("QT_QPA_PLATFORMTHEME_QT6", "qt6ct")
 **Enable Qt Theming:**
 
 1. Log out and back in (for environment.d changes) or restart your compositor
-2. Open **Settings → Theme & Colors**
-3. Toggle **Apply Qt Themes**
+2. Open **Settings → Wallpaper & colors → App theming**
+3. Click **Apply Qt colors** under **GTK & Qt**
 
 This links the generated matugen color files to qt5ct/qt6ct configurations.
 
@@ -373,7 +395,15 @@ Settings you put in that file yourself are preserved. DMS only manages `theme.co
 
 :::warning[Arch: Qt5 plugin path]
 
-The AUR package installs the Qt5 plugin to `/usr/lib/qt5/plugins/platformthemes/`, but Arch's Qt5 plugin root is `/usr/lib/qt/plugins` with no `5`. Qt5 applications will not find it and fall back to an unthemed palette, while Qt6 applications look correct. Run `dms doctor` to check, and either symlink the plugin into the right directory or add the packaged path to `QT_PLUGIN_PATH`.
+Older versions of these docs recommended symlinking the Qt5 plugin into `/usr/lib/qt/plugins`, as a workaround for a bug in the AUR package. The package installed the plugin to `/usr/lib/qt5/plugins`, where Qt5 applications could not find it. This is fixed in `qtengine` 0.2.3-3, which installs to the correct directory, so the workaround is no longer needed.
+
+The leftover symlinks conflict with the fixed package, and pacman stops the upgrade with a `conflicting files` error. If they were created, remove them before upgrading:
+
+```sh
+sudo rm /usr/lib/qt/plugins/platformthemes/libqt5engine-plugin.so /usr/lib/qt/plugins/styles/libqt5engine-style.so
+```
+
+Run `dms doctor` afterwards to check that the plugin is found.
 
 :::
 
@@ -476,7 +506,7 @@ for PROFILE_DIR in \
 do
     [ -z "$PROFILE_DIR" ] && continue
     mkdir -p "$PROFILE_DIR/chrome"
-    ln -sf "$HOME/.config/DankMaterialShell/zen.css" "$PROFILE_DIR/chrome/userChrome.css"
+    ln -sf "$HOME/.config/dms/zen.css" "$PROFILE_DIR/chrome/userChrome.css"
 done
 ```
 
@@ -605,15 +635,17 @@ Reload or restart the terminal to apply colors.
 ## Troubleshooting
 
 **GTK apps not themed:**
-- Verify `adw-gtk-theme` is installed
-- Check that symlinks exist: `ls -la ~/.config/gtk-3.0/gtk.css`
-- Ensure "Apply GTK Themes" is toggled in Settings
+- Verify adw-gtk3 is installed: `dms doctor` lists it under **Optional Features → adw-gtk3**
+- Check the import is present: `grep dank-colors ~/.config/gtk-4.0/gtk.css ~/.config/gtk-3.0/gtk.css`
+- Press **Apply GTK colors** again in **Settings → Wallpaper & colors → App theming**
+- Make sure the **GTK** template is on under **Matugen templates**
+- On GTK older than 4.22, restart GTK4 apps that were open during the theme change
 
 **Qt apps not themed:**
 - Verify environment variables are set in compositor config
 - Restart compositor session after changing environment
 - Check `qt6ct` is installed if using Option 2
-- Ensure "Apply Qt Themes" is toggled in Settings
+- Press **Apply Qt colors** in **Settings → Wallpaper & colors → App theming**
 
 **Firefox theme not working:**
 - Verify `about:config` settings are correct

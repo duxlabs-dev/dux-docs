@@ -27,17 +27,17 @@ func TestDispatchPostsRepositoryDispatch(t *testing.T) {
 	}))
 	defer srv.Close()
 
-	c := NewToken("pat-123", "duxlabs-dev", "dux-packaging")
+	c := NewToken("pat-123", "duxlabs-dev", "dux-repo")
 	base, _ := url.Parse(srv.URL + "/")
 	c.base = github.NewClient(nil)
 	c.base.BaseURL = base
 
 	payload := map[string]any{"release": "F44", "builds": []string{"qt6-qtbase-6.11.2-2.fc44"}}
-	if err := c.Dispatch(context.Background(), "duxlabs-dev", "dux-packaging", "fedora-qt-update", payload); err != nil {
+	if err := c.Dispatch(context.Background(), "duxlabs-dev", "dux-repo", "fedora-qt-update", payload); err != nil {
 		t.Fatalf("dispatch failed: %v", err)
 	}
 
-	if gotPath != "POST /repos/duxlabs-dev/dux-packaging/dispatches" {
+	if gotPath != "POST /repos/duxlabs-dev/dux-repo/dispatches" {
 		t.Fatalf("unexpected request: %s", gotPath)
 	}
 	if gotAuth != "Bearer pat-123" {

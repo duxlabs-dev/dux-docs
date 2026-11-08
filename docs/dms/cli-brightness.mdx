@@ -253,6 +253,14 @@ hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("dms ipc call brightness decrem
 hl.bind("SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd("dms ipc call brightness toggleExponential"))
 ```
 
+### Pinned Devices
+
+When there is more than one brightness device, the brightness page in the Control Center has a pin button on each device. Pins belong to the screen the Control Center is open on, and decide what that screen's brightness controls change: the Control Center slider, scrolling on the bar's Control Center button, and `dms ipc call brightness set|increment|decrement` without a device while that screen has focus.
+
+Pin more than one device to move them together, for example a laptop panel and two external monitors. The most recently pinned device leads. The others follow at the same position within their own brightness range, so the first change brings them all to the same relative level. The on-screen display slider after a change and the Dank Island brightness control move the same devices.
+
+The **Clear All** button next to the close button in the page header clears every pin of that screen. Selecting a device that is not pinned on that screen clears its pins too, so the controls follow the selected device. Passing a device to the IPC call still changes only that device.
+
 ## Gamma and Contrast
 
 `dms brightness` CLI is only responsible for setting the actual brightness of the display, for monitors that support DDC/CI or have a backlight, and for the percieved brightness, for monitors that only support software brightness. If a panel looks washed out and backlight or temperature changes do not help, adjust gamma and contrast instead. Both live under the `night` IPC target but apply whether night mode is on or off:

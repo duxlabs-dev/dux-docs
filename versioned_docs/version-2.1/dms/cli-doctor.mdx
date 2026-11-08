@@ -1,0 +1,500 @@
+---
+title: System Diagnostics (doctor)
+description: Diagnose DMS installation, dependencies, and system configuration
+sidebar_position: 3
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗
+██╔══██╗████╗ ████║██╔════╝
+██║  ██║██╔████╔██║███████╗
+██║  ██║██║╚██╔╝██║╚════██║
+██████╔╝██║ ╚═╝ ██║███████║
+╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  hideTitle={true}
+/>
+
+The `dms doctor` command diagnoses your DMS installation, verifies dependencies, and checks system configuration. Use it to troubleshoot issues or verify your setup is complete.
+
+## Usage
+
+```bash
+dms doctor           # Standard output
+dms doctor -v        # Verbose output with paths and details
+dms doctor -j        # JSON output for scripting
+```
+
+## Status Indicators
+
+| Icon | Status | Meaning |
+|------|--------|---------|
+| 🟢 | OK | Check passed |
+| 🟡 | Warning | Non-critical issue, may affect some features |
+| 🔴 | Error | Critical issue that needs attention |
+| ⚪ | Info | Informational, no action needed |
+
+---
+
+## System Checks
+
+### Operating System
+
+All GNU/Linux distributions are supported - this information is purely informational.
+
+### Architecture
+
+Only amd64/arm64 is officially supported, although other architectures may work with manual compilation.
+
+### Display Server
+
+DMS only supports Wayland, this check verifies you're not using X11.
+
+---
+
+## Version Checks
+
+### DMS CLI
+
+DMS CLI is the backend and command-line interface for DMS. Its version should match the version of the quickshell configuration.
+
+### Quickshell
+
+Quickshell is the framework used by DMS. Older versions of quickshell may result in a reduced feature set within DMS.
+
+If the version check fails, run:
+
+```bash
+qs --version
+```
+
+An `undefined symbol` error mentioning `Qt_6_PRIVATE_API` means Quickshell was built against different Qt libraries than those currently installed. Rebuild or reinstall Quickshell against the current Qt version, then restart DMS.
+
+On Arch Linux, rebuild the AUR package:
+
+```bash
+paru -S quickshell-git --rebuild
+# or
+yay -S quickshell-git --rebuild
+systemctl --user restart dms.service
+```
+
+### DMS Shell
+
+The version of the shell configuration, which should match the DMS CLI version.
+
+---
+
+## Installation Checks
+
+### DMS Configuration
+
+By default DMS installs its configuration, plugins, and themes in `$XDG_CONFIG_HOME/dms/`. This check verifies that the configuration directory exists. 
+
+### shell.qml
+
+The location of the `shell.qml` is the installed location of the DMS shell configuration.
+
+### Install Type
+
+- `system`: Installed via system package manager (e.g. `apt`, `dnf`, `pacman`)
+- `user`: if manually  installed via manual compilation & installation
+- `nix`: if installed via Nix package manager
+
+### Package Repos {/* #package-repos */}
+
+Checks whether the DMS package repositories on this system still point at the legacy `avengemedia` owner.
+
+| Status | Message | Meaning |
+|--------|---------|---------|
+| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate). |
+| 🟢 OK | `Current` | All DMS repositories come from `duxlabs` (`home:duxlabs-dev` on OBS). |
+| ⚪ Info | `No DMS package repositories` | No DMS package repositories are configured, so there is nothing to check. |
+
+---
+
+## Compositor Checks
+
+All wayland compositors that implement the [layer shell protocol](https://wayland.app/protocols/wlr-layer-shell-unstable-v1) are supported, with varying feature sets.
+
+### Supported Compositors
+
+| Compositor | Detection | Version Parsing |
+|------------|-----------|-----------------|
+| niri | `niri` | `niri --version` |
+| Hyprland | `hyprland`, `Hyprland` | `Hyprland --version` (`Tag:` line) |
+| mangowc | `mango` | `mango -v` |
+| labwc | `labwc` | `labwc --version` |
+| Sway | `sway` | `sway --version` |
+| Miracle WM | `miracle-wm` | `miracle-wm --version` |
+| River | `river` | `river -version` |
+| Wayfire | `wayfire` | `wayfire --version` |
+| Scroll | `scroll` | `scroll --version` |
+| Aqueous | `aqueous` | `aqueous -version` |
+| Umbriel | `umbriel` | `umbriel --version` |
+
+### Hyprland Lua config
+
+On Hyprland, doctor warns when:
+
+- **Hyprland Lua config**, `Hyprland <version> is older than 0.55`: DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer. Upgrade Hyprland.
+- **Quickshell for Hyprland 0.57**, `Quickshell <version> is older than 0.3.2`: Hyprland 0.57 sends workspace addresses instead of ids, and older Quickshell collapses named and special workspaces. Upgrade Quickshell.
+- **Hyprland deprecated config**, `<n> deprecated option(s)`: `hyprctl -j deprecated-config` lists options your config still uses that Hyprland has deprecated. Update or remove them.
+
+### niri config {/* #niri-config */}
+
+When niri is installed, doctor reads `~/.config/niri/config.kdl` and every `.kdl` file in `~/.config/niri/dms/`. DMS never rewrites `config.kdl` or `dms/binds.kdl`, so each warning names the line to fix by hand.
+
+- **binds-next include**, `config.kdl does not include dms/binds-next.kdl`: add `include optional=true "dms/binds-next.kdl"` above the `dms/binds.kdl` include, or run `dms setup`. Without it you lose the DMS binds that depend on the niri version, including Keyboard Shortcuts. See [Version-dependent binds](./compositors.mdx#version-dependent-binds).
+- **binds-next include**, `config.kdl:<line> includes dms/binds-next.kdl after dms/binds.kdl`: move it above, so your binds in `dms/binds.kdl` override the DMS defaults.
+- **Mod+Shift+Slash**, `<file>:<line> binds Mod+Shift+Slash`: on the next niri release, this bind also fires for `Mod+Shift+7` on German, Spanish and Swedish layouts. Rename it to `Mod+Shift+question`, which `dms/binds-next.kdl` already binds to Keyboard Shortcuts.
+- **keep-max-bpc**, `<file>:<line> sets keep-max-bpc-unchanged`: niri after 26.04 removed this debug flag and rejects the whole config. Delete the line and set max-bpc in the output section instead.
+- **binds-next.kdl**, `dms/binds-next.kdl is rejected by the installed niri`: niri then rejects the whole config. Delete the file; DMS rewrites it for your niri on its next start.
+
+### Background Blur
+
+Reports whether the compositor supports `ext-background-effect-v1`, which DMS uses for background blur. See [Compositor Blur](./compositor-blur.mdx).
+
+### Mango config
+
+When the installed mangowm is older than 0.18, doctor reports a **Mango config format** error, `Mango <version> is older than 0.18`: DMS writes Mango config with the snake_case keys of 0.18 and newer, which that release rejects. Upgrade mangowm.
+
+In a mangowm session, doctor also reads the main config mangowm loads (`~/.config/mango/config.conf`, else `config.toml`) and every `.conf` file in `~/.config/mango/dms/`:
+
+- **Mango config keys** (error), `Unknown keys: <key> (<file>), ...`: doctor runs `mango -p` over the main config and the files it sources, and lists every key mangowm rejects. Pre-0.18 names are the usual cause; convert them with the `migrate-config-keys.sh` from [mangowm's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) or rename them by hand.
+- **Mango mouse binds** (warning), `Obsolete overview binds in <files>`: `mousebind=NONE,btn_left,toggleoverview,1` and `mousebind=NONE,btn_right,killclient,0` swallow normal clicks. Remove them.
+
+### Active {/* #compositor */}
+
+The compositor running in this session.
+
+---
+
+## Quickshell Features
+
+These features depend on how Quickshell was built. Using `quickshell-git` provides full feature support, some builds of quickshell can exclude features based on compilation options.
+
+:::note
+All of these features currently require `quickshell-git` or `quickshell` from the Dux repositories (Fedora, Debian, Ubuntu, OpenSUSE)
+:::
+
+### Polkit
+
+Polkit is used for escalation prompts, items that require root authorization.
+
+### IdleMonitor
+
+Used to automatically lock, power off monitors, suspend, or hibernate.
+
+### IdleInhibitor
+
+Used to prevent the system from idling or sleeping.
+
+### ShortcutInhibitor
+
+Used to manage keyboard shortcuts on niri.
+
+---
+
+## Optional Features
+
+### accountsservice
+
+Required to persist user profile changes, such as profile picture.
+
+### power-profiles-daemon
+
+Required to manage power profiles. (e.g. performance, balanced, power-saver)
+
+Either `power-profiles-daemon`, `tuned` together with `tuned-ppd` or `tlp` together with `tlp-pd` satisfies this check. `tuned-ppd` and `tlp-pd` exposes the same D-Bus interface that `power-profiles-daemon` does, so DMS works with them too. `power-profiles-daemon`, `tuned` and `tlp` conflict, so install only one of them.
+
+### cups-pk-helper
+
+Required for printer management (adding, deleting, and configuring printers). Provides the `org.opensuse.CupsPkHelper.Mechanism` D-Bus interface.
+
+### I2C/DDC
+
+Required for external monitor brightness control, on most distributions requires `i2c-tools` and the user to be in the `i2c` group.
+
+### qt6-imageformats
+
+Qt image format plugins adding WebP, TIFF, GIF, JP2, and ICNS support — used for wallpapers, notification images, and previews.
+
+| Distribution | Package |
+|------|---------|
+| Arch | `qt6-imageformats` |
+| Fedora | `qt6-qtimageformats` |
+| Debian/Ubuntu | `qt6-image-formats-plugins` |
+| openSUSE | `qt6-imageformats` |
+| NixOS | `qt6.qtimageformats` |
+
+### kimageformats
+
+KDE image format plugins adding AVIF, HEIF, JXL, and EXR support.
+
+| Distribution | Package |
+|------|---------|
+| Arch | `kimageformats` |
+| Fedora | `kf6-kimageformats` |
+| Debian/Ubuntu | `kimageformat6-plugins` |
+| openSUSE | `kf6-kimageformats` |
+| NixOS | `kdePackages.kimageformats` |
+
+### Terminal
+
+Detected terminals (in priority order): `ghostty`, `kitty`, `alacritty`, `foot`, `wezterm`
+
+### matugen
+
+DMS leverages matugen with custom color enrichment (dank16) to generate themes for itself and various applications, terminals, and IDEs.
+
+### cava
+
+Required for audio visualization in media players.
+
+### khal
+
+Required to enrich calendar with events from local, CalDAV, or other sources supported by khal.
+
+### adw-gtk3
+
+Required for dynamic GTK3 theming: DMS copies the theme (light and dark variants) into `~/.local/share/themes` and patches the copies with your generated colors, so GTK3 apps follow the system color-scheme live. The row shows which mode is active:
+
+- **Installed** (user copy) — dynamic theming is active.
+- **Installed** (system copy) — installed via your package manager; DMS creates the user copy the next time GTK theming applies.
+- **Missing adw-gtk3(-dark)** — only one variant found; dynamic theming needs both.
+- **Not installed** — GTK3 falls back to a global `dank-colors.css` import; colors still apply, without live light/dark switching.
+
+| Distribution | Package |
+|------|---------|
+| Arch | `adw-gtk-theme` |
+| Fedora | `adw-gtk3-theme` |
+| NixOS | `adw-gtk3` |
+
+Debian, Ubuntu, and openSUSE do not package it; extract an [upstream release](https://github.com/lassekongo83/adw-gtk3/releases) into `~/.local/share/themes` instead — DMS uses it from there directly.
+
+See [Application Themes](application-themes#gtk-applications) for details.
+
+### Network
+
+Detected backends: NetworkManager, iwd, systemd-networkd, iwd+systemd-networkd.
+
+DMS supports different network stacks, NetworkManager is recommended for the vast majority of use cases as its also compatible with Gnome, KDE, etc. This is purely for integration within the shell itself (such as conencting to networks, viewing network status, etc.)
+
+- NetworkManager : all features supported (Wifi, Ethernet, VPN)
+- iwd : Wifi only, no Ethernet or VPN support
+- systemd-networkd : Ethernet only, no Wifi or VPN support
+- iwd+systemd-networkd : Wifi and Ethernet supported, no VPN support
+
+### dux-search
+
+Checks for the `dsearch` command, used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
+
+### dux-calendar
+
+Checks for the `dcal` calendar app. See [Dux Calendar documentation](../dcal/) for more information.
+
+### dux-files
+
+Checks for the `dfiles` file manager (the **File manager** row). See [Dux Files documentation](../dfiles/) for more information.
+
+### logind
+
+The `org.freedesktop.login1` D-Bus service, available on systems using `systemd` or `elogind`. Used for various session management features such as lock integration, lock before suspend, etc.
+
+### fprintd
+
+Adds fingerprint authentication support to the lock screen.
+
+---
+
+## Configuration Files {/* #config-files */}
+
+| File | Location | Purpose |
+|------|----------|---------|
+| `settings.json` | `~/.config/dms/` | Main settings |
+| `clsettings.json` | `~/.config/dms/` | Clipboard settings |
+| `plugin_settings.json` | `~/.config/dms/` | Plugin configuration |
+| `session.json` | `~/.local/state/dms/` | Session state |
+| `dms-colors.json` | `~/.cache/dms/` | Cached color scheme |
+| `config.d/*.json` | `~/.config/dms/` | Drop-in settings (optional) |
+
+---
+
+## Services
+
+### dms.service
+
+If in use, DMS lifecycle will be managed by systemd. This is optional, DMS can also be started manually or via other init systems.
+
+The detail line lists the compositor units that want the service (`Wanted by niri.service`). When the service is not running and the compositor you are logged into does not want it, the check reports `Nothing starts dms.service with hyprland-session.target. Run 'dms systemd enable'.` See [Systemd service](./cli-systemd.mdx).
+
+### graphical-session.target
+
+Only reported when `dms.service` is installed and enabled. Warns with `Inactive` when the target exists but is not active in the current session.
+
+`dms.service` is tied to `graphical-session.target` (`WantedBy`, `PartOf`, `Requisite`), and systemd never activates that target on its own. The compositor session has to start it. If nothing does, `dms.service` is enabled but never autostarts, and `systemctl --user start dms` fails on the `Requisite` dependency.
+
+Check the current state:
+
+```bash
+systemctl --user status graphical-session.target
+```
+
+Compositors with native systemd session integration (niri) activate the target themselves. Others need a compositor-specific session target that pulls it in, started from the compositor config.
+
+On Hyprland, `hyprland-session.target` must exist and Hyprland must start it. Hyprland 0.57 and newer ship this unit in `/usr/lib/systemd/user/` (or `/usr/local/lib/systemd/user/`); when it's there, `duxinstall` and `dms setup` use it and remove their own copy from `~/.config/systemd/user/`. On older Hyprland they write the unit below. A hand-written unit is left alone either way:
+
+```ini title="~/.config/systemd/user/hyprland-session.target"
+[Unit]
+Description=Hyprland Session Target
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target
+PropagatesStopTo=graphical-session.target
+```
+
+Hyprland then needs to export its environment and start the target:
+
+```lua title="~/.config/hypr/hyprland.lua"
+hl.on("hyprland.start", function()
+  hl.exec_cmd("dbus-update-activation-environment --systemd --all")
+  hl.exec_cmd("systemctl --user start hyprland-session.target")
+end)
+```
+
+Starting it by hand confirms the wiring before relogging:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user start hyprland-session.target
+systemctl --user status graphical-session.target dms
+```
+
+See [Installation](installation#compositor-specific-systemd-setup) for the equivalent setup on Sway, mangowm, and Miracle WM.
+
+### greetd
+
+Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+
+Doctor also warns (**Greeter session**) when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua. On Arch it warns (**Greeter package**) when a retired `greetd-dms-greeter` package is still installed; switch to the `dux-greeter` package.
+
+### xdg-desktop-portal
+
+Checks that the settings portal answers. Chromium, Electron and libadwaita apps follow light and dark mode through it. The portal is D-Bus activated and needs `graphical-session.target`; without systemd, or on a compositor that never starts that target, start the portal backend and `xdg-desktop-portal` from your compositor config.
+
+---
+
+## Environment Variables
+
+### QT_QPA_PLATFORMTHEME
+
+Used to set the Qt platform theme - usually one of `gtk3`, `qt6ct`, `qtengine`, or `kde`. This will define how QT applications are themed. Including some elements of DMS (such as icon themes)
+
+:::warning[qt6ct vs qt6ct-kde]
+`qt6ct-kde` is the **package name** (AUR), not a theme value — the value Qt expects is `qt6ct`. With `qt6ct-kde` set as the value, Qt apps load no platform theme at all: palettes stay unstyled and icon lookups fail, which shows up in Quickshell tray menus as black/magenta placeholder icons. `dms doctor` flags this misconfiguration and prints the fix.
+:::
+
+When the variable is set, `dms doctor` also verifies that the plugin it names actually exists in the plugin directory Qt searches (asked via `qmake`/`qtpaths`), warning with the expected path on a miss. Without Qt development tools installed, the check reports "Cannot verify" instead of guessing.
+
+For Qt 6 plugins, it also compares the Qt version the plugin was built against with the installed Qt, and warns on a mismatch (for example `Built for Qt 6.11, Qt is 6.12.0`).
+
+:::warning[Platform theme plugins break after Qt updates]
+Qt only loads a platform theme plugin built for its exact major.minor version and skips any other without a visible error. Plugins built outside your distribution's repositories (an AUR package such as `qt6ct-kde`, a COPR/PPA build, or a local build) stop loading after a Qt minor update until they are rebuilt. Qt apps then fall back to a built-in theme, and Quickshell tray icons and menus show black/magenta placeholders.
+
+Rebuild or reinstall the package providing the plugin against the current Qt, then restart DMS. On Arch Linux:
+
+```bash
+paru -S --rebuild qt6ct-kde
+# or
+yay -S --rebuild qt6ct-kde
+systemctl --user restart dms
+```
+
+To confirm the cause, run any Qt app from a terminal with `QT_LOGGING_RULES="qt.core.plugin.factoryloader.debug=true"` and look for `Ignoring QPA plugin due to mismatching Qt versions`.
+:::
+
+With `qtengine`, it checks the Qt5 and Qt6 plugins and whether `~/.config/qtengine/config.json` points at the DMS color scheme.
+
+### QS_ICON_THEME
+
+Optional environment variable to set the icon theme for DMS only. Will not effect other applications.
+
+### XDG_MENU_PREFIX {/* #xdg-menu-prefix */}
+
+Required by KDE applications under a non-Plasma compositor. Without it, `KService` cannot build the XDG menu tree and Dolphin's "Open with…" dialog appears empty; double-clicking files also don't open them, and if they do, is with the wrong application.
+
+Set `plasma-` in your compositor's environment. The matching `/etc/xdg/menus/plasma-applications.menu` is provided by `plasma-workspace`.
+
+Example in niri's `config.kdl`:
+
+```kdl
+environment {
+  XDG_MENU_PREFIX "plasma-"
+}
+```
+
+Or globally via `~/.config/environment.d/`:
+
+```ini
+XDG_MENU_PREFIX=plasma-
+```
+
+uwsm sets the variable to the compositor's name (for example `hyprland-`), which overrides `environment.d`. Under uwsm, set it in `~/.config/uwsm/env-<compositor>` instead:
+
+```sh
+export XDG_MENU_PREFIX=plasma-
+```
+
+After changing it, re-login to apply the changes.
+
+:::tip
+To verify without re-login, force a cache rebuild:`XDG_MENU_PREFIX=plasma- kbuildsycoca6 --noincremental`.
+:::
+
+:::note
+`kde-cli-tools` (which provides `keditfiletype`) must also be installed, as Dolphin's "Open with…" dialog depends on it. Plasma sessions already export this variable automatically, so this only applies to non-Plasma compositors.
+:::
+
+---
+
+## Fonts
+
+Checks the **Normal Font**, **Monospace Font** and **Display Font** set in `settings.json`. The defaults (Google Sans Flex, Fira Code, DM Serif Display) ship with DMS; doctor warns if their files are missing from the install. Any other font must be registered with fontconfig, so doctor also needs `fc-list` (**Fontconfig Tools**) and a non-empty font cache (**Fontconfig Cache**). If a font is not found, install it or run `fc-cache -fv`.
+
+---
+
+## JSON Output
+
+Use `dms doctor -j` for machine-readable output:
+
+```json
+{
+  "summary": {
+    "errors": 0,
+    "warnings": 1,
+    "ok": 15,
+    "info": 5
+  },
+  "results": [
+    {
+      "category": "System",
+      "name": "Operating System",
+      "status": "ok",
+      "message": "Arch Linux",
+      "details": "ID: arch, Version: rolling, Arch: amd64"
+    }
+  ]
+}
+```
+
+## Welcome Wizard Integration
+
+The doctor checks are also available in the Welcome Wizard's System Check page. Access it via:
+
+```bash
+dms ipc call welcome doctor
+```
+
+Or through Settings → About → Tools → System Check.

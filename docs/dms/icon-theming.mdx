@@ -18,17 +18,17 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   hideTitle={true}
 />
 
-Dux Shell will use the QT6 icon theme system as primary source for application icons. Depending on which platform theme you're using, icons are configured in different locations.
+Dux Modular Shell will use the QT6 icon theme system as primary source for application icons. Depending on which platform theme you're using, icons are configured in different locations.
 
 ## How Icon Theming Works
 
-Qt6 applications, including Dux Shell, look for icon themes based on your `QT_QPA_PLATFORMTHEME` setting. Each platform theme reads icon configuration from a different location:
+Qt6 applications, including Dux Modular Shell, look for icon themes based on your `QT_QPA_PLATFORMTHEME` setting. Each platform theme reads icon configuration from a different location:
 
 - **gtk3**: Reads from GTK settings (`~/.config/gtk-3.0/settings.ini`)
 - **qt6ct**: Reads from qt6ct configuration (`~/.config/qt6ct/qt6ct.conf`)
 - **kde**: Reads from KDE Plasma settings (`~/.config/kdeglobals`)
 
-DMS respects these platform-specific configurations and doesn't override your icon theme choices.
+DMS leaves these files alone until you pick a theme under **Settings → Wallpaper & colors → Icons**. Picking one writes it to GTK, qt5ct and qt6ct, and saves the theme it replaced to `~/.config/gtk-3.0/icon-theme.dms-backup`. Choosing **System Default** puts that saved theme back, unless another tool changed the icon theme in the meantime.
 
 ### Environment Variable Override
 
@@ -157,13 +157,13 @@ echo $QT_QPA_PLATFORMTHEME
 
 :::tip[Dux Installer Users]
 
-The Dux Installer sets `QT_QPA_PLATFORMTHEME=gtk3` in `~/.config/environment.d/90-dms.conf`. Check this file to see your current setting. You can also override this per-service with `systemctl --user edit dms` (only affects DMS and apps it launches).
+The Dux Installer only sets `QT_QPA_PLATFORMTHEME=gtk3` for non-systemd sessions, in the compositor config (niri's `environment` block, Hyprland's `hl.env`). With the default systemd setup it is not set; add it to a file in `~/.config/environment.d/` or override it per-service with `systemctl --user edit dms` (only affects DMS and apps it launches).
 
 :::
 
 :::note
 
-This variable must be exposed to the `dms` process. Dux Installer users have this in `~/.config/environment.d/90-dms.conf`. Manual setups typically set it in the compositor config, a custom environment.d file, or via `systemctl --user edit dms` (only affects DMS and apps it launches).
+This variable must be exposed to the `dms` process. Set it in the compositor config, a custom environment.d file, or via `systemctl --user edit dms` (only affects DMS and apps it launches).
 
 :::
 

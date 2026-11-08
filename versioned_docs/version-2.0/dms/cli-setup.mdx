@@ -19,6 +19,10 @@ The `dms setup` command generates default configuration files for your composito
 
 Running `dms setup` with no arguments deploys all defaults at once. You can also deploy individual configs one at a time.
 
+:::note[Image-based systems]
+`dms setup` works unchanged on Fedora Atomic, bootc, and other image-based systems because it only writes to your home directory. On those hosts the [Dux Installer](../duxinstall) runs this same config deployment once the packages have been layered and the system rebooted. See [Fedora Atomic & bootc images](./installation#fedora-atomic--bootc-images).
+:::
+
 ## Quick Start
 
 Deploy all default configs:
@@ -51,9 +55,24 @@ Running `dms setup` with no subcommand deploys all of the above, plus the input 
 DMS writes Hyprland config in Lua only. When the installed Hyprland reports a version older than 0.55, `dms setup` stops with `hyprland.lua is not loaded by Hyprland <version>; DMS needs 0.55 or newer` instead of writing a config Hyprland would ignore. If the version can't be detected, it deploys anyway.
 :::
 
+:::note[MangoWC 0.18 or newer]
+Everything `dms setup` writes for MangoWC uses the snake_case keys of MangoWC 0.18 and newer. With no subcommand, your existing `config.conf` is backed up to `config.conf.backup.<timestamp>` and replaced. Its bind, `monitor_rule` and `window_rule` lines move into `dms/binds.conf`, `dms/outputs.conf` and `dms/windowrules.conf` when those are empty, converted to snake_case. Fragments that already have content are kept as they are; if they predate 0.18, convert them with MangoWC's `migrate-config-keys.sh` (see [MangoWC Configuration](./compositors.mdx#mangowc-configuration)).
+:::
+
 :::tip
 If you installed DMS from packages (not through the interactive installer), run `dms setup` after install to get working compositor and terminal configs right away.
 :::
+
+## Existing Keybinds
+
+When `dms setup` finds your own keybinds (a non-empty `dms/binds.kdl` on niri; a non-empty `dms/binds.conf` or bind lines in `config.conf` on MangoWC), it asks before deploying:
+
+```
+  1) Keep my binds as they are
+  2) Start from the DMS stock binds
+```
+
+Keeping is the default. Either way, an existing `binds.conf` or `binds.kdl` is backed up with a timestamp first. Hyprland is not asked, since your own binds live in `dms/binds-user.lua`. `dms setup headless` keeps them unless you pass `--stock-binds`.
 
 ## Headless
 
@@ -70,6 +89,7 @@ dms setup headless --compositor niri
 | `--force` | Overwrite existing configs. Existing files get timestamped backups first |
 | `--skip-existing` | Log a warning and skip anything that already has a config, instead of failing |
 | `--no-systemd` | Deploy the session config without systemd integration |
+| `--stock-binds` | Replace existing keybinds with the DMS stock set instead of keeping them. A backup is kept |
 
 With systemd, setup binds `dms.service` to the compositor's session unit (the same step as [`dms systemd enable`](./cli-systemd.mdx)) and the deployed config does not start DMS itself. If that binding fails, the config falls back to starting `dms run`.
 

@@ -23,7 +23,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Dux Shell (DMS)',
+      label: 'Dux Modular Shell (DMS)',
       collapsed: false,
       items: [
         {
@@ -55,6 +55,7 @@ const sidebars: SidebarsConfig = {
         'dms/vpn',
         'dms/autostart',
         'dms/network-speed-monitor',
+        'dms/system-monitor',
         'dms/reboot-to-another-os',
         {
           type: 'doc',
@@ -75,6 +76,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'dms/keybinds-ipc',
+        'dms/keyboard-navigation',
         {
           type: 'category',
           label: 'CLI',
@@ -91,6 +93,11 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'dms/cli-switch',
               label: 'Switch channels',
+            },
+            {
+              type: 'doc',
+              id: 'dms/cli-migrate',
+              label: 'Migrate repositories',
             },
             {
               type: 'doc',
@@ -152,12 +159,12 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: 'Dux Labs Packages',
+      label: 'Dux Labs Repo',
       collapsed: false,
       items: [
         {
           type: 'doc',
-          id: 'packaging/index',
+          id: 'repo/index',
           label: 'Overview',
         },
       ],

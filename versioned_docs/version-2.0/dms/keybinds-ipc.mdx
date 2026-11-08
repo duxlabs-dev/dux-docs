@@ -461,11 +461,11 @@ dms ipc call bar setPosition index 0 top
 dms ipc call bar setPosition id default left
 ```
 
-**Dank Island and Dot:** A bar instance may use the Island or Dot layout (Settings → Bar → Layout). Both are still listed by `bar` selectors (`index` includes them), but visibility and auto-hide commands return `BAR_IS_ISLAND` — use the [`island`](#island) or [`dot`](#dot) target instead. `setPosition` accepts only `top` and `bottom` for an edge island; for a free island it only picks the orientation (`top`/`bottom` horizontal, `left`/`right` vertical).
+**Island and Dot:** A bar instance may use the Island or Dot layout (Settings → Bar → Layout). Both are still listed by `bar` selectors (`index` includes them), but visibility and auto-hide commands return `BAR_IS_ISLAND` — use the [`island`](#island) or [`dot`](#dot) target instead. `setPosition` accepts only `top` and `bottom` for an edge island; for a free island it only picks the orientation (`top`/`bottom` horizontal, `left`/`right` vertical).
 
 ### island
 
-Dank Island activity surface. Requires a bar instance using the Island layout and enabled. Commands target the focused screen unless you use an `*On` variant. This target never answers for a [Dot](#dot); use `openInstance` / `toggleInstance` with a bar id to address either kind explicitly.
+Island activity surface. Requires a bar instance using the Island layout and enabled. Commands target the focused screen unless you use an `*On` variant. This target never answers for a [Dot](#dot); use `openInstance` / `toggleInstance` with a bar id to address either kind explicitly.
 
 | Function | Description | Parameters |
 | --- | --- | --- |
@@ -473,26 +473,28 @@ Dank Island activity surface. Requires a bar instance using the Island layout an
 | `toggle <activity>` | Collapse if expanded; otherwise expand into the activity | activity id |
 | `show <activity>` | Switch the compact face without expanding | activity id |
 | `close` | Collapse back to the compact face | - |
-| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when Default Opens is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
+| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when **Opens** is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
 | `status` | JSON snapshot of the island on the focused screen | - |
 | `notifications` | Toggle the notification center as an island activity | - |
 | `openOn` / `toggleOn` / `showOn` / `closeOn` / `cycleOn` / `statusOn` / `notificationsOn` | Same actions on a named monitor | activity (where required) + screen name |
 | `openInstance` / `toggleInstance` | Address one island or dot instance by bar id | activity + screen name + bar id |
-| `move <x> <y>` | Move a free island's centre to a pixel position on its screen, clamped fully on screen | x, y |
+| `move <x> <y>` | Move a free island's center to a pixel position on its screen, clamped fully on screen | x, y |
 | `moveOn <screen> <x> <y>` | Same on a named monitor | screen name, x, y |
-| `center` / `centerOn <screen>` | Recentre a free island, useful to recover one parked off a disconnected display | screen name (for `centerOn`) |
+| `center` / `centerOn <screen>` | Recenter a free island, useful to recover one parked off a disconnected display | screen name (for `centerOn`) |
 
-**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
+**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`), `clipboard`, `powermenu` (`power-menu`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
 
 **Free placement:** With Float on, Settings → Bar → General → Placement offers **Edge** (floats along its edge) or **Anywhere** (a draggable island you can park at any point on the display). `move` / `center` only apply to an Anywhere island and return `DANK_ISLAND_NOT_FREE` otherwise. `status` reports `free` plus the anchor `x` / `y` for free islands.
 
-When Dank Island or a Dot is the sole top chrome on the focused display, or an island or dot there has **Shared shortcuts** set to **Always here** or is the last one clicked under **Last used on this screen**, these existing targets open island activities instead of their popouts:
+When an Island or a Dot is the sole top chrome on the focused display, or an island or dot there has **Shared shortcuts** set to **Always here** or is the last one clicked under **Last used on this screen**, these existing targets open island activities instead of their popouts:
 
 - `control-center` `open` / `toggle` / `hide` / `status`
 - `notifications` `open` / `toggle` / `close` (the notification modal is used if the island does not own the screen)
 - `dash` `open` / `toggle` with `overview` (or no tab), `media`, `wallpaper`, or `weather`, and `dash close` while those activities are open
+- `clipboard` `open` / `toggle` / `close`
+- `powermenu` `open` / `toggle` / `close`
 
-`spotlight` and `launcher` open the island launcher when **Launcher → Default Opens** is Island, and fall back to Spotlight if the focused screen has no island. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
+`spotlight` and `launcher` open the island launcher when **Launcher → Default action → Opens** is Island, and fall back to Spotlight if the focused screen has no island. In connected Frame mode, **Opens** does not offer Spotlight, and a saved Spotlight style opens the Full launcher. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
 
 **Examples:**
 ```bash
@@ -503,6 +505,7 @@ dms ipc call island open controlcenter
 dms ipc call island open wallpaper
 dms ipc call island open weather
 dms ipc call island open notifications
+dms ipc call island open powermenu
 dms ipc call island show home
 dms ipc call island toggleOn media DP-1
 dms ipc call island cycle
@@ -515,7 +518,7 @@ dms ipc call island openInstance controlcenter DP-1 default
 
 ### dot
 
-Dank Dot: a bar instance using the Dot layout (Settings → Bar → Layout → Dot). It rests as a small draggable dot anywhere on the display, floats over every other bar, and opens the same activities as the island. Fades and shrinks when idle; hover or drag to wake it. Commands target the focused screen unless you use an `*On` variant, and answer only for dots — an [`island`](#island) never responds here.
+Dot: a bar instance using the Dot layout (Settings → Bar → Layout → Dot). It rests as a small draggable dot anywhere on the display, floats over every other bar, and opens the same activities as the island. Fades and shrinks when idle; hover or drag to wake it. Commands target the focused screen unless you use an `*On` variant, and answer only for dots — an [`island`](#island) never responds here.
 
 | Function | Description | Parameters |
 | --- | --- | --- |
@@ -526,8 +529,8 @@ Dank Dot: a bar instance using the Dot layout (Settings → Bar → Layout → D
 | `cycle` | Cycle activities, same order as the island | - |
 | `status` | JSON snapshot of the dot (`screen`, `x`, `y`, `idle`, `activity`, `expanded`, …) | - |
 | `notifications` | Toggle the notification center as a dot activity | - |
-| `move <x> <y>` | Move the dot's centre to a pixel position on its screen, clamped fully on screen | x, y |
-| `center` | Recentre the dot on its screen | - |
+| `move <x> <y>` | Move the dot's center to a pixel position on its screen, clamped fully on screen | x, y |
+| `center` | Recenter the dot on its screen (Settings → Dot → **Reset Position** recenters it on every screen) | - |
 | `openOn` / `toggleOn` / `showOn` | Same activity action on a named monitor | activity + screen name |
 | `closeOn` / `cycleOn` / `statusOn` / `notificationsOn` / `centerOn` | Same action on a named monitor | screen name |
 | `moveOn` | Move the dot on a named monitor | screen name + x + y |
@@ -614,6 +617,8 @@ Control bar widget popouts, menus, and visibility (including plugins).
 | `hide <widgetId>` | Force widget to be hidden | widget ID |
 | `reset <widgetId>` | Clear visibility override, return to normal behavior | widget ID |
 
+`toggle clock` runs the clock's click action (Settings → Bar widgets → Clock): the dashboard by default, which opens on the first enabled tab when Overview is off and does nothing when no tab is enabled.
+
 **Examples:**
 ```bash
 dms ipc call widget list
@@ -657,7 +662,7 @@ Application launcher modal with search capabilities.
 :::note
 `spotlight` and `launcher` are synonymous — both targets call the same launcher modal for backwards compatibility.
 
-When **Launcher → Default Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Dank Island). Direct control is `island open launcher`.
+When **Launcher → Default action → Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
 :::
 
 | Function | Description | Parameters |
@@ -711,13 +716,15 @@ dms ipc call spotlight-bar toggleWith files
 All these modals support `open`, `close`, and `toggle` functions:
 
 - **clipboard** - Clipboard history manager
-- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
+- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `invokeLast`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
 - **processlist** - System process list and performance monitor (also supports `focusOrToggle`)
 - **powermenu** - Power menu for system actions
 - **control-center** - Quick settings (network, bluetooth, audio, etc.)
 - **notepad** - Quick notepad/scratchpad
 
-When Dank Island is the sole top chrome on the focused display (or an island or dot there owns shared shortcuts), `control-center` and `notifications` open island activities instead of their popouts. The notification modal still opens if the island does not own the screen.
+`invokeLast` runs the default action of the newest notification and dismisses it, like clicking its popup. It falls back to the first action and returns `NOTIFICATION_INVOKE_NO_ACTION` when there is nothing to run.
+
+When an Island is the sole top chrome on the focused display (or an island or dot there owns shared shortcuts), `control-center` and `notifications` open island activities instead of their popouts. The notification modal still opens if the island does not own the screen.
 
 **Examples:**
 ```bash
@@ -725,6 +732,7 @@ dms ipc call clipboard toggle
 dms ipc call notifications open
 dms ipc call notifications clearAll
 dms ipc call notifications dismiss
+dms ipc call notifications invokeLast
 dms ipc call notifications dismissAllPopups
 dms ipc call notifications toggleDoNotDisturb
 dms ipc call notifications getDoNotDisturb
@@ -817,7 +825,7 @@ Dashboard popup with multiple tabs.
 
 Without a position, the dashboard anchors to the clock widget. `openAt`/`toggleAt` anchor it to the given bar section instead — useful when triggering the dash from a custom widget or script.
 
-On displays where Dank Island is the sole top chrome (or an island or dot there owns shared shortcuts), `open`/`toggle` with `media`, `wallpaper`, or `weather` route to the matching island activity. `close` collapses those activities when they are open.
+On displays where an Island is the sole top chrome (or an island or dot there owns shared shortcuts), `open`/`toggle` with `media`, `wallpaper`, or `weather` route to the matching island activity. `close` collapses those activities when they are open.
 
 **Examples:**
 ```bash
@@ -979,14 +987,14 @@ dms ipc call keybinds toggleWithPath sway /etc/sway/config
 **Supported Providers:**
 
 The keybinds modal supports all providers available through the `dms keybinds` CLI:
-- **Built-in providers**: Hyprland, Sway, MangoWC, Miracle WM (automatically parse compositor configs)
+- **Built-in providers**: niri, Hyprland, Sway, Scroll, MangoWC, Miracle WM, Aqueous (automatically parse compositor configs)
 - **Custom cheatsheets**: Any JSON-based cheatsheet in `~/.config/dms/cheatsheets/`
 
 The modal automatically parses configuration files and displays keybinds organized by category with optional subcategories. See the [Keybinds & Cheatsheets](/docs/dms/cli-keybinds-cheatsheets) documentation for more details on providers and creating custom cheatsheets.
 
 ### window-rules
 
-**niri only**
+**niri, Hyprland, and MangoWC only**
 
 Window rules editor modal for managing compositor window rules.
 
@@ -1004,7 +1012,7 @@ dms ipc call window-rules toggle
 ```
 
 :::note
-This feature is only available on the niri compositor.
+This feature is only available on niri, Hyprland, and MangoWC compositors. Other compositors return `WINDOW_RULES_UNSUPPORTED_COMPOSITOR`.
 :::
 
 ### workspace-rename

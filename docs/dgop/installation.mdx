@@ -33,14 +33,14 @@ import TabItem from '@theme/TabItem';
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo pacman -S dgop
+sudo pacman -S dux-gop
 ```
 
 </TabItem>
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-paru -S dgop-git
+paru -S dux-gop-git
 ```
 
 </TabItem>
@@ -49,8 +49,8 @@ paru -S dgop-git
 ### Fedora & CentOS
 
 ```bash
-sudo dnf copr enable duxlabs/dux
-sudo dnf install dgop
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-gop
 ```
 
 ### Debian & Ubuntu
@@ -65,36 +65,36 @@ Select your release:
 <TabItem value="trixie" label="Debian 13 (Trixie)" default>
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_13/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_13/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install dgop
+sudo apt install dux-gop
 ```
 
 </TabItem>
 <TabItem value="testing" label="Debian Testing">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Testing/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Testing/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install dgop
+sudo apt install dux-gop
 ```
 
 </TabItem>
 <TabItem value="sid" label="Debian Sid">
 
 ```bash
-curl -fsSL https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/Debian_Unstable/Release.key | \
-  sudo gpg --dearmor -o /etc/apt/keyrings/duxlabs.gpg
-echo "deb [signed-by=/etc/apt/keyrings/duxlabs.gpg] https://download.opensuse.org/repositories/home:/AvengeMedia:/danklinux/Debian_Unstable/ /" | \
-  sudo tee /etc/apt/sources.list.d/duxlabs.list
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install dgop
+sudo apt install dux-gop
 ```
 
 </TabItem>
@@ -105,9 +105,9 @@ sudo apt install dgop
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 ```bash
-sudo add-apt-repository ppa:duxlabs/dux
+sudo add-apt-repository ppa:duxlabs/dux-repo
 sudo apt update
-sudo apt install dgop
+sudo apt install dux-gop
 ```
 
 ### openSUSE & Derivatives
@@ -120,36 +120,36 @@ Select your distribution:
 <TabItem value="tumbleweed" label="Tumbleweed" default>
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Tumbleweed/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dgop
+sudo zypper install dux-gop
 ```
 
 </TabItem>
 <TabItem value="leap16" label="Leap 16">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.0/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dgop
+sudo zypper install dux-gop
 ```
 
 </TabItem>
 <TabItem value="leap161" label="Leap 16.1">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/16.1/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dgop
+sudo zypper install dux-gop
 ```
 
 </TabItem>
 <TabItem value="slowroll" label="Slowroll">
 
 ```bash
-sudo zypper addrepo https://download.opensuse.org/repositories/home:AvengeMedia:danklinux/openSUSE_Slowroll/home:AvengeMedia:danklinux.repo
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install dgop
+sudo zypper install dux-gop
 ```
 
 </TabItem>
@@ -167,9 +167,9 @@ Install dgop from our R2-backed XBPS repository or build it from source.
 <TabItem value="repo" label="Dux Repository" default>
 
 ```bash
-echo "repository=https://void.danklinux.com/danklinux/current" | sudo tee /etc/xbps.d/dux.conf
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -Su
-sudo xbps-install -S dgop
+sudo xbps-install -S dux-gop
 ```
 
 :::note
@@ -190,13 +190,13 @@ cd void-packages
 ./xbps-src binary-bootstrap
 
 # Copy in the templates (adjust paths as needed)
-cp -R ../Dux/distro/void/srcpkgs/dgop* srcpkgs/
+cp -R ../Dux/distro/void/srcpkgs/dux-gop* srcpkgs/
 
 # Build the package
-./xbps-src pkg dgop
+./xbps-src pkg dux-gop
 
 # Install the results
-sudo xbps-install --repository=hostdir/binpkgs dgop
+sudo xbps-install --repository=hostdir/binpkgs dux-gop
 ```
 
 </TabItem>
@@ -204,12 +204,12 @@ sudo xbps-install --repository=hostdir/binpkgs dgop
 
 #### Gentoo
 
-`gui-apps/dgop` is available in the official [guru](https://wiki.gentoo.org/wiki/Project:GURU) community overlay.
+`dux-desktop/dux-gop` is available in the official [guru](https://wiki.gentoo.org/wiki/Project:GURU) community overlay.
 
 ```bash
 sudo eselect repository enable guru
 sudo emaint sync -r guru
-sudo emerge --ask gui-apps/dgop
+sudo emerge --ask dux-desktop/dux-gop
 ```
 
 :::note
@@ -217,7 +217,7 @@ sudo emerge --ask gui-apps/dgop
 The guru overlay package is keyworded `~amd64`, so you may need to accept the testing keyword:
 
 ```bash
-echo "gui-apps/dgop ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dgop
+echo "dux-desktop/dux-gop ~amd64" | sudo tee -a /etc/portage/package.accept_keywords/dgop
 ```
 
 :::
@@ -278,7 +278,7 @@ For enhanced functionality:
 
 :::tip
 
-Dux Shell users gain access to system widgets (CPU, RAM, GPU, Disk, Network) and process monitoring when dgop is installed.
+Dux Modular Shell users gain access to system widgets (CPU, RAM, GPU, Disk, Network) and process monitoring when dgop is installed.
 
 :::
 

@@ -28,6 +28,8 @@ DMS picks **one primary system backend** (the first candidate that reports itsel
 - **System**: one of APT, DNF5/DNF (skipped when `rpm-ostree` indicates an ostree-booted system so the transactional backend can take over), Pacman, Paru, Yay, Zypper, or rpm-ostree, depending on what is installed and what the environment reports.
 - **Overlays**: **Flatpak** is included when the `flatpak` CLI is present.
 
+On image-based systems (rpm-ostree, bootc, transactional-update) this is also how Dux Shell itself gets updated: `dms update` refuses to run there and points to `dms system update` or the image tooling.
+
 On Arch-based systems, **Paru** or **Yay** is preferred when installed so both repository and **AUR** updates can be discovered and upgraded in one flow. Plain **Pacman** covers official repos only.
 
 Updates from each backend are merged into a single list; upgrades run **per backend** in sequence, only for packages that belong to that backend.

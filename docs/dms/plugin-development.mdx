@@ -1,6 +1,6 @@
 ---
 title: Development
-description: Build plugins for Dux Shell
+description: Build plugins for Dux Modular Shell
 sidebar_position: 7
 ---
 
@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Build and ship plugins for Dux Shell. This guide covers the actual patterns and components you'll use, with real working examples from the plugin library.
+Build and ship plugins for Dux Modular Shell. This guide covers the actual patterns and components you'll use, with real working examples from the plugin library.
 
 ## Development Environment
 
@@ -35,7 +35,7 @@ qs -p .  # Press Ctrl+C after it starts
 mkdir -p dms-plugins/MyPlugin
 ```
 
-Shared widgets come from the [dank-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule under `quickshell/DCommon`. The submodule must be present for the QML language server to resolve them.
+Shared widgets come from the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule under `quickshell/DCommon`. The submodule must be present for the QML language server to resolve them.
 
 :::warning[DMS 2.0 widget migration]
 
@@ -82,6 +82,10 @@ dms ipc call plugins list
 Use [Run on Save](https://marketplace.visualstudio.com/items?itemName=emeraldwalk.RunOnSave) to auto-reload your plugin during development. The reload command uses the plugin `id` from your `plugin.json`.
 :::
 
+:::warning[New files in an update]
+Reloading picks up changes to files the shell has already loaded. A QML or JS file that is new in a directory the running shell has already loaded from fails with `File name case mismatch` until `dms restart`, because Qt keeps each directory's file list for the life of the shell. Users update plugins without restarting, so put files that a release adds in a new subdirectory, or say in the release notes that the update needs `dms restart`.
+:::
+
 ## Quick Start
 
 ### 1. Create Plugin Directory
@@ -119,6 +123,7 @@ import QtQuick
 import qs.Common
 import qs.Services
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
@@ -130,7 +135,7 @@ PluginComponent {
         Row {
             spacing: Theme.spacingS
 
-            DankIcon {
+            DIcon {
                 name: "widgets"
                 size: Theme.iconSize
                 color: Theme.primary
@@ -150,7 +155,7 @@ PluginComponent {
         Column {
             spacing: Theme.spacingXS
 
-            DankIcon {
+            DIcon {
                 name: "widgets"
                 size: Theme.iconSize
                 color: Theme.primary
@@ -213,16 +218,16 @@ PluginSettings {
 1. Open DMS Settings → Plugins
 2. Click "Scan for Plugins"
 3. Toggle your plugin on
-4. Add to DankBar widget list
+4. Add to bar widget list
 5. Restart shell: `dms restart`
 
 You now have a working plugin.
 
 ## Widget Plugins
 
-Widget plugins show up in DankBar, in docks, or in the Control Center. They use `PluginComponent` as the base.
+Widget plugins show up in the bar, in docks, or in the Control Center. They use `PluginComponent` as the base.
 
-### DankBar Widget
+### Bar Widget
 
 Here's a real color display widget:
 
@@ -355,7 +360,7 @@ PluginComponent {
                 implicitHeight: root.popoutHeight - popoutColumn.headerHeight -
                                popoutColumn.detailsHeight - Theme.spacingXL
 
-                DankGridView {
+                DGridView {
                     anchors.fill: parent
                     cellWidth: 50
                     cellHeight: 50
@@ -401,6 +406,8 @@ PluginComponent {
 
 The `PopoutComponent` helper gives you consistent header/footer and a `closePopout()` function.
 
+Hover-opened popouts close when the pointer leaves them, and an open `DDropdown` menu counts as leaving. Declare `property var parentPopout: null` on the popout content and pass `transientSurfaceTracker: parentPopout?.transientSurfaceTracker ?? null` to the dropdown so the popout stays open while its menu is up.
+
 ### Control Center Widget
 
 Tiles use square cells. The default size is 4×1; 2×2 is square. Users resize tiles and the panel within the available screen space.
@@ -411,6 +418,7 @@ This audio tile uses demo data. Small tiles use the standard icon and status lay
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 import qs.Modules.ControlCenter.Widgets
 
@@ -443,7 +451,7 @@ PluginComponent {
         CcTileContent {
             id: content
 
-            DankSlider {
+            DSlider {
                 id: volumeControl
                 width: parent.width
                 size: "m"
@@ -517,12 +525,13 @@ Set `attachedContent` to give a widget a panel that opens inside the dock:
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
     id: root
     horizontalBarPill: Component {
-        DankIcon {
+        DIcon {
             name: "sticky_note_2"
             size: root.iconSize
         }
@@ -538,12 +547,12 @@ PluginComponent {
                 color: Theme.surfaceText
                 font.pixelSize: Theme.fontSizeLarge
             }
-            DankTextField {
+            DTextField {
                 width: parent.width - Theme.spacingM * 2
                 placeholderText: I18n.trFor("attachedPanelExample", "Type here…")
                 Accessible.name: I18n.trFor("attachedPanelExample", "Notes")
             }
-            DankButton {
+            DButton {
                 text: I18n.trFor("attachedPanelExample", "Close")
                 onClicked: root.surfaceContext.dismissExpansion()
             }
@@ -1108,7 +1117,7 @@ PluginSettings {
 
 ## Launcher Plugins
 
-Launcher plugins integrate with DankLauncher to provide searchable results. They use `QtObject` as their root (not `Item` or `PluginComponent`) since they don't render any UI directly.
+Launcher plugins integrate with the launcher to provide searchable results. They use `QtObject` as their root (not `Item` or `PluginComponent`) since they don't render any UI directly.
 
 ### Basic Structure
 
@@ -1485,7 +1494,7 @@ A tab is a `DashTabComponent`, an `Item` sized to the dash content area. Here's 
     "name": "Stopwatch Example",
     "description": "A standalone dash tab: a stopwatch with laps that keeps time while the dash is closed",
     "version": "1.0.0",
-    "author": "Dux Shell",
+    "author": "Dux Modular Shell",
     "type": "dash",
     "capabilities": ["dash-tab"],
     "component": "./StopwatchTab.qml",
@@ -1518,9 +1527,10 @@ A tab is a `DashTabComponent`, an `Item` sized to the dash content area. Here's 
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
-import qs.Modules.DankDash
-import qs.Modules.DankDash.Overview
+import qs.Modules.DDash
+import qs.Modules.DDash.Overview
 
 DashTabComponent {
     id: root
@@ -1660,7 +1670,7 @@ DashTabComponent {
             anchors.horizontalCenter: parent.horizontalCenter
             spacing: Theme.spacingS
 
-            DankButton {
+            DButton {
                 text: root.running ? I18n.trFor("dashTabExample", "Lap") : I18n.trFor("dashTabExample", "Reset")
                 reserveText: I18n.trFor("dashTabExample", "Reset")
                 iconName: root.running ? "flag" : "restart_alt"
@@ -1670,7 +1680,7 @@ DashTabComponent {
                 onClicked: root.running ? root.lap() : root.reset()
             }
 
-            DankButton {
+            DButton {
                 id: startButton
                 text: root.running ? I18n.trFor("dashTabExample", "Pause") : root.elapsed > 0 ? I18n.trFor("dashTabExample", "Resume") : I18n.trFor("dashTabExample", "Start")
                 reserveText: I18n.trFor("dashTabExample", "Resume")
@@ -1756,7 +1766,7 @@ A card is a `DashCardComponent`, a tonal surface in the overview grid. This one 
     "name": "Progress Example",
     "description": "A standalone overview card showing how much of the day, week, month or year has passed",
     "version": "1.0.0",
-    "author": "Dux Shell",
+    "author": "Dux Modular Shell",
     "type": "dashCard",
     "capabilities": ["dash-card"],
     "component": "./ProgressCard.qml",
@@ -1815,7 +1825,7 @@ import Quickshell
 import qs.Common
 import qs.Widgets
 import qs.Modules.Plugins
-import qs.Modules.DankDash
+import qs.Modules.DDash
 
 DashCardComponent {
     id: root
@@ -1960,7 +1970,7 @@ A plugin with both surfaces, and maybe a bar widget too, uses `components`. `Das
     "name": "Counter Example",
     "description": "One counter shared by a dash tab, an overview card and a bar or dock widget",
     "version": "1.0.0",
-    "author": "Dux Shell",
+    "author": "Dux Modular Shell",
     "type": "composite",
     "capabilities": ["dash-tab", "dash-card", "dankbar-widget"],
     "icon": "counter_1",
@@ -1992,6 +2002,7 @@ The card is clickable, so a click opens the tab:
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 DashCardComponent {
@@ -2017,7 +2028,7 @@ DashCardComponent {
         anchors.centerIn: parent
         spacing: Theme.spacingM
 
-        DankIcon {
+        DIcon {
             anchors.verticalCenter: parent.verticalCenter
             name: "counter_1"
             size: Theme.iconSizeLarge
@@ -2042,6 +2053,7 @@ The bar widget opens the dash on the counter tab. It works the same in a dock:
 import QtQuick
 import qs.Common
 import qs.Widgets
+import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
@@ -2057,7 +2069,7 @@ PluginComponent {
         Row {
             spacing: Theme.spacingXS
 
-            DankIcon {
+            DIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 name: "counter_1"
                 size: root.iconSize
@@ -2077,7 +2089,7 @@ PluginComponent {
         Column {
             spacing: Theme.spacingXXS
 
-            DankIcon {
+            DIcon {
                 anchors.horizontalCenter: parent.horizontalCenter
                 name: "counter_1"
                 size: root.iconSize
@@ -2158,23 +2170,23 @@ Declare `targetScreen`, `active` or `rowBudget` (rows of 96 px that fit on scree
 | Member | Description |
 |--------|-------------|
 | `implicitHeight` | The dash grows to fit it. Minimum `DashMetrics.tabMinHeight` |
-| `focusTarget` | Item focused when Down enters the tab |
+| `focusTarget` | Item focused when Ctrl+Tab, F6 or an unused arrow key steps into the tab's controls |
 | `restoreFocus()` | Called when the dash opens on the tab or returns focus to it |
-| `handleKeyEvent(event)` | Return `true` to consume a key. Ctrl+Tab and Ctrl+Shift+Tab stay with the dash |
+| `handleKeyEvent(event)` | Return `true` to consume a key. Ctrl+PgUp and Ctrl+PgDown stay with the dash; Tab, Ctrl+Tab and F6 (with Shift) do too unless `blocksTabNavigation` is set |
 | `blocksTabNavigation` | True while an editor needs native Tab traversal |
 | `menuActions` | `[{ label, iconName, action, visible?, enabled? }]` for the three-dot menu |
 | `signal tabRequested(string id)` | Switch the dash to another tab, like `"overview"` or `"plugin_other"` |
-| `signal navFocusRequested` | Hand focus back to the dash navigation |
+| `signal navFocusRequested` | Step focus back out of the tab's controls |
 
-For tiles inside a tab, use `Card` from `qs.Modules.DankDash.Overview`. It has the same surface colors, radius and tones as the overview cards.
+For tiles inside a tab, use `Card` from `qs.Modules.DDash.Overview`. It has the same surface colors, radius and tones as the overview cards.
 
 ### Widgets Inside a Tab
 
 Give your tab a `DashWidgetGrid` and assign it to `widgetGrid` to get the dash Edit, Add widget, Reset and Clear All actions for free:
 
 ```qml
-import qs.Modules.DankDash
-import qs.Modules.DankDash.Overview
+import qs.Modules.DDash
+import qs.Modules.DDash.Overview
 
 DashTabComponent {
     id: tab
@@ -2238,7 +2250,7 @@ definitions: [
 - `DashRegistry.toneOption(def)` is the shared Tone choice: `""` for the surface, `"primary"`, `"secondary"` or `"tertiary"`.
 - `id`, `w`, `h`, `col` and `row` are reserved keys.
 
-A `Card` takes the tone directly with `tone: widgetOptions.tone`. Anything else can follow a tone with `DankTone` from `qs.Widgets`:
+A `Card` takes the tone directly with `tone: widgetOptions.tone`. Anything else can follow a tone with `DTone` from `qs.DCommon.Widgets`:
 
 ```qml
 Rectangle {
@@ -2246,7 +2258,7 @@ Rectangle {
 
     color: toneColors.surfaceColor
 
-    DankTone {
+    DTone {
         id: toneColors
         tone: widgetOptions.tone ?? ""
     }
@@ -2258,7 +2270,7 @@ Rectangle {
 }
 ```
 
-`DankTone` exposes `surfaceColor`, `containerColor`, `contentColor`, `accentColor`, `onAccentColor`, `mutedColor`, `chipColor` and `tinted`, the same values a `Card` has. The built-in weather widgets are painted this way.
+`DTone` exposes `surfaceColor`, `containerColor`, `contentColor`, `accentColor`, `onAccentColor`, `mutedColor`, `chipColor` and `tinted`, the same values a `Card` has. The built-in weather widgets are painted this way.
 
 ### DashCardComponent Reference
 
@@ -2291,12 +2303,15 @@ Rectangle {
 
 ### Keyboard
 
-The dash offers every key to the current tab's `handleKeyEvent` first. What it does with the rest:
+The dash opens with the keyboard silently inside the tab (`restoreFocus()`), so your keys work at once, and offers every key to its `handleKeyEvent` first. The tab bar itself takes no keyboard focus. What the dash does with the rest:
 
-- Down or Right from the header enters the tab content at `focusTarget`.
-- Tab and Shift+Tab switch dash tabs unless the tab sets `blocksTabNavigation`. Ctrl+Tab and Ctrl+Shift+Tab always switch.
-- On the overview, Alt+Arrows or Alt+H/J/K/L move between cards and Alt+Tab / Alt+Shift+Tab cycle them. Non-clickable cards without a `focusTarget` are skipped.
-- Escape leaves edit mode, then a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
+- Until the user steps into the tab's controls, Tab and Shift+Tab switch dash tabs.
+- Ctrl+Tab, F6 (with or without Shift), or an arrow key your tab does not consume steps into the controls at `focusTarget`. Ctrl+Tab, F6 or Escape steps back out, as does emitting `navFocusRequested`.
+- Inside the controls, Tab and Shift+Tab walk them and wrap around.
+- Ctrl+PgDown and Ctrl+PgUp switch tabs from anywhere.
+- Tab, Ctrl+Tab and F6 step aside while the tab sets `blocksTabNavigation`.
+- On the overview, the arrows move between cards when the focused card does not use them, as do Alt+Arrows or Alt+H/J/K/L; Alt+Tab / Alt+Shift+Tab cycle them. Non-clickable cards without a `focusTarget` are skipped. Alt+Arrow toward the tab bar from the edge card steps back out.
+- Escape leaves edit mode, then steps out of the controls, then leaves a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
 
 ### Opening the Dash From Other Surfaces
 
@@ -2438,9 +2453,150 @@ rm -rf ~/.cache/dms/lyrics
 2. **Exit 0 when nothing matches** - A non-zero exit is an error, and errors are asked again on every lookup
 3. **Answer in time** - Keep your own request timeouts well under 8 seconds
 
+## Weather Providers
+
+A plugin can add a weather source. The provider is a program you ship in the plugin, written in anything. DMS runs it with the location and it prints the forecast. It sits next to the built-in providers (Open-Meteo, MET Norway) in the same priority list.
+
+:::note[Requires DMS 2.1.1]
+
+Weather provider plugins are new in 2.1.1. Declare `"requires_dms": ">=2.1.1"`. Weather lookups run in the `dms` backend (`weather.get` over IPC). Plugin providers only show up when `dms` reports the `weather.plugins` capability. With an older `dms` the plugin still loads, but its provider is not listed.
+
+:::
+
+### How Users See Them
+
+- After the plugin is enabled under Settings → Plugins, the provider shows up switched off at the bottom of Settings → Date, time & region → Weather → Weather providers.
+- It only runs once the user switches it on there. Dragging it up or down sets its priority against the other providers.
+- Every enabled provider is asked at the same time, so an enabled plugin runs on every lookup even when it is not first. The highest one in the list that returns a forecast is used. Readings it lacks (humidity, pressure, UV and so on) are filled in from the providers below it, and sunrise, sunset, moonrise and moonset are computed for the location when no provider has them.
+- Your `name` is the row title. Provider ids are `plugin_<pluginId>`.
+
+### Manifest
+
+```json
+{
+  "id": "exampleWeather",
+  "name": "Example Weather",
+  "description": "Forecast from weather.example.com",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "type": "weather",
+  "requires_dms": ">=2.1.1",
+  "weather": {
+    "command": "./weather.py",
+    "name": "Example",
+    "url": "https://weather.example.com"
+  }
+}
+```
+
+A plugin with only a `weather` block needs no QML. The block also works next to `component` or `components`, so a widget or daemon plugin can bring its own provider.
+
+| Key | |
+|-----|---|
+| `command` | Required. The program to run, relative to the plugin directory. Commit it with the executable bit and a shebang line. |
+| `name` | The row title. Defaults to the plugin's `name`. |
+| `url` | The website of your source. |
+
+### The Command
+
+DMS runs the command once per lookup, about every 15 minutes and whenever the location or the first provider changes. The location comes in on stdin:
+
+```json
+{ "latitude": 46.95, "longitude": 7.45 }
+```
+
+Print a forecast in the shape of an [Open-Meteo forecast response](https://open-meteo.com/en/docs) on stdout:
+
+```json
+{
+  "timezone": "Europe/Zurich",
+  "utc_offset_seconds": 3600,
+  "current": { "time": "2026-11-02T14:15", "temperature_2m": 7.6, "weather_code": 3, "is_day": 1 },
+  "hourly": {
+    "time": ["2026-11-02T14:00", "2026-11-02T15:00"],
+    "temperature_2m": [7.6, 7.9],
+    "weather_code": [3, 2],
+    "is_day": [1, 1]
+  },
+  "daily": {
+    "time": ["2026-11-02"],
+    "temperature_2m_max": [8.4],
+    "temperature_2m_min": [3.6],
+    "weather_code": [3]
+  }
+}
+```
+
+Times are local wall-clock times without an offset (`2026-11-02T14:00`), dates are `2026-11-02`. `daily` starts with today, and `hourly` should cover the current hour, which is found by matching `current.time`. Any reading may be `null` or left out; missing values are filled in from the next enabled providers.
+
+| Field | |
+|-------|---|
+| `current` | `time`, `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `is_day`, `weather_code` (WMO code), `surface_pressure`, `wind_speed_10m`, `wind_direction_10m`. |
+| `hourly` | `time` and arrays indexed like it: `temperature_2m`, `apparent_temperature`, `relative_humidity_2m`, `dew_point_2m`, `weather_code`, `precipitation_probability`, `wind_speed_10m`, `surface_pressure`, `visibility`, `uv_index`, `is_day`. |
+| `daily` | `time` and arrays indexed like it: `sunrise`, `sunset`, `moonrise`, `moonset`, `temperature_2m_max`, `temperature_2m_min`, `weather_code`, `precipitation_probability_max`. |
+| `timezone` | Recommended. The IANA name of the zone your times are in, such as `Europe/Zurich`. |
+| `utc_offset_seconds` | Recommended. The offset of your times from UTC. |
+
+- Units are Open-Meteo's defaults: °C, km/h, degrees, hPa, metres for visibility, percent for humidity and probabilities.
+- `is_day` is 1 or 0 per hour. Without it, day and night follow the daily sunrise and sunset.
+- With `timezone` and `utc_offset_seconds`, values filled in from another provider land on the right hour even when that provider reports in a different zone. `timezone` also keeps them lined up across a DST change. Without either, hours are matched by their local time string.
+- A forecast without `current`, `hourly` or `daily`, or without any hours or days, is a failure.
+
+| Output | Means |
+|--------|-------|
+| A forecast, exit 0 | Used, or used to fill in another provider's gaps. |
+| Nothing, exit 0 | A failure (`no forecast`). The providers below it are used instead. |
+| Non-zero exit | A failure. The providers below it are used instead. |
+
+- The command gets 15 seconds. Once a provider above yours has returned its forecast, yours has 3 more seconds to fill in gaps before it counts as failed (`too slow to fill in`). After that, or once the lookup is done with it, it is killed along with everything it started.
+- Output over 2 MiB is rejected.
+- On a non-zero exit the last 512 bytes of stderr are added to the error, so say why you failed there. Otherwise stderr is dropped.
+- It runs at low priority with the environment and working directory of the `dms` process. Find your own files relative to the script.
+
+### Example
+
+```python
+#!/usr/bin/env python3
+import json
+import sys
+import urllib.parse
+import urllib.request
+
+location = json.load(sys.stdin)
+query = urllib.parse.urlencode({"lat": location["latitude"], "lon": location["longitude"]})
+with urllib.request.urlopen(f"https://weather.example.com/forecast?{query}", timeout=10) as response:
+    found = json.load(response)
+
+json.dump({
+    "timezone": found["zone"],
+    "utc_offset_seconds": found["offset"],
+    "current": {"time": found["now"]["time"], "temperature_2m": found["now"]["temp"], "weather_code": found["now"]["wmo"]},
+    "hourly": {"time": [h["time"] for h in found["hours"]], "temperature_2m": [h["temp"] for h in found["hours"]]},
+    "daily": {"time": [d["date"] for d in found["days"]], "temperature_2m_max": [d["max"] for d in found["days"]], "temperature_2m_min": [d["min"] for d in found["days"]]},
+}, sys.stdout)
+```
+
+Any failure raises and exits non-zero with the traceback on stderr, and the other providers answer instead. Everything left out here is filled in by the other providers or computed.
+
+### Testing a Provider
+
+Run it by hand and check the JSON:
+
+```bash
+echo '{"latitude":46.95,"longitude":7.45}' | ./weather.py | python3 -m json.tool | head
+```
+
+Then move it to the top of the provider list. Changing the first provider refreshes the weather right away.
+
+### Weather Provider Best Practices
+
+1. **Report your zone** - Set `timezone` and `utc_offset_seconds`, or filled-in hours can land on their neighbour
+2. **Leave out what you do not have** - `null` or a missing field is filled from the next provider, a made-up value wins over them
+3. **Answer in time** - Keep your own request timeouts well under 15 seconds, and under 3 if you want to fill in for a provider above you
+
 ## Composite Plugins
 
-A single plugin can provide **multiple surfaces at once** — for example a background daemon, a DankBar widget, and a desktop widget. Each surface has a different lifecycle (the daemon is instantiated once; bar and desktop widgets are instantiated per bar/placement, per screen), so each one is its own QML file.
+A single plugin can provide **multiple surfaces at once** — for example a background daemon, a bar widget, and a desktop widget. Each surface has a different lifecycle (the daemon is instantiated once; bar and desktop widgets are instantiated per bar/placement, per screen), so each one is its own QML file.
 
 ### Manifest
 
@@ -2611,7 +2767,7 @@ PluginSettings {
     ToggleSetting {
         settingKey: "showInBar"
         label: "Show in Bar"
-        description: "Display widget in DankBar"
+        description: "Display widget in the bar"
         defaultValue: true
     }
 
@@ -2761,7 +2917,7 @@ See `PLUGINS/QuickNotesExample/` in the DMS repo for a complete launcher plugin 
 Use `iconSize` for consistent icon sizing that adapts to bar orientation and user preferences:
 
 ```qml
-DankIcon {
+DIcon {
     name: "settings"
     size: root.iconSize
 }
@@ -2873,7 +3029,7 @@ DesktopPluginComponent {
 }
 ```
 
-For the full scrolling view with word highlights, use `LyricsOverlay` from `qs.Modules.DankDash.Media`. It subscribes by itself while visible:
+For the full scrolling view with word highlights, use `LyricsOverlay` from `qs.Modules.DDash.Media`. It subscribes by itself while visible:
 
 ```qml
 LyricsOverlay {
@@ -2970,21 +3126,27 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
     "name": "My Source",
     "url": "https://example.com",
     "wordSync": false
+  },
+  "weather": {
+    "command": "./weather.py",
+    "name": "My Source",
+    "url": "https://example.com"
   }
 }
 ```
 
-`components` replaces `component` for [composite plugins](#composite-plugins) that expose more than one surface. Provide one or the other. `dash` labels the dash surfaces and declares their options, see [Dash Options](#dash-options). `lyrics` adds a [lyrics provider](#lyrics-providers). A plugin with only `lyrics` needs no `component`.
+`components` replaces `component` for [composite plugins](#composite-plugins) that expose more than one surface. Provide one or the other. `dash` labels the dash surfaces and declares their options, see [Dash Options](#dash-options). `lyrics` adds a [lyrics provider](#lyrics-providers), `weather` a [weather provider](#weather-providers). A plugin with only `lyrics` or `weather` needs no `component`.
 
 ### Plugin Types
 
-- `"widget"` - DankBar or Control Center widget
+- `"widget"` - Bar or Control Center widget
 - `"daemon"` - Background service
 - `"launcher"` - Spotlight extension
 - `"desktop"` - Desktop layer widget
 - `"dash"` - Dash tab (requires DMS &ge; 2.0.0)
 - `"dashCard"` - Dash overview card (requires DMS &ge; 2.0.0)
 - `"lyrics"` - [Lyrics provider](#lyrics-providers) with no QML (requires DMS &ge; 2.0.0)
+- `"weather"` - [Weather provider](#weather-providers) with no QML (requires DMS &ge; 2.1.1)
 - `"composite"` - Multiple surfaces in one plugin (use with `components`; requires DMS &ge; 1.5.0)
 
 ### Permissions
@@ -3084,10 +3246,10 @@ Keep your English strings stable once they're in POEditor. Renaming a term is a 
 ## Testing
 
 1. Enable plugin: Settings → Plugins → Scan → Toggle on
-2. Add to bar: Settings → DankBar → Add widget. For a dock, use the dock's edit mode. Dash tabs show up on their own; add dash cards from the dash (three-dot menu → Edit → Add widget), and open a tab directly with `dms ipc call dash open plugin_myPlugin`
+2. Add to bar: Settings → Bar → Add widget. For a dock, use the dock's edit mode. Dash tabs show up on their own; add dash cards from the dash (three-dot menu → Edit → Add widget), and open a tab directly with `dms ipc call dash open plugin_myPlugin`
 3. Check console: Look for errors in shell output
 4. Hot-reload your plugin: `dms ipc call plugins reload myPlugin`
-5. Check settings files: `~/.config/DankMaterialShell/settings.json` or `~/.config/DankMaterialShell/config.d/*.json`
+5. Check settings files: `~/.config/dms/settings.json` or `~/.config/dms/config.d/*.json`
 
 ### Hot Reloading
 

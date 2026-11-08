@@ -147,6 +147,8 @@ gateway responds, and the tunnel itself is handled by NetworkManager.
 
 Profiles that authenticate with a username and password connect through the same
 OpenConnect path DMS already used, prompting for whichever credential is not saved.
+Password profiles do not handle OTP or MFA challenge forms; use browser login for
+those, where any MFA your identity provider asks for happens in the browser.
 
 ## Server certificates
 
@@ -173,8 +175,9 @@ connection and the prompt returns next time.
 
 GlobalProtect profiles that use SAML authenticate through
 [gp-saml-gui](https://github.com/dlenski/gp-saml-gui), which DMS launches to open a
-browser window and then captures the resulting cookie. See
-[System Diagnostics](cli-doctor#gp-saml-gui) for the dependency.
+browser window and then captures the resulting cookie. Install both `gp-saml-gui` and
+the `openconnect` command: openconnect turns that cookie into the one NetworkManager
+uses for the tunnel.
 
 ## Troubleshooting
 

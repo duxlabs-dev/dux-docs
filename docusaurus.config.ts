@@ -183,7 +183,7 @@ const proseOnly = (content: string) =>
 
 const config: Config = {
   title: 'Dux',
-  tagline: 'Dux Shell and tools: a modern Wayland desktop suite for niri, Hyprland, MangoWC, dwl, labwc, and Sway.',
+  tagline: 'Dux Modular Shell and tools: a modern Wayland desktop suite for niri, Hyprland, mangowm, dwl, labwc, and Sway.',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -293,16 +293,20 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/duxlabs-dev/dux-docs/tree/master',
-          lastVersion: '2.0',
+          lastVersion: '2.1',
           versions: {
             current: {
-              label: '2.1',
-              path: '2.1',
+              label: '2.2',
+              path: '2.2',
               banner: 'unreleased',
+            },
+            '2.1': {
+              label: '2.1',
+              path: '',
             },
             '2.0': {
               label: '2.0',
-              path: '',
+              path: '2.0',
             },
             '1.6': {
               label: '1.6',
@@ -381,22 +385,22 @@ const config: Config = {
       {
         redirects: [{from: '/blog/v1-7-release', to: '/blog/v2-0-release'}],
         createRedirects(existingPath: string) {
-          const map: [string, string][] = [
-            ['/docs/dms/', '/docs/dankmaterialshell/'],
-            ['/docs/dms-greeter/', '/docs/dankgreeter/'],
-            ['/docs/dsearch/', '/docs/danksearch/'],
-            ['/docs/dcal/', '/docs/dankcalendar/'],
-            ['/docs/packaging/', '/docs/danklinux/'],
-            ['/docs/dms', '/docs/dankmaterialshell'],
-            ['/docs/dms-greeter', '/docs/dankgreeter'],
-            ['/docs/dsearch', '/docs/danksearch'],
-            ['/docs/dcal', '/docs/dankcalendar'],
-            ['/docs/packaging', '/docs/danklinux'],
-            ['/docs/duxinstall', '/docs/dankinstall'],
+          const map: [string, string[]][] = [
+            ['/docs/dms/', ['/docs/dankmaterialshell/']],
+            ['/docs/dms-greeter/', ['/docs/dankgreeter/']],
+            ['/docs/dsearch/', ['/docs/danksearch/']],
+            ['/docs/dcal/', ['/docs/dankcalendar/']],
+            ['/docs/repo/', ['/docs/packaging/', '/docs/danklinux/']],
+            ['/docs/dms', ['/docs/dankmaterialshell']],
+            ['/docs/dms-greeter', ['/docs/dankgreeter']],
+            ['/docs/dsearch', ['/docs/danksearch']],
+            ['/docs/dcal', ['/docs/dankcalendar']],
+            ['/docs/repo', ['/docs/packaging', '/docs/danklinux']],
+            ['/docs/duxinstall', ['/docs/dankinstall']],
           ];
-          for (const [neu, old] of map) {
+          for (const [neu, olds] of map) {
             if (existingPath === neu || existingPath.startsWith(neu.endsWith('/') ? neu : neu + '/')) {
-              return [existingPath.replace(neu, old)];
+              return olds.map((old) => existingPath.replace(neu, old));
             }
           }
           return undefined;
@@ -420,9 +424,9 @@ const config: Config = {
     // Replace with your project's social card (fallback for pages without images)
     image: 'img/homepage/dux-preview.png',
     announcementBar: {
-      id: 'v2-0-release',
+      id: 'v2-1-release',
       content:
-        '<b>DMS 2.0: DankMaterialShell is now Dux Shell.</b> <span class="announcement-detail">New design, Dash plugins, a customizable lock screen, the Dux Lyrical Engine, and Dux Files.</span> <a class="announcement-cta" href="/blog/v2-0-release">Read the announcement</a>',
+        '<b>DMS 2.1 Stormborn.</b> <span class="announcement-detail">New system monitor, video wallpapers, revamped media player, interface density, numerous dux files enhancements, and more.</span> <a class="announcement-cta" href="/blog/v2-1-release">Read the announcement</a>',
       backgroundColor: '#6B46C1',
       textColor: '#ffffff',
       isCloseable: true,
@@ -528,6 +532,14 @@ const config: Config = {
             {
               label: 'Contributing',
               to: '/docs/contributing',
+            },
+            {
+              label: 'Sponsors',
+              to: '/sponsors',
+            },
+            {
+              label: 'Contributors',
+              to: '/contributors',
             },
           ],
         },

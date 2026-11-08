@@ -24,7 +24,7 @@ dms systemd start | stop | restart
 |------------|------|-------|
 | niri | `niri.service` | niri's own systemd integration |
 | Hyprland | `hyprland-session.target` | Shipped by Hyprland 0.57+. On older Hyprland, DMS writes the target to `~/.config/systemd/user/` and the `hyprland.lua` from `dms setup` starts it |
-| MangoWC | `mango-session.target` | Mango 0.17.1+. Older Mango has no target, so `enable` fails and the Mango config starts DMS instead |
+| mangowm | `mango-session.target` | Mango 0.17.1+. Older Mango has no target, so `enable` fails and the Mango config starts DMS instead |
 
 The compositor is the one you are logged into. Outside a session, or to pick another one, pass `--compositor hyprland|niri|mango`.
 
@@ -34,7 +34,7 @@ This is deliberately not `systemctl --user enable dms`. That ties the service to
 
 ## disable
 
-Removes the `dms.service` wants link from all three compositor units and reloads systemd. Add `--now` to also stop the running service. If your compositor config starts DMS itself (`spawn-at-startup "dms" "run"`, `hl.exec_cmd("dms run")`, `exec-once=dms run`), it keeps doing so.
+Removes the `dms.service` wants link from all three compositor units and reloads systemd. Add `--now` to also stop the running service. If your compositor config starts DMS itself (`spawn-at-startup "dms" "run"`, `hl.exec_cmd("dms run")`, `exec_once=dms run`), it keeps doing so.
 
 ## status
 

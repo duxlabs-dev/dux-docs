@@ -90,7 +90,7 @@ The version of the shell configuration, which should match the DMS CLI version.
 
 ### DMS Configuration
 
-By default DMS installs its configuration, plugins, and themes in `$XDG_CONFIG_HOME/DankMaterialShell/`. This check verifies that the configuration directory exists. 
+By default DMS installs its configuration, plugins, and themes in `$XDG_CONFIG_HOME/dms/`. This check verifies that the configuration directory exists. 
 
 ### shell.qml
 
@@ -101,6 +101,16 @@ The location of the `shell.qml` is the installed location of the DMS shell confi
 - `system`: Installed via system package manager (e.g. `apt`, `dnf`, `pacman`)
 - `user`: if manually  installed via manual compilation & installation
 - `nix`: if installed via Nix package manager
+
+### Package Repos {/* #package-repos */}
+
+Checks whether the DMS package repositories on this system still point at the legacy `avengemedia` owner.
+
+| Status | Message | Meaning |
+|--------|---------|---------|
+| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate). |
+| 🟢 OK | `Current` | All DMS repositories come from `duxlabs` (`home:duxlabs-dev` on OBS). |
+| ⚪ Info | `No DMS package repositories` | No DMS package repositories are configured, so there is nothing to check. |
 
 ---
 
@@ -114,21 +124,41 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 |------------|-----------|-----------------|
 | niri | `niri` | `niri --version` |
 | Hyprland | `hyprland`, `Hyprland` | `Hyprland --version` (`Tag:` line) |
-| mangowc | `mangowc` | `mangowc --version` |
+| mangowc | `mango` | `mango -v` |
 | labwc | `labwc` | `labwc --version` |
 | Sway | `sway` | `sway --version` |
 | Miracle WM | `miracle-wm` | `miracle-wm --version` |
 | River | `river` | `river -version` |
 | Wayfire | `wayfire` | `wayfire --version` |
+| Scroll | `scroll` | `scroll --version` |
+| Aqueous | `aqueous` | `aqueous -version` |
+| Umbriel | `umbriel` | `umbriel --version` |
 
 ### Hyprland Lua config
 
-On Hyprland, doctor adds a **Hyprland Lua config** warning in two cases:
+On Hyprland, doctor warns when:
 
 - **Hyprland `<version>` is older than 0.55**: DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer. Upgrade Hyprland.
-- **Hyprland config is hyprland.conf**: `~/.config/hypr/hyprland.conf` exists and `hyprland.lua` doesn't. DMS keybinds, window rules and displays are read-only until you run `dms setup` to migrate to Lua. Hyprland 0.57 drops `.conf` support.
 
-When both files exist, `hyprland.lua` wins and there is no warning.
+- **Quickshell is older than 0.3.2 on Hyprland 0.57+**: Hyprland 0.57 sends workspace addresses instead of ids, and older Quickshell collapses named and special workspaces. Upgrade Quickshell.
+- **Deprecated config options**: `hyprctl -j deprecated-config` lists options your config still uses that Hyprland has deprecated. Update or remove them.
+
+### Mango config
+
+When the installed MangoWC is older than 0.18, doctor reports a **Mango config format** error, `Mango <version> is older than 0.18`: DMS writes Mango config with the snake_case keys of 0.18 and newer, which that release rejects. Upgrade MangoWC.
+
+In a MangoWC session, doctor also reads `~/.config/mango/config.conf` and every `.conf` file in `~/.config/mango/dms/`:
+
+- **Mango config keys** (error), `Unknown keys: <key> (<file>), ...`: doctor runs `mango -p` over `config.conf` and the files it sources, and lists every key MangoWC rejects. Pre-0.18 names are the usual cause; convert them with the `migrate-config-keys.sh` from [MangoWC's 0.18.0 release](https://github.com/DreamMaoMao/mangowc/releases/tag/0.18.0) or rename them by hand.
+- **Mango mouse binds** (warning), `Obsolete overview binds in <files>`: `mousebind=NONE,btn_left,toggleoverview,1` and `mousebind=NONE,btn_right,killclient,0` swallow normal clicks. Remove them.
+
+### aqueous-config
+
+Only checked in an Aqueous session. Warns when the `aqueous-config` helper is missing; keybind and display settings edits from the shell need it.
+
+### Background Blur
+
+Reports whether the compositor supports `ext-background-effect-v1`, which background blur needs. See [Compositor Blur](./compositor-blur.mdx).
 
 ### Active Compositor {/* #compositor */}
 
@@ -158,7 +188,11 @@ Used to prevent the system from idling or sleeping.
 
 ### ShortcutInhibitor
 
-Used to manage keyboard shortcuts, specific to the niri compositor.
+Used to manage keyboard shortcuts, specific to the niri and Aqueous compositors.
+
+### BackgroundBlur
+
+Background blur API support in Quickshell.
 
 ---
 
@@ -214,10 +248,6 @@ Detected terminals (in priority order): `ghostty`, `kitty`, `alacritty`, `foot`,
 
 DMS leverages matugen with custom color enrichment (dank16) to generate themes for itself and various applications, terminals, and IDEs.
 
-### dgop
-
-Required to use system monitoring widgets and applets (CPU, RAM, Disk, Network, Processes). See [dgop documentation](../dgop/) for more information.
-
 ### cava
 
 Required for audio visualization in media players.
@@ -256,29 +286,15 @@ DMS supports different network stacks, NetworkManager is recommended for the vas
 - systemd-networkd : Ethernet only, no Wifi or VPN support
 - iwd+systemd-networkd : Wifi and Ethernet supported, no VPN support
 
-### gp-saml-gui
-
-Required for GlobalProtect VPN connections that use SAML (browser-based) authentication. When a GlobalProtect connection requires SAML, DMS launches [gp-saml-gui](https://github.com/dlenski/gp-saml-gui) to open a browser window for login, then captures the resulting authentication cookie.
-
-### openconnect
-
-Required for GlobalProtect SAML VPN connections and for Fortinet VPN profiles.
-
-- For GlobalProtect SAML, [openconnect](https://gitlab.com/openconnect/openconnect) converts the prelogin cookie from `gp-saml-gui` into an authentication cookie that NetworkManager can use.
-- For Fortinet password profiles started from the DMS VPN widget, DMS uses `openconnect --authenticate` directly and passes the short-lived cookie to NetworkManager. If the VPN server certificate is not trusted, DMS displays its fingerprint for confirmation and saves the approved fingerprint only after the tunnel connects successfully.
-- For Fortinet profiles that authenticate against an external identity provider, DMS runs the browser login itself and hands the resulting session to NetworkManager.
-
-The NetworkManager openconnect plugin provides the tunnel in every one of those cases, and importing an `openfortivpn` config requires it too. It is packaged separately from the `openconnect` command; see [VPN](vpn#plugins-and-packages) for the package names, and [VPN](vpn) for connecting and importing profiles.
-
-:::note
-Native Fortinet authentication applies to profiles with `protocol=fortinet` using either `authtype=password` or `authtype=saml`. Password profiles do not handle OTP or MFA challenge forms; with browser login, any MFA your identity provider asks for happens in the browser. Other OpenConnect protocols are not included in this flow.
-:::
-
 ### danksearch
 
-Used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [DankSearch documentation](../dsearch/) for more information.
+Checks for the `dsearch` command. Used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
 
-### loginctl
+### dankcalendar
+
+Checks for the `dcal` command. See [Dux Calendar documentation](../dcal/) for more information.
+
+### logind
 
 Available on systems using `systemd` or `elogind`. Used for various session management features such as lock integration, lock before suspend, etc.
 
@@ -292,12 +308,12 @@ Adds fingerprint authentication support to the lock screen.
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `settings.json` | `~/.config/DankMaterialShell/` | Main settings |
-| `clsettings.json` | `~/.config/DankMaterialShell/` | Clipboard settings |
-| `plugin_settings.json` | `~/.config/DankMaterialShell/` | Plugin configuration |
-| `session.json` | `~/.local/state/DankMaterialShell/` | Session state |
-| `dms-colors.json` | `~/.cache/DankMaterialShell/` | Cached color scheme |
-| `config.d/*.json` | `~/.config/DankMaterialShell/` | Drop-in settings (optional) |
+| `settings.json` | `~/.config/dms/` | Main settings |
+| `clsettings.json` | `~/.config/dms/` | Clipboard settings |
+| `plugin_settings.json` | `~/.config/dms/` | Plugin configuration |
+| `session.json` | `~/.local/state/dms/` | Session state |
+| `dms-colors.json` | `~/.cache/dms/` | Cached color scheme |
+| `config.d/*.json` | `~/.config/dms/` | Drop-in settings (optional) |
 
 ---
 
@@ -323,7 +339,7 @@ systemctl --user status graphical-session.target
 
 Compositors with native systemd session integration (niri) activate the target themselves. Others need a compositor-specific session target that pulls it in, started from the compositor config.
 
-On Hyprland, `hyprland-session.target` must exist and Hyprland must start it. Hyprland 0.57 and newer ship this unit in `/usr/lib/systemd/user/` (or `/usr/local/lib/systemd/user/`); when it's there, `dankinstall` and `dms setup` use it and remove their own copy from `~/.config/systemd/user/`. On older Hyprland they write the unit below. A hand-written unit is left alone either way:
+On Hyprland, `hyprland-session.target` must exist and Hyprland must start it. Hyprland 0.57 and newer ship this unit in `/usr/lib/systemd/user/` (or `/usr/local/lib/systemd/user/`); when it's there, `duxinstall` and `dms setup` use it and remove their own copy from `~/.config/systemd/user/`. On older Hyprland they write the unit below. A hand-written unit is left alone either way:
 
 ```ini title="~/.config/systemd/user/hyprland-session.target"
 [Unit]
@@ -353,9 +369,21 @@ systemctl --user status graphical-session.target dms
 
 See [Installation](installation#compositor-specific-systemd-setup) for the equivalent setup on Sway, MangoWC, and Miracle WM.
 
+### xdg-desktop-portal
+
+Warns with `Settings portal unreachable` when the settings portal does not answer. Chromium, Electron and libadwaita apps then cannot follow light/dark mode. The portal is D-Bus activated and needs `graphical-session.target`; without systemd, or on a compositor that never starts that target, start the portal backend and `xdg-desktop-portal` at session start.
+
 ### greetd
 
-Required for the Dank Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+
+Doctor also warns when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua (`Greeter session`), and on Arch when a retired `greetd-dms-greeter` package is still installed (`Greeter package`). Switch to the `dux-greeter` package and rerun `dms-greeter install`.
+
+---
+
+## Fonts
+
+Checks that the `Normal Font`, `Monospace Font`, and `Display Font` set in DMS are installed. Custom fonts are looked up in the fontconfig cache: `Fontconfig Tools` warns when `fc-list` is missing, and `Fontconfig Cache` errors when the cache is empty or unreadable. Run `fc-cache -fv` to rebuild it.
 
 ---
 

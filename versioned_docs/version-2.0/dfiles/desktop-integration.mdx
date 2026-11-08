@@ -56,7 +56,7 @@ Apps that draw their own dialogs are unchanged. The dialog is a standalone windo
 
 Nothing is switched on by install. The packages ship `dfiles.portal` and its activation file, but the choice of backend is per user, in `~/.config/xdg-desktop-portal/<desktop>-portals.conf`. Two ways to flip it:
 
-- **Settings → General → Use Dank Files for open and save dialogs**
+- **Settings → General → Use Dux Files for open and save dialogs**
 - `dfiles portal install`
 
 Both write the per-user files when the packaged ones are missing, put `dfiles` first in the `org.freedesktop.impl.portal.FileChooser` key (keeping the previous backend as the fallback and every other line as it was), and record what changed so **Restore** or `dfiles portal uninstall` puts it back. `dfiles portal status` shows each part.
@@ -86,7 +86,7 @@ window-rule {
 
 ### Packaging and Nix
 
-Packagers install `dfiles.portal` under `share/xdg-desktop-portal/portals/` and the service file under `share/dbus-1/services/` with the binary path substituted, and do not ship a `portals.conf` that prefers it. On NixOS and home-manager, `programs.dank-files.portal.enable` registers the backend and `portal.preferred` writes the preference. See [NixOS Installation](nixos-flake).
+Packagers install `dfiles.portal` under `share/xdg-desktop-portal/portals/` and the service file under `share/dbus-1/services/` with the binary path substituted, and do not ship a `portals.conf` that prefers it. On NixOS and home-manager, `programs.dux-files.portal.enable` registers the backend and `portal.preferred` writes the preference. See [NixOS Installation](nixos-flake).
 
 The Flatpak cannot register the backend: Flatpak exports no `share/xdg-desktop-portal` files.
 

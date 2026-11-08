@@ -1,0 +1,179 @@
+---
+title: Dmenu Mode
+description: dmenu-compatible picker backed by the DMS app launcher, for scripts and window manager keybinds
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ███╗   ███╗███████╗███╗   ██╗██╗   ██╗
+██╔══██╗████╗ ████║██╔════╝████╗  ██║██║   ██║
+██║  ██║██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
+██║  ██║██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
+██████╔╝██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
+╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ `}
+  hideTitle={true}
+/>
+
+The `dms dmenu` command reads newline-separated items from stdin, shows them in the DMS launcher, and prints whatever gets picked to stdout. It's a drop-in replacement for `dmenu`, with some extra functionality inspired by `rofi`'s dmenu mode.
+
+> Matching is always case-insensitive, but `dmenu`'s `-i` flag is still accepted for script compatibility.
+
+## Quick Start
+
+```bash
+# Pick from a list
+printf '%s\n' opt1 opt2 opt3 | dms dmenu -p "Pick one:"
+
+# Free-text prompt with no item list
+dms dmenu --prompt-only -p "Rename to:"
+
+# Use it from a keybind to run a command picker
+dms dmenu --input ~/.local/share/commands.txt -p "Run:"
+```
+
+Exit codes: `0` on accept, `1` if the user cancelled (or stdin was empty), `2` if the shell was unreachable.
+
+## Options
+
+> Every long-form flag also accepts rofi's single-dash spelling
+
+### Prompt & Input
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--prompt` | `-p` | Prompt label (default: `dmenu`) |
+| `--placeholder` | | Input placeholder text |
+| `--lines` | `-l` | Max visible result rows (spotlight launcher only) |
+| `--prompt-only` | | Skip the piped item list for a plain free-text prompt |
+| `--mesg` | | Extra message line shown alongside the list |
+| `--input` | | Read items from this file instead of stdin |
+| `--sep` | | Input item separator (default: newline) |
+
+### Matching & Selection
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--select` | | Pre-select the first row matching this string (with `--dump`, filters instead) |
+| `--active` | `-a` | Mark rows active by index, e.g. `1,3,7:11,-3:` |
+| `--urgent` | `-u`| Mark rows urgent by index (same syntax as `--active`) |
+| `--only-match` | | Reject free text; only a listed item may be returned. Also blocks Escape/click-outside, forcing a real pick |
+| `--no-custom` | | Reject free text; only a listed item may be returned. Unlike `--only-match`, Escape/cancel still works |
+| `--multi-select` | | Allow selecting multiple rows; each prints on its own line on accept |
+| `--markup-rows` | | Render each row's text as rich markup |
+| `--case-insensitive` | `-i` | No effect -- included only for parity with `dmenu`, matching is always case-insensitive |
+
+The index syntax used by `--active`/`--urgent` takes comma-separated indices and ranges: `1,3` for single rows, `7:11` for a range, and `-3:` for "from the third-to-last row onward" (an empty side of `:` means "to the start/end").
+
+### Security
+| Flag | Description |
+|------|-------------|
+| `--password` | Mask typed input (cosmetic only, not a security boundary) |
+| `--disable-history` | Don't add this session's search query to the launcher's persistent history |
+
+> **NOTE**: `--password` does not automatically disable history. If handling sensitive data such as a password, it is advised you use *both* flags, as well as display text for each entry which differs from the passed value.
+
+### Reading stdin
+
+| Flag | Description |
+|------|-------------|
+| `--sync` | Read all input to EOF before showing the picker (default: stream as items arrive) |
+| `--no-run-if-empty` | If stdin is empty, exit `1` immediately with no UI shown |
+
+### Output Format
+
+Use `--format` to control what gets printed on accept. Default is `s`.
+
+| Value | Prints |
+|-------|--------|
+| `s` | The row's text (default) |
+| `i` | 0-based row index |
+| `d` | 1-based row index |
+| `q` | Shell-quoted text |
+| `p` | Text with markup tags stripped |
+| `f` | The typed filter text |
+| `F` | Shell-quoted filter text |
+
+```bash
+# Print the 1-based index of the chosen row instead of its text
+printf '%s\n' a b c | dms dmenu --format d
+```
+
+### Dump Mode
+
+| Flag | Description |
+|------|-------------|
+| `--dump` | Apply `--select` against the item list and print the result immediately; no UI is ever shown |
+| `--print-info` | Also print an accepted row's `info` metadata on a second line |
+
+`--dump` is useful for testing a filter non-interactively, or for scripts that want dmenu's `--select` filtering behavior without paying for a picker UI at all.
+
+```bash
+# Print every item containing "firefox", no UI shown
+printf '%s\n' firefox chromium firefox-dev | dms dmenu --dump --select firefox
+```
+
+### Custom Keybinds
+
+| Flag | Description |
+|------|-------------|
+| `--keybind` | Bind a custom accept key (repeatable): `N=keyspec`, e.g. `--keybind 1=ctrl+e` (`N` is 1-19) |
+
+Accepting via a custom keybind exits with code `9 + N` (10-28) instead of `0`, so a wrapper script can tell which key was used to accept.
+
+```bash
+# ctrl+e accepts with exit code 10; a plain Enter still exits 0
+printf '%s\n' a b c | dms dmenu --keybind 1=ctrl+e
+echo "exit: $?"
+```
+
+### Appearance
+
+| Flag | Description |
+|------|-------------|
+| `--view` | Override the result view for this invocation: `list`, `grid`, or `tile` (default: `list`) |
+| `--size` | Override the popup size preset: `1`-`4`, matching the Appearance settings size buttons (default: the shell's own launcher size setting) |
+| `--icon` | Show a Material Symbols icon next to the prompt badge (default: none) |
+
+## Per-Row Metadata Protocol
+
+Each line of input can carry metadata past a NUL byte (`\0`), as `key\x1fvalue` fields separated by the unit separator (`\x1f`). Everything before the NUL is the row's displayed/matched text.
+
+```
+Firefox\0icon\x1ffirefox\x1fmeta\x1fweb browser
+```
+
+Supported fields:
+
+| Field | Type | Effect |
+|-------|------|--------|
+| `icon` | string | Icon shown next to the row |
+| `display` | string | Alternate text to render (matching still uses the row's main text) |
+| `meta` | string | Secondary/subtitle text shown under the row |
+| `info` | string | Opaque value printed after the row's text when accepted, if `--print-info` is set |
+| `nonselectable` | bool | Row can't be picked (e.g. a section divider) |
+| `urgent` | bool | Marks the row urgent, same styling as `--urgent` |
+| `active` | bool | Marks the row active, same styling as `--active` |
+| `permanent` | bool | Row stays pinned regardless of filtering |
+| `header` | bool | Renders as a section header rather than a selectable row |
+
+Boolean fields accept `1`/`true`/`yes` for true and `0`/`false`/`no`/empty for false.
+
+## Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| `0` | Accepted normally (or via Enter) |
+| `1` | Cancelled, or stdin was empty with `--no-run-if-empty` |
+| `2` | The DMS shell was unreachable |
+| `10`-`28` | Accepted via custom keybind `N` (code is `9 + N`) |
+
+## Command Reference
+
+```bash
+dms dmenu [flags]
+```
+
+**Global Flags**:
+- `-c, --config <path>`: Specify custom DMS config directory
+- `-h, --help`: Show help

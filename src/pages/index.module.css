@@ -813,7 +813,13 @@
   margin: 0 auto;
 }
 
+/* The sponsor strip leads the section; the showcase above already spaces it. */
+.support > :first-child {
+  margin-top: 0;
+}
+
 .supportCard {
+  margin-top: 4rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -884,6 +890,10 @@
 @media (max-width: 768px) {
   .support {
     padding: 1rem 1.5rem 3rem;
+  }
+
+  .supportCard {
+    margin-top: 3rem;
   }
 
   .supportActions {
