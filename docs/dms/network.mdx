@@ -1,6 +1,6 @@
 ---
 title: Network
-description: Edit NetworkManager connection profiles, including 802.1X and eduroam, VLANs, bonds, bridges, cellular, DSL, and the hotspot
+description: Edit NetworkManager connection profiles, including 802.1X and eduroam, cellular, and the hotspot
 sidebar_position: 4.9
 ---
 
@@ -28,14 +28,29 @@ their existing pages. See [System Diagnostics](cli-doctor#network) for what each
 
 **Settings → Network → Connections** lists every saved profile, grouped into Ethernet, Wi-Fi,
 VPN, Cellular, and Other, with active profiles first and the date each one was last used.
-Selecting a profile opens the editor. Each profile can be connected or disconnected from the
-list, **Duplicate** copies it under a new name, **Forget** deletes it, and **Add** starts a
-new one.
+Selecting a profile opens the editor, as does **Edit** in a Wi-Fi network's menu or an Ethernet
+adapter's options in Control Center. Each profile can be connected or disconnected from the
+list, **Duplicate** copies it under a new name, and **Forget** deletes it. **Connect** is hidden
+when the computer has no adapter for the profile's type.
+
+**Add** asks for a **Type** (Ethernet, Wi-Fi, Cellular, or VPN) and, for VPN, the kind of VPN
+(WireGuard, OpenVPN, or any installed plugin). Changing the type keeps the name. **Import**
+adds a VPN profile from a file, as in [VPN](vpn#importing-a-profile). The hotspot has its own
+group. Its row opens the [Hotspot](#hotspot) page when an adapter can host a hotspot, and
+otherwise stays listed with **Forget**.
+
+Every network page ends with an **All connections** card that opens this list, and the Network
+overview has **Manage all connections** at the bottom.
 
 A profile that NetworkManager keeps only in memory is marked as temporary and gets a
 **Save permanently** button that writes it to disk. Saving any other edit leaves the profile
 where it is already stored. When polkit doesn't allow the user to change a profile, the editor
 opens read-only, and Duplicate and Forget are hidden.
+
+Profiles the editor doesn't cover, such as VLAN, bond, bridge, DSL (PPPoE), CDMA, and team, stay
+in the list marked **Not supported in Settings**. The button on their row opens them in
+`nm-connection-editor`, or in `nmtui` in a terminal when only that is installed, and is hidden
+when neither is.
 
 ## IPv4 and IPv6
 
@@ -96,59 +111,6 @@ Certificates are stored in the profile, and NetworkManager keeps its own copy ne
 moving or deleting the downloaded file doesn't break the connection. Passpoint-only files are
 not supported.
 
-## VLAN
-
-A VLAN needs a parent interface and a VLAN ID from 0 to 4094. The interface name defaults to
-`<parent>.<id>`.
-
-| Flag | Effect |
-| --- | --- |
-| Reorder headers | The kernel adds the VLAN tag only when a frame reaches the parent device, and removes it before the VLAN interface sees it. On by default. |
-| GVRP | Registers the VLAN with switches that support the GARP VLAN Registration Protocol. |
-| Loose binding | The VLAN stays up when its parent's link goes down. |
-| MVRP | Registers the VLAN through the Multiple VLAN Registration Protocol, GVRP's successor. |
-
-## Bond
-
-| Mode | Behavior |
-| --- | --- |
-| `balance-rr` | Sends packets across the ports in turn. The default. |
-| `active-backup` | Uses one port and fails over to another. Needs no switch support. |
-| `balance-xor` | Picks the port from a hash of the source and destination addresses. |
-| `broadcast` | Sends every packet on every port. |
-| `802.3ad` | LACP link aggregation. The switch must be configured for it. |
-| `balance-tlb` | Balances outgoing traffic by load and receives on one port. |
-| `balance-alb` | Like `balance-tlb`, and also balances incoming IPv4 traffic. |
-
-**Link monitoring** is MII or ARP. MII watches the link state every interval (100 ms when
-left empty), and **Link up delay** and **Link down delay** wait that many milliseconds before
-using or dropping a port. ARP sends probes to the **ARP targets** every interval instead, and
-NetworkManager doesn't allow it with `balance-tlb` or `balance-alb`. Any other bonding option
-goes into **Options** under its kernel name, for example `xmit_hash_policy`.
-
-## Bridge
-
-| Setting | Range | Default |
-| --- | --- | --- |
-| Priority | 0 to 65535 | 32768 |
-| Forward delay | 2 to 30 seconds | 15 |
-| Hello time | 1 to 10 seconds | 2 |
-| Max age | 6 to 40 seconds | 20 |
-| Aging time | 0 to 1000000 seconds | 300 |
-
-All but Aging time belong to STP and can only be changed while STP is on, which it is by
-default. An empty field uses the default.
-
-A bridge port has its own **Priority** (0 to 63, default 32), **Path cost** (1 to 65535,
-default 100), and **Hairpin mode**, which lets frames leave through the port they arrived on.
-
-## Ports
-
-Once a bond or bridge is saved, its page lists its ports. **Add** creates a port for a free
-Ethernet device and **Delete** removes one, both immediately, without saving the bond or
-bridge. **Configure** opens the port's own profile. Bonds and bridges created in DMS bring
-their ports up when they connect (`connection.autoconnect-slaves`).
-
 ## Mobile broadband
 
 | Setting | Notes |
@@ -158,15 +120,7 @@ their ports up when they connect (`connection.autoconnect-slaves`).
 | PIN | Left empty on a saved profile, the stored PIN is kept. |
 | Network ID | The operator's MCC-MNC code, which locks the profile to that operator. |
 
-CDMA profiles have the number, username, and password instead of the GSM settings, and can be
-edited but not created.
-
-## DSL
-
-DSL profiles (PPPoE) take a username and password, and optionally a parent Ethernet device
-(**Auto** by default) and the service name (empty unless the ISP gives one). Turning off
-**Save password** asks for it on connect. The collapsed **PPP** section is shared with mobile
-broadband:
+The collapsed **PPP** section holds the options below:
 
 | Option | Effect |
 | --- | --- |
@@ -184,11 +138,16 @@ sections.
 
 ## Hotspot
 
-The hotspot card in **Settings → Network → Wi-Fi** sets the band, then a channel for that
-band, and the **IP address** of the shared network as an address with a prefix from `/8` to
-`/30` (empty uses NetworkManager's default, `10.42.x.1/24`). While a hotspot with a password is running, **Show QR
-Code** displays a code that joins it, and [`dms qr wifi`](cli-qr#wifi-qr-codes) works for it
-as well.
+**Settings → Network → Hotspot** appears when an adapter can host a hotspot. The
+page sets the name, **Security** (Open, WPA2, or
+WPA3), the band, then a channel for that band, **Hidden**, and the **IP address**
+of the shared network as an address with a prefix from `/8` to `/30` (empty uses
+NetworkManager's default, `10.42.x.1/24`). WPA3 only starts when the adapter supports it. The
+page owns the hotspot profile. While a
+hotspot with a password is running, **Show QR Code** displays a code that joins it, and
+[`dms qr wifi`](cli-qr#wifi-qr-codes) works for it as well.
+
+**Settings → Network → Wi-Fi** is hidden when the computer has no Wi-Fi adapter.
 
 ## Connectivity checking and captive portals
 

@@ -25,8 +25,8 @@ VPN requires the NetworkManager backend. `iwd` and `systemd-networkd` have no VP
 See [System Diagnostics](cli-doctor#network) for what each backend covers.
 :::
 
-Profiles are listed in two places, both of which can connect, disconnect, import, and
-delete:
+Profiles are listed in two places, both of which can connect, disconnect, edit, import, and
+delete. In both, selecting a profile connects it and **Edit** opens it in the editor:
 
 - **Control Center → VPN**
 - **Settings → Network → VPN**
@@ -121,7 +121,7 @@ which is where the rest of your saved connection secrets already live.
 
 ## Editing profiles
 
-Selecting a profile in **Settings → Network → VPN** opens it in the
+**Edit** on a profile in **Settings → Network → VPN** opens it in the
 [connection editor](network). **Add** on that page creates a WireGuard profile, or a profile
 for any installed VPN plugin.
 
@@ -140,7 +140,7 @@ since the file contains the private key. Plugin profiles are exported through
 
 OpenVPN and OpenConnect profiles get a form for their common settings. Every plugin profile
 also has **Options** and **Secrets** tables with the plugin's raw `vpn.data` and `vpn.secrets`
-keys, for anything a form doesn't cover. When `nm-connection-editor` is installed, the General
+keys, for anything a form doesn't cover. When `nm-connection-editor` or `nmtui` is installed, the General
 section of any saved profile has a button that opens it there.
 
 ## Fortinet gateways
@@ -223,8 +223,11 @@ flag:
 | Hostname | `--hostname` |
 | Subnet routes | `--advertise-routes` |
 
-The exit node list marks the node Tailscale suggests as recommended. **Accounts** switches
-between logged-in accounts, adds one, or logs out.
+**Status** turns Tailscale on or off, with the tailnet name below it. The exit node list marks the node Tailscale suggests as recommended.
+
+The accounts are listed on the page. Click one to switch to it. **Log out** is on the current account, and **Remove** forgets an account on this device. **Login** appears when the current account's session expired.
+
+**Add account** opens its own page with a **Server** field. Leave it empty for tailscale.com, or enter the address of a self-hosted server such as headscale. It asks for the administrator password once. Leaving the page before the login finishes switches back to the previous account.
 
 Changing settings requires the user to be Tailscale's operator. Until they are, the page shows
 the command that grants it (`sudo tailscale set --operator=$USER`) and, when `pkexec` is
