@@ -657,12 +657,14 @@ dms ipc call widget reset weather
 
 These targets control various modal windows and overlays.
 
-### spotlight
+### launcher {/* #spotlight */}
 
 Application launcher modal with search capabilities.
 
+**Default keybind:** `Super + Space` (calls `spotlight toggle`)
+
 :::note
-`spotlight` and `launcher` are synonymous — both targets call the same launcher modal for backwards compatibility.
+`launcher` and `spotlight` are synonymous — both targets call the same launcher modal. `spotlight` is kept for backwards compatibility, and the default keybinds still use it, so existing binds keep working.
 
 When **Launcher → Default action → Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
 :::
@@ -679,11 +681,14 @@ When **Launcher → Default action → Opens** is set to Island, these calls ope
 
 **Examples:**
 ```bash
+dms ipc call launcher toggle
+dms ipc call launcher openQuery browser
+dms ipc call launcher toggleQuery "!"
+dms ipc call launcher openWith apps
+dms ipc call launcher toggleWith files
+
+# Same calls through the spotlight alias
 dms ipc call spotlight toggle
-dms ipc call spotlight openQuery browser
-dms ipc call spotlight toggleQuery "!"
-dms ipc call spotlight openWith apps
-dms ipc call spotlight toggleWith files
 ```
 
 ### spotlight-bar
