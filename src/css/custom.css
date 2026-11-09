@@ -1154,6 +1154,12 @@ figcaption {
   color: var(--md-sys-color-on-primary-container);
 }
 
+.navbar-version-tag {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
 .table-of-contents__link--active {
   color: var(--ifm-color-primary);
   border-left-color: var(--ifm-color-primary);
