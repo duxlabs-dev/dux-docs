@@ -2594,6 +2594,215 @@ Then move it to the top of the provider list. Changing the first provider refres
 2. **Leave out what you do not have** - `null` or a missing field is filled from the next provider, a made-up value wins over them
 3. **Answer in time** - Keep your own request timeouts well under 15 seconds, and under 3 if you want to fill in for a provider above you
 
+## Island Live Activities
+
+A plugin can show live activities in the island: a recording indicator, a timer, a download, a build result. An activity is a short preview that takes over the island for a few seconds, a small persistent slot beside the island's own content, or both. Scripts publish the same data through the [`islandActivity` IPC target](./keybinds-ipc.mdx#islandactivity).
+
+:::note[Requires DMS 2.2]
+
+Island live activities are new in 2.2. Declare `"requires_dms": ">=2.2.0"`.
+
+:::
+
+### How Users See Them
+
+- Each island and dot has a **Live activities** card (Settings → Bar with the island selected, or Settings → Dot). **Plugin activities** turns them on or off for that island, and **Hidden activity sources** hides chosen sources.
+- **Preview duration** is used when your payload has no `duration`. **Persistent activity slots** sets how many slots show (default 3, at most 6; 0 hides them).
+- Once your source has published, **Activity sources** lets the user override its position, its collapsed look and what a click opens.
+- Colours and severity only show when the user turns on **Activity colors**. High contrast ignores them.
+- The registry lives in the shell and clears on restart.
+
+### Publishing
+
+`IslandActivityService` is in `qs.Services`. Use your plugin id as the source, so unloading the plugin removes your activities, faces and queued actions. Publishing again with the same source and id replaces the activity.
+
+```qml
+import QtQuick
+import qs.Common
+import qs.Services
+import qs.Modules.Plugins
+
+PluginComponent {
+    id: root
+
+    function startRecording() {
+        IslandActivityService.publish(root.pluginId, "recording", {
+            title: I18n.tr("Recording"),
+            icon: "fiber_manual_record",
+            iconAnimation: "pulse",
+            persistent: true,
+            category: "status",
+            priorityClass: "urgent",
+            preemption: "higher",
+            duration: 3000,
+            actions: [{id: "stop", label: I18n.tr("Stop"), role: "destructive"}]
+        })
+    }
+
+    Connections {
+        target: IslandActivityService
+        function onActionInvoked(source, id, action) {
+            if (source !== root.pluginId || action !== "stop")
+                return
+            IslandActivityService.remove(root.pluginId, "recording")
+        }
+    }
+}
+```
+
+| Function | |
+|----------|---|
+| `publish(source, id, payload)` | Returns `false` for an invalid payload or a full registry (64 activities). |
+| `remove(source, id)` | Ends one activity. Persistent activities stay until you remove them. |
+| `clearSource(source)` | Ends every activity and drops the faces registered for the source. |
+| `open(source, id)` | Expands the activity on every island showing it. |
+| `actionInvoked(source, id, action)` | Signal for button presses and `clickAction`. Filter by your source. |
+| `islandAvailable`, `activitiesAvailable`, `notificationsAvailable` | Whether any island is mounted, shows activities, or shows notifications. |
+| `islandAvailableOn(screenName)`, `canPresentSource(source, screen, barId)` | Check one output before routing content there. `barId` is optional. `canPresentSource` also checks the user's hidden sources. |
+
+Sources, ids and action ids are 1–64 letters, digits, `_`, `.`, `:` or `-`.
+
+### Payload Fields
+
+Unknown fields are ignored. Text is plain text, cut to the length shown.
+
+| Field | |
+|-------|---|
+| `title` | Required, 256 characters. |
+| `subtitle`, `body` | 512 and 4096 characters. `body` shows only when expanded. |
+| `value`, `status` | A large value (128 characters) and a line under it (256), such as remaining time or a phase. Expanded only. |
+| `icon` | Material Symbols name. Defaults to `notifications`. |
+| `image` | Artwork path or URL. Replaces the icon. |
+| `iconAnimation` | `wiggle`, `pulse` or `spin`. The island's **Activity icon animation** setting can override it, and reduced motion stops it. |
+| `progress` | A fraction from 0 to 1, shown as a bar when expanded. |
+| `duration` | Preview time in milliseconds, up to 3600000. Left out, the island's **Preview duration** applies. `0` makes a persistent slot with no preview. |
+| `persistent` | Keep a slot after the preview until you remove it. |
+| `ttl` | Lifetime of a persistent activity in milliseconds, up to 86400000 (24 hours). Publishing again renews it. IPC publishers get 8 hours when it is left out. |
+| `announce` | `false` skips the preview. Updating a persistent activity is silent unless you pass `true`, which replays the preview. |
+| `compact` | `label` (default) or `icon`, for the collapsed preview. |
+| `stableCompact` | `icon` (default) or `label`, for the persistent slot. |
+| `position` | `left`, `center` or `right` slot. Defaults to `right` for `category: "status"`, otherwise `left`. |
+| `category` | `status` places the slot on the right by default. |
+| `dismissible` | Adds a Dismiss button that removes the activity. The close button only collapses it. |
+| `actions` | Up to 3 buttons: `{id, label, role, enabled, pending}`. `role` is `primary`, `secondary` (default) or `destructive`. Disabled or pending actions cannot be invoked. Labels are cut to 64 characters. |
+| `clickActivity` | What clicking the slot opens: `live` (default, the expanded activity), `home`, `media`, `clipboard`, `controlcenter`, `notificationcenter`, `weather`, `launcher` or `wallpaper`. Press and hold always expands the activity. |
+| `clickAction` | Send this action id through `actionInvoked` instead. |
+| `clickTarget`, `clickMethod` | Run `dms ipc call <clickTarget> <clickMethod>` instead, with no arguments. |
+| `priorityClass` | `low`, `normal` (default), `high`, `urgent` or `critical`: -20, 0, 60, 90 or 100. |
+| `priority` | A number from -100 to 100 that overrides `priorityClass`. Higher previews go first, and when there are more persistent activities than slots, the higher ones keep theirs. |
+| `preemption` | `higher` interrupts a preview of strictly lower priority, which resumes afterwards with its remaining time. Defaults to `never`. |
+| `screen`, `barId` | Show only on this output or bar. Left out, every island shows it. |
+| `severity` | `error` or `warning`. Colours the island when you set no `background`. |
+| `background`, `expandedBackground`, `foreground` | Colour role names, see below. |
+
+Each island queues previews on its own. While a notification, an OSD or a built-in sheet is showing, every preview waits, `critical` ones included, and the highest priority shows first once the island is free. Publishing again with a different `screen` or `barId` moves the activity off islands that no longer match.
+
+### Colours
+
+Colours are Material 3 role names from the user's theme, never hex values. Anything outside this list, `#RRGGBB` included, is ignored and the island keeps its own colours.
+
+| Role | Fill | Text and icons |
+|------|------|----------------|
+| `hostSurface`, `cardSurface`, `chipSurface`, `chipSurfaceNested` | That surface | `surfaceText` |
+| `primaryContainer`, `secondaryContainer`, `tertiaryContainer` | That container | Its on-colour, e.g. `onPrimaryContainer` |
+| `error` | `errorContainer` | `onErrorContainer` |
+| `warning` | `chipSurface` tinted with `warning` | `surfaceText` |
+
+`background` colours the island while your activity is the one showing, and `expandedBackground` overrides it when expanded. Text on it uses the role's on-colour. `foreground` takes a role too and means that role's on-colour, so `"foreground": "primaryContainer"` draws text and icons in `onPrimaryContainer`. It also colours your persistent slot.
+
+### Custom Faces
+
+The built-in face shows the icon, title, subtitle, value, status, body, progress and actions. To draw your own, register QML Components for your source:
+
+```qml
+IslandActivityService.registerRenderer(pluginId, compactFace, expandedFace)
+IslandActivityService.registerIconRenderer(pluginId, iconFace)
+```
+
+- `registerRenderer(source, compact, expanded, icon)` sets the collapsed face, the expanded face and optionally the icon. Pass `null` for any of them to keep the built-in one.
+- `registerIconRenderer(source, icon)` replaces only the icon and keeps the rest of the built-in face. `image` in a payload still wins over it.
+- One registration covers every activity of the source; read `activity.id` to tell them apart. At most 64 sources can register.
+- The compact face shows in previews, and in slots only with `stableCompact: "label"`. Icon-only previews and slots (`compact: "icon"`, the slot default, or a vertical bar) use the icon face.
+- Faces are in-process plugin code. IPC publishers can only send data.
+
+Each face is created in a Loader. Read these through `parent`:
+
+| Property | |
+|----------|---|
+| `activity` | The normalized payload, with `source` and `id`. |
+| `expanded`, `stable` | Whether the face is expanded, or sits in a persistent slot. |
+| `foreground` | Text colour to use. |
+| `live` | The face is visible. Stop timers and work when it is false. |
+| `motionEnabled`, `motionDuration`, `motionIntensity` | Run animation only while `motionEnabled`. It is false when hidden, with reduced motion, with animations off, or with the island's icon animation set to **None**. |
+| `iconSize` | Icon faces only. |
+| `contentInset`, `contentSpacing`, `actionHeight`, `close()` | Face Loaders only. `close()` collapses the island without ending the activity. |
+
+Give the root an `implicitWidth` (and an `implicitHeight` for expanded faces) to size the island. An expanded face can define `focusFace()` to pick its first focused control and return `true`. `IslandActivityLayout` from `qs.Widgets` is the column the built-in face uses, with themed spacing and an `availableWidth`.
+
+```qml
+Component {
+    id: recordingIcon
+
+    Item {
+        id: icon
+        readonly property var context: parent
+
+        Rectangle {
+            anchors.centerIn: parent
+            width: icon.context.iconSize * 0.5
+            height: width
+            radius: width / 2
+            color: Theme.error
+
+            SequentialAnimation on opacity {
+                running: icon.context.motionEnabled
+                loops: Animation.Infinite
+                NumberAnimation { to: 0.6; duration: icon.context.motionDuration }
+                NumberAnimation { to: 1; duration: icon.context.motionDuration }
+            }
+        }
+    }
+}
+
+Component.onCompleted: IslandActivityService.registerIconRenderer(pluginId, recordingIcon)
+```
+
+### Notification Interceptors
+
+A plugin can turn matching notifications into activities or change how they show in the island:
+
+```qml
+NotificationInterceptorService.register(
+    pluginId,
+    "calendar-events",
+    40,
+    info => info.desktopEntry === "org.example.Calendar",
+    info => ({
+        consume: true,
+        activity: {
+            title: info.summary,
+            subtitle: info.body,
+            icon: "event",
+            iconAnimation: "wiggle"
+        }
+    }),
+    I18n.tr("Calendar events"),
+    I18n.tr("Show calendar events as island activities")
+)
+```
+
+`register(source, id, priority, matcher, handler, label, description)` takes a priority from -100 to 100; leave it out to use 0. Both callbacks get `{appName, desktopEntry, summary, body}`. Interceptors run from the highest priority down, and the first one whose matcher passes and whose handler returns an object wins. Errors are swallowed. Each interceptor appears in the island's **Live activities** card, where the user can turn it off.
+
+The handler can return:
+
+| Key | |
+|-----|---|
+| `consume: true` with `activity` | Replace the notification with an activity from your source. It only replaces a popup that would have shown: under Do Not Disturb or with popups off, and when no island matching the activity's `screen` and `barId` can show your source, the notification is handled as usual. Once the activity is published the notification is dismissed and is not kept in the notification center. Give `activity.id` to update or remove it later through your source; without one it gets a generated id. |
+| `presentation` | `{icon, title}` for the notification's island face. `title` can use `{summary}`, `{body}` and `{appName}`. The notification itself is unchanged. |
+| `policy` | Booleans `drop`, `disablePopup`, `hideFromCenter`, `disableHistory` and `bypassDnd`, and `urgency` (`low`, `normal` or `critical`). |
+
+Interceptors only see notifications that none of the user's notification rules match. Any matching rule wins, even one with the default action. Users can get the `presentation` effect themselves with a rule's **Island summary** option, which sets the icon and title template for matching notifications in the island.
+
 ## Composite Plugins
 
 A single plugin can provide **multiple surfaces at once** — for example a background daemon, a bar widget, and a desktop widget. Each surface has a different lifecycle (the daemon is instantiated once; bar and desktop widgets are instantiated per bar/placement, per screen), so each one is its own QML file.

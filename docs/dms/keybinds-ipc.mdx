@@ -518,6 +518,49 @@ dms ipc call island centerOn DP-1
 dms ipc call island openInstance controlcenter DP-1 default
 ```
 
+### islandActivity
+
+Live activities from scripts and other programs: progress, timers, recording state and similar status shown in the island. Activities are data only (no QML, no shell commands) and use the same payload as [plugin activities](./plugin-development.mdx#island-live-activities). An island or dot shows them when **Live activities → Plugin activities** is on in its settings (Settings → Bar with the island selected, or Settings → Dot). The registry lives in the shell and clears on restart.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `publish <source> <id> <json>` | Add or replace an activity. Pass `-` instead of the JSON to read it from stdin | source, id, JSON payload or `-` |
+| `remove <source> <id>` | End one activity | source, id |
+| `clear <source>` | End every activity from a source | source |
+| `open <source> <id>` | Expand the activity on every island showing it | source, id |
+| `invoke <source> <id> <action>` | Trigger one of the activity's actions, as if its button was clicked | source, id, action id |
+| `pollActions <source>` | JSON array of `{source, id, action}` events since the last poll, then clears them (the shell keeps the last 64) | source |
+| `list` | JSON array of every published activity | - |
+| `status` | JSON array with one entry per island: screen, bar id, whether activities and notifications are enabled, the showing preview and the queue | - |
+| `availability` | JSON with `islandPresent`, `activitiesAvailable`, `notificationsAvailable` and per-screen hosts | - |
+| `availabilityOn <screen>` | The same for one output | screen name |
+| `canPresentSource <source> <screen>` | `true` if an island on that screen shows activities and does not hide this source | source, screen name |
+
+Sources and ids are 1–64 letters, digits, `_`, `.`, `:` or `-`. Replies are `ISLAND_ACTIVITY_PUBLISHED`, `ISLAND_ACTIVITY_REMOVED`, `ISLAND_ACTIVITY_CLEARED`, `ISLAND_ACTIVITY_OPENED`, `ISLAND_ACTIVITY_ACTION_INVOKED`, or `ISLAND_ACTIVITY_INVALID`, `ISLAND_ACTIVITY_NOT_FOUND` and `ISLAND_ACTIVITY_ACTION_INVALID` on failure. An invalid payload, a payload over 64 KiB or a full registry (64 activities) returns `ISLAND_ACTIVITY_INVALID`.
+
+**Payload:** see [payload fields](./plugin-development.mdx#payload-fields). A `persistent` activity published over IPC without a `ttl` expires after 8 hours; publish it again to renew it, and `remove` it when your program is done. `invoke` only accepts an action that exists on the activity and is enabled and not pending. External programs read button presses with `pollActions`.
+
+**Reading from stdin:** with `-` as the last argument, `dms ipc call islandActivity publish <source> <id> -` reads one complete JSON payload from stdin, up to 64 KiB. It is one publish, not a stream of updates. Run without piped input, it stops with `no JSON payload piped to stdin`.
+
+**Examples:**
+```bash
+dms ipc call islandActivity availability
+dms ipc call islandActivity canPresentSource recorder DP-1
+dms ipc call islandActivity publish recorder status '{"title":"Recording","icon":"fiber_manual_record","persistent":true,"category":"status","actions":[{"id":"stop","label":"Stop","role":"destructive"}]}'
+dms ipc call islandActivity publish recorder status '{"title":"Recording","subtitle":"00:12","icon":"fiber_manual_record","persistent":true,"category":"status"}'
+dms ipc call islandActivity publish build result '{"title":"Build failed","severity":"error","priorityClass":"high","duration":4000}'
+dms ipc call islandActivity open recorder status
+dms ipc call islandActivity pollActions recorder
+dms ipc call islandActivity remove recorder status
+dms ipc call islandActivity clear recorder
+dms ipc call islandActivity list
+dms ipc call islandActivity status
+
+# Payload from stdin
+printf '%s\n' '{"title":"Build complete","icon":"check_circle","duration":3000}' | dms ipc call islandActivity publish build result -
+dms ipc call islandActivity publish calendar event - < event.json
+```
+
 ### dot
 
 Dot: a bar instance using the Dot layout (Settings → Bar → Layout → Dot). It rests as a small draggable dot anywhere on the display, floats over every other bar, and opens the same activities as the island. Fades and shrinks when idle; hover or drag to wake it. Commands target the focused screen unless you use an `*On` variant, and answer only for dots — an [`island`](#island) never responds here.

@@ -74,6 +74,7 @@ const sidebars: SidebarsConfig = {
             'dms/custom-themes',
           ],
         },
+        'dms/island',
         'dms/keybinds-ipc',
         'dms/keyboard-navigation',
         {

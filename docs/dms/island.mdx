@@ -1,0 +1,46 @@
+---
+title: Island
+description: Arrange the island's widgets, live activities, workspace switches, the dash tab it opens and its motion
+sidebar_position: 6
+---
+
+# Island
+
+The island replaces a bar's center section, or floats on its own as the dot. Its settings live under **Settings → Bar**: the widget list on **Widgets**, the rest in the island cards on **General** and **Appearance**.
+
+## Island widgets
+
+**Settings → Bar → Widgets → Island widgets** works like the left and right sections: drag to reorder, switch a widget off to hide it, click it for its settings, or remove it with **X**. The clock stays and anchors the list. Widgets above it sit before the clock in the island, the rest after it.
+
+**Add widget** offers two groups:
+
+- **Island activities**: media or launcher, weather, control center or battery, volume, brightness, notifications, privacy, workspaces, keyboard layout and tray, built for the island and opening its own views. A removed one comes back from here.
+- **Bar widgets**: regular bar widgets and plugin widgets, drawn without their bar pill. Widgets the island already rebuilds, like the clock or battery, are not offered twice.
+
+The dot has no room for bar widgets, so it only offers island activities.
+
+## Dashboard tab
+
+**Dashboard opens to** in the island's behavior card picks the dash tab that clicking or hovering the home face expands into. It starts at Overview.
+
+## Workspace switches
+
+**Workspace Switch** in the island's notifications card shows workspace changes in the island instead of the workspace OSD. It travels as a live activity from the `workspace` source, so it needs **Plugin activities** on and `workspace` left out of **Hidden activity sources**. Without them the toggle is unavailable and the regular OSD shows.
+
+## Live activities
+
+Plugins and `dms ipc call islandActivity` publish activities into the island. The **Live activities** card turns plugin activities on or off, sets how long a new one previews and how many stay as slots, and hides sources. **Activity sources** overrides where one source sits, what it shows collapsed and what a click opens. See [Island Live Activities](./plugin-development#island-live-activities) and the [`islandActivity` IPC target](./keybinds-ipc#islandactivity).
+
+A notification rule's **Island summary** option shows matching notifications in the island with an icon and a title template, while the notification center keeps the original. The template takes `{summary}`, `{body}` and `{appName}`.
+
+## Motion
+
+**Spring** in the island's motion card picks how the island expands and collapses:
+
+| Preset | Stiffness | Damping | Feel |
+| --- | --- | --- | --- |
+| Smooth (default) | 600 | 49 | Settles without overshoot |
+| Balanced | 560 | 37 | A slight overshoot |
+| Playful | 640 | 30 | A visible bounce |
+
+The stiffness, damping and mass sliders below it fine-tune the spring; values that match no preset leave none selected. Reset returns to Smooth. **Reduce motion** turns the spring off.
