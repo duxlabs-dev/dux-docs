@@ -63,6 +63,8 @@ DMS CLI is the backend and command-line interface for DMS. Its version should ma
 
 Quickshell is the framework DMS is built on. DMS runs it from **dux-qt-base**, Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). The `dms` binary loads the library itself and runs the UI in its own process, so no `quickshell` package or `qs` binary is needed. This check reports the version of that runtime; `dms doctor --verbose` also shows which library file is in use.
 
+**Not installed** means `dms` found no `libdux-qt-base.so.0`, and `dms run` will not start without it. Running the UI on upstream Quickshell with `dms run --qs-child` is unsupported, and the doctor still reports dux-qt-base as missing. See [UI runtime](./cli-process-management#ui-runtime).
+
 `dms` uses the first runtime it finds:
 
 1. A copy embedded in the `dms` binary (only in source builds made with `make QTBASE=1`)
@@ -141,7 +143,6 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 | River | `river` | `river -version` |
 | Wayfire | `wayfire` | `wayfire --version` |
 | Scroll | `scroll` | `scroll --version` |
-| Aqueous | `aqueous` | `aqueous -version` |
 | Umbriel | `umbriel` | `umbriel --version` |
 
 ### Hyprland Lua config

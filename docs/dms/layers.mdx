@@ -14,6 +14,8 @@ DMS uses Wayland's layer shell protocol for all UI components: the bar, popups, 
 
 Layer shell surfaces differ from regular windows—they're UI overlays positioned at specific layers (background, bottom, top, overlay). By assigning unique namespaces to each component type, you can apply blur selectively (e.g., "blur all modals" or "blur all popouts") without affecting other elements.
 
+Popouts, tooltips, context menus, toasts, OSDs and notification popups each render on one persistent surface per screen. Those surfaces stay mapped as a single transparent pixel while nothing is shown, so they always appear in `niri msg layers` and `hyprctl layers`, and a rule on their namespace applies to everything that component type shows on that screen. Modals keep one surface per modal, so rules like blocking the clipboard history from screencasts keep targeting just that modal.
+
 ## Component Namespaces
 
 Every component namespace starts with `dms:` followed by the rest of the namespace, DMS uses the following namespaces for layer shell components:
@@ -41,22 +43,17 @@ Full-screen modal dialogs including settings, power menu, and clipboard history.
 | Fallback namespace   | `dms:modal`                     |
 
 ### Popouts
-Popup panels triggered by bar widgets, such as the control center, app drawer, and notification center. These are anchored to the bar and slide out accordingly.
+Popup panels triggered by bar, island and dock widgets, such as the control center, app drawer, dash, notification center, battery, VPN, process list, tray menus and plugin popouts. These are anchored to the bar and slide out accordingly.
 
 **Connected popouts** in **Settings → Bar → Appearance → Surface** opens a bar's popouts joined to the bar with no gap, on the bar's own background. It needs the bar on the `top` layer, so it is hidden while the Frame is on and unavailable for a bar that uses the overlay layer or has a fully opaque background.
 
-| Component                 | Namespace                        |
-| ------------------------- | -------------------------------- |
-| App drawer                | `dms:app-launcher`               |
-| Control center            | `dms:control-center`             |
-| Battery                   | `dms:battery`                    |
-| Vpn                       | `dms:vpn`                        |
-| Dash                      | `dms:dash`                       |
-| Notification center       | `dms:notification-center-popout` |
-| Process list              | `dms:process-list-popout`        |
-| Fallback namespace        | `dms:popout`                     |
-| Plugin                    | `dms:plugins:<namespace>`        |
-| Fallback plugin namespace | `dms:plugins:plugin`             |
+All popouts share one surface per screen:
+
+| Component    | Namespace    |
+| ------------ | ------------ |
+| Every popout | `dms:popout` |
+
+The per-popout namespaces from earlier releases (`dms:control-center`, `dms:dash`, `dms:app-launcher`, `dms:battery`, `dms:vpn`, `dms:notification-center-popout`, `dms:process-list-popout`, `dms:tray-menu`, `dms:plugins:<namespace>`) no longer exist as layer surfaces. Rules written for them should match `dms:popout` instead.
 
 
 ### Desktop widgets
@@ -75,21 +72,24 @@ Namespaces for other component that aren't modals or popouts.
 | Component          | Namespace                | Use                                                                                                                                  |
 | ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
 | Bar                | `dms:bar`                | The main panel, which can be positioned at the top, bottom, left, or right edge of the screen.                                       |
+| Island             | `dms:dankisland`         | The island bar, and the dot or free-floating island.                                                                                 |
+| Island dismiss     | `dms:dankisland:dismiss` | Input-only surface that collapses an expanded island on an outside click.                                                            |
+| Frame              | `dms:frame`              | The frame around the screen in frame mode. In connected frame mode it also draws the bar and dock chrome.                            |
 | Dock               | `dms:dock`               | Application dock (optional component).                                                                                               |
 | Workspace overview | `dms:workspace-overview` | The workspace overview for hyprland.                                                                                                 |
 | Notification popup | `dms:notification-popup` | Toast notifications displayed when applications request user attention.                                                              |
 | OSD                | `dms:osd`                | On-screen displays for volume and brightness indicators. These appear briefly to show status information and fade out automatically. |
 | Slideout           | `dms:slideout`           | Sliding panels from screen edges (optional component).                                                                               |
-| Tooltip            | `dms:tooltip`            | Tooltip shown for example when hovering an app on the dock.                                                                          |
-| Dock context menu  | `dock-context-menu`      | Context menu when right clicking an app on the dock.                                                                                 |
+| Tooltip            | `dms:tooltip`            | Tooltips, for example when hovering an app on the dock or a bar widget.                                                              |
+| Context menu       | `dms:context-menu`       | Right-click menus of bar widgets, the desktop, notifications, the clipboard and the launcher.                                        |
+| Dock context menu  | `dms:dock-context-menu`  | Context menu when right clicking an app on the dock.                                                                                 |
 | Toast              | `dms:toast`              | Toast appearing on top middle of the screen.                                                                                         |
-| Tray menu window   | `dms:tray-menu-window`   | Menu appearing when right clicking an applet in the system tray.                                                                     |
  
 > **Tip:** If you are unsure about a component's namespace, you can check it using your compositor's tools:
 > - **Hyprland**: Run `hyprctl layers` with the layer opened
 > - **Niri**: Run `niri msg layers` to list active layer surfaces
 
-If you're a plugin dev, see the [plugin development](./plugin-development.mdx#widget-with-popout) page to add your layer namespace.
+Plugin popouts render on the shared `dms:popout` surface; see the [plugin development](./plugin-development.mdx#widget-with-popout) page.
 
 ## Floating Windows
 
@@ -170,7 +170,7 @@ Add these layer rules to enable blur for DMS components (only needed below Hyprl
 
 ```lua
 hl.layer_rule({
-    match = { namespace = "dms:control-center" },
+    match = { namespace = "dms:popout" },
     animation = "slide right"
 })
 
@@ -211,7 +211,7 @@ hl.layer_rule({
 
 -- Shell components (bar, popouts, etc.)
 hl.layer_rule({
-    match = { namespace = "dms:(bar|tooltip|toast|dock-context-menu|tray-menu-window|control-center|notification-center-popout|dash|system-update|process-list-popout|battery|popout|app-launcher)" },
+    match = { namespace = "dms:(bar|dock|frame|dankisland|tooltip|toast|context-menu|dock-context-menu|popout|notification-popup|osd)" },
     blur = true,
     ignore_alpha = 0
 })
@@ -246,6 +246,13 @@ Niri uses a different configuration format with `layer-rule` blocks. Each rule c
 // Block out sensitive components from screencasts
 layer-rule {
     match namespace="^dms:clipboard$"
+
+    block-out-from "screencast"
+}
+
+// Keep notification popups out of screencasts
+layer-rule {
+    match namespace="^dms:notification-popup$"
 
     block-out-from "screencast"
 }

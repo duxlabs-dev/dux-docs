@@ -369,7 +369,7 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 
 **DMS won't start:**
 - Check logs: `journalctl --user -u dms -n 50` (systemd) or run `dms run` in a terminal
-- Verify the dux-qt-base runtime is found (the **Quickshell** row): `dms doctor`
+- Verify the dux-qt-base runtime is found: `dms doctor` (see the [Quickshell](./cli-doctor#quickshell) row)
 - Kill stuck processes: `dms kill`
 
 **Settings not applying:**

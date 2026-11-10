@@ -24,7 +24,7 @@ Dux Files installs a single `dfiles` binary with the Quickshell UI embedded, a d
 
 ## Requirements
 
-- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian and Ubuntu, from the [Dux repository](../repo/#core-framework). Distribution packages pull it in automatically, and `dfiles` refuses to start without it. No `quickshell` package or `qs` executable is needed
+- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian, Ubuntu and PikaOS, from the [Dux repository](../repo/#core-framework). Distribution packages pull it in automatically, and `dfiles run` refuses to start without it. No `quickshell` package or `qs` executable is needed. `dfiles run --qs-child` (or `DFILES_QS_CHILD=1`) runs the UI on upstream `qs` instead, which is unsupported
 - Go 1.27+ (build from source only; the binary is pure Go with no cgo)
 
 Optional, picked up from `PATH` when the daemon starts:
@@ -232,6 +232,8 @@ This installs:
 - Portal file chooser backend files, not preferred until you ask (see [Open and save dialogs](desktop-integration#open-and-save-dialogs))
 
 Override the prefix with `PREFIX=/usr sudo make install`. `make install-systemd` adds the user unit, `make uninstall-dbus` removes the activation file.
+
+The build uses the installed dux-qt-base. To build it from the `dux-qt-base` submodule and embed it in `dfiles` instead, run `make QTBASE=1`.
 
 ### Release Binary
 

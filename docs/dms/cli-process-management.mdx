@@ -59,7 +59,7 @@ dms run [flags]
 **Flags**:
 - `-d, --daemon`: Run in daemon mode (detached from terminal)
 - `--session`: Session managed mode (for use with systemd or other session managers)
-- `--qs-child`: Run the UI on upstream `qs` from `PATH` instead of dux-qt-base (same as `DMS_QS_CHILD=1`). Unsupported, for debugging only: fork-only features degrade to warnings
+- `--qs-child`: Run the UI on upstream Quickshell (`qs` on `PATH`) instead of dux-qt-base. Same as setting `DMS_QS_CHILD=1`. Unsupported, see [UI runtime](#ui-runtime)
 - `-h, --help`: Show help
 
 **Examples**:
@@ -79,6 +79,23 @@ dms run --session
 - **Normal mode**: For testing, debugging, or manual shell management
 - **Daemon mode**: For background operation without terminal attachment
 - **Session mode**: When managing DMS via systemd user units or similar session managers
+
+### UI runtime
+
+The UI runs on dux-qt-base, the DMS build of Quickshell, loaded as a library inside the `dms` process. `dms run` looks for `libdux-qt-base.so.0` embedded in `dms`, next to the `dms` binary, then in the system library directories. If none is found, it refuses to start and asks you to install the `dux-qt-base` package.
+
+`--qs-child` runs upstream Quickshell as the UI process instead. This is unsupported: features that need dux-qt-base are missing or degrade to warnings. Use it only when dux-qt-base is not packaged for your system.
+
+```bash
+dms run --qs-child
+```
+
+In a systemd unit, add the flag to `ExecStart` or set the variable:
+
+```ini
+[Service]
+Environment=DMS_QS_CHILD=1
+```
 
 ### `dms restart`
 
@@ -240,10 +257,12 @@ When you run `dms run`, the backend server starts first, creates the IPC socket,
 
 ### DMS Won't Start
 
-Check that the dux-qt-base runtime is found. Without `libdux-qt-base.so.0`, `dms run` refuses to start. Distro packages pull it in automatically; if it is missing, install the `dux-qt-base` package (`libdux-qt-base0` on Debian, Ubuntu and openSUSE):
+Check that the dux-qt-base runtime is found. Without `libdux-qt-base.so.0`, `dms run` refuses to start:
 ```bash
 dms doctor
 ```
+
+If **Quickshell** shows **Not installed**, install the `dux-qt-base` package (`libdux-qt-base0` on Debian, Ubuntu and openSUSE). Distro packages pull it in automatically. See [UI runtime](#ui-runtime).
 
 Check for conflicting processes:
 ```bash

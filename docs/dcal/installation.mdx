@@ -24,7 +24,7 @@ Dux Calendar installs a single `dcal` binary, the Quickshell UI config, and a de
 
 ## Requirements
 
-- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian and Ubuntu, from the [Dux repository](../repo/#core-framework). Distribution packages pull it in automatically, and `dcal` refuses to start without it. No `quickshell` package or `qs` executable is needed
+- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian, Ubuntu and PikaOS, from the [Dux repository](../repo/#core-framework). Distribution packages pull it in automatically, and `dcal run` refuses to start without it. No `quickshell` package or `qs` executable is needed. `dcal run --qs-child` (or `DANKCAL_QS_CHILD=1`) runs the UI on upstream `qs` instead, which is unsupported
 - Qt 6 declarative, including `Qt.labs.platform` for the tray icon
 - Go 1.25+ (build from source only; the packaged binary is pure Go with no CGO)
 

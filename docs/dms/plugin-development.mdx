@@ -297,16 +297,9 @@ The widget pulls `customColor` from `pluginData`, which automatically syncs with
 
 Add a popout menu that opens when you click the widget.
 
-To add a layer namespace to your plugin, just add `layerNamespacePlugin: "<namespace for your plugin>"` like below.
-Make sure to only type what you want the namespace to be and to not add a prefix (like `dms:` or `dms:plugins:` for example) since the shell will add `dms:plugins:` as a prefix automatically.
-For example, the namespace of the plugin below will be `dms:plugins:emoji-launcher`.
+Plugin popouts render on the shared per-screen popout surface, whose layer namespace is `dms:popout` (see [Layer Namespaces](./layers.mdx#popouts)). Compositor layer rules for your popout go on that namespace.
 
-While you don't have to add a layer namespace to you widget (it will fallback to `dms:plugins:plugin`), it's prefered to do so.
-:::warning
-
-As of right now, layer namespace only work with popout widget plugins.
-
-:::
+`layerNamespacePlugin: "<name>"` still identifies your popout to the shell: it is reported as `dms:plugins:<name>` by `dms ipc call screenshot getSurfaces` and used for connected frame chrome. Type only the name, without a `dms:` or `dms:plugins:` prefix; it falls back to `plugin`. It does not create a compositor-visible layer namespace.
 ```qml
 PluginComponent {
     id: root

@@ -50,7 +50,7 @@ Dux Files can serve `org.freedesktop.impl.portal.FileChooser`, the backend side 
 - GTK 4 apps under `GDK_DEBUG=portals`
 - Qt apps under `QT_QPA_PLATFORMTHEME=xdgdesktopportal`
 
-Apps that draw their own dialogs are unchanged. The dialog is a standalone window: Qt 6.12 and Quickshell do not import xdg-foreign handles, so it is not attached to the calling window and the `modal` option is ignored.
+Apps that draw their own dialogs are unchanged. When the calling app hands the portal its window, the dialog becomes a child of it: through xdg-foreign-v2 on Wayland, as a transient dialog on X11. In a Wayland session, apps running under XWayland pass an X11 window, which a Wayland client cannot use, so their dialog is a standalone window. The `modal` option is ignored.
 
 ### Turning it on
 
@@ -75,7 +75,7 @@ The portal activates the backend on demand through the activation file. Without 
 
 ### Floating the dialog
 
-The chooser window carries the calling app's id and the title the app asked for. A niri rule that floats it:
+niri and sway open child windows floating, so a dialog with a Wayland parent floats with no rule. The chooser shares the `dev.duxlabs.files` app id with the file manager and takes the title the calling app asked for, so a dialog without a parent can only be told apart by its title. A niri rule that floats those:
 
 ```kdl
 window-rule {
