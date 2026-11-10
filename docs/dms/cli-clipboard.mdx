@@ -54,7 +54,9 @@ dms cl search "password"
 
 ### `dms cl copy [text]`
 
-Copies data to the Wayland clipboard. Forks a background process by default to serve paste requests.
+Copies data to the Wayland clipboard. When the DMS server is running, it holds the clipboard and records the entry in history, so the command exits straight away. When the server isn't running, the clipboard manager is disabled (`--disable`), or the data is over `maxEntrySize`, a background `dms` process holds the clipboard instead, until something else is copied.
+
+A copy held by the server leaves the clipboard on `dms restart`, but stays in history.
 
 ```bash
 dms cl copy [text] [flags]
@@ -65,8 +67,8 @@ dms cl copy [text] [flags]
 
 **Flags**:
 - `-d, --download`: Download URL to clipboard (see below)
-- `-f, --foreground`: Stay in foreground instead of forking
-- `-o, --paste-once`: Exit after first paste (one-shot copy)
+- `-f, --foreground`: Hold the clipboard in this process until something else is copied
+- `-o, --paste-once`: Hold the clipboard in this process and exit after the first paste
 - `-t, --type <mime>`: MIME type (default: `text/plain;charset=utf-8`)
 
 **Examples**:
