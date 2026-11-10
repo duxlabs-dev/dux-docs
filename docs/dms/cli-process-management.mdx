@@ -15,13 +15,13 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-The `dms` command provides process management functionality for running, restarting, and killing Dux Modular Shell instances. These commands manage the DMS backend server, which in turn spawns and manages the Quickshell UI process as a child, configuring IPC communication between them.
+The `dms` command provides process management functionality for running, restarting, and killing Dux Modular Shell instances. These commands manage the DMS backend server, which in turn spawns and manages the UI process as a child, configuring IPC communication between them.
 
 ## Overview
 
-Dux Modular Shell consists of a Go backend server that spawns and manages a Quickshell UI frontend as a child process. The process management commands orchestrate both components:
+Dux Modular Shell consists of a Go backend server that spawns and manages the UI frontend as a child process. The UI runs on **dux-qt-base** (`libdux-qt-base.so.0`), Dux's fork of Quickshell built as a shared library, which `dms` loads into its own UI process (`dms qs`). No `quickshell` package or separate `qs` process is involved. The process management commands orchestrate both components:
 - Launching the DMS backend server
-- Spawning Quickshell as a child process with DMS configuration
+- Spawning the UI as a child process with DMS configuration
 - Configuring IPC communication between backend and frontend
 - Restarting both processes to apply configuration changes
 - Managing daemon and session modes
@@ -50,7 +50,7 @@ dms kill
 
 ### `dms run`
 
-Launch Dux Modular Shell by starting the backend server and Quickshell UI process, then establishing IPC communication between them via Unix socket.
+Launch Dux Modular Shell by starting the backend server and UI process, then establishing IPC communication between them via Unix socket.
 
 ```bash
 dms run [flags]
@@ -59,6 +59,7 @@ dms run [flags]
 **Flags**:
 - `-d, --daemon`: Run in daemon mode (detached from terminal)
 - `--session`: Session managed mode (for use with systemd or other session managers)
+- `--qs-child`: Run the UI on upstream `qs` from `PATH` instead of dux-qt-base (same as `DMS_QS_CHILD=1`). Unsupported, for debugging only: fork-only features degrade to warnings
 - `-h, --help`: Show help
 
 **Examples**:
@@ -81,7 +82,7 @@ dms run --session
 
 ### `dms restart`
 
-Kill the DMS backend server (along with its Quickshell child process) and relaunch them. This is useful when you've made configuration changes and want to reload the shell.
+Kill the DMS backend server (along with its UI child process) and relaunch them. This is useful when you've made configuration changes and want to reload the shell.
 
 ```bash
 dms restart [flags]
@@ -98,9 +99,9 @@ dms restart
 ```
 
 **What it does**:
-1. Terminates the DMS backend server (which also kills its Quickshell child process)
-2. Cleans up any orphaned Quickshell processes if needed
-3. Relaunches the backend, which spawns a fresh Quickshell instance
+1. Terminates the DMS backend server (which also kills its UI child process)
+2. Cleans up any orphaned UI processes if needed
+3. Relaunches the backend, which spawns a fresh UI instance
 4. Re-establishes IPC communication
 
 **Use cases**:
@@ -111,7 +112,7 @@ dms restart
 
 ### `dms kill`
 
-Kill the DMS backend server (which automatically terminates its Quickshell child process) without restarting.
+Kill the DMS backend server (which automatically terminates its UI child process) without restarting.
 
 ```bash
 dms kill [flags]
@@ -219,7 +220,7 @@ systemctl --user enable --now dms
 DMS operates as a multi-process system with IPC communication:
 
 1. **DMS Backend Server** (Go): Handles IPC requests, plugin management, system monitoring, and CLI operations
-2. **Quickshell UI Process**: Qt/QML runtime that renders the shell interface (spawned as a child of the backend)
+2. **UI Process** (`dms qs`): the Qt/QML runtime from dux-qt-base, loaded by the `dms` binary itself, that renders the shell interface (spawned as a child of the backend)
 3. **IPC Layer**: Unix socket communication between backend and frontend
 4. **Plugins**: Optional processes that extend functionality
 
@@ -229,24 +230,24 @@ compositor (hyprland/sway/niri/etc)
 └── dms backend server
     ├── IPC server (Unix socket)
     ├── Plugin manager
-    └── quickshell (child process)
+    └── dms qs (UI child process, dux-qt-base)
         └── Connects to parent via IPC
 ```
 
-When you run `dms run`, the backend server starts first, creates the IPC socket, then spawns Quickshell as a child process. Quickshell connects back to its parent via the Unix socket for commands like brightness control, keybind displays, and other system operations.
+When you run `dms run`, the backend server starts first, creates the IPC socket, then spawns the UI as a child process. The UI connects back to its parent via the Unix socket for commands like brightness control, keybind displays, and other system operations.
 
 ## Troubleshooting
 
 ### DMS Won't Start
 
-Check if Quickshell is installed:
+Check that the dux-qt-base runtime is found. Without `libdux-qt-base.so.0`, `dms run` refuses to start. Distro packages pull it in automatically; if it is missing, install the `dux-qt-base` package (`libdux-qt-base0` on Debian, Ubuntu and openSUSE):
 ```bash
-which qs
+dms doctor
 ```
 
 Check for conflicting processes:
 ```bash
-ps aux | grep quickshell
+ps aux | grep 'dms'
 ```
 
 Try running without daemon mode to see errors:
@@ -291,7 +292,7 @@ DMS is designed to work with Wayland compositors. The process management command
 - **Niri**: Use `spawn-at-startup` for autostart
 - **mangowm**: Use `exec_once` for autostart
 
-When the compositor exits, the DMS backend should automatically terminate, which will also kill its Quickshell child process. If processes don't clean up properly, run `dms kill` before logging out.
+When the compositor exits, the DMS backend should automatically terminate, which will also kill its UI child process. If processes don't clean up properly, run `dms kill` before logging out.
 
 ## Command Reference
 
@@ -300,7 +301,7 @@ dms [command] [flags]
 ```
 
 **Process Management Commands**:
-- `run [flags]`: Launch Quickshell with DMS configuration
+- `run [flags]`: Launch the DMS backend and UI
 - `restart`: Kill and relaunch DMS
 - `kill`: Kill all running DMS instances
 

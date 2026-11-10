@@ -57,28 +57,38 @@ DMS only supports Wayland, this check verifies you're not using X11.
 
 ### DMS CLI
 
-DMS CLI is the backend and command-line interface for DMS. Its version should match the version of the quickshell configuration.
+DMS CLI is the backend and command-line interface for DMS. Its version should match the version of the shell configuration.
 
 ### Quickshell
 
-Quickshell is the framework used by DMS. Older versions of quickshell may result in a reduced feature set within DMS.
+Quickshell is the framework DMS is built on. DMS runs it from **dux-qt-base**, Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). The `dms` binary loads the library itself and runs the UI in its own process, so no `quickshell` package or `qs` binary is needed. This check reports the version of that runtime; `dms doctor --verbose` also shows which library file is in use.
 
-If the version check fails, run:
+`dms` uses the first runtime it finds:
+
+1. A copy embedded in the `dms` binary (only in source builds made with `make QTBASE=1`)
+2. `libdux-qt-base.so.0` next to the `dms` binary, or in `../lib/dms/` relative to it
+3. The system library path (`LD_LIBRARY_PATH`, directories listed in `ld.so.conf`, then `/usr/lib` and `/lib` or their `lib64` variants)
+
+Distro packages of DMS pull in dux-qt-base automatically. If the check fails, make sure the package is installed: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on Debian, Ubuntu and openSUSE. To see the error, run:
 
 ```bash
-qs --version
+dms qs --version
 ```
 
-An `undefined symbol` error mentioning `Qt_6_PRIVATE_API` means Quickshell was built against different Qt libraries than those currently installed. Rebuild or reinstall Quickshell against the current Qt version, then restart DMS.
-
-On Arch Linux, rebuild the AUR package:
+An `undefined symbol` error mentioning `Qt_6_PRIVATE_API` means dux-qt-base was built against different Qt libraries than those currently installed. dux-qt-base uses private Qt APIs, so it must be rebuilt after every Qt update. The Dux repositories rebuild their packages automatically: update your system so the rebuilt package is installed, then restart DMS. On Arch Linux, rebuild the AUR package you installed (`dux-qt-base` or `dux-qt-base-git`):
 
 ```bash
-paru -S quickshell-git --rebuild
+paru -S dux-qt-base --rebuild
 # or
-yay -S quickshell-git --rebuild
+yay -S dux-qt-base --rebuild
 systemctl --user restart dms.service
 ```
+
+If you built dux-qt-base yourself, rebuild and reinstall it against the current Qt.
+
+:::note
+A separately installed `quickshell` or `quickshell-git` package is not used by DMS and does not conflict with dux-qt-base, which installs no `qs` binary. Keep it if another shell needs it, or uninstall it.
+:::
 
 ### DMS Shell
 
@@ -139,7 +149,7 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 On Hyprland, doctor warns when:
 
 - **Hyprland Lua config**, `Hyprland <version> is older than 0.55`: DMS writes Hyprland config in Lua only, which needs Hyprland 0.55 or newer. Upgrade Hyprland.
-- **Quickshell for Hyprland 0.57**, `Quickshell <version> is older than 0.3.2`: Hyprland 0.57 sends workspace addresses instead of ids, and older Quickshell collapses named and special workspaces. Upgrade Quickshell.
+- **Quickshell for Hyprland 0.57**, `Quickshell <version> is older than 0.3.2`: Hyprland 0.57 sends workspace addresses instead of ids, and an older Quickshell runtime collapses named and special workspaces. Update the dux-qt-base package.
 - **Hyprland deprecated config**, `<n> deprecated option(s)`: `hyprctl -j deprecated-config` lists options your config still uses that Hyprland has deprecated. Update or remove them.
 
 ### niri config {/* #niri-config */}
@@ -169,11 +179,7 @@ The compositor running in this session.
 
 ## Quickshell Features
 
-These features depend on how Quickshell was built. Using `quickshell-git` provides full feature support, some builds of quickshell can exclude features based on compilation options.
-
-:::note
-All of these features currently require `quickshell-git` or `quickshell` from the Dux repositories (Fedora, Debian, Ubuntu, OpenSUSE)
-:::
+These features depend on how the Quickshell runtime was built. The dux-qt-base packages from the Dux repositories include all of them. A feature reported as unavailable usually means an outdated or custom-built runtime.
 
 ### Polkit
 

@@ -63,7 +63,7 @@ imports = [
 programs.dux-files.enable = true;
 ```
 
-Rebuild and Dux Files is installed with Quickshell, the desktop entry and the `FileManager1` activation file.
+Rebuild and Dux Files is installed with its dux-qt-base runtime built in, the desktop entry and the `FileManager1` activation file. No separate Quickshell package is needed.
 
 ## Configuration Options
 
@@ -74,8 +74,10 @@ programs.dux-files = {
   # Use a custom package (optional)
   package = inputs.dfiles.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
-  # The Quickshell package that runs the UI
-  quickshell.package = pkgs.quickshell;
+  # Override the dux-qt-base runtime library built into the package (optional,
+  # needs a dux-qt-base flake input; defaults to pkgs.dux-qt-base from an
+  # overlay, else the one Dux Files pins)
+  duxQtBase.package = inputs.dux-qt-base.packages.${pkgs.stdenv.hostPlatform.system}.dux-qt-base;
 
   # Keep a resident instance so windows open fast and the portal answers at once
   systemd = {
@@ -95,14 +97,16 @@ programs.dux-files = {
 
 | Option | Default | What it does |
 | --- | --- | --- |
-| `package` | the flake package | The Dux Files package to install |
-| `quickshell.package` | `pkgs.quickshell` | Quickshell used to launch the UI |
+| `package` | the flake package, built against `duxQtBase.package` | The Dux Files package to install |
+| `duxQtBase.package` | `pkgs.dux-qt-base` if an overlay provides it, otherwise the flake's `dux-qt-base` input | The dux-qt-base library embedded in the default `package` to run the UI |
 | `systemd.enable` | `false` | Installs and enables the `dfiles` user service |
 | `systemd.target` | `graphical-session.target` | The target the service follows. The home-manager module defaults it to `wayland.systemd.target` |
 | `systemd.restartIfChanged` | `true` | Restart the service when the package changes (NixOS module) |
 | `portal.enable` | `false` | Adds the package to `xdg.portal.extraPortals` so the `dfiles` backend is registered |
 | `portal.preferred` | `false` | Writes `dfiles` into `xdg.portal.config.<desktop>."org.freedesktop.impl.portal.FileChooser"` |
 | `portal.desktop` | `"common"` | Which portal configuration gets the preference: a lowercased `XDG_CURRENT_DESKTOP` name, or `common` |
+
+The old `quickshell.package` option is removed; evaluation fails with a message pointing to `duxQtBase.package`.
 
 See [Open and save dialogs](desktop-integration#open-and-save-dialogs) for what the portal backend does and which apps use it.
 

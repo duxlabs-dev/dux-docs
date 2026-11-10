@@ -308,7 +308,7 @@ For source builds or [non-packaged](installation) distro installer setups:
 dms update
 ```
 
-For manually compiled dependencies (quickshell, niri, etc.), use the interactive TUI:
+For manually compiled dependencies (dux-qt-base, niri, etc.), use the interactive TUI:
 
 ```bash
 dms
@@ -369,7 +369,7 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 
 **DMS won't start:**
 - Check logs: `journalctl --user -u dms -n 50` (systemd) or run `dms run` in a terminal
-- Verify quickshell is installed: `which qs`
+- Verify the dux-qt-base runtime is found (the **Quickshell** row): `dms doctor`
 - Kill stuck processes: `dms kill`
 
 **Settings not applying:**

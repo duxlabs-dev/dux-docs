@@ -24,7 +24,7 @@ Dux Files installs a single `dfiles` binary with the Quickshell UI embedded, a d
 
 ## Requirements
 
-- [Quickshell](https://quickshell.org) (`qs`): `quickshell-git` or `quickshell` from the [Dux repository](../repo/)
+- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian and Ubuntu, from the [Dux repository](../repo/#core-framework). Distribution packages pull it in automatically, and `dfiles` refuses to start without it. No `quickshell` package or `qs` executable is needed
 - Go 1.27+ (build from source only; the binary is pure Go with no cgo)
 
 Optional, picked up from `PATH` when the daemon starts:
@@ -221,6 +221,8 @@ make
 sudo make install
 ```
 
+`make` uses the installed dux-qt-base library. `make QTBASE=1` instead builds it from the `dux-qt-base` submodule (needs CMake, Ninja and the Qt 6 development packages) and embeds it in `dfiles`.
+
 This installs:
 
 - `dfiles` binary to `/usr/local/bin` (UI embedded)
@@ -241,7 +243,7 @@ tar -xzf dfiles-linux-amd64.tar.gz
 sudo install -Dm755 dfiles-linux-amd64 /usr/local/bin/dfiles
 ```
 
-The binary alone gives you the app and the CLI. The desktop entry, D-Bus activation, polkit policy and portal files come from `make install` in a source checkout.
+The release binary does not embed dux-qt-base, so install the library first (see [Requirements](#requirements)). The binary alone gives you the app and the CLI. The desktop entry, D-Bus activation, polkit policy and portal files come from `make install` in a source checkout.
 
 ### NixOS and home-manager
 

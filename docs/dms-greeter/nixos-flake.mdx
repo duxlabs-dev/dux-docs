@@ -107,10 +107,14 @@ programs.dms-greeter = {
     path = "/tmp/dms-greeter.log";
   };
 
-  # Custom Quickshell Package
-  quickshell.package = pkgs.quickshell;
+  # Custom dux-qt-base runtime library, built into dms-greeter (optional,
+  # needs a dux-qt-base flake input; defaults to pkgs.dux-qt-base from an
+  # overlay, else the one dux-greeter pins)
+  duxQtBase.package = inputs.dux-qt-base.packages.${pkgs.stdenv.hostPlatform.system}.dux-qt-base;
 };
 ```
+
+The greeter no longer uses a Quickshell package. The old `quickshell.package` option is removed; evaluation fails with a message pointing to `duxQtBase.package`.
 
 ## Rebuilding
 

@@ -38,8 +38,28 @@ Dux Modular Shell is now available on more distributions than ever before!
 - [**Niri-git**](https://github.com/niri-wm/niri): Development build of niri
 
 ### Core Framework
-- [**Quickshell**](https://github.com/quickshell-mirror/quickshell): QtQuick-based Wayland desktop shell framework — on **Debian**, use the native package (see below); Dux Labs builds remain for other distros
-- [**Quickshell-git**](https://github.com/quickshell-mirror/quickshell): Development build of Quickshell (Dux Labs repositories)
+- [**dux-qt-base**](https://github.com/duxlabs-dev/dux-qt-base): Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). `dms`, `dfiles`, `dcal`, and `dms-greeter` load it and run their UI in their own process, so they no longer need a `quickshell` package or a `qs` executable
+- [**dux-qt-base-git**](https://github.com/duxlabs-dev/dux-qt-base): Development build of dux-qt-base
+
+The DMS, Dux Files, Dux Calendar, and Dux Greeter packages pull dux-qt-base in automatically, so you normally never install it by hand. Its package name depends on the distribution:
+
+| Distribution | Stable | Development |
+| --- | --- | --- |
+| Arch Linux (AUR) | `dux-qt-base` or `dux-qt-base-bin` | `dux-qt-base-git` |
+| Fedora / Enterprise Linux (COPR `duxlabs/dux-repo`) | `dux-qt-base` | `dux-qt-base-git` |
+| openSUSE (OBS `home:duxlabs-dev:dux-repo`) | `libdux-qt-base0` | `libdux-qt-base0-git` |
+| Debian (OBS `home:duxlabs-dev:dux-repo`) | `libdux-qt-base0` | `libdux-qt-base0-git` |
+| Ubuntu (PPA `ppa:duxlabs/dux-repo`) | `libdux-qt-base0` | `libdux-qt-base0-git` |
+| Void Linux | `dux-qt-base` | |
+| PikaOS | `libdux-qt-base0` (PikaOS repository) | |
+
+dux-qt-base installs no `qs` binary, desktop file, or QML files, so it does not conflict with `quickshell` or `quickshell-git`. If another shell still needs Quickshell, keep it; otherwise you can uninstall it. dux-qt-base uses private Qt APIs and must be rebuilt after Qt updates; the Dux Labs repositories rebuild it automatically.
+
+:::warning[Legacy AvengeMedia repositories]
+
+The legacy `avengemedia` repositories (COPR `avengemedia/*`, OBS `home:AvengeMedia:*`, `ppa:avengemedia/*`) are deprecated and do not carry dux-qt-base. Their `-git` packages are frozen at the last Quickshell-based build. Switch to the `duxlabs` repositories with [`dms migrate dux`](../dms/cli-migrate) to keep receiving updates.
+
+:::
 
 ### Utilities
 - [**dgop**](https://github.com/duxlabs-dev/dux-gop): Stateless CPU/GPU monitor system by Dux Labs
@@ -144,12 +164,13 @@ paru -S dux-shell-git dux-gop-git dux-search-git dux-calendar-git dux-greeter-gi
 | Dux Search | `dux-search-bin` (AUR) | `dux-search-git` (AUR) |
 | Dux Calendar | `dux-calendar-bin` (AUR) | `dux-calendar-git` (AUR) |
 | Dux Greeter | `dux-greeter-bin` (AUR) | `dux-greeter-git` (AUR) |
+| dux-qt-base | `dux-qt-base` or `dux-qt-base-bin` (AUR) | `dux-qt-base-git` (AUR) |
 
-`niri`, `quickshell`, and the other compositors are available from the official Arch repositories. See the [Arch & Derivatives](../dms/installation#arch--derivatives) installation guide for details.
+`niri` and the other compositors are available from the official Arch repositories. See the [Arch & Derivatives](../dms/installation#arch--derivatives) installation guide for details.
 
 ### Debian
 
-Stable **quickshell** should come from Debian (trixie-backports on Debian 13; main on testing/sid). The Dux Labs OBS `quickshell` package for Debian is **deprecated** and will be removed in the future — migrate with `sudo apt remove quickshell` then install the Debian package below. Dux Labs OBS remains for **niri**, **quickshell-git**, and other companions.
+The Dux Labs OBS repository provides **niri**, **libdux-qt-base0**, and other companions. Dux apps no longer need `quickshell`, so you do not need the Debian backports package for DMS; if you installed `quickshell` only for DMS, you can remove it with `sudo apt remove quickshell`.
 
 Select your release, then choose stable or development packages.
 
@@ -160,13 +181,6 @@ Select your release, then choose stable or development packages.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-# Native quickshell from Debian backports
-echo "deb http://deb.debian.org/debian trixie-backports main" | \
-  sudo tee /etc/apt/sources.list.d/trixie-backports.list
-sudo apt update
-sudo apt install -t trixie-backports quickshell
-
-# Dux OBS for niri and other companions
 curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
   sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
@@ -184,7 +198,7 @@ curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
   sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install quickshell-git niri-git
+sudo apt install niri-git
 ```
 
 </TabItem>
@@ -197,11 +211,6 @@ sudo apt install quickshell-git niri-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-# Native quickshell from Debian
-sudo apt update
-sudo apt install quickshell
-
-# Dux OBS for niri and other companions
 curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
   sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
@@ -219,7 +228,7 @@ curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
   sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install quickshell-git niri-git
+sudo apt install niri-git
 ```
 
 </TabItem>
@@ -232,11 +241,6 @@ sudo apt install quickshell-git niri-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-# Native quickshell from Debian
-sudo apt update
-sudo apt install quickshell
-
-# Dux OBS for niri and other companions
 curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
   sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
@@ -254,7 +258,7 @@ curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
   sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
 sudo apt update
-sudo apt install quickshell-git niri-git
+sudo apt install niri-git
 ```
 
 </TabItem>
@@ -278,14 +282,14 @@ sudo apt update
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-sudo apt install quickshell niri
+sudo apt install niri
 ```
 
 </TabItem>
 <TabItem value="git" label="Latest Development Build">
 
 ```bash
-sudo apt install quickshell-git niri-git
+sudo apt install niri-git
 ```
 
 </TabItem>
@@ -320,7 +324,7 @@ Select your distribution, then choose stable or development packages.
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell niri
+sudo zypper install niri
 ```
 
 </TabItem>
@@ -329,7 +333,7 @@ sudo zypper install quickshell niri
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell-git niri-git
+sudo zypper install niri-git
 ```
 
 </TabItem>
@@ -344,7 +348,7 @@ sudo zypper install quickshell-git niri-git
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell niri
+sudo zypper install niri
 ```
 
 </TabItem>
@@ -353,7 +357,7 @@ sudo zypper install quickshell niri
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell-git niri-git
+sudo zypper install niri-git
 ```
 
 </TabItem>
@@ -368,7 +372,7 @@ sudo zypper install quickshell-git niri-git
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell niri
+sudo zypper install niri
 ```
 
 </TabItem>
@@ -377,7 +381,7 @@ sudo zypper install quickshell niri
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell-git niri-git
+sudo zypper install niri-git
 ```
 
 </TabItem>
@@ -392,7 +396,7 @@ sudo zypper install quickshell-git niri-git
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell niri
+sudo zypper install niri
 ```
 
 </TabItem>
@@ -401,7 +405,7 @@ sudo zypper install quickshell niri
 ```bash
 sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
 sudo zypper refresh
-sudo zypper install quickshell-git niri-git
+sudo zypper install niri-git
 ```
 
 </TabItem>
@@ -419,7 +423,7 @@ The COPR repositories provide packages for Fedora 43/44/45, Rawhide, and Enterpr
 
 ```bash
 sudo dnf copr enable duxlabs/dux-repo
-sudo dnf install quickshell niri
+sudo dnf install niri
 ```
 
 </TabItem>
@@ -427,7 +431,7 @@ sudo dnf install quickshell niri
 
 ```bash
 sudo dnf copr enable duxlabs/dux-repo
-sudo dnf install quickshell-git niri-git
+sudo dnf install niri-git
 ```
 
 </TabItem>
@@ -484,7 +488,7 @@ The packaging configurations and build scripts are maintained in the official Du
 :::note
 
 **Official Dux Labs packages**: `dms`, `dms-cli`, `dux-gop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dux-greeter`, `dux-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
-Packages retain their upstream licenses: Niri (GPL-3.0), Quickshell (LGPL-3.0), Matugen (GPL-2.0), Cliphist (GPL-3.0).
+Packages retain their upstream licenses: Niri (GPL-3.0), Quickshell and dux-qt-base (LGPL-3.0), Matugen (GPL-2.0), Cliphist (GPL-3.0).
 
 :::
 

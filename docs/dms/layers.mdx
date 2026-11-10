@@ -43,6 +43,8 @@ Full-screen modal dialogs including settings, power menu, and clipboard history.
 ### Popouts
 Popup panels triggered by bar widgets, such as the control center, app drawer, and notification center. These are anchored to the bar and slide out accordingly.
 
+**Connected popouts** in **Settings → Bar → Appearance → Surface** opens a bar's popouts joined to the bar with no gap, on the bar's own background. It needs the bar on the `top` layer, so it is hidden while the Frame is on and unavailable for a bar that uses the overlay layer or has a fully opaque background.
+
 | Component                 | Namespace                        |
 | ------------------------- | -------------------------------- |
 | App drawer                | `dms:app-launcher`               |

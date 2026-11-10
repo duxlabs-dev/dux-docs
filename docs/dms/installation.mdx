@@ -23,7 +23,7 @@ This guide covers installation of Dux Modular Shell across different Linux distr
 
 ## Dependencies
 
-- [**quickshell**](https://github.com/quickshell-mirror/quickshell) (required) - The core framework
+- [**dux-qt-base**](https://github.com/duxlabs-dev/dux-qt-base) (required) - The Quickshell runtime DMS runs on, pulled in automatically by the DMS packages
 - [**cava**](https://github.com/karlstav/cava) (optional) - Audio visualizer widget
 - [**dcal**](https://github.com/duxlabs-dev/dux-calendar) (optional) - Complete desktop calendar app with native integration for DMS calendar widgets
 - [**dsearch**](https://github.com/duxlabs-dev/dux-search) (optional) - Filesystem search engine
@@ -35,7 +35,9 @@ For pre-built packages on Fedora, Debian, Ubuntu, and OpenSUSE, see the [Dux Rep
 
 :::note
 
-Only **Quickshell** is required. All other dependencies are optional and enable specific features.
+Only **dux-qt-base** is required, and the DMS packages install it for you. All other dependencies are optional and enable specific features.
+
+DMS no longer needs a `quickshell` package or a `qs` binary. dux-qt-base is Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`) that `dms` loads itself. It installs no `qs` binary, so it does not conflict with a `quickshell` or `quickshell-git` package another shell uses. If nothing else needs Quickshell, you can uninstall it.
 
 :::
 
@@ -92,7 +94,7 @@ sudo dnf install dms
 </TabItem>
 </Tabs>
 
-The COPR repositories also provide companion packages such as `quickshell-git`, `dux-calendar`, `matugen`, and other utilities used by the default configuration.
+The COPR repositories also provide companion packages such as `dux-qt-base`, `dux-calendar`, `matugen`, and other utilities used by the default configuration.
 
 ### Fedora Atomic & bootc images
 
@@ -109,7 +111,7 @@ To layer the packages yourself instead (niri and ghostty shown):
 ```bash
 sudo curl -fsSLo /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:duxlabs:dms.repo \
   https://copr.fedorainfracloud.org/coprs/duxlabs/dms/repo/fedora-$(rpm -E %fedora)/duxlabs-dms-fedora-$(rpm -E %fedora).repo
-sudo rpm-ostree install dms niri ghostty quickshell matugen xwayland-satellite
+sudo rpm-ostree install dms niri ghostty matugen xwayland-satellite
 systemctl reboot
 ```
 
@@ -129,7 +131,7 @@ Dux Modular Shell is available through Open Build Service (OBS) for Debian and L
 
 Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
 
-Stable **quickshell** should come from Debian (see the [Dux Debian section](../repo#debian)). The Dux OBS `quickshell` package for Debian is **deprecated** — if you still have it, `sudo apt remove quickshell` then install the Debian package before continuing.
+DMS no longer needs a **quickshell** package: `dms` pulls in `libdux-qt-base0`, its Quickshell runtime, from the Dux repository added below. A Debian `quickshell` package does not conflict and can stay if another shell uses it. The Dux OBS `quickshell` package for Debian is **deprecated** — if you still have it and nothing else needs it, remove it with `sudo apt remove quickshell`.
 
 :::note[Existing installs]
 
@@ -146,12 +148,6 @@ Select your release, then choose stable or development packages.
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-# Native quickshell from Debian backports (required before dms)
-echo "deb http://deb.debian.org/debian trixie-backports main" | \
-  sudo tee /etc/apt/sources.list.d/trixie-backports.list
-sudo apt update
-sudo apt install -t trixie-backports quickshell
-
 curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
   sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
@@ -194,10 +190,6 @@ sudo apt install dms-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-# Native quickshell from Debian (required before dms)
-sudo apt update
-sudo apt install quickshell
-
 curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
   sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
@@ -240,10 +232,6 @@ sudo apt install dms-git
 <TabItem value="stable" label="Stable Release" default>
 
 ```bash
-# Native quickshell from Debian (required before dms)
-sudo apt update
-sudo apt install quickshell
-
 curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
   sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
 echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
@@ -331,7 +319,7 @@ sudo apt update
 sudo apt install dms
 ```
 
-`dms-git`, `dms-greeter`, `danksearch` and `dankcalendar` are available the same way. quickshell, niri, Hyprland and matugen come from PikaOS's own builds.
+`dms-git`, `dms-greeter`, `danksearch` and `dankcalendar` are available the same way. dux-qt-base (`libdux-qt-base0`), niri, Hyprland and matugen come from PikaOS's own builds.
 
 ## OpenSUSE & Derivatives
 
@@ -606,7 +594,7 @@ sudo xbps-install --repository=hostdir/binpkgs dms dux-search
 </TabItem>
 </Tabs>
 
-Only `quickshell` is strictly required. Install optional features as desired — `matugen` (theming), `cava` (audio visualiser), `danksearch` (search), `dankcalendar` (calendar), `qt6-multimedia` (sounds) — and a compositor such as `niri`, `hyprland`, or `sway`. See the [Void README](https://github.com/duxlabs-dev/dux-shell/tree/master/distro/void) for the full optional-dependency list.
+Only `dux-qt-base` is strictly required, and the `dms` package pulls it in. Install optional features as desired — `matugen` (theming), `cava` (audio visualiser), `danksearch` (search), `dankcalendar` (calendar), `qt6-multimedia` (sounds) — and a compositor such as `niri`, `hyprland`, or `sway`. See the [Void README](https://github.com/duxlabs-dev/dux-shell/tree/master/distro/void) for the full optional-dependency list.
 
 ### Running Wayland from TTY (Without a Display Manager)
 
@@ -659,11 +647,11 @@ This guide doesn't cover compositor installation. You need a compatible Wayland 
 
 ### 1. Install Essential Dependencies
 
-#### Quickshell
+#### dux-qt-base
 
-Install Quickshell from your distribution's repositories or the [Dux Repository](../repo/). A packaged Quickshell already ships everything it needs, so there is nothing else to install.
+DMS runs its UI on [dux-qt-base](https://github.com/duxlabs-dev/dux-qt-base), Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). A `quickshell` package or `qs` binary is not needed. Install `dux-qt-base` from the [Dux Repository](../repo/) if it offers a package for your distribution.
 
-Only build from source if neither offers a package. Follow the upstream [Quickshell build instructions](https://git.outfoxxed.me/quickshell/quickshell/src/branch/master/BUILD.md) for the current dependency list and build options.
+Otherwise, build it from source in [step 3](#3-compile--install-the-dms-backend), either embedded in the `dms` binary or as a system library. See `dux-qt-base/BUILD.md` in the DMS repository for its build dependencies.
 
 :::note
 
@@ -694,7 +682,7 @@ sudo emerge --ask sys-apps/accountsservice
 
 ### 2. Clone the DMS Repository
 
-Shared widgets live in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule, so clone with `--recurse-submodules`:
+Shared widgets live in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule and the Quickshell runtime in the [dux-qt-base](https://github.com/duxlabs-dev/dux-qt-base) submodule, so clone with `--recurse-submodules`:
 
 ```bash
 git clone --recurse-submodules https://github.com/duxlabs-dev/dux-shell.git ~/dms
@@ -710,6 +698,24 @@ In an existing clone, run `git submodule update --init` instead — `make instal
 cd ~/dms
 sudo make install
 ```
+
+This build loads an installed `libdux-qt-base.so.0`. Without a dux-qt-base package, either embed the runtime in the `dms` binary:
+
+```bash
+cd ~/dms
+make QTBASE=1 && sudo make install
+```
+
+or build and install the library from the submodule:
+
+```bash
+cd ~/dms/dux-qt-base
+just release
+sudo just install
+sudo ldconfig
+```
+
+`just install` uses the `/usr/local` prefix, and `/usr/local/lib` is only searched if `ld.so.conf` lists it, which not every distribution does. dux-qt-base uses private Qt APIs, so rebuild it after every Qt update. `dms doctor` shows which runtime is in use.
 
 The Quickshell UI is embedded into the `dms` binary at build time. The shell runs from the embedded UI unless `-c` or `DMS_SHELL_DIR` points elsewhere. The login screen is a separate binary from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) with its own embedded UI.
 

@@ -201,7 +201,7 @@ systemd.user.services.niri-flake-polkit.enable = false;
 
 :::info
 The configuration options below work for **both** the NixOS module and the home-manager module. However, note that:
-- **NixOS module**: Installs packages system-wide and places quickshell configs in `/etc/xdg/quickshell/dms`
+- **NixOS module**: Installs packages system-wide; the shell UI and its dux-qt-base runtime are embedded in the `dms` package
 - **Home-manager module**: Additionally supports plugins, default settings, and default session configuration
 :::
 
@@ -227,22 +227,24 @@ programs.dank-material-shell = {
 };
 ```
 
-### Custom Quickshell Package
+### Custom dux-qt-base Package
 
-:::info[Quickshell from Source]
+:::info[Quickshell runtime]
 
-The Dux Modular Shell flake already uses Quickshell built from source by default, as many features rely on unreleased Quickshell features. No additional configuration is needed.
+The Dux Modular Shell flake builds `dms` against dux-qt-base, Dux's fork of Quickshell built as a shared library, and embeds it in the `dms` package. No `quickshell` package is needed. By default the flake uses `pkgs.dux-qt-base` when an overlay provides it, otherwise its own `dux-qt-base` input. No additional configuration is needed.
 
 :::
 
-If you need to override the Quickshell package:
+If you need to override the dux-qt-base package:
 
 ```nix
 programs.dank-material-shell = {
   enable = true;
-  quickshell.package = pkgs.quickshell; # or your custom package
+  duxQtBase.package = pkgs.dux-qt-base; # or your custom package
 };
 ```
+
+The old `quickshell.package` option has been removed. Setting it now fails evaluation with a message pointing to `duxQtBase.package`.
 
 ### Settings (home-manager only)
 

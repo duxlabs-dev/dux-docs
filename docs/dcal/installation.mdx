@@ -24,7 +24,7 @@ Dux Calendar installs a single `dcal` binary, the Quickshell UI config, and a de
 
 ## Requirements
 
-- [Quickshell](https://quickshell.org) (`qs`) — `quickshell-git` or `quickshell` from the [Dux repository](../repo/)
+- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian and Ubuntu, from the [Dux repository](../repo/#core-framework). Distribution packages pull it in automatically, and `dcal` refuses to start without it. No `quickshell` package or `qs` executable is needed
 - Qt 6 declarative, including `Qt.labs.platform` for the tray icon
 - Go 1.25+ (build from source only; the packaged binary is pure Go with no CGO)
 
@@ -34,7 +34,7 @@ Choose the installation method that best fits your system.
 
 ### Flatpak
 
-Dux Calendar is available on [Flathub](https://flathub.org/apps/com.danklinux.dankcalendar) as `com.danklinux.dankcalendar`. The Flatpak bundles its runtime dependencies, so you do not need a separate Quickshell install on the host.
+Dux Calendar is available on [Flathub](https://flathub.org/apps/com.danklinux.dankcalendar) as `com.danklinux.dankcalendar`. The Flatpak bundles its runtime dependencies, including dux-qt-base, so you do not need to install anything else on the host.
 
 ```bash
 flatpak install flathub com.danklinux.dankcalendar
@@ -249,6 +249,8 @@ cd dux-calendar
 make
 sudo make install
 ```
+
+`make` uses the installed dux-qt-base library. `make QTBASE=1` instead builds it from the `dux-qt-base` submodule (needs CMake, Ninja and the Qt 6 development packages) and embeds it in `dcal`.
 
 This installs:
 

@@ -46,7 +46,7 @@ Dux Modular Shell (dms) is a Wayland desktop shell built with [Quickshell](https
 
 ## Architecture
 
-Dux Modular Shell uses a client-server architecture where a Go backend (`dms`) manages system integrations and spawns the Quickshell-based UI as a child process. Communication happens over Unix socket using REQ/REP and PUB/SUB patterns.
+Dux Modular Shell uses a client-server architecture where a Go backend (`dms`) manages system integrations and spawns the Quickshell-based UI as a child process. The UI runs on dux-qt-base, Dux's fork of Quickshell built as a shared library that `dms` loads itself (`dms qs`), so no separate `quickshell` install is needed. Communication happens over Unix socket using REQ/REP and PUB/SUB patterns.
 
 <div style={{overflowX: 'auto', maxWidth: '100%'}}>
 
@@ -55,7 +55,7 @@ flowchart TB
     DMS[dms]
 
     subgraph UI[" "]
-        QS[Quickshell Qt6]
+        QS["dux-qt-base<br/>Quickshell runtime, Qt6"]
         QML[QML App]
         SOCK[Unix Socket<br/>REQ/REP & PUB/SUB]
     end
@@ -114,7 +114,7 @@ flowchart TB
 
 **Key Points:**
 
-- **dms** spawns **Quickshell** as a child process
+- **dms** spawns the UI as a child process, running on **dux-qt-base** (Dux's Quickshell fork, loaded as a shared library)
 - **dms** and **Quickshell** both integrate with Wayland and D-Bus APIs independently
 - **dms** fills gaps that Quickshell doesn't handle natively
 - Communication between QML app and dms backend happens via Unix socket
@@ -124,6 +124,7 @@ flowchart TB
 | Component | Role |
 | --- | --- |
 | **Dux Modular Shell - Quickshell** | Frontend powering widgets, modals, and user experience. |
+| **dux-qt-base** | Dux's fork of Quickshell, built as a shared library that `dms` loads to run the frontend. |
 | **Dux Modular Shell - Backend (cli)** | Bridges DBus, Wayland, and plugin APIs - also a management CLI |
 | **dgop** | System telemetry library built into the backend for resource widgets. |
 | **dsearch** | Optional filesystem search engine used by the Spotlight launcher. |

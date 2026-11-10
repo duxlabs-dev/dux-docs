@@ -482,14 +482,14 @@ Enabling `dms-greeter` will replace your current display manager.
 
 ### Manual installation (no package)
 
-Prefer your distro package when available (see the sections above). If your distro has no `dux-greeter` package, install `greetd` and `quickshell`, then grab the prebuilt binary from the latest release:
+Prefer your distro package when available (see the sections above). If your distro has no `dux-greeter` package, install `greetd` and dux-qt-base, the Dux build of Quickshell that runs the UI (`dux-qt-base`, or `libdux-qt-base0` on openSUSE, Debian and Ubuntu; see the [Dux repository](../repo/#core-framework)), then grab the prebuilt binary from the latest release. The greeter refuses to start without dux-qt-base, and the release binary does not embed it:
 
 ```bash
 curl -fsSL https://github.com/duxlabs-dev/dux-greeter/releases/latest/download/dms-greeter-linux-amd64.tar.gz | tar -xz
 sudo install -Dm755 dms-greeter-linux-amd64 /usr/local/bin/dms-greeter
 ```
 
-Or build it from source (requires go and make):
+Or build it from source (requires go and make). `make build` uses the installed dux-qt-base library; `make build QTBASE=1` instead builds it from the `dux-qt-base` submodule (needs CMake, Ninja and the Qt 6 development packages) and embeds it in `dms-greeter`:
 
 ```bash
 git clone --recurse-submodules https://github.com/duxlabs-dev/dux-greeter.git
@@ -498,7 +498,7 @@ make build
 sudo make install
 ```
 
-The UI is embedded in the binary, there is no quickshell config tree to install. Create the greeter user and cache directory if your setup does not already have them (see the [dux-greeter README](https://github.com/duxlabs-dev/dux-greeter)):
+The UI is embedded in the binary, there is no Quickshell config tree to install and no `quickshell` package is needed. Create the greeter user and cache directory if your setup does not already have them (see the [dux-greeter README](https://github.com/duxlabs-dev/dux-greeter)):
 
 ```bash
 sudo mkdir -p /var/cache/dms-greeter
