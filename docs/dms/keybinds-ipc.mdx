@@ -360,6 +360,16 @@ Wallpaper management with support for global and per-monitor configurations.
 | `nextFor <screen>` | Cycle to next wallpaper | monitor name |
 | `prevFor <screen>` | Cycle to previous wallpaper | monitor name |
 
+#### Folder Functions
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `folders` | List wallpaper folders, one per line (hidden ones marked `(hidden)`) | - |
+| `folderAdd <path>` | Add a wallpaper folder (shows up once it has been checked) | absolute path to folder |
+| `folderRemove <path>` | Remove a wallpaper folder | path to folder |
+| `folderHide <path>` | Hide a folder's wallpapers | path to folder |
+| `folderShow <path>` | Show a hidden folder's wallpapers again | path to folder |
+
 **Examples:**
 ```bash
 # Global wallpaper mode
@@ -370,6 +380,10 @@ dms ipc call wallpaper next
 dms ipc call wallpaper setFor DP-2 /path/to/image1.jpg
 dms ipc call wallpaper setFor eDP-1 /path/to/image2.jpg
 dms ipc call wallpaper nextFor eDP-1
+
+# Wallpaper folders
+dms ipc call wallpaper folderAdd ~/Pictures/Wallpapers
+dms ipc call wallpaper folders
 
 # Clear and return to global mode
 dms ipc call wallpaper clear
