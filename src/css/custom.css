@@ -1400,7 +1400,10 @@ details li strong {
 
 .footer-github-link,
 .footer-discord-link,
-.footer-kofi-link {
+.footer-kofi-link,
+.footer-x-link,
+.footer-mastodon-link,
+.footer-reddit-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1413,7 +1416,10 @@ details li strong {
 
 .footer-github-link::before,
 .footer-discord-link::before,
-.footer-kofi-link::before {
+.footer-kofi-link::before,
+.footer-x-link::before,
+.footer-mastodon-link::before,
+.footer-reddit-link::before {
   content: '';
   width: 1.25rem;
   height: 1.25rem;
@@ -1438,9 +1444,27 @@ details li strong {
   -webkit-mask-image: url('/img/kofi.svg');
 }
 
+.footer-x-link::before {
+  mask-image: url('/img/x.svg');
+  -webkit-mask-image: url('/img/x.svg');
+}
+
+.footer-mastodon-link::before {
+  mask-image: url('/img/mastodon.svg');
+  -webkit-mask-image: url('/img/mastodon.svg');
+}
+
+.footer-reddit-link::before {
+  mask-image: url('/img/reddit.svg');
+  -webkit-mask-image: url('/img/reddit.svg');
+}
+
 .footer-github-link:hover,
 .footer-discord-link:hover,
-.footer-kofi-link:hover {
+.footer-kofi-link:hover,
+.footer-x-link:hover,
+.footer-mastodon-link:hover,
+.footer-reddit-link:hover {
   background: var(--dank-tint-strong);
   color: var(--ifm-color-primary);
 }
@@ -1473,14 +1497,20 @@ details li strong {
 
   .footer-github-link,
   .footer-discord-link,
-  .footer-kofi-link {
+  .footer-kofi-link,
+  .footer-x-link,
+  .footer-mastodon-link,
+  .footer-reddit-link {
     width: 2rem;
     height: 2rem;
   }
 
   .footer-github-link::before,
   .footer-discord-link::before,
-  .footer-kofi-link::before {
+  .footer-kofi-link::before,
+  .footer-x-link::before,
+  .footer-mastodon-link::before,
+  .footer-reddit-link::before {
     width: 1.125rem;
     height: 1.125rem;
   }

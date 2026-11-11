@@ -263,6 +263,49 @@ const config: Config = {
         content: 'summary_large_image',
       },
     },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:site',
+        content: '@DuxLabsDev',
+      },
+    },
+    // Mastodon: profile link verification and link-preview author attribution
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'me',
+        href: 'https://mastodon.social/@DuxLabs',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'fediverse:creator',
+        content: '@DuxLabs@mastodon.social',
+      },
+    },
+    // Organization structured data linking the official profiles
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Dux Labs',
+        url: 'https://duxlabs.dev',
+        logo: 'https://duxlabs.dev/img/dux-logo.png',
+        sameAs: [
+          'https://github.com/duxlabs-dev',
+          'https://x.com/DuxLabsDev',
+          'https://mastodon.social/@DuxLabs',
+          'https://www.reddit.com/r/duxlabs',
+          'https://discord.gg/ppWTpKmPgT',
+        ],
+      }),
+    },
   ],
 
   // Set the production url of your site here

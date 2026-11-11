@@ -31,6 +31,27 @@ export default function FooterWrapper(props: Props): React.JSX.Element {
           className="footer-kofi-link"
           aria-label="Support on Ko-fi"
         />
+        <a
+          href="https://x.com/DuxLabsDev"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-x-link"
+          aria-label="Dux Labs on X"
+        />
+        <a
+          href="https://mastodon.social/@DuxLabs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-mastodon-link"
+          aria-label="Dux Labs on Mastodon"
+        />
+        <a
+          href="https://www.reddit.com/r/duxlabs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="footer-reddit-link"
+          aria-label="Dux Labs on Reddit"
+        />
       </div>
     </div>
   );
