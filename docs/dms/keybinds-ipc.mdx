@@ -784,7 +784,7 @@ All these modals support `open`, `close`, and `toggle` functions:
 - **processlist** - System process list and performance monitor (also supports `focusOrToggle`)
 - **powermenu** - Power menu for system actions
 - **control-center** - Quick settings (network, bluetooth, audio, etc.)
-- **notepad** - Quick notepad/scratchpad
+- **notepad** - Quick notepad (for parking windows, see [`scratchpad`](#scratchpad))
 
 `invokeLast` runs the default action of the newest notification and dismisses it, like clicking its popup. It falls back to the first action and returns `NOTIFICATION_INVOKE_NO_ACTION` when there is nothing to run.
 
@@ -1095,6 +1095,72 @@ dms ipc call workspace-rename open
 ```
 
 **Note:** Returns an error if running on an unsupported compositor.
+
+### scratchpad
+
+**Niri and Hyprland only**
+
+Park windows out of sight and bring them back with a key. Pads have names; `""` is the default pad. The name argument is required, so pass `""` rather than leaving it out.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `toggle <name>` | Show or park the pad's windows | pad name (`""` for the default) |
+| `move <name>` | Park the focused window in the pad. niri floats it first | pad name (`""` for the default) |
+| `restore` | Take the focused window out of its scratchpad for good | - |
+
+On niri, if any window shown from the pad is on the current workspace, `toggle` parks every window shown from that pad, including ones on other workspaces and monitors. Otherwise it brings every window of the pad to the current workspace and focuses the last one. Run on the parking workspace itself, it switches back to the previous workspace and returns `SCRATCHPAD_HIDDEN`. On Hyprland, `toggle` toggles the special workspace `special` (default pad) or `special:<name>`.
+
+Windows parked with `move` come back floating. A window dragged onto the parking workspace by hand comes back as it was, so a tiled window stays tiled.
+
+On niri, `restore` brings a parked window to your current workspace, or to the nearest regular workspace if you are on the parking workspace. A window that `toggle` has shown stays where it is and is simply no longer part of the pad.
+
+**Examples:**
+```bash
+dms ipc call scratchpad toggle ""
+dms ipc call scratchpad move ""
+dms ipc call scratchpad restore
+
+# Named pad
+dms ipc call scratchpad move music
+dms ipc call scratchpad toggle music
+```
+
+The stock niri binds:
+
+```kdl
+Mod+S hotkey-overlay-title="Scratchpad" { spawn "dms" "ipc" "call" "scratchpad" "toggle" ""; }
+Mod+Shift+S hotkey-overlay-title="Scratchpad: Move Window" { spawn "dms" "ipc" "call" "scratchpad" "move" ""; }
+Mod+Ctrl+S hotkey-overlay-title="Scratchpad: Restore Window" { spawn "dms" "ipc" "call" "scratchpad" "restore"; }
+```
+
+The stock Hyprland binds use Hyprland's own dispatchers: `SUPER+S` toggles the `special` workspace and `SUPER+SHIFT+S` moves the focused window to it. There is no stock restore bind on Hyprland.
+
+| Status | Meaning |
+| --- | --- |
+| `SCRATCHPAD_SHOWN` | niri: the pad's windows were brought to the current workspace |
+| `SCRATCHPAD_HIDDEN` | niri: the pad's windows were parked |
+| `SCRATCHPAD_EMPTY` | niri: the pad has no windows |
+| `SCRATCHPAD_TOGGLED` | Hyprland: the special workspace was toggled |
+| `SCRATCHPAD_MOVED` | The focused window was parked |
+| `SCRATCHPAD_MOVE_FAILED` | niri only: `move` or `toggle` found no empty workspace to turn into the pad (for example, you are on the monitor's last, empty workspace) |
+| `SCRATCHPAD_RESTORED` | The focused window left its scratchpad |
+| `SCRATCHPAD_NO_FOCUSED_WINDOW` | No window has focus |
+| `SCRATCHPAD_WINDOW_NOT_IN_SCRATCHPAD` | The focused window is not in a scratchpad |
+| `SCRATCHPAD_UNSUPPORTED_COMPOSITOR` | Compositor is not niri or Hyprland |
+
+#### How it works on niri
+
+niri has no way to hide or minimize a window, so DMS parks windows on a workspace named `scratchpad` (named pads use `scratchpad:<name>`). DMS creates it at the bottom of the current monitor when needed. It removes the workspace once it is empty: after `toggle` shows its windows, after `restore` takes its last window, or when `toggle` finds it empty. If you close a parked window, the empty workspace stays until the next `toggle` of that pad. Windows slide in and out with niri's own window-movement animation.
+
+- DMS hides these workspaces from its bar, island and workspace scroll. niri's own overview, its Alt-Tab and `focus-workspace` up, down or by number still reach them while windows are parked.
+- Turn on **Show scratchpads** in the workspace switcher's options to get one pill per pad that holds windows. It lights while the pad's windows are shown; click it to toggle the pad.
+- Clicking a parked window in the dock, taskbar or launcher brings it to the current workspace instead of jumping to the parking workspace.
+- A window shown on another monitor moves without animation.
+- If the shell restarts, DMS forgets which pad a shown window came from. Run `move` on it again.
+
+:::warning
+Do not declare `workspace "scratchpad"` in your niri config. Config workspaces sit at index 1 and shift every `focus-workspace N` bind.
+:::
 
 ### outputs
 

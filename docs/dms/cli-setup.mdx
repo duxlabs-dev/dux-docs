@@ -49,7 +49,7 @@ dms setup binds
 | `windowrules` | Default window rules config | `~/.config/niri/dms/windowrules.kdl` | `~/.config/hypr/dms/windowrules.lua` | `~/.config/mango/dms/windowrules.conf` |
 | `alttab` | Default alt-tab config (niri only) | `~/.config/niri/dms/alttab.kdl` | — | — |
 
-Running `dms setup` with no subcommand deploys all of the above, plus the input fragment (`dms/input.kdl` on niri, `dms/input.lua` on Hyprland, `dms/input.conf` on mangowm) and, on Hyprland, `dms/binds-user.lua`. The input fragment has no subcommand of its own.
+Running `dms setup` with no subcommand deploys all of the above, plus the input fragment (`dms/input.kdl` on niri, `dms/input.lua` on Hyprland, `dms/input.conf` on mangowm) and, on Hyprland, `dms/binds-user.lua`. The input fragment has no subcommand of its own. It also deploys the [animations](./compositors.mdx#compositor-animations) fragment with the DMS style.
 
 :::note[Hyprland 0.55 or newer]
 DMS writes Hyprland config in Lua only. When the installed Hyprland reports a version older than 0.55, `dms setup` stops with `hyprland.lua is not loaded by Hyprland <version>; DMS needs 0.55 or newer` instead of writing a config Hyprland would ignore. If the version can't be detected, it deploys anyway.
