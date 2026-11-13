@@ -295,6 +295,24 @@ const sidebars: SidebarsConfig = {
         'dfiles/ipc',
       ],
     },
+    {
+      type: 'category',
+      label: 'Dux Edit',
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          id: 'dedit/index',
+          label: 'Overview',
+        },
+        'dedit/installation',
+        'dedit/usage',
+        'dedit/keyboard',
+        'dedit/settings',
+        'dedit/plugins',
+        'dedit/ipc',
+      ],
+    },
     'contributing',
     {
       type: 'doc',

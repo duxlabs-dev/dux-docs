@@ -1,0 +1,80 @@
+---
+title: Dux Edit
+description: standalone text and document editor for Linux with the look and feel of Dux Modular Shell
+sidebar_position: 1
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██╔══██╗██║╚══██╔══╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║  ██║██║   ██║   
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║  ██║██║   ██║   
+██████╔╝╚██████╔╝██╔╝ ██╗     ███████╗██████╔╝██║   ██║   
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚═════╝ ╚═╝   ╚═╝   `}
+  hideTitle={false}
+/>
+
+import Head from '@docusaurus/Head';
+
+<Head>
+<title>Dux Edit, text editor for Linux</title>
+<meta property="og:title" content="Dux Edit" />
+<meta property="og:site_name" content="Dux Edit" />
+<meta name="application-name" content="Dux Edit" />
+<meta name="description" content="Dux Edit is a free, open-source text and document editor for Linux with tabs, syntax highlighting, Markdown preview, spellcheck, find and replace, crash recovery and plugins, built with Go and dux-qt-base." />
+<script type="application/ld+json">{JSON.stringify({
+'@context': 'https://schema.org',
+'@type': 'SoftwareApplication',
+name: 'Dux Edit',
+operatingSystem: 'Linux',
+applicationCategory: 'UtilitiesApplication',
+url: 'https://duxlabs.dev/docs/dedit/',
+description: 'Dux Edit is a free, open-source text and document editor for Linux. It has tabs, drafts that survive a restart, crash recovery, syntax highlighting, Markdown preview, spellcheck, find and replace with regular expressions, and saves root-owned files through polkit.',
+offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
+})}</script>
+</Head>
+
+# Dux Edit
+
+Dux Edit is a free, open-source text and document editor for Linux. It opens any text file without a project around it: notes, config files, scripts, Markdown. It sits between a scratchpad and an IDE, shares the look and feel of [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell), and follows its theme automatically. It takes over from the DMS notepad. `dux-edit` is the command name, and `dedit` is a short alias.
+
+Built with [dux-qt-base](https://github.com/duxlabs-dev/dux-qt-base) and [Go](https://go.dev/). The core is pure Go with no cgo.
+
+## Features
+
+- **Tabs and Drafts**: Reorder tabs, reopen closed ones, and keep untitled drafts across restarts. Closing the window never loses work.
+- **Crash Recovery**: Unsaved edits live in a swap file and come back after a crash or a restart.
+- **Syntax Highlighting**: [Chroma](https://github.com/alecthomas/chroma) lexers, with colors derived from the desktop theme and editable per role.
+- **Markdown Preview**: Side by side or preview only. Task boxes in the preview toggle the source line.
+- **Spellcheck**: Uses `hunspell` and its dictionaries when installed. Code is checked in comments, and optionally in strings.
+- **Find and Replace**: Regular expressions (RE2), whole word and case options, and replace all as one undo step.
+- **Byte-for-Byte Editing**: Encodings, byte order marks and line endings are kept as they are. A save only differs from what was read where you edited, or converted.
+- **Save as Administrator**: Root-owned files save through polkit, with a confined helper.
+- **Line Commands**: Duplicate, delete, move, join and sort lines, and change case.
+- **Simple and Advanced Modes**: Simple hides the status details, line numbers and a lone tab.
+- **Plugins**: QML plugins with the same manifest format as DMS plugins. See [Plugins](plugins).
+- **DMS Notes Import**: Copy your DMS notepad tabs and settings in one command.
+- **Light on Resources**: Nothing polls and a hidden window holds no editors. See [Usage](usage#running-in-the-background).
+- **Localized**: User-facing strings are translatable.
+
+## Documentation
+
+- [Installation](installation) - Build and install `dux-edit`, with its desktop entry and polkit policy
+- [Usage](usage) - CLI commands, opening files at a line, drafts and recovery, importing DMS notes
+- [Keyboard](keyboard) - Every shortcut
+- [Settings](settings) - What each setting does and where it lives
+- [Plugins](plugins) - Write and install editor plugins
+- [IPC](ipc) - Scriptable IPC surface for keybinds and automation
+
+## Contributing
+
+`dux-edit` is open source and welcomes contributions:
+
+- **Source Code**: [GitHub Repository](https://github.com/duxlabs-dev/dux-edit)
+- **Issues**: Report bugs and request features on GitHub
+
+## License
+
+`dux-edit` is released under the MIT License. See the [LICENSE](https://github.com/duxlabs-dev/dux-edit/blob/master/LICENSE) file for details.
