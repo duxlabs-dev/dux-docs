@@ -16,7 +16,7 @@ import Hero from '@site/src/components/Hero';
   hideTitle={true}
 />
 
-Dux Modular Shell supports several advanced configuration options through environment variables prefixed with `DMS_`.
+Dux Modular Shell supports several advanced configuration options through environment variables prefixed with `DMS_`. The dux-qt-base runtime reads a few of its own, prefixed with `QS_`.
 
 ## Core Configuration
 
@@ -69,6 +69,56 @@ Disables DDC/CI brightness control for external monitors. DMS probes i2c buses t
 ```bash
 DMS_NO_DDC=1 dms run
 ```
+
+### Render Control
+
+DMS draws its windows through the render loop in dux-qt-base instead of Qt's. It redraws only the part of a surface that changed, and idle surfaces such as popouts, OSDs, toasts and notification popups stay mapped without a full-size buffer. It is on by default.
+
+It turns itself off and DMS uses Qt's rendering when the renderer cannot draw into dmabufs, when the compositor does not offer dmabuf feedback (`zwp_linux_dmabuf_v1` version 4), or when Qt runs on anything other than OpenGL or Vulkan. The log then has the line `Render control is unavailable`.
+
+To turn it off yourself, use any one of these, then run `dms restart`:
+
+- **Settings → Fonts & motion → Advanced → Render control**
+- `"renderControlEnabled": false` in `~/.config/dms/settings.json`
+- the environment variable `QS_DISABLE_RENDER_CONTROL=1`
+
+```bash
+QS_DISABLE_RENDER_CONTROL=1 dms run
+```
+
+Turn it off to rule it out when you see rendering glitches, or to compare GPU memory use.
+
+### Startup Cache
+
+dux-qt-base keeps the compiled form of the shell's QML, so a start does not compile it again. It is on by default.
+
+The cache lives in the runtime directory, `$XDG_RUNTIME_DIR/quickshell/vfs/<id>/qmlcache`, which is memory. It is saved as one file, `~/.cache/quickshell/by-shell/<id>/qmlcache.pack`, and read back on the first start after a boot. Entries that go unused for 30 days are dropped.
+
+Things to know:
+
+- The first start after an update rebuilds the cache and is slightly slower than a start without it. Later starts are faster.
+- The cache and the copy of the shell's QML it loads from take roughly 35 to 40 MB of the runtime directory.
+- It turns itself off when the runtime directory is not on tmpfs.
+- With DMS itself installed on a hard disk, a cold boot can be slower with the cache than without it.
+
+To turn it off yourself, use any one of these, then run `dms restart`:
+
+- **Settings → Fonts & motion → Advanced → Startup cache**
+- `"qmlCacheEnabled": false` in `~/.config/dms/settings.json`
+- the environment variable `QS_DISABLE_DISK_CACHE=1` (Qt's own `QML_DISABLE_DISK_CACHE=1` works too)
+
+```bash
+QS_DISABLE_DISK_CACHE=1 dms run
+```
+
+To rebuild the cache from scratch, delete the pack and restart:
+
+```bash
+rm ~/.cache/quickshell/by-shell/*/qmlcache.pack
+dms restart
+```
+
+Older builds kept one file per QML document in `~/.cache/quickshell/qmlcache`. That directory is no longer used and can be deleted.
 
 ### Shadow & Elevation Migration Notes (Power Users)
 
@@ -359,6 +409,13 @@ Force DMS to use a specific battery when multiple are detected.
 DMS_DISABLE_LAYER=true
 ```
 Disable layer effects to improve performance on lower-end hardware.
+
+**Rule out the render loop or the startup cache:**
+```bash
+QS_DISABLE_RENDER_CONTROL=1
+QS_DISABLE_DISK_CACHE=1
+```
+Both have a toggle in Settings too. See [Render Control](#render-control) and [Startup Cache](#startup-cache).
 
 **Remote print server:**
 ```bash

@@ -372,6 +372,14 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 - Verify the dux-qt-base runtime is found: `dms doctor` (see the [Quickshell](./cli-doctor#quickshell) row)
 - Kill stuck processes: `dms kill`
 
+**Slow startup:**
+- The first start after an update rebuilds the startup cache, later starts are faster
+- If every start is slow, turn the cache off to compare: see [Startup Cache](./advanced-configuration#startup-cache)
+
+**Rendering glitches or high GPU memory use:**
+- Turn render control off to compare: see [Render Control](./advanced-configuration#render-control)
+- Check the log for `Render control is unavailable`, which means DMS already fell back to Qt's rendering
+
 **Settings not applying:**
 - Backup and remove `~/.config/dms/settings.json` and drop-in files under `~/.config/dms/config.d/*.json` (if you have any).
 - Restart DMS to regenerate defaults

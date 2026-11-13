@@ -75,14 +75,30 @@ The portal activates the backend on demand through the activation file. Without 
 
 ### Floating the dialog
 
-niri and sway open child windows floating, so a dialog with a Wayland parent floats with no rule. The chooser shares the `dev.duxlabs.files` app id with the file manager and takes the title the calling app asked for, so a dialog without a parent can only be told apart by its title. A niri rule that floats those:
+niri and sway open child windows floating, so a dialog with a Wayland parent floats with no rule. A dialog without a parent needs one.
+
+The open, save and select folder dialogs use the app id `dev.duxlabs.files.chooser`. The file manager keeps `dev.duxlabs.files`, so a rule can match the dialogs alone, whatever title the calling app asked for.
+
+niri:
 
 ```kdl
 window-rule {
-    match app-id=r#"^dev\.duxlabs\.files$"# title=r#"^(Open|Save|Select|Upload|Export|Import)"#
+    match app-id=r#"^dev\.duxlabs\.files\.chooser$"#
     open-floating true
 }
 ```
+
+Hyprland:
+
+```lua
+hl.window_rule({ match = { class = "^(dev\\.duxlabs\\.files\\.chooser)$" }, float = true })
+```
+
+:::note
+
+In 2.1.2 and older the dialogs share `dev.duxlabs.files` with the file manager and can only be told apart by title. A rule anchored to that id, like the one this page used to show, stops matching the dialogs after the change. Replace it with the rule above.
+
+:::
 
 ### Packaging and Nix
 
