@@ -1265,6 +1265,8 @@ Manage plugins at runtime - useful for development and troubleshooting.
 | `reload <pluginId>` | Hot-reload a plugin without restarting | plugin ID |
 | `enable <pluginId>` | Enable a disabled plugin | plugin ID |
 | `disable <pluginId>` | Disable a loaded plugin | plugin ID |
+| `disableAll` | Disable all loaded plugins and snapshot them for restore | - |
+| `restore` | Re-enable plugins from the `disableAll` snapshot | - |
 
 **Examples:**
 ```bash
@@ -1280,6 +1282,10 @@ dms ipc call plugins reload myPlugin
 # Toggle plugins on/off
 dms ipc call plugins enable myPlugin
 dms ipc call plugins disable myPlugin
+
+# Disable all active plugins and restore them later
+dms ipc call plugins disableAll
+dms ipc call plugins restore
 ```
 
 ### systemupdater
