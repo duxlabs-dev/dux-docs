@@ -56,6 +56,7 @@ const sidebars: SidebarsConfig = {
         'dms/network-speed-monitor',
         'dms/system-monitor',
         'dms/reboot-to-another-os',
+        'dms/config-profiles',
         {
           type: 'doc',
           id: 'dms/managing',
