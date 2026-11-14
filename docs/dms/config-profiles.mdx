@@ -7,12 +7,12 @@ sidebar_position: 8
 import Hero from '@site/src/components/Hero';
 
 <Hero
-  asciiArt={`██████╗ ███╗   ███╗███████╗
-██╔══██╗████╗ ████║██╔════╝
-██║  ██║██╔████╔██║███████╗
-██║  ██║██║╚██╔╝██║╚════██║
-██████╔╝██║ ╚═╝ ██║███████║
-╚═════╝ ╚═╝     ╚═╝╚══════╝`}
+  asciiArt={`██████╗ ██████╗  ██████╗ ███████╗██╗██╗     ███████╗███████╗
+██╔══██╗██╔══██╗██╔═══██╗██╔════╝██║██║     ██╔════╝██╔════╝
+██████╔╝██████╔╝██║   ██║█████╗  ██║██║     █████╗  ███████╗
+██╔═══╝ ██╔══██╗██║   ██║██╔══╝  ██║██║     ██╔══╝  ╚════██║
+██║     ██║  ██║╚██████╔╝██║     ██║███████╗███████╗███████║
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝`}
   hideTitle={true}
 />
 
@@ -20,7 +20,8 @@ A config profile is a saved copy of the DMS settings with a configurable scope. 
 its right-click menu has Apply, Partial apply, Edit and Delete. **Manage profiles** opens the full page with New profile
 and Import.
 
-Every user starts with a **Default** profile that is kept in sync with the current settings.
+Opening **Manage profiles** for the first time creates a **Default** profile from the current settings, makes it
+active and keeps it in sync. Until then the Profiles card only shows the Manage profiles link.
 
 ## What a profile includes
 
@@ -52,6 +53,17 @@ demand, including ones that aren't active.
 **Compare** on the edit page (or **Partial apply** in the right-click menu) lists every group where the profile differs
 from the current settings. Only the groups left on are applied, and the active profile stays the same.
 
+## Preview image
+
+Each profile can have a preview image, set on its edit page. **Browse Files** picks an image and **Take screenshot**
+captures the screen. Take screenshot shows a small bar at the bottom of the screen, so Settings can be closed and the
+desktop arranged first. The bar's **Take screenshot** button captures the screen, and Settings reopens on the profile.
+
+## Control Center
+
+The **Profiles** widget can be added in the Control Center editor. Its tile switches to the next profile, and its
+detail view lists all profiles.
+
 ## Export and import
 
 **Export** saves a profile as a `.tar.gz` archive that includes its wallpapers. **Import** adds an archive as a new
@@ -62,6 +74,9 @@ For safety, exports and imports don't contain plugin settings, plugin widgets or
 can run commands. Cycling folders and custom theme files are not bundled but keep their paths, so they need to be
 installed separately.
 
+An archive holds at most 64 files, 128 MB per file and 512 MB in total. Wallpapers over a limit are not bundled and
+keep their paths.
+
 The same works from the command line:
 
 ```bash
@@ -69,6 +84,9 @@ dms profile list
 dms profile export <id> work.tar.gz
 dms profile import work.tar.gz
 ```
+
+`list` prints one profile per line as the id and the name separated by a tab. `export` prints every path it could not
+bundle, one per line. `import` prints the id of the new profile.
 
 Profiles are stored in `~/.config/dms/profiles/`, one folder per profile, and imported wallpapers in
 `~/.local/share/dms/wallpapers/`. `dms backup` includes the profiles, but not those wallpapers.
