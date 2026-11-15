@@ -198,6 +198,20 @@ The format needs a plugin you do not have. `openfortivpn` configs and any other
 OpenConnect profile need the [openconnect plugin](#plugins-and-packages); the rest need
 the plugin named in the import table.
 
+### The connection fails without asking for a password
+
+The profile leaves its secrets to NetworkManager, which happens with profiles created by
+`nmcli` without secret flags. Save the secrets on the profile, or have DMS ask for them on
+every connect by setting each secret's flags to `2`, either in nm-connection-editor or
+with `nmcli`. The flag key is the secret's name followed by `-flags`:
+
+```bash
+# L2TP, PPTP, strongSwan
+nmcli connection modify <profile> +vpn.data "password-flags=2"
+# vpnc
+nmcli connection modify <profile> +vpn.data "Xauth password-flags=2, IPSec secret-flags=2"
+```
+
 ### No browser opened
 
 DMS opens the login page with `xdg-open`. Check that a default browser is set:
