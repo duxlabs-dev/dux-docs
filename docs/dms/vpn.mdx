@@ -52,7 +52,7 @@ requires it too, so Fedora installs `NetworkManager-openconnect` and Debian inst
 `networking.networkmanager.plugins` rather than to your system packages.
 
 The `openconnect` command is packaged separately, under that name on every distribution,
-and is a different thing from the plugin. Fortinet profiles that authenticate with a password
+and is a different thing from the plugin. OpenConnect profiles that authenticate with a password
 need both, because DMS runs that login through the command. Browser login needs only the
 plugin, since DMS performs the login itself.
 
@@ -178,6 +178,17 @@ GlobalProtect profiles that use SAML authenticate through
 browser window and then captures the resulting cookie. Install both `gp-saml-gui` and
 the `openconnect` command: openconnect turns that cookie into the one NetworkManager
 uses for the tunnel.
+
+## Other VPN types
+
+OpenConnect profiles on other protocols, such as Cisco AnyConnect or Pulse, sign in with
+the username and password saved on the profile, or ask for them when connecting. If the
+server wants more, like a second factor, the plugin's own login window opens instead.
+
+Other plugins, such as vpnc, L2TP or strongSwan, ask for the secrets they need when
+connecting. Plugins that can only sign in through their own window, like the
+GlobalProtect-openconnect client, open that window. Both use the plugin's login dialog,
+which Debian, Ubuntu and Fedora ship separately, in the plugin package with a `-gnome` suffix.
 
 ## Troubleshooting
 
