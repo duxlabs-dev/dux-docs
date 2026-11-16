@@ -261,6 +261,16 @@ Pin more than one device to move them together, for example a laptop panel and t
 
 The **Clear All** button next to the close button in the page header clears every pin of that screen. Selecting a device that is not pinned on that screen clears its pins too, so the controls follow the selected device. Passing a device to the IPC call still changes only that device.
 
+### Controlled Devices
+
+By default the shell controls every brightness device. To leave some out, open **Settings → Displays → Brightness**, turn off **Control all devices** and check only the devices the shell should control. The card shows when there is more than one device.
+
+Unchecked devices don't show the OSD, aren't in the Control Center, can't become the default device and are ignored by `dms ipc call brightness`. Passing one to the IPC call returns `Device not found`. This is useful for a device that another tool dims on its own, such as the Touch Bar backlight on T2 MacBooks, which `tiny-dfr` dims when idle.
+
+While **Control all devices** is off, newly connected devices stay unchecked. If none of the checked devices is present, the shell controls every device so brightness keeps working.
+
+The setting only affects the shell. `dms brightness` still sees and controls every device.
+
 ## Gamma and Contrast
 
 `dms brightness` CLI is only responsible for setting the actual brightness of the display, for monitors that support DDC/CI or have a backlight, and for the percieved brightness, for monitors that only support software brightness. If a panel looks washed out and backlight or temperature changes do not help, adjust gamma and contrast instead. Both live under the `night` IPC target but apply whether night mode is on or off:
