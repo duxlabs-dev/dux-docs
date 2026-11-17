@@ -88,7 +88,7 @@ systemctl --user restart dms.service
 
 If you built dux-qt-base yourself, rebuild and reinstall it against the current Qt.
 
-:::note
+:::note[Separate quickshell install]
 A separately installed `quickshell` or `quickshell-git` package is not used by DMS and does not conflict with dux-qt-base, which installs no `qs` binary. Keep it if another shell needs it, or uninstall it.
 :::
 
@@ -458,7 +458,7 @@ After changing it, re-login to apply the changes.
 To verify without re-login, force a cache rebuild:`XDG_MENU_PREFIX=plasma- kbuildsycoca6 --noincremental`.
 :::
 
-:::note
+:::note[kde-cli-tools required]
 `kde-cli-tools` (which provides `keditfiletype`) must also be installed, as Dolphin's "Open with…" dialog depends on it. Plasma sessions already export this variable automatically, so this only applies to non-Plasma compositors.
 :::
 

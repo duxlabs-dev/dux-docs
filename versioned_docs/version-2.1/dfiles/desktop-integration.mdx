@@ -26,7 +26,7 @@ Dux Files never takes the name from another file manager. It waits in the queue 
 
 `make install` and the distribution packages also install `dev.duxlabs.files.FileManager1.service`, so a call can start Dux Files when nothing owns the name. An instance started that way serves the call whatever the setting says, and quits if it never opens a window (for example when the call named a missing file).
 
-:::note
+:::note[Competing activation files]
 
 Nautilus, Dolphin, Thunar and Nemo ship activation files for the same name. `dbus-daemon(1)` gives the first service directory precedence (the default `PREFIX=/usr/local` puts ours ahead of `/usr/share`) and calls the choice arbitrary inside one directory. If another file manager keeps winning, remove its activation file or install Dux Files under a prefix that sorts first.
 

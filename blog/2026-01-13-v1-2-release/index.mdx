@@ -412,7 +412,7 @@ Packages include DMS, niri, quickshell, dgop, dsearch, and other core dependenci
 
 ## Upgrade Notes
 
-:::warning
+:::warning[Manual steps may be required]
 This release contains changes that may require manual intervention.
 :::
 
@@ -427,8 +427,7 @@ Ghostty and VSCode theming have changed and will stop working without manual int
 
 The theme path has changed to `~/.config/ghostty/themes/danktheme`. Update your Ghostty configuration:
 
-```toml
-# ~/.config/ghostty/config
+```toml title="~/.config/ghostty/config"
 # Add this
 theme = dankcolors
 
@@ -459,13 +458,11 @@ Steps are recommended to remove existing clipboard history daemon and migrate ex
 
 Remove the `wl-paste --watch cliphist store` daemon/startup from your compositor configuration.
 
-```js
-// ~/.config/niri/config.kdl
+```kdl title="~/.config/niri/config.kdl"
 spawn-at-startup "wl-paste --watch cliphist store" // REMOVE THIS LINE
 ```
 
-```toml
-# ~/.config/hypr/hyprland.conf
+```conf title="~/.config/hypr/hyprland.conf"
 exec-once = wl-paste --watch cliphist store # REMOVE THIS LINE
 ```
 
@@ -524,8 +521,7 @@ touch ~/.config/niri/dms/outputs.kdl
 
 2. Move existing configuration to new files
 
-```js
-// ~/.config/niri/dms/cursor.kdl
+```kdl title="~/.config/niri/dms/cursor.kdl"
 // Move cursor {} block from config.kdl
 cursor {
     xcursor-theme "Bibata-Original-Ice"
@@ -543,8 +539,7 @@ output "DP-1" {
 
 3. Include new files in your config
 
-```js
-// ~/.config/niri/config.kdl
+```kdl title="~/.config/niri/config.kdl"
 // Recommended to place at the end of the file
 include "dms/cursor.kdl"
 include "dms/outputs.kdl"
@@ -570,8 +565,7 @@ touch ~/.config/hypr/dms/binds.conf
 
 2. Move existing configuration to new files
 
-```bash
-# ~/.config/hypr/dms/cursor.conf
+```conf title="~/.config/hypr/dms/cursor.conf"
 # Move cursor settings from hyprland.conf
 env = HYPRCURSOR_THEME,Bibata-Original-Ice
 env = HYPRCURSOR_SIZE,24
@@ -595,8 +589,7 @@ general {
 
 3. Source new files in your config
 
-```bash
-# ~/.config/hypr/hyprland.conf
+```conf title="~/.config/hypr/hyprland.conf"
 # Recommended to place at the end of the file
 source = ./dms/cursor.conf
 source = ./dms/outputs.conf
@@ -623,8 +616,7 @@ touch ~/.config/mangowc/dms/binds.conf
 
 2. Move existing configuration to new files
 
-```bash
-# ~/.config/mangowc/dms/cursor.conf
+```conf title="~/.config/mangowc/dms/cursor.conf"
 # Move cursor settings from mangowc.conf
 cursor_size=24
 cursor_theme=Bibata-Original-Ice
@@ -649,8 +641,7 @@ borderpx=2
 
 3. Source new files in your config
 
-```bash
-# ~/.config/mangowc/mangowc.conf
+```conf title="~/.config/mangowc/mangowc.conf"
 # Recommended to place at the end of the file
 source = ./dms/cursor.conf
 source = ./dms/outputs.conf
@@ -684,12 +675,12 @@ DMS 1.2 brings significant improvements to NixOS integration and the flake-based
 - Simple declarative installation - just enable plugins by their ID
 - Works with both NixOS and Home Manager modules
 
-:::note
+:::note[Flake option names changed]
 The DMS Flake options name was now changed from `programs.dankMaterialShell` to `programs.dank-material-shell`. The modules names also changed.
 While the old module names will still work, you'll receive a deprecation warning informing about the new name.
 :::
 
-:::info
+:::info[nixpkgs docs coming]
 The documentation for the [nixpkgs module](/docs/dms/nixos) will get updated as soon as DMS 1.2 gets into `nixos-unstable`.
 :::
 

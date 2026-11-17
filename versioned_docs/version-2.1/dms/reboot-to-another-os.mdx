@@ -60,7 +60,7 @@ it again.
 
 Save this as `/etc/polkit-1/rules.d/50-dms-bootnext.rules`:
 
-```js
+```js title="/etc/polkit-1/rules.d/50-dms-bootnext.rules"
 polkit.addRule(function (action, subject) {
     if (action.id !== "org.freedesktop.policykit.exec" || !subject.local || !subject.active)
         return polkit.Result.NOT_HANDLED;

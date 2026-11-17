@@ -58,12 +58,12 @@ For complete DMS installation instructions including repository setup, see the [
 
 :::tip[Quick Start]
 
-- **Fedora / Enterprise Linux**: See the [Fedora & Enterprise Linux](../dms/installation#fedora--enterprise-linux) section in the installation guide
-- **Arch Linux**: See the [Arch & Derivatives](../dms/installation#arch--derivatives) section in the installation guide
-- **Ubuntu/Debian**: See the [Ubuntu & Debian](../dms/installation#debian--ubuntu) section in the installation guide
-- **OpenSUSE**: See the [OpenSUSE](../dms/installation#opensuse--derivatives) section in the installation guide
-- **Void Linux**: See the [Void Linux](../dms/installation#void-linux) section in the installation guide
-- **PikaOS**: See the [PikaOS](../dms/installation#pikaos) section in the installation guide
+- **Fedora / Enterprise Linux**: See the [Fedora & Enterprise Linux](../dms/installation?distro=fedora#fedora--enterprise-linux) section in the installation guide
+- **Arch Linux**: See the [Arch & Derivatives](../dms/installation?distro=arch#arch--derivatives) section in the installation guide
+- **Ubuntu/Debian**: See the [Ubuntu & Debian](../dms/installation?distro=debian#debian--ubuntu) section in the installation guide
+- **OpenSUSE**: See the [OpenSUSE](../dms/installation?distro=opensuse#opensuse--derivatives) section in the installation guide
+- **Void Linux**: See the [Void Linux](../dms/installation?distro=void#void-linux) section in the installation guide
+- **PikaOS**: See the [PikaOS](../dms/installation?distro=debian#pikaos) section in the installation guide
 
 :::
 
@@ -109,7 +109,7 @@ The new names exist only in the `duxlabs` repositories (`home:duxlabs-dev` on OB
 
 All packages in the Dux Labs repository can be installed independently. First, add the Dux Labs repository for your distribution, then install the packages you need.
 
-:::note
+:::note[xwayland-satellite is automatic]
 
 **xWayland-Satellite** is automatically installed as a dependency when installing **niri** or **niri-git**. You don't need to install it separately.
 
@@ -145,7 +145,7 @@ paru -S dux-shell-git dux-gop-git dux-search-git dux-calendar-git dux-greeter-gi
 | Dux Calendar | `dux-calendar-bin` (AUR) | `dux-calendar-git` (AUR) |
 | Dux Greeter | `dux-greeter-bin` (AUR) | `dux-greeter-git` (AUR) |
 
-`niri`, `quickshell`, and the other compositors are available from the official Arch repositories. See the [Arch & Derivatives](../dms/installation#arch--derivatives) installation guide for details.
+`niri`, `quickshell`, and the other compositors are available from the official Arch repositories. See the [Arch & Derivatives](../dms/installation?distro=arch#arch--derivatives) installation guide for details.
 
 ### Debian
 
@@ -305,7 +305,7 @@ sudo xbps-install -S dux-gop dux-search dux-calendar dux-files
 The package names are `dux-gop`, `dux-search`, `dux-calendar`, and `dux-files`; they install
 the `dgop`, `dsearch`, `dcal`, and `dfiles` commands respectively. To install DMS itself,
 also configure the separate repository in the [Void Linux DMS installation
-guide](../dms/installation#void-linux).
+guide](../dms/installation?distro=void#void-linux).
 
 ### OpenSUSE
 
@@ -433,7 +433,7 @@ sudo dnf install quickshell-git niri-git
 </TabItem>
 </Tabs>
 
-:::note
+:::note[Package availability]
 
 Package availability may vary by distribution. Some packages may only be available on Debian, Ubuntu, and OpenSUSE via OBS/PPA.
 
@@ -481,7 +481,7 @@ The packaging configurations and build scripts are maintained in the official Du
 
 **Repository**: [github.com/duxlabs-dev/dux-repo](https://github.com/duxlabs-dev/dux-repo)
 
-:::note
+:::note[Official Dux Labs packages]
 
 **Official Dux Labs packages**: `dms`, `dms-cli`, `dux-gop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dux-greeter`, `dux-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
 Packages retain their upstream licenses: Niri (GPL-3.0), Quickshell (LGPL-3.0), Matugen (GPL-2.0), Cliphist (GPL-3.0).

@@ -224,7 +224,7 @@ dms ipc call sessions switchTo testuser2
 dms ipc call sessions activate 4
 ```
 
-:::note
+:::note[Existing sessions only]
 This only switches between sessions that *already exist* on the current seat. Creating a brand-new session for a user who isn't logged in needs a multi-session greeter (greetd-flexiserver / GDM / LightDM); the picker's empty state offers a Log out fallback to reach the greeter.
 :::
 
@@ -720,7 +720,7 @@ Application launcher modal with search capabilities.
 
 **Default keybind:** `Super + Space` (calls `spotlight toggle`)
 
-:::note
+:::note[launcher and spotlight]
 `launcher` and `spotlight` are synonymous — both targets call the same launcher modal. `spotlight` is kept for backwards compatibility, and the default keybinds still use it, so existing binds keep working.
 
 When **Launcher → Default action → Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
@@ -1158,7 +1158,7 @@ niri has no way to hide or minimize a window, so DMS parks windows on a workspac
 - A window shown on another monitor moves without animation.
 - If the shell restarts, DMS forgets which pad a shown window came from. Run `move` on it again.
 
-:::warning
+:::warning[Don't declare the scratchpad workspace]
 Do not declare `workspace "scratchpad"` in your niri config. Config workspaces sit at index 1 and shift every `focus-workspace N` bind.
 :::
 

@@ -261,7 +261,7 @@ A registry can provide only plugins, only themes, or both. See [dms-plugin-regis
 
 An administrator can turn off every registry, the official one included, with the `disable_registries` key in `/etc/dms/cli-policy.json`:
 
-```json
+```json title="/etc/dms/cli-policy.json"
 {
   "policy_version": 1,
   "disable_registries": true
@@ -278,7 +278,7 @@ With the key set, DMS never clones or pulls a registry. Installed plugins and th
 
 An administrator can stop DMS's own interfaces from ending or weakening a lock with these keys in `/etc/dms/cli-policy.json`. Each key is off unless set to `true`:
 
-```json
+```json title="/etc/dms/cli-policy.json"
 {
   "policy_version": 1,
   "disable_lock_ipc_unlock": true,

@@ -25,7 +25,7 @@ Thank you for contributing to the Dux Modular Shell registry! This guide covers 
    - Go to [duxlabs-dev/dux-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) and click Fork
 
 2. **Create a new JSON file** in the `plugins/` directory:
-   ```
+   ```text
    plugins/{github-username}-{plugin-name}.json
    ```
    - Use lowercase letters
@@ -34,7 +34,7 @@ Thank you for contributing to the Dux Modular Shell registry! This guide covers 
 
 3. **Fill in your plugin information** using this schema:
 
-```json
+```json title="plugins/{github-username}-{plugin-name}.json"
 {
     "id": "pluginId",
     "name": "PluginName",
@@ -122,7 +122,7 @@ On top of that, registry plugins can apply to join the central DMS POEditor proj
 2. On approval, a maintainer adds your repo to the translation sync. Your English strings get uploaded to POEditor, tagged with your plugin id
 3. As translators finish languages, you get PRs adding `translations/<locale>.json` files to your repo — merge them and the translations ship with your next plugin update
 
-:::warning
+:::warning[Keep English strings stable]
 Once your strings are in POEditor, renaming a term is a delete-plus-add — the old term's translations across every language are discarded. Keep English strings stable.
 :::
 
@@ -136,7 +136,7 @@ Once your strings are in POEditor, renaming a term is a delete-plus-add — the 
    - Go to [duxlabs-dev/dux-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry) and click Fork
 
 2. **Create a new folder** in the `themes/` directory:
-   ```
+   ```text
    themes/{theme-id}/theme.json
    ```
    - Use lowercase letters and hyphens for the folder name
@@ -144,7 +144,7 @@ Once your strings are in POEditor, renaming a term is a delete-plus-add — the 
 
 3. **Create your `theme.json`** with this schema:
 
-```json
+```json title="themes/{theme-id}/theme.json"
 {
   "id": "themeId",
   "name": "Theme Name",

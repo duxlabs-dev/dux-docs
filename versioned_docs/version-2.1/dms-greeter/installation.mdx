@@ -39,7 +39,10 @@ The old `dms greeter <command>` form still works as a deprecated alias that forw
 
 ## Distro Installation
 
-### Arch & Derivatives
+<Tabs groupId="distro" queryString="distro">
+<TabItem value="arch" label="Arch">
+
+#### Arch & Derivatives
 
 Dux Greeter is available in the AUR as a prebuilt binary package or a source (`-git`) package.
 
@@ -78,7 +81,10 @@ dms-greeter install
 
 :::
 
-### Fedora & Enterprise Linux
+</TabItem>
+<TabItem value="fedora" label="Fedora & EL">
+
+#### Fedora & Enterprise Linux
 
 Dux Greeter is published to the [duxlabs/dux-repo](https://copr.fedorainfracloud.org/coprs/duxlabs/dux-repo/) COPR from the [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) repository. On Enterprise Linux 10 the same COPR provides `greetd`, which EPEL 10 does not ship.
 
@@ -119,11 +125,14 @@ sudo dnf swap dux-greeter-git dux-greeter
 
 Both RPMs install `/usr/lib/sysusers.d/dms-greeter.conf` so the `greeter` user is recreated from `/usr` on every boot. That matters on **Fedora Atomic**, Universal Blue, bootc, and other ostree systems where install-time `useradd` in `/etc/passwd` may not persist.
 
-### Debian & Ubuntu
+</TabItem>
+<TabItem value="debian" label="Debian & Ubuntu">
+
+#### Debian & Ubuntu
 
 Dux Greeter is published from [dux-greeter](https://github.com/duxlabs-dev/dux-greeter) into the Dux OBS/PPA channels as **`dux-greeter`** (tagged releases) and **`dux-greeter-git`** (master snapshots). The two packages conflict; both install `/usr/bin/dms-greeter`.
 
-#### Debian
+##### Debian
 
 Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
 
@@ -195,7 +204,7 @@ sudo apt install dux-greeter       # replaces dux-greeter-git
 </TabItem>
 </Tabs>
 
-#### Ubuntu
+##### Ubuntu
 
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
@@ -232,7 +241,10 @@ sudo apt install dux-greeter       # replaces dux-greeter-git
 </TabItem>
 </Tabs>
 
-### openSUSE & Derivatives
+</TabItem>
+<TabItem value="opensuse" label="openSUSE">
+
+#### openSUSE & Derivatives
 
 Dux Greeter is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll. Both **`dux-greeter`** and **`dux-greeter-git`** ship from the same `home:duxlabs-dev:dux-repo` project and conflict with each other.
 
@@ -303,7 +315,43 @@ sudo zypper remove dux-greeter-git && sudo zypper install dux-greeter
 </TabItem>
 </Tabs>
 
-### Void Linux
+</TabItem>
+<TabItem value="gentoo" label="Gentoo">
+
+#### Gentoo
+
+There is no Gentoo package yet. Install the prebuilt binary from the latest release:
+
+```bash
+curl -fsSL https://github.com/duxlabs-dev/dux-greeter/releases/latest/download/dms-greeter-linux-amd64.tar.gz | tar -xz
+sudo install -Dm755 dms-greeter-linux-amd64 /usr/local/bin/dms-greeter
+```
+
+Then run:
+
+```bash
+dms-greeter install
+```
+
+This will automatically install `greetd` via Portage, configure permissions, and set up greetd to use dms-greeter. To start the greeter immediately without rebooting, run `sudo systemctl start greetd`.
+
+</TabItem>
+<TabItem value="nixos" label="NixOS">
+
+#### NixOS
+
+:::tip
+
+NixOS has dedicated documentation with two installation methods:
+- [Native nixpkgs installation](./nixos) - **Recommended** for NixOS 26.05+
+- [Flake-based installation](./nixos-flake) - Use for quicker updates
+
+:::
+
+</TabItem>
+<TabItem value="void" label="Void">
+
+#### Void Linux
 
 :::note
 
@@ -381,6 +429,25 @@ sudo xbps-install --repository=hostdir/binpkgs dux-greeter
 </TabItem>
 </Tabs>
 
+
+##### Void Linux
+
+After installing **`dux-greeter`** or **`dux-greeter-git`** (see [Void Linux](#void-linux) under Distro Installation above), enable and optionally sync theming:
+
+```bash
+dms-greeter enable
+dms-greeter sync     # optional: share theming with the shell
+```
+
+On Void, `dms-greeter enable` sets up everything logind provides automatically on systemd distros: it enables the `dbus` and `elogind` services, configures greetd for elogind (`LIBSEAT_BACKEND=logind`), rewrites `/etc/sv/greetd/run` to wait for those services at boot, adds the `_greeter` user to the `video`/`input` groups, and adds `pam_rundir` to `/etc/pam.d/greetd` so the post-login session gets an `XDG_RUNTIME_DIR`. If `seatd` is enabled it is disabled, elogind manages the seat instead.
+
+On runit, enabling greetd starts it within a few seconds, no separate start command is needed. greetd package updates restore the stock run script, re-run `dms-greeter enable` afterwards.
+
+A Wayland compositor (`niri`, `hyprland`, `sway`, …) is required and is not pulled in automatically.
+
+</TabItem>
+</Tabs>
+
 After installation, proceed to [Completing Setup](#completing-setup) below.
 
 ## Greeter system user (RPM, DEB, and immutable systems)
@@ -417,48 +484,6 @@ systemd-sysusers --dry-run | grep greeter
 ```
 
 If you previously added a manual `/usr/lib/sysusers.d/dms-greeter.conf` workaround (for example on Zirconium before upstream packaging), you can remove it once `dux-greeter` from Dux includes the same file.
-
-### Gentoo
-
-There is no Gentoo package yet. Install the prebuilt binary from the latest release:
-
-```bash
-curl -fsSL https://github.com/duxlabs-dev/dux-greeter/releases/latest/download/dms-greeter-linux-amd64.tar.gz | tar -xz
-sudo install -Dm755 dms-greeter-linux-amd64 /usr/local/bin/dms-greeter
-```
-
-Then run:
-
-```bash
-dms-greeter install
-```
-
-This will automatically install `greetd` via Portage, configure permissions, and set up greetd to use dms-greeter. To start the greeter immediately without rebooting, run `sudo systemctl start greetd`.
-
-### NixOS
-
-:::tip
-
-NixOS has dedicated documentation with two installation methods:
-- [Native nixpkgs installation](./nixos) - **Recommended** for NixOS 26.05+
-- [Flake-based installation](./nixos-flake) - Use for quicker updates
-
-:::
-
-### Void Linux
-
-After installing **`dux-greeter`** or **`dux-greeter-git`** (see [Void Linux](#void-linux) under Distro Installation above), enable and optionally sync theming:
-
-```bash
-dms-greeter enable
-dms-greeter sync     # optional: share theming with the shell
-```
-
-On Void, `dms-greeter enable` sets up everything logind provides automatically on systemd distros: it enables the `dbus` and `elogind` services, configures greetd for elogind (`LIBSEAT_BACKEND=logind`), rewrites `/etc/sv/greetd/run` to wait for those services at boot, adds the `_greeter` user to the `video`/`input` groups, and adds `pam_rundir` to `/etc/pam.d/greetd` so the post-login session gets an `XDG_RUNTIME_DIR`. If `seatd` is enabled it is disabled, elogind manages the seat instead.
-
-On runit, enabling greetd starts it within a few seconds, no separate start command is needed. greetd package updates restore the stock run script, re-run `dms-greeter enable` afterwards.
-
-A Wayland compositor (`niri`, `hyprland`, `sway`, …) is required and is not pulled in automatically.
 
 ## Installer & Manual Installation
 
@@ -605,7 +630,7 @@ If you prefer to set up the greeter manually, follow these steps:
 :::
 
 1. Edit `/etc/greetd/config.toml` and set `command =` to use dms-greeter:
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   [terminal]
   vt = 1
 
@@ -643,7 +668,7 @@ Disabling a greeter while logged in under that greeter will log you out and brin
 The steps above assume systemd. On Void the greeter user is `_greeter`, the seat is managed by elogind, and greetd needs extra pieces that logind provides for free elsewhere. `dms-greeter enable` does all of this for you, this is the manual equivalent:
 
 1. Edit `/etc/greetd/config.toml`:
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   [terminal]
   vt = 1
 
@@ -661,7 +686,7 @@ The steps above assume systemd. On Void the greeter user is `_greeter`, the seat
   ```
 
 3. Make greetd wait for dbus and elogind at boot. Replace `/etc/sv/greetd/run` with:
-  ```sh
+  ```sh title="/etc/sv/greetd/run"
   #!/bin/sh
   sv check dbus >/dev/null || exit 1
   sv check elogind >/dev/null || exit 1
@@ -675,7 +700,7 @@ The steps above assume systemd. On Void the greeter user is `_greeter`, the seat
   ```
 
 5. Add pam_rundir to `/etc/pam.d/greetd` so sessions get an `XDG_RUNTIME_DIR`:
-  ```
+  ```pam title="/etc/pam.d/greetd"
   session    optional    pam_rundir.so
   ```
 

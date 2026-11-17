@@ -17,7 +17,7 @@ import Hero from '@site/src/components/Hero';
 
 The `dms system update` command checks for pending updates and optionally upgrades your system using the package managers actually installed on the machine. It talks to **APT**, **DNF** / **DNF5**, **Pacman**, **Paru**, **Yay**, **Zypper**, **rpm-ostree** (Atomic / Silverblue-style deployments), and **Flatpak** — whichever combination is available — without going through the DMS compositor daemon for normal check and upgrade flows.
 
-:::info
+:::info[No server required]
 Listing and applying updates runs **locally** against those tools. You do **not** need `dms` running as a server for `dms system update` or `dms system update --check`. The optional `--interval` flag is the exception: it configures how often a **running** DMS server polls for updates.
 :::
 

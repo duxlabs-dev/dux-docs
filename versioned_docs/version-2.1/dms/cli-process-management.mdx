@@ -158,7 +158,7 @@ journalctl --user -u dms -f
 
 The `dms restart` and `dms kill` commands work regardless of whether you're using systemd or manual startup.
 
-:::warning
+:::warning[Don't run DMS twice]
 
 If using systemd, don't add `dms run` to your compositor config - you'll end up with two instances.
 
@@ -169,19 +169,19 @@ If using systemd, don't add `dms run` to your compositor config - you'll end up 
 Add to your compositor's autostart configuration:
 
 **Hyprland** (`~/.config/hypr/hyprland.lua`):
-```lua
+```lua title="~/.config/hypr/hyprland.lua"
 hl.on("hyprland.start", function()
     hl.exec_cmd("dms run")
 end)
 ```
 
 **Sway** (`~/.config/sway/config`):
-```conf
+```conf title="~/.config/sway/config"
 exec dms run
 ```
 
 **Niri** (`~/.config/niri/config.kdl`):
-```kdl
+```kdl title="~/.config/niri/config.kdl"
 spawn-at-startup "dms" "run"
 ```
 
@@ -224,7 +224,7 @@ DMS operates as a multi-process system with IPC communication:
 4. **Plugins**: Optional processes that extend functionality
 
 **Process hierarchy**:
-```
+```text
 compositor (hyprland/sway/niri/etc)
 └── dms backend server
     ├── IPC server (Unix socket)

@@ -99,7 +99,7 @@ cd ~/.config/dms/plugins/MyPlugin
 
 Save this as `plugin.json`:
 
-```json
+```json title="plugin.json"
 {
   "id": "myPlugin",
   "name": "My Plugin",
@@ -118,7 +118,7 @@ Save this as `plugin.json`:
 
 Save this as `MyWidget.qml`:
 
-```qml
+```qml title="MyWidget.qml" showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Services
@@ -177,7 +177,7 @@ PluginComponent {
 
 Save this as `MySettings.qml`:
 
-```qml
+```qml title="MySettings.qml" showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Modules.Plugins
@@ -231,7 +231,7 @@ Widget plugins show up in the bar, in docks, or in the Control Center. They use 
 
 Here's a real color display widget:
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Services
@@ -241,6 +241,7 @@ import qs.Modules.Plugins
 PluginComponent {
     id: root
 
+    // highlight-next-line
     property color customColor: pluginData.customColor || Theme.primary
 
     horizontalBarPill: Component {
@@ -307,7 +308,7 @@ While you don't have to add a layer namespace to you widget (it will fallback to
 As of right now, layer namespace only work with popout widget plugins.
 
 :::
-```qml
+```qml showLineNumbers
 PluginComponent {
     id: root
 
@@ -414,7 +415,7 @@ Tiles use square cells. The default size is 4×1; 2×2 is square. Users resize t
 
 This audio tile uses demo data. Small tiles use the standard icon and status layout. Larger tiles add a volume slider and as many device rows as fit. The icon toggles mute; the label opens the full device list. Icon-only tiles open the list directly.
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Widgets
@@ -521,7 +522,7 @@ Docks run the same widget plugins as the bar. Users add them from the dock's edi
 
 Set `attachedContent` to give a widget a panel that opens inside the dock:
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Widgets
@@ -586,7 +587,7 @@ Daemon plugins run in the background without UI. They monitor events, automate t
 
 Here's a daemon that runs a script whenever the wallpaper changes:
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -661,7 +662,7 @@ Desktop plugins render directly on the desktop background layer using Wayland's 
 
 ### Basic Desktop Widget
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import Quickshell
 import qs.Common
@@ -775,7 +776,7 @@ DesktopPluginComponent {
 
 When enabled, the widget's layer requests `OnDemand` keyboard focus whenever the user is not actively dragging or resizing it. Use this for widgets with text inputs, search fields, or keyboard shortcuts. Leave it off (the default) for purely visual widgets so the wallpaper layer doesn't steal focus from real applications.
 
-:::warning
+:::warning[Keyboard focus]
 Only enable this if your widget actually needs keyboard input. Always-focused desktop widgets can interfere with global shortcuts and the focused application.
 :::
 
@@ -882,7 +883,7 @@ Canvas {
 
 A clock widget with analog and digital modes, demonstrating dynamic component loading and responsive sizing.
 
-```qml
+```qml title="DesktopClock.qml" showLineNumbers
 // DesktopClock.qml
 import QtQuick
 import Quickshell
@@ -1063,7 +1064,7 @@ DesktopPluginComponent {
 }
 ```
 
-```qml
+```qml title="DesktopClockSettings.qml" showLineNumbers
 // DesktopClockSettings.qml
 import QtQuick
 import qs.Common
@@ -1121,7 +1122,7 @@ Launcher plugins integrate with the launcher to provide searchable results. They
 
 ### Basic Structure
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import Quickshell
 import qs.Common
@@ -1352,7 +1353,7 @@ function saveSetting(key, value) {
 
 ### Example: Calculator Plugin
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import Quickshell
 import qs.Services
@@ -1411,7 +1412,7 @@ QtObject {
 
 Launcher plugins use `PluginSettings` just like widget plugins:
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Widgets
@@ -1488,7 +1489,7 @@ Dash plugins are new in 2.0. Declare `"requires_dms": ">=2.0.0"`.
 
 A tab is a `DashTabComponent`, an `Item` sized to the dash content area. Here's a complete stopwatch tab. It's the `DashTabExample` plugin in the DMS repo.
 
-```json
+```json showLineNumbers
 {
     "id": "dashTabExample",
     "name": "Stopwatch Example",
@@ -1522,7 +1523,7 @@ A tab is a `DashTabComponent`, an `Item` sized to the dash content area. Here's 
 }
 ```
 
-```qml
+```qml title="StopwatchTab.qml" showLineNumbers
 // StopwatchTab.qml
 import QtQuick
 import qs.Common
@@ -1545,8 +1546,10 @@ DashTabComponent {
     readonly property bool showHundredths: options.hundredths !== false
     readonly property var visibleLaps: laps.slice(0, options.laps ?? 5)
 
+    // highlight-start
     focusTarget: startButton
     implicitHeight: Math.max(DashMetrics.tabMinHeight, content.implicitHeight + Theme.spacingL * 2)
+    // highlight-end
     menuActions: [
         {
             label: I18n.trFor("dashTabExample", "Reset"),
@@ -1626,6 +1629,7 @@ DashTabComponent {
         startButton.forceActiveFocus(Qt.OtherFocusReason);
     }
 
+    // highlight-next-line
     function handleKeyEvent(event) {
         if (event.modifiers & (Qt.ControlModifier | Qt.AltModifier))
             return false;
@@ -1647,6 +1651,7 @@ DashTabComponent {
         interval: root.showHundredths ? 40 : 200
         repeat: true
         triggeredOnStart: true
+        // highlight-next-line
         running: root.live && root.running
         onTriggered: root.now = Date.now()
     }
@@ -1760,7 +1765,7 @@ What's going on:
 
 A card is a `DashCardComponent`, a tonal surface in the overview grid. This one shows how much of the day, week, month or year has passed. It's the `DashCardExample` plugin.
 
-```json
+```json showLineNumbers
 {
     "id": "dashCardExample",
     "name": "Progress Example",
@@ -1818,7 +1823,7 @@ A card is a `DashCardComponent`, a tonal surface in the overview grid. This one 
 }
 ```
 
-```qml
+```qml title="ProgressCard.qml" showLineNumbers
 // ProgressCard.qml
 import QtQuick
 import Quickshell
@@ -1833,8 +1838,10 @@ DashCardComponent {
     readonly property string period: options.period ?? "day"
     readonly property var span: spanFor(clock.date, period)
     readonly property real progress: Math.max(0, Math.min(1, (clock.date - span.start) / (span.end - span.start)))
+    // highlight-start
     readonly property bool wide: width >= DashMetrics.gridRowUnit * 2
     readonly property bool tall: height >= DashMetrics.gridRowUnit * 2
+    // highlight-end
     readonly property string periodText: {
         switch (period) {
         case "week":
@@ -1856,6 +1863,7 @@ DashCardComponent {
         return I18n.trFor("dashCardExample", "%1 days left").arg(Math.floor(hours / 24));
     }
 
+    // highlight-next-line
     tone: options.tone ?? ""
 
     function weekStart() {
@@ -1964,7 +1972,7 @@ What's going on:
 
 A plugin with both surfaces, and maybe a bar widget too, uses `components`. `DashCounterExample` shares one counter between a tab, a card and a bar or dock widget:
 
-```json
+```json showLineNumbers
 {
     "id": "dashCounterExample",
     "name": "Counter Example",
@@ -1997,7 +2005,7 @@ A plugin with both surfaces, and maybe a bar widget too, uses `components`. `Das
 
 The card is clickable, so a click opens the tab:
 
-```qml
+```qml title="CounterCard.qml" showLineNumbers
 // CounterCard.qml
 import QtQuick
 import qs.Common
@@ -2008,6 +2016,7 @@ import qs.Modules.Plugins
 DashCardComponent {
     id: root
 
+    // highlight-next-line
     readonly property int count: pluginData.count ?? 0
 
     clickable: true
@@ -2018,6 +2027,7 @@ DashCardComponent {
             setData("count", Math.max(0, count - 1));
             return true;
         case Qt.Key_Right:
+            // highlight-next-line
             setData("count", count + 1);
             return true;
         }
@@ -2048,7 +2058,7 @@ DashCardComponent {
 
 The bar widget opens the dash on the counter tab. It works the same in a dock:
 
-```qml
+```qml title="CounterWidget.qml" showLineNumbers
 // CounterWidget.qml
 import QtQuick
 import qs.Common
@@ -2184,7 +2194,7 @@ For tiles inside a tab, use `Card` from `qs.Modules.DDash.Overview`. It has the 
 
 Give your tab a `DashWidgetGrid` and assign it to `widgetGrid` to get the dash Edit, Add widget, Reset and Clear All actions for free:
 
-```qml
+```qml showLineNumbers
 import qs.Modules.DDash
 import qs.Modules.DDash.Overview
 
@@ -2675,7 +2685,7 @@ Point the manifest's `startupCheck` field at a small component, and list the too
 
 The check component must be **non-visual** — use a `QtObject` so nothing is created in the graphics scene. It exposes a `check` function. Call `done(null)` to allow activation, or `done(error)` to block it:
 
-```qml
+```qml title="StartupCheck.qml"
 // StartupCheck.qml
 import QtQuick
 import qs.Common
@@ -2711,7 +2721,7 @@ QtObject {
 }
 ```
 
-:::note
+:::note[Sync vs async checks]
 Async vs sync is chosen by **arity**: if you declare `check(done)` (one argument) it is treated as async and you must call `done(...)`; if you declare `check()` (no arguments) its return value is used directly. Don't mix the two — a one-argument `check` that returns instead of calling `done` will hang activation.
 :::
 
@@ -2721,7 +2731,7 @@ When the check fails the enable toggle reverts and the error is shown as a toast
 
 Use `PluginSettings` as the base and drop in setting components. They handle all the loading and saving automatically.
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import qs.Common
 import qs.Modules.Plugins
@@ -3007,7 +3017,7 @@ Lyrics come from a `LyricsController` in `qs.Services`. It looks up the track th
 
 `LyricsService.controller` is the shared controller for the active MPRIS player. The media tab, the island and plugins all read the same one, so there is one lookup and one clock no matter how many views are open. It only runs while something holds a `LyricsSubscription`:
 
-```qml
+```qml showLineNumbers
 import QtQuick
 import qs.Services
 import qs.Widgets
@@ -3099,7 +3109,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 
 ### Optional Fields
 
-```json
+```json showLineNumbers
 {
   "icon": "material_icon",
   "settings": "./Settings.qml",
@@ -3160,7 +3170,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 
 Plugins ship their own translations. Drop a `translations/` directory next to `plugin.json`, wrap your strings in `I18n.trFor()`, done — nothing needs to change in the DMS repo, and users get your translations just by installing the plugin.
 
-```
+```text
 MyPlugin/
 ├── plugin.json
 ├── MyWidget.qml

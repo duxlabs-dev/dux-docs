@@ -8,7 +8,7 @@ COPY patches ./patches
 RUN npm ci
 
 FROM node:22-alpine AS builder
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat git
 WORKDIR /app
 
 # Copy dependencies from deps stage

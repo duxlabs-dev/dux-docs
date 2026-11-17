@@ -20,7 +20,7 @@ import Hero from '@site/src/components/Hero';
 
 A Dux Edit plugin is a folder with a `plugin.json` manifest and QML files. It uses the same manifest format, storage calls and settings controls as [DMS plugins](../dms/plugin-development), with one new surface: `editor`. DMS plugins written for the bar, control center, desktop, dashboard or launcher do not load here.
 
-:::warning
+:::warning[Plugins run with your privileges]
 A plugin is arbitrary QML that runs with your user's privileges. Manifest permissions are advisory, not a sandbox. Only install plugins you trust. Plugins get no way to save with administrator rights.
 :::
 
@@ -43,7 +43,7 @@ Keep anything that must outlive this in `pluginService`: data and state saved th
 
 Same format as a [DMS plugin manifest](../dms/plugin-development#2-create-manifest), with the `editor` surface:
 
-```json
+```json title="plugin.json"
 {
   "id": "dateTools",
   "name": "Date Tools",
@@ -137,7 +137,7 @@ DMS `SettingsData`, `SessionData`, `PopoutService`, `DMSService`, `CompositorSer
 
 `~/.config/dux/edit/plugins/dateTools/plugin.json` is the manifest above without the `settings` line. `DateTools.qml`:
 
-```qml
+```qml title="DateTools.qml"
 import QtQuick
 import qs.Common
 import qs.DCommon.Common
