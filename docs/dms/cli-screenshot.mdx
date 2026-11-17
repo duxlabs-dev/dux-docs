@@ -86,6 +86,8 @@ dms screenshot -f jpg -q 85
 | `--config` | `-c` | Custom DMS config directory path |
 | `--help` | `-h` | Show help |
 
+The defaults above can be changed in **Settings → System & integrations → Screenshot**: save folder, format, JPEG quality, clipboard, notification, cursor, region confirmation, shortcut hints and scroll capture interval. A flag passed on the command line overrides the setting for that capture, so a keybind like `dms screenshot --no-file` stays clipboard only. Scripts follow the settings too: pass `--format` for a fixed `--stdout` format, and `--no-file=false` when `--json` must report a saved path.
+
 ## Examples
 
 ### Region Selection
