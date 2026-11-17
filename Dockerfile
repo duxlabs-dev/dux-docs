@@ -17,6 +17,11 @@ COPY --from=deps /app/node_modules ./node_modules
 # Copy source files
 COPY . .
 
+# Fetch full git history (shallow clones break "Last updated" dates)
+RUN if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then \
+      git fetch --unshallow --quiet https://github.com/duxlabs-dev/dux-docs.git || true; \
+    fi
+
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 

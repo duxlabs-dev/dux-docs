@@ -1894,6 +1894,54 @@ a.theme-doc-card-container [class*='cardDescription'] {
   color: var(--md-sys-color-primary);
 }
 
+/* ==== Desktop sidebar collapse button ==== */
+/* Default is a boxed, square grey bar; make it a quiet footer strip with a
+   single top divider and a themed chevron that gets a pill on hover. */
+@media (min-width: 997px) {
+  button[class*='collapseSidebarButton'] {
+    height: 48px;
+    border: 0;
+    border-top: 1px solid var(--dank-border);
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  button[class*='collapseSidebarButton']:hover,
+  button[class*='collapseSidebarButton']:focus-visible {
+    background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+    color: var(--md-sys-color-primary);
+  }
+
+  button[class*='collapseSidebarButton'] svg {
+    width: 18px;
+    height: 18px;
+    margin-top: 0;
+    fill: currentColor;
+  }
+}
+
+/* Collapsed rail: same treatment for the expand strip. */
+@media (min-width: 997px) {
+  [role='button'][class*='expandButton'] {
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  [role='button'][class*='expandButton']:hover,
+  [role='button'][class*='expandButton']:focus-visible {
+    background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+    color: var(--md-sys-color-primary);
+  }
+
+  [role='button'][class*='expandButton'] svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+}
+
 /* ==== Image zoom & Mermaid panzoom ==== */
 
 [data-theme='dark'] .medium-zoom-overlay {
