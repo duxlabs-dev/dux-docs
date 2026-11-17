@@ -31,7 +31,7 @@ services.displayManager.dms-greeter = {
 };
 ```
 
-:::warning
+:::note[Compositors come from NixOS config]
 
 Compositors must be installed via NixOS configuration to appear in Dux Greeter, not via home-manager.
 
@@ -73,7 +73,7 @@ You can use the package from the [dux-greeter](https://github.com/duxlabs-dev/du
 
 First, add the flake input to your `flake.nix`:
 
-```nix
+```nix title="flake.nix"
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -96,7 +96,7 @@ services.displayManager.dms-greeter = {
 };
 ```
 
-:::warning
+:::warning[Flake package differences]
 
 When using the flake package with the native nixpkgs module, some dependencies may not be automatically enabled by default, and certain configurations might be missing. You may need to manually install optional dependencies or adjust settings to match your needs.
 

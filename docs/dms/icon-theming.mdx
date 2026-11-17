@@ -48,7 +48,7 @@ If you're using the GTK passthrough method for Qt theming, icon themes are contr
 
 Edit `~/.config/gtk-3.0/settings.ini`:
 
-```ini
+```ini title="~/.config/gtk-3.0/settings.ini"
 [Settings]
 gtk-icon-theme-name=Papirus-Dark
 ```
@@ -88,7 +88,7 @@ When using qt6ct for dedicated Qt control, icon themes are managed through the q
 
 Edit `~/.config/qt6ct/qt6ct.conf`:
 
-```ini
+```ini title="~/.config/qt6ct/qt6ct.conf"
 [Appearance]
 icon_theme=Papirus-Dark
 ```
@@ -101,7 +101,7 @@ If you're using KDE Plasma or the KDE platform theme, icon themes are managed th
 
 Edit `~/.config/kdeglobals`:
 
-```ini
+```ini title="~/.config/kdeglobals"
 [Icons]
 Theme=Papirus-Dark
 ```
@@ -161,7 +161,7 @@ The Dux Installer only sets `QT_QPA_PLATFORMTHEME=gtk3` for non-systemd sessions
 
 :::
 
-:::note
+:::note[Expose the variable to DMS]
 
 This variable must be exposed to the `dms` process. Set it in the compositor config, a custom environment.d file, or via `systemctl --user edit dms` (only affects DMS and apps it launches).
 

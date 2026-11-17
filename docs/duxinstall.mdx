@@ -125,7 +125,7 @@ The installer is tested on Workstation Edition but should work fine on any Fedor
 
 **Supported:** Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, Zirconium, and other rpm-ostree or bootc images based on Fedora.
 
-The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
+The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation?distro=fedora#fedora-atomic--bootc-images).
 
 ### Enterprise Linux 10
 
@@ -193,17 +193,24 @@ Gentoo requires a **systemd** installation. OpenRC is not supported.
 | xwayland-satellite | Manual | For niri X11 app support |
 | Dux Modular Shell | Manual | Git clone to `~/.config/quickshell/dms` |
 
-**Global USE Flags:**
-`dbus udev alsa policykit jpeg png webp gif tiff svg brotli gdbm accessibility gtk qt6 egl gbm`
+**Global USE flags:**
 
-**Package-Specific USE Flags:**
-- `sys-apps/xdg-desktop-portal-gtk`: wayland X
-- `gui-wm/niri`: dbus screencast
-- `gui-wm/hyprland`: X
-- `dev-qt/qtbase`: wayland opengl vulkan widgets
-- `dev-qt/qtdeclarative`: opengl vulkan
-- `media-libs/mesa`: opengl vulkan
-- `gui-apps/quickshell`: breakpad jemalloc sockets wayland layer-shell session-lock toplevel-management screencopy X pipewire tray mpris pam hyprland hyprland-global-shortcuts hyprland-focus-grab i3 i3-ipc bluetooth
+```conf title="/etc/portage/make.conf"
+USE="dbus udev alsa policykit jpeg png webp gif tiff svg brotli gdbm accessibility gtk qt6 egl gbm"
+```
+
+**Package-specific USE flags:**
+
+```text title="/etc/portage/package.use/danklinux"
+sys-apps/xdg-desktop-portal-gtk wayland X
+gui-wm/niri                     dbus screencast
+gui-wm/hyprland                 X
+dev-qt/qtbase                   wayland opengl vulkan widgets
+dev-qt/qtdeclarative            opengl vulkan
+media-libs/mesa                 opengl vulkan
+gui-apps/quickshell             crash-handler jemalloc sockets wayland layer-shell session-lock toplevel-management screencopy X pipewire tray mpris pam policykit upower notifications hyprland i3 bluetooth
+```
+
 
 ## What About Manual Building?
 
@@ -248,7 +255,7 @@ You can also run `systemctl --user edit dms` and add `Environment=VAR=Value` lin
 
 Any `dms` CLI command that needs root - `duxinstall`, `dms-greeter sync`, `dms-greeter install`, and the like - will prompt when both `sudo` and `run0` are detected:
 
-```
+```text
 Multiple privilege escalation tools detected:
   [1] sudo
   [2] run0

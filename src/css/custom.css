@@ -148,7 +148,7 @@
   --ifm-background-color: var(--md-sys-color-surface);
   --ifm-background-surface-color: var(--md-sys-color-surface-container-low);
   --dank-docs-background: var(--md-sys-color-surface);
-  --docusaurus-highlighted-code-line-bg: rgba(208, 188, 255, 0.2);
+  --docusaurus-highlighted-code-line-bg: rgba(208, 188, 255, 0.1);
 
   --ifm-navbar-link-color: rgba(255, 255, 255, 0.75);
   --ifm-navbar-link-active-color: var(--dank-purple-light);
@@ -1033,22 +1033,24 @@ a.navbar-version-dropdown.navbar__link::after {
 
 /* ==== Docs content ==== */
 
+/* Standalone <pre> (outside a themed code block). Themed blocks get their frame
+   from .theme-code-block in the "Docs prose" section below. */
 pre[class*='language-'] {
   border-left: 3px solid var(--dank-purple-primary);
-  border-radius: 0.5rem;
+  border-radius: var(--dank-radius-md);
 }
 
+/* Inline code: neutral chip so commands/paths don't blend into links/headings. */
 :not(pre) > code {
-  background-color: var(--dank-tint);
-  border: 1px solid var(--dank-border);
-  color: var(--dank-purple-dark);
-  padding: 0.2em 0.4em;
-  border-radius: 0.25rem;
+  background-color: var(--md-sys-color-surface-container-high);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-on-surface);
+  padding: 0.15em 0.4em;
+  border-radius: var(--dank-radius-sm);
   font-size: 0.9em;
-}
-
-[data-theme='dark'] :not(pre) > code {
-  color: var(--dank-purple-light);
+  /* break-word, not anywhere: `anywhere` lets table columns shrink below a
+     word, splitting ids like `capabilities` mid-word. */
+  overflow-wrap: break-word;
 }
 
 .docusaurus-highlight-code-line {
@@ -1057,20 +1059,6 @@ pre[class*='language-'] {
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
   border-left: 3px solid var(--dank-purple-light);
-}
-
-table thead tr {
-  border-bottom: 2px solid var(--dank-purple-primary);
-}
-
-.markdown h1,
-.markdown h2 {
-  border-bottom-color: var(--dank-border);
-}
-
-.markdown h2,
-.markdown h3 {
-  color: var(--ifm-color-primary);
 }
 
 .markdown img {
@@ -1083,17 +1071,6 @@ figcaption {
   font-size: 0.875rem;
   color: var(--ifm-color-emphasis-600);
   margin-top: 0.5rem;
-}
-
-.alert--info {
-  --ifm-alert-background-color: var(--dank-tint);
-  --ifm-alert-background-color-highlight: var(--dank-tint-strong);
-  --ifm-alert-foreground-color: var(--dank-purple-dark);
-  --ifm-alert-border-color: var(--dank-purple-primary);
-}
-
-[data-theme='dark'] .alert--info {
-  --ifm-alert-foreground-color: var(--dank-purple-light);
 }
 
 .theme-doc-sidebar-item-link:hover {
@@ -1152,6 +1129,12 @@ figcaption {
 .dropdown__link--active:hover {
   background: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
+}
+
+.navbar-version-tag {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  opacity: 0.7;
 }
 
 .table-of-contents__link--active {
@@ -1270,11 +1253,693 @@ details a:hover {
 }
 
 details p > strong {
-  color: var(--ifm-color-primary);
+  color: var(--md-sys-color-on-surface);
 }
 
 details li strong {
   color: var(--ifm-font-color-base);
+}
+
+/* ==== Docs prose, code frame, admonitions, tables ==== */
+
+/* Brand purple is reserved for links and active states; headings and body stay
+   neutral so hierarchy comes from size/weight/spacing instead of color. */
+.markdown {
+  --dank-link: var(--md-sys-color-primary);
+  --dank-link-hover: #553c9a;
+  --ifm-link-color: var(--dank-link);
+  --ifm-link-hover-color: var(--dank-link-hover);
+  --ifm-heading-color: var(--md-sys-color-on-surface);
+  --ifm-list-item-margin: 0.4rem;
+  line-height: 1.65;
+}
+
+[data-theme='dark'] .markdown {
+  --dank-link-hover: #e9dfff;
+}
+
+/* Reading measure: prose caps at ~78ch; code blocks, tables, images and
+   admonitions keep the full column. Nested prose (lists, cells, quotes) is
+   already bounded by its parent. */
+.markdown :is(p, ul, ol, dl, blockquote) {
+  max-width: 78ch;
+}
+
+.markdown :is(li, td, th, blockquote) :is(p, ul, ol, dl) {
+  max-width: none;
+}
+
+.markdown :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--md-sys-color-on-surface);
+}
+
+.markdown h1:first-child {
+  --ifm-h1-font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.markdown > h2 {
+  --ifm-h2-font-size: 1.75rem;
+  margin-top: 2.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  /* The rule only runs a little past the heading text, so it works as an
+     underline rather than a section divider; real separators stay hr. */
+  width: fit-content;
+  max-width: 100%;
+  padding-right: 1.5rem;
+  border-bottom: 1px solid var(--dank-border-strong);
+  /* Short brand-colored segment on the underline: the only brand accent on
+     headings, so h2 reads as a section marker without looking like a link. */
+  background: linear-gradient(var(--md-sys-color-primary), var(--md-sys-color-primary)) left bottom / 3rem 2px no-repeat;
+  line-height: 1.25;
+}
+
+/* On phones a wrapped heading spans the whole width, so the grey underline
+   would read as a full-width separator. Keep only the purple segment. */
+@media (max-width: 600px) {
+  .markdown > h2 {
+    width: auto;
+    padding-right: 0;
+    border-bottom: 0;
+    background-size: 3rem 3px;
+  }
+}
+
+.markdown > h3 {
+  --ifm-h3-font-size: 1.375rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.markdown > h4 {
+  --ifm-h4-font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown > h5,
+.markdown > h6 {
+  --ifm-h5-font-size: 1rem;
+  --ifm-h6-font-size: 0.8125rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown > h6 {
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Headings inside tab panels keep the same scale. The panel's lead heading
+   (e.g. the distro name under the picker) is sized like a section title. */
+.markdown [role='tabpanel'] > h4 {
+  --ifm-h4-font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown [role='tabpanel'] > h4:first-child {
+  --ifm-h4-font-size: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+}
+
+.markdown [role='tabpanel'] > h5,
+.markdown [role='tabpanel'] > h6 {
+  --ifm-h5-font-size: 1rem;
+  --ifm-h6-font-size: 0.8125rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.markdown [role='tabpanel'] > h6 {
+  color: var(--md-sys-color-on-surface-variant);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.markdown strong {
+  font-weight: 650;
+}
+
+/* Links: underlined so they never read as headings or inline code. */
+.markdown a:not(.hash-link):not(.button):not([class*='card']) {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  transition:
+    color var(--dank-duration-fast) var(--dank-easing),
+    text-decoration-color var(--dank-duration-fast) var(--dank-easing);
+}
+
+.markdown a:not(.hash-link):not(.button):not([class*='card']):hover {
+  text-decoration-thickness: 2px;
+  text-decoration-color: currentColor;
+}
+
+/* Inline code in context */
+.markdown a code {
+  color: inherit;
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+  border-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.markdown :is(h1, h2, h3, h4, h5, h6) code {
+  color: inherit;
+  font-size: 0.8em;
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+  border-color: color-mix(in srgb, currentColor 20%, transparent);
+}
+
+/* Lists */
+.markdown :is(ul, ol) {
+  margin-bottom: 1.1rem;
+}
+
+.markdown li > p {
+  margin-bottom: 0.5rem;
+}
+
+.markdown li > :is(ul, ol) {
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+}
+
+.markdown li::marker {
+  color: var(--md-sys-color-outline);
+}
+
+/* Blockquote */
+.markdown blockquote {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1.25rem;
+  border-left: 4px solid var(--md-sys-color-outline);
+  border-radius: 0 var(--dank-radius-md) var(--dank-radius-md) 0;
+  background: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface-variant);
+  box-shadow: none;
+  font-size: inherit;
+}
+
+.markdown blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown hr {
+  height: 1px;
+  margin: 2.25rem 0;
+  border: 0;
+  background: var(--md-sys-color-outline-variant);
+}
+
+kbd {
+  padding: 0.1em 0.45em;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom-width: 2px;
+  border-radius: var(--dank-radius-sm);
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+/* ---- Code block frame (background comes from the Prism theme) ---- */
+
+.theme-code-block {
+  --ifm-pre-padding: 1.125rem;
+  --ifm-pre-line-height: 1.55;
+  margin: 1.25rem 0;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-left: 3px solid var(--dank-purple-primary);
+  border-radius: var(--dank-radius-md);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.theme-code-block pre[class*='language-'] {
+  border-left: 0;
+  border-radius: 0;
+}
+
+.theme-code-block [class*='codeBlockTitle'] {
+  padding: 0.5rem 1.125rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--prism-color) 14%, transparent);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--prism-color) 7%, transparent);
+  color: var(--prism-color);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ---- Admonitions: tinted container, colored bar/title, distinct hue per type ---- */
+
+.theme-admonition {
+  --dank-adm-accent: #4d4560;
+  --dank-adm-bg: #efecf4;
+  --dank-adm-bar: #7b7086;
+}
+
+.theme-admonition-tip {
+  --dank-adm-accent: #17653a;
+  --dank-adm-bg: #e8f4ec;
+  --dank-adm-bar: #2f855a;
+}
+
+.theme-admonition-info {
+  --dank-adm-accent: #0a5f9c;
+  --dank-adm-bg: #e8f1fa;
+  --dank-adm-bar: #2b7fc4;
+}
+
+.theme-admonition-warning {
+  --dank-adm-accent: #7a4a00;
+  --dank-adm-bg: #fcf2de;
+  --dank-adm-bar: #c47f00;
+}
+
+.theme-admonition-danger,
+.theme-admonition-caution {
+  --dank-adm-accent: #b3261e;
+  --dank-adm-bg: #fbebe9;
+  --dank-adm-bar: #d64545;
+}
+
+[data-theme='dark'] .theme-admonition {
+  --dank-adm-accent: #cdc2db;
+  --dank-adm-bg: #1c1825;
+  --dank-adm-bar: #978aa3;
+}
+
+[data-theme='dark'] .theme-admonition-tip {
+  --dank-adm-accent: #7ddc9d;
+  --dank-adm-bg: #10241a;
+  --dank-adm-bar: #3fae6a;
+}
+
+[data-theme='dark'] .theme-admonition-info {
+  --dank-adm-accent: #7cc4ff;
+  --dank-adm-bg: #0e2132;
+  --dank-adm-bar: #4a9ee0;
+}
+
+[data-theme='dark'] .theme-admonition-warning {
+  --dank-adm-accent: #ffc861;
+  --dank-adm-bg: #2a2110;
+  --dank-adm-bar: #e0a020;
+}
+
+[data-theme='dark'] .theme-admonition-danger,
+[data-theme='dark'] .theme-admonition-caution {
+  --dank-adm-accent: #ffb4ab;
+  --dank-adm-bg: #2e1614;
+  --dank-adm-bar: #e5645b;
+}
+
+.alert.theme-admonition {
+  --ifm-alert-background-color: var(--dank-adm-bg);
+  --ifm-alert-background-color-highlight: color-mix(in srgb, var(--dank-adm-accent) 14%, transparent);
+  --ifm-alert-foreground-color: var(--md-sys-color-on-surface);
+  --ifm-alert-border-color: var(--dank-adm-bar);
+  --ifm-alert-border-radius: var(--dank-radius-lg);
+  --ifm-alert-shadow: none;
+  --ifm-link-color: var(--dank-adm-accent);
+  --ifm-link-hover-color: var(--dank-adm-accent);
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--dank-adm-bar) 35%, transparent);
+  border-left: 4px solid var(--dank-adm-bar);
+}
+
+.theme-admonition [class*='admonitionHeading'] {
+  color: var(--dank-adm-accent);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+}
+
+.theme-admonition [class*='admonitionIcon'] svg {
+  fill: var(--dank-adm-accent);
+}
+
+.theme-admonition code {
+  color: var(--md-sys-color-on-surface);
+  background-color: color-mix(in srgb, var(--dank-adm-accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--dank-adm-accent) 30%, transparent);
+}
+
+/* ---- Tables: rounded scroll container, tinted header, quiet row dividers ---- */
+
+.markdown table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--dank-radius-md);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.markdown table :is(thead, tbody, tr, tr:nth-child(2n)) {
+  background: transparent;
+}
+
+.markdown table tr {
+  border: 0;
+}
+
+.markdown table :is(th, td) {
+  padding: 0.65rem 0.9rem;
+  border: 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown table thead tr:first-child :is(th, td) {
+  border-top: 0;
+}
+
+.markdown table th {
+  background: var(--md-sys-color-surface-container);
+  color: var(--md-sys-color-on-surface);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.markdown table thead tr {
+  border-bottom: 0;
+}
+
+.markdown table td {
+  color: var(--md-sys-color-on-surface);
+}
+
+.markdown table tbody tr:hover td {
+  background: var(--dank-tint);
+}
+
+.markdown table :is(td, th) > :last-child {
+  margin-bottom: 0;
+}
+
+/* ==== Steps, labels, category cards, last updated ==== */
+
+/* ---- Stepper: top-level ordered lists become numbered steps ----
+   Only direct children of the article body (or of a tab panel) qualify, so lists
+   inside admonitions, tables and other lists keep plain decimal numbering.
+   The implicit `list-item` counter already honors `start=` / `value=`. */
+
+.markdown > ol,
+.markdown [role='tabpanel'] > ol {
+  --dank-step-size: 2rem;
+  --dank-step-gap: 1rem;
+  list-style: none;
+  margin: 1.5rem 0;
+  padding-left: 0;
+  max-width: calc(78ch + var(--dank-step-size) + var(--dank-step-gap));
+}
+
+.markdown > ol > li,
+.markdown [role='tabpanel'] > ol > li {
+  position: relative;
+  margin: 0;
+  padding: 0.2rem 0 1.5rem calc(var(--dank-step-size) + var(--dank-step-gap));
+  padding-top: calc((var(--dank-step-size) - 1lh) / 2);
+  min-height: var(--dank-step-size);
+}
+
+.markdown > ol > li:last-child,
+.markdown [role='tabpanel'] > ol > li:last-child {
+  padding-bottom: 0;
+}
+
+.markdown > ol > li::before,
+.markdown [role='tabpanel'] > ol > li::before {
+  content: counter(list-item);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: var(--dank-step-size);
+  height: var(--dank-step-size);
+  border-radius: 50%;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Connector between badges */
+.markdown > ol > li:not(:last-child)::after,
+.markdown [role='tabpanel'] > ol > li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(var(--dank-step-size) + 0.375rem);
+  bottom: 0.375rem;
+  left: calc(var(--dank-step-size) / 2 - 1px);
+  width: 2px;
+  border-radius: 1px;
+  background: var(--md-sys-color-outline-variant);
+}
+
+.markdown > ol > li > :first-child {
+  margin-top: 0;
+}
+
+.markdown > ol > li > :last-child {
+  margin-bottom: 0;
+}
+
+/* Nested lists fall back to ordinary numbering */
+.markdown > ol > li :is(ol, ul) {
+  margin-top: 0.5rem;
+}
+
+.markdown > ol > li ol {
+  list-style: decimal;
+}
+
+/* ---- Bold-only lead-in paragraphs ("**Example output**:") read as labels ---- */
+
+.markdown > p:has(> strong:only-child),
+.markdown [role='tabpanel'] > p:has(> strong:only-child) {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+}
+
+.markdown > p:has(> strong:only-child) > strong,
+.markdown [role='tabpanel'] > p:has(> strong:only-child) > strong {
+  color: inherit;
+  font-weight: 650;
+}
+
+/* Attach the label to the block it introduces */
+.markdown > p:has(> strong:only-child):has(+ :is(ul, ol, pre, table, details, .theme-code-block)),
+.markdown [role='tabpanel'] > p:has(> strong:only-child):has(+ :is(ul, ol, pre, table, details, .theme-code-block)) {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ---- Category landing pages (generated-index / DocCardList) ---- */
+
+a.theme-doc-card-container {
+  --ifm-link-color: var(--md-sys-color-on-surface);
+  --ifm-link-hover-color: var(--md-sys-color-on-surface);
+  --ifm-link-hover-decoration: none;
+  background: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--dank-radius-lg);
+  box-shadow: none;
+  text-decoration: none;
+  transition: var(--dank-control-transition);
+}
+
+a.theme-doc-card-container:hover {
+  background: var(--md-sys-color-surface-container);
+  border-color: var(--dank-border-strong);
+  box-shadow: none;
+  text-decoration: none;
+}
+
+a.theme-doc-card-container:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+}
+
+a.theme-doc-card-container [class*='cardTitle'] {
+  color: var(--md-sys-color-on-surface);
+  font-weight: 650;
+  transition: color var(--dank-duration-fast) var(--dank-easing);
+}
+
+a.theme-doc-card-container [class*='cardTitleText'] {
+  white-space: normal;
+}
+
+a.theme-doc-card-container:hover [class*='cardTitle'] {
+  color: var(--md-sys-color-primary);
+}
+
+a.theme-doc-card-container [class*='cardDescription'] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  white-space: normal;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* ---- Last updated ---- */
+
+.theme-last-updated {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.8125rem;
+  font-style: normal;
+}
+
+.theme-last-updated b {
+  color: var(--md-sys-color-on-surface);
+  font-weight: 500;
+}
+
+/* ==== Tabs ==== */
+
+/* Top-level tabs (e.g. the distro picker): a row of M3 chips that wrap
+   instead of squeezing labels onto several lines. */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  overflow: visible;
+}
+
+.tabs__item {
+  flex: 0 0 auto;
+  padding: 0.375rem 1rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--dank-radius-full);
+  background: transparent;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  white-space: nowrap;
+  transition: var(--dank-control-transition);
+}
+
+.tabs__item:hover {
+  background: var(--dank-tint);
+  color: var(--md-sys-color-on-surface);
+}
+
+.tabs__item--active,
+.tabs__item--active:hover {
+  border-color: transparent;
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+/* Tabs nested inside a tab panel (e.g. Stable / Development): quieter
+   underline style so they read as a sub-choice, not a second picker. */
+[role='tabpanel'] .tabs {
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant);
+  scrollbar-width: none;
+}
+
+[role='tabpanel'] .tabs::-webkit-scrollbar {
+  display: none;
+}
+
+[role='tabpanel'] .tabs__item {
+  margin-bottom: -1px;
+  padding: 0.5rem 0.875rem;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+}
+
+[role='tabpanel'] .tabs__item:hover {
+  background: var(--dank-tint);
+}
+
+[role='tabpanel'] .tabs__item--active,
+[role='tabpanel'] .tabs__item--active:hover {
+  border-bottom-color: var(--md-sys-color-primary);
+  background: transparent;
+  color: var(--md-sys-color-primary);
+}
+
+/* ==== Desktop sidebar collapse button ==== */
+/* Default is a boxed, square grey bar; make it a quiet footer strip with a
+   single top divider and a themed chevron that gets a pill on hover. */
+@media (min-width: 997px) {
+  button[class*='collapseSidebarButton'] {
+    height: 48px;
+    border: 0;
+    border-top: 1px solid var(--dank-border);
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  button[class*='collapseSidebarButton']:hover,
+  button[class*='collapseSidebarButton']:focus-visible {
+    background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+    color: var(--md-sys-color-primary);
+  }
+
+  button[class*='collapseSidebarButton'] svg {
+    width: 18px;
+    height: 18px;
+    margin-top: 0;
+    fill: currentColor;
+  }
+}
+
+/* Collapsed rail: same treatment for the expand strip. */
+@media (min-width: 997px) {
+  [role='button'][class*='expandButton'] {
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  [role='button'][class*='expandButton']:hover,
+  [role='button'][class*='expandButton']:focus-visible {
+    background: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+    color: var(--md-sys-color-primary);
+  }
+
+  [role='button'][class*='expandButton'] svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
 }
 
 /* ==== Image zoom & Mermaid panzoom ==== */
@@ -1394,7 +2059,10 @@ details li strong {
 
 .footer-github-link,
 .footer-discord-link,
-.footer-kofi-link {
+.footer-kofi-link,
+.footer-x-link,
+.footer-mastodon-link,
+.footer-reddit-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1407,7 +2075,10 @@ details li strong {
 
 .footer-github-link::before,
 .footer-discord-link::before,
-.footer-kofi-link::before {
+.footer-kofi-link::before,
+.footer-x-link::before,
+.footer-mastodon-link::before,
+.footer-reddit-link::before {
   content: '';
   width: 1.25rem;
   height: 1.25rem;
@@ -1432,9 +2103,27 @@ details li strong {
   -webkit-mask-image: url('/img/kofi.svg');
 }
 
+.footer-x-link::before {
+  mask-image: url('/img/x.svg');
+  -webkit-mask-image: url('/img/x.svg');
+}
+
+.footer-mastodon-link::before {
+  mask-image: url('/img/mastodon.svg');
+  -webkit-mask-image: url('/img/mastodon.svg');
+}
+
+.footer-reddit-link::before {
+  mask-image: url('/img/reddit.svg');
+  -webkit-mask-image: url('/img/reddit.svg');
+}
+
 .footer-github-link:hover,
 .footer-discord-link:hover,
-.footer-kofi-link:hover {
+.footer-kofi-link:hover,
+.footer-x-link:hover,
+.footer-mastodon-link:hover,
+.footer-reddit-link:hover {
   background: var(--dank-tint-strong);
   color: var(--ifm-color-primary);
 }
@@ -1467,14 +2156,20 @@ details li strong {
 
   .footer-github-link,
   .footer-discord-link,
-  .footer-kofi-link {
+  .footer-kofi-link,
+  .footer-x-link,
+  .footer-mastodon-link,
+  .footer-reddit-link {
     width: 2rem;
     height: 2rem;
   }
 
   .footer-github-link::before,
   .footer-discord-link::before,
-  .footer-kofi-link::before {
+  .footer-kofi-link::before,
+  .footer-x-link::before,
+  .footer-mastodon-link::before,
+  .footer-reddit-link::before {
     width: 1.125rem;
     height: 1.125rem;
   }

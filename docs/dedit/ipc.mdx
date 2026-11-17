@@ -1,0 +1,169 @@
+---
+title: IPC
+description: Scriptable IPC surface for keybinds and automation
+sidebar_position: 7
+---
+
+import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██╔══██╗██║╚══██╔══╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║  ██║██║   ██║   
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║  ██║██║   ██║   
+██████╔╝╚██████╔╝██╔╝ ██╗     ███████╗██████╔╝██║   ██║   
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚═════╝ ╚═╝   ╚═╝   `}
+  hideTitle={true}
+/>
+
+# IPC
+
+The `dux-edit` app exposes its operations over a unix socket. Invoke a method and pass params as `key=value` pairs:
+
+```bash
+dux-edit ipc ui.toggle
+dux-edit ipc ui.open paths=/etc/hostname line=3
+dux-edit ipc ui.open paths=/tmp/a paths=/tmp/b
+dux-edit ipc search.find docId=1 version=4 query=TODO
+```
+
+List every available method and its params from the running app:
+
+```bash
+dux-edit ipc describe
+```
+
+Results print JSON. Params marked `*` are required. Values that parse as JSON are sent typed, anything else as a string. A key given twice is sent as a list, and so is a list param such as `paths`, even when given once. `ipc` needs the running app; method and param names complete with the shell (see `dux-edit completion`). Set `DUX_EDIT_SOCKET` to talk to a specific socket.
+
+Expected failures are results, `{"ok": false, "code": "..."}`, not IPC errors. Offsets are UTF-16 code units and lines are 0-based on the socket, except `ui.open`, whose `line` and `column` are 1-based like the CLI flags.
+
+## Keybinds
+
+For a key that shows the window, run `dux-edit` itself: it starts the app when it is not running. `ui.toggle` hides the window again, but needs the app already running.
+
+<Tabs groupId="compositor">
+<TabItem value="niri" label="niri" default>
+
+```kdl
+binds {
+    Mod+E { spawn "dux-edit"; }
+    Mod+Shift+E { spawn "dux-edit" "ipc" "ui.toggle"; }
+    Mod+Alt+E { spawn "dux-edit" "--new-instance"; }
+}
+```
+
+</TabItem>
+<TabItem value="hyprland" label="Hyprland">
+
+```ini
+bind = SUPER, E, exec, dux-edit
+bind = SUPER SHIFT, E, exec, dux-edit ipc ui.toggle
+bind = SUPER ALT, E, exec, dux-edit --new-instance
+```
+
+</TabItem>
+<TabItem value="mangowm" label="mangowm">
+
+```ini
+bind=SUPER,e,spawn,dux-edit
+bind=SUPER+SHIFT,e,spawn,dux-edit ipc ui.toggle
+bind=SUPER+ALT,e,spawn,dux-edit --new-instance
+```
+
+</TabItem>
+</Tabs>
+
+Shortcuts inside the window are in [Keyboard](keyboard).
+
+## Core
+
+| Method | Params |
+| --- | --- |
+| `ping` | Liveness check |
+| `version` | Backend and API version |
+| `describe` | List all IPC methods and their params |
+| `subscribe` | `topics` (`ui`, `docs`, `highlight`, `spell`, `colorScheme`; default `ui`) |
+| `unsubscribe` | `topics` |
+
+## UI
+
+| Method | Params |
+| --- | --- |
+| `ui.show` | Show the window, creating it if needed |
+| `ui.hide` | Close the window and stay resident |
+| `ui.toggle` | Show or hide the window |
+| `ui.open` | `paths` (absolute paths; empty opens a new draft), `positions` (one `{line, column}` object per path; nonnegative integers, 1-based, 0 for unset), `line`, `column` (1-based, first path), `simple` |
+| `ui.quit` | Quit the app |
+
+## Documents
+
+| Method | Params |
+| --- | --- |
+| `doc.open` | `path`, `swapId` (draft or recovery swap to load), `encoding`, `elevated` (read through polkit), `force` (skip the large file confirmation): both `path` and `swapId` empty opens a new draft. A file's result carries `indentStyle` and `indentWidth` from `.editorconfig` or a modeline when known |
+| `doc.edit` | `docId*`, `version*`, `start*`, `removed*`, `text*`, `length*`, `undoSteps`, `redo`: apply one text change to the mirror |
+| `doc.reset` | `docId*`, `version*`, `text*`, `conflict`: replace the mirror after a resync event |
+| `doc.save` | `docId*`, `version*`, `md5`, `path` (save as), `encoding`, `bom`, `eol` (`lf\|crlf\|cr`), `elevated`, `force` (overwrite a file changed on disk), `overwrite` (replace an existing file on save as) |
+| `doc.reload` | `docId*`, `encoding`: re-read the file, dropping unsaved edits |
+| `doc.close` | `docId*`, `discard` (delete its swap), `version`, `md5` |
+| `doc.setTitle` | `docId*`, `title*`: name a draft |
+| `doc.text` | `docId*`: current mirror text |
+| `doc.matchBracket` | `docId*`, `version*`, `offset*`, `first*`, `last*`: match the bracket beside the cursor, ignoring strings and comments |
+| `doc.flush` | Write pending swaps now |
+| `recovery.list` | Swaps no open document or live instance owns |
+| `recovery.discard` | `swapId*` |
+
+## Highlighting
+
+| Method | Params |
+| --- | --- |
+| `highlight.view` | `docId*`, `first*`, `last*` (0-based, inclusive): set the visible line range; spans follow on the `highlight` topic |
+| `highlight.setLexer` | `docId*`, `lexer` (empty for automatic), `force` (highlight past the size caps) |
+| `highlight.state` | `docId*`: lexer and tier of a document |
+| `highlight.lexers` | Every lexer, for the language picker |
+
+## Search
+
+| Method | Params |
+| --- | --- |
+| `search.find` | `docId*`, `version*`, `query*`, `regex` (RE2), `caseSensitive`, `wholeWord`, `limit` (default 10000), `seq` |
+| `search.replaceAll` | Same as `search.find` plus `replacement*` (`$1` expands in regex mode): one edit that replaces every match |
+| `search.expand` | Same as `search.find` plus `replacement*`, `start*`, `length*`: replacement text for one match |
+
+## Spellcheck
+
+| Method | Params |
+| --- | --- |
+| `spell.configure` | `enabled*`, `language` (dictionary code or `auto`), `strings` |
+| `spell.languages` | Installed hunspell dictionaries |
+| `spell.view` | `docId*`, `first*`, `last*`, `cursorLine`, `cursorColumn`: ranges follow on the `spell` topic |
+| `spell.suggest` | `word*`, `language` |
+| `spell.add` | `word*`: add to the user dictionary |
+| `spell.ignore` | `word*`: ignore until the app exits |
+
+## Markdown
+
+| Method | Params |
+| --- | --- |
+| `markdown.render` | `docId*`, `version*`, `palette`, `codeBackground`, `linkColor`: render to Qt rich text HTML |
+
+## System
+
+| Method | Params |
+| --- | --- |
+| `plugins.list` | Scan the plugin directories |
+| `dialog.openFiles` | `title`, `dir`, `multiple` (default true): portal open dialog |
+| `dialog.saveFile` | `title`, `dir`, `name`: portal save dialog |
+| `system.colorScheme.get` | Desktop light/dark preference |
+| `system.elevation` | Whether saving as administrator can be offered |
+| `import.dms` | `dryRun`, `apply` (also send the result to the UI): copy DMS notepad tabs and settings |
+
+## Live Updates
+
+Subscribe to push events instead of polling. Topics: `ui` (default), `docs`, `highlight`, `spell`, `colorScheme`.
+
+## Next Steps
+
+- [Usage](usage) - CLI wrappers around methods
+- [Keyboard](keyboard) - What the window binds by default

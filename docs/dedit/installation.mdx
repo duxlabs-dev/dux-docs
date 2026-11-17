@@ -1,0 +1,86 @@
+---
+title: Installation
+description: Build and install Dux Edit and make it the editor for text files
+sidebar_position: 2
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██╔══██╗██║╚══██╔══╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║  ██║██║   ██║   
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║  ██║██║   ██║   
+██████╔╝╚██████╔╝██╔╝ ██╗     ███████╗██████╔╝██║   ██║   
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚═════╝ ╚═╝   ╚═╝   `}
+  hideTitle={true}
+/>
+
+# Dux Edit Installation
+
+Dux Edit installs a single `dux-edit` binary with the UI embedded, a `dedit` alias, a desktop entry, AppStream metadata, an icon, and a polkit policy for saving files as administrator.
+
+## Requirements
+
+- dux-qt-base 0.4.3 or newer, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian, Ubuntu and PikaOS, from the [Dux repositories](../repo/). Building with `QTBASE=1` embeds the runtime instead.
+- Go 1.27+ (build from source only; the binary is pure Go with no cgo)
+
+Optional:
+
+| Package | Binary | Enables |
+| --- | --- | --- |
+| `hunspell` and a dictionary | `hunspell` | spellcheck |
+| `polkit` | `pkexec` | saving root-owned files as administrator |
+| `xdg-desktop-portal` | | the open and save dialogs |
+
+## Build from Source
+
+```bash
+git clone --recurse-submodules https://github.com/duxlabs-dev/dux-edit.git
+cd dux-edit
+make
+sudo make install
+```
+
+`make` builds `core/bin/dux-edit` with the UI embedded. `make QTBASE=1` also builds dux-qt-base from the submodule and embeds it. `make install` puts these under `/usr/local` (change it with `PREFIX`, and stage with `DESTDIR`):
+
+| File | Location |
+| --- | --- |
+| `dux-edit`, `dedit` | `$PREFIX/bin` |
+| `dev.duxlabs.edit.desktop` | `$PREFIX/share/applications` |
+| `dev.duxlabs.edit.svg` | `$PREFIX/share/icons/hicolor/scalable/apps` |
+| `dev.duxlabs.edit.metainfo.xml` | `$PREFIX/share/metainfo` |
+| `dev.duxlabs.edit.policy` | `/usr/share/polkit-1/actions` |
+
+The polkit policy names the installed binary and pkexec refuses any other path, so reinstall it if you move the binary. `sudo make uninstall` removes everything.
+
+### Try It Without Installing
+
+```bash
+make run
+```
+
+Builds without the embedded UI and loads `quickshell/` from the repo with hot reload.
+
+## Run It
+
+```bash
+dux-edit                # show the window, starting the app first if needed
+dux-edit run -d         # start in the background
+```
+
+Open it from your launcher, or bind a key. See [IPC](ipc#keybinds) for compositor examples.
+
+## Make It the Default Editor
+
+The desktop entry registers Dux Edit for plain text, Markdown, JSON, XML, YAML, TOML, shell, and most source file types. Set it as the default for a type:
+
+```bash
+xdg-mime default dev.duxlabs.edit.desktop text/plain
+xdg-mime default dev.duxlabs.edit.desktop text/markdown
+```
+
+## Next Steps
+
+- [Usage](usage) - CLI commands and workflows
+- [Settings](settings) - Configure the editor

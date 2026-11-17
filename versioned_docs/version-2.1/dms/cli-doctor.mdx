@@ -131,7 +131,6 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 | River | `river` | `river -version` |
 | Wayfire | `wayfire` | `wayfire --version` |
 | Scroll | `scroll` | `scroll --version` |
-| Aqueous | `aqueous` | `aqueous -version` |
 | Umbriel | `umbriel` | `umbriel --version` |
 
 ### Hyprland Lua config
@@ -453,7 +452,7 @@ After changing it, re-login to apply the changes.
 To verify without re-login, force a cache rebuild:`XDG_MENU_PREFIX=plasma- kbuildsycoca6 --noincremental`.
 :::
 
-:::note
+:::note[kde-cli-tools required]
 `kde-cli-tools` (which provides `keditfiletype`) must also be installed, as Dolphin's "Open with…" dialog depends on it. Plasma sessions already export this variable automatically, so this only applies to non-Plasma compositors.
 :::
 

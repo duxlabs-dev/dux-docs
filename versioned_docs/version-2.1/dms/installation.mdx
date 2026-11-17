@@ -39,7 +39,14 @@ Only **Quickshell** is required. All other dependencies are optional and enable 
 
 :::
 
-## Arch & Derivatives
+## Install by Distribution
+
+Select your distribution. The choice carries over to the other install pages.
+
+<Tabs groupId="distro" queryString="distro">
+<TabItem value="arch" label="Arch">
+
+#### Arch & Derivatives
 
 `dms` is available in the official Arch repositories (extra), and as a development package in the AUR.
 
@@ -62,7 +69,10 @@ paru -S dux-shell-git
 
 These packages ship the shell, widgets, and CLI. Pair them with `niri`, `hyprland`, `sway`, `mangowc`, `labwc`, or `miracle-wm` packages from the official repositories for a complete desktop stack.
 
-## Fedora & Enterprise Linux
+</TabItem>
+<TabItem value="fedora" label="Fedora & EL">
+
+#### Fedora & Enterprise Linux
 
 Dux Modular Shell is available through COPR repositories for Fedora 43/44/45, Rawhide, and Enterprise Linux 10 (RHEL, CentOS Stream, Rocky Linux, AlmaLinux) on the latest 10.x minor.
 
@@ -94,7 +104,7 @@ sudo dnf install dms
 
 The COPR repositories also provide companion packages such as `quickshell-git`, `dux-calendar`, `matugen`, and other utilities used by the default configuration.
 
-### Fedora Atomic & bootc images
+##### Fedora Atomic & bootc images
 
 Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, and other rpm-ostree or bootc images don't take `dnf install`. Packages are layered onto the image with `rpm-ostree` and become active after a reboot. The [Dux Installer](../duxinstall) detects these hosts and runs in two passes; it never installs packages or asks for a password on an image.
 
@@ -121,11 +131,14 @@ Update with `sudo rpm-ostree upgrade` (or `dms system update`), which upgrades t
 
 For the greeter on these images, see [Immutable and image-based systems](../dms-greeter/installation#immutable-and-image-based-systems).
 
-## Debian & Ubuntu
+</TabItem>
+<TabItem value="debian" label="Debian & Ubuntu">
+
+#### Debian & Ubuntu
 
 Dux Modular Shell is available through Open Build Service (OBS) for Debian and Launchpad PPA for Ubuntu.
 
-### Debian
+##### Debian
 
 Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
 
@@ -282,7 +295,7 @@ sudo apt install dms-git
 </TabItem>
 </Tabs>
 
-### Ubuntu
+##### Ubuntu
 
 Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
@@ -322,7 +335,7 @@ Add **niri** or **niri-git** to your system to get the best experience.
 
 :::
 
-### PikaOS
+##### PikaOS
 
 PikaOS 4+ carries the Dux Labs packages in its own repository, so no extra repository is needed.
 
@@ -333,7 +346,10 @@ sudo apt install dms
 
 `dms-git`, `dms-greeter`, `danksearch` and `dankcalendar` are available the same way. quickshell, niri, Hyprland and matugen come from PikaOS's own builds.
 
-## OpenSUSE & Derivatives
+</TabItem>
+<TabItem value="opensuse" label="openSUSE">
+
+#### OpenSUSE & Derivatives
 
 Dux Modular Shell is available through the Open Build Service (OBS) for OpenSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
 
@@ -452,7 +468,10 @@ sudo zypper install dms-git
 </TabItem>
 </Tabs>
 
-## Gentoo (Community)
+</TabItem>
+<TabItem value="gentoo" label="Gentoo">
+
+#### Gentoo (Community)
 
 :::warning[Community Maintained]
 
@@ -510,7 +529,10 @@ sudo emerge --ask dux-desktop/dux-shell
 </TabItem>
 </Tabs>
 
-## NixOS
+</TabItem>
+<TabItem value="nixos" label="NixOS">
+
+#### NixOS
 
 :::tip
 
@@ -520,7 +542,10 @@ NixOS has dedicated documentation with two installation methods:
 
 :::
 
-## Solus
+</TabItem>
+<TabItem value="solus" label="Solus">
+
+#### Solus
 
 Dux Modular Shell is available from the official Solus repository. Pair it with `niri`, `hyprland`, `sway`, or `labwc` packages from the official repositories for a complete desktop stack.
 
@@ -534,7 +559,10 @@ Install the `niri-session`, `sway-session`, or `labwc-session` packages for thos
 
 :::
 
-## Void Linux
+</TabItem>
+<TabItem value="void" label="Void">
+
+#### Void Linux
 
 :::note
 
@@ -608,7 +636,7 @@ sudo xbps-install --repository=hostdir/binpkgs dms dux-search
 
 Only `quickshell` is strictly required. Install optional features as desired — `matugen` (theming), `cava` (audio visualiser), `danksearch` (search), `dankcalendar` (calendar), `qt6-multimedia` (sounds) — and a compositor such as `niri`, `hyprland`, or `sway`. See the [Void README](https://github.com/duxlabs-dev/dux-shell/tree/master/distro/void) for the full optional-dependency list.
 
-### Running Wayland from TTY (Without a Display Manager)
+##### Running Wayland from TTY (Without a Display Manager)
 
 :::tip
 
@@ -618,7 +646,7 @@ If you use **`dms-greeter`**, all seat management, D-Bus initialization, and run
 
 If you choose to launch your compositor (like `niri`, `Hyprland`, or `sway`) directly from a TTY login prompt instead of using a display manager (like `greetd`), Void Linux requires some manual runtime configuration because it does not run systemd by default:
 
-#### 1. Configure Seat Management (`elogind`)
+###### 1. Configure Seat Management (`elogind`)
 Wayland compositors require permissions to access input and graphics hardware devices directly. The `dms` package already depends on `dbus` and `elogind`; enable their services:
 
 ```bash
@@ -627,7 +655,7 @@ sudo ln -s /etc/sv/elogind /var/service/
 ```
 *Note: Log out of the TTY and log back in (or reboot) so your login gets an elogind session, which grants seat access and sets `XDG_RUNTIME_DIR`. If you prefer `seatd` instead, enable it and add your user to the `_seatd` group, but do not run both seat managers at once.*
 
-#### 2. Launch the Session
+###### 2. Launch the Session
 A D-Bus session bus is required for desktop utilities (including the DMS daemon and panels) to communicate. Launch your compositor wrapped inside a D-Bus session:
 
 ```bash
@@ -636,7 +664,7 @@ dbus-run-session niri
 dbus-run-session Hyprland
 ```
 
-#### 3. Handle `XDG_RUNTIME_DIR`
+###### 3. Handle `XDG_RUNTIME_DIR`
 Wayland sockets and configurations require `XDG_RUNTIME_DIR` to be defined. If it is not automatically set on your system (e.g. if you are not running `elogind`), add the following fallback script to your shell login configuration file (e.g., `~/.bash_profile` or `~/.zprofile`):
 
 ```bash
@@ -649,7 +677,10 @@ if [ -z "$XDG_RUNTIME_DIR" ]; then
 fi
 ```
 
-## All Other Distributions
+</TabItem>
+<TabItem value="other" label="Other / Manual Build">
+
+#### All Other Distributions
 
 :::warning
 
@@ -657,27 +688,21 @@ This guide doesn't cover compositor installation. You need a compatible Wayland 
 
 :::
 
-### 1. Install Essential Dependencies
+##### 1. Install Essential Dependencies
 
-#### Quickshell
+###### Quickshell
 
-If your distribution does not provide a quickshell package, you'll need to build it from source. Quickshell requires:
+Install Quickshell from your distribution's repositories or the [Dux Repository](../repo/). A packaged Quickshell already ships everything it needs, so there is nothing else to install.
 
-**Base dependencies:**
-- cmake, qt6base, qt6declarative, qtshadertools, pkg-config, cli11
-- Private Qt headers for qt6declarative (and qt6wayland on Qt < 6.10)
-- Qt 6.6 or newer. Use Qt 6.10 or newer for the lock screen: on older Qt the lock client exits on an output with a fractional scale whose logical size is not a whole number (for example 2256x1504 at 1.5), and the compositor falls back to its red lockout screen.
+Only build from source if neither offers a package. Follow the upstream [Quickshell build instructions](https://git.outfoxxed.me/quickshell/quickshell/src/branch/master/BUILD.md) for the current dependency list and build options.
 
-**Key features and their dependencies:**
-- **Wayland support** (enabled by default) - qt6wayland, wayland, wayland-protocols
-- **Crash reporter** (recommended) - google-breakpad
-- **Jemalloc** (recommended for better memory management) - jemalloc
-- **System tray** - qt6dbus
-- **PAM authentication** - pam
+:::note
 
-For complete build instructions and feature flags, see the [Quickshell BUILD.md](https://git.outfoxxed.me/quickshell/quickshell/raw/branch/master/BUILD.md).
+Build against Qt 6.10 or newer. On older Qt the lock screen exits on an output with a fractional scale whose logical size is not a whole number (for example 2256x1504 at 1.5), and the compositor falls back to its red lockout screen.
 
-#### AccountsService
+:::
+
+###### AccountsService
 
 :::note
 
@@ -698,7 +723,7 @@ sudo zypper install accountsservice
 sudo emerge --ask sys-apps/accountsservice
 ```
 
-### 2. Clone the DMS Repository
+##### 2. Clone the DMS Repository
 
 Shared widgets live in the [dux-qml-common](https://github.com/duxlabs-dev/dux-qml-common) submodule, so clone with `--recurse-submodules`:
 
@@ -708,7 +733,7 @@ git clone --recurse-submodules https://github.com/duxlabs-dev/dux-shell.git ~/dm
 
 In an existing clone, run `git submodule update --init` instead — `make install` fails until the submodule is present.
 
-### 3. Compile & Install the DMS Backend
+##### 3. Compile & Install the DMS Backend
 
 *Requires GO 1.26+*
 
@@ -725,7 +750,7 @@ To uninstall a source build, run `sudo make uninstall` from the repository direc
 
 :::
 
-### 4. Install Optional Integrations
+##### 4. Install Optional Integrations
 
 Install optional components for full functionality using your distribution's package manager:
 
@@ -735,6 +760,9 @@ Install optional components for full functionality using your distribution's pac
 - `dcal` - Desktop calendar integration
 - `cava` - Audio visualizer widget
 - `qt6-multimedia` - System sound feedback
+
+</TabItem>
+</Tabs>
 
 ## Post Install
 

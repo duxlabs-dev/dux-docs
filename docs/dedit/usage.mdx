@@ -1,0 +1,90 @@
+---
+title: Usage
+description: Dux Edit CLI commands, drafts, recovery and importing DMS notes
+sidebar_position: 3
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██╔══██╗██║╚══██╔══╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║  ██║██║   ██║   
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║  ██║██║   ██║   
+██████╔╝╚██████╔╝██╔╝ ██╗     ███████╗██████╔╝██║   ██║   
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚═════╝ ╚═╝   ╚═╝   `}
+  hideTitle={true}
+/>
+
+# Usage
+
+Dux Edit is an app that stays one instance. Running `dux-edit` again talks to the running app and starts it first when it is not running.
+
+## Opening Files
+
+```bash
+dux-edit                          # show the window
+dux-edit notes.md todo.txt        # open files as tabs in the running app
+dux-edit main.go --line 42 --column 7
+dux-edit a.go:12 b.go:3:9         # each file at its own line and column
+dux-edit +42 main.go              # same as --line for the first file
+dux-edit --simple notes.md        # open in Simple mode
+dux-edit --new-instance           # a separate app instead of tabs in the running one
+```
+
+`--line` and `--column` are 1-based and apply to the first file. A file whose name really ends in `:LINE` is opened as named. A file named like a command (`run`, `kill`, `ipc`, `qs`, `version`, `helper`, `import-dms-notes`, and so on) needs a path: `dux-edit ./run`.
+
+`--new-instance` starts an ephemeral app: it neither restores nor writes the session.
+
+## Commands
+
+| Command | Does |
+| --- | --- |
+| `dux-edit [file...]` | Show the window or open files as tabs |
+| `dux-edit run` | Run the app. `-d` runs it in the background |
+| `dux-edit kill` | Quit the running app |
+| `dux-edit ipc <method> [key=value...]` | Call an [IPC](ipc) method |
+| `dux-edit import-dms-notes` | Copy DMS notepad tabs and settings. `--dry-run` lists what would be imported |
+| `dux-edit version` | Print version information |
+| `dux-edit completion` | Shell completion, including IPC method and param names |
+
+Use `-c <dir>` (or `DUX_EDIT_SHELL_DIR`) to run a UI from a directory containing `shell.qml` instead of the embedded one. `dux-edit` refuses to run as root.
+
+## Drafts and Recovery
+
+A new document is a draft: an untitled tab whose swap file is its storage. Drafts come back after a restart. Unsaved edits to a file are written to a swap file about a second after you stop typing, and restored the next time the file opens, including after a crash.
+
+- Closing the window never prompts. Closing a tab with unsaved changes asks whether to save.
+- If the file changed on disk while you had unsaved edits, the next save asks before overwriting.
+- Discard Changes in the window menu reloads the file and drops unsaved edits.
+
+Document text is never written to settings, session or log files. Unsaved text lives only in the swap directory (mode `0700`) and in memory.
+
+## Saving Root-Owned Files
+
+When a file is not writable, Dux Edit offers to save as administrator through polkit. A confined `pkexec` helper writes the file, keeping its mode, owner and links. The helper runs only for that save. A document read as administrator has no swap, so quitting asks about its unsaved changes.
+
+## Running in the Background
+
+Set **Closing the Window** to **Keeps It Running in the Background** in [Settings](settings#files) and closing the window leaves the app resident. A hidden window holds no editors and the core holds no documents, so what stays is two idle processes. Plugins are destroyed on hide and created again on show.
+
+## Importing DMS Notes
+
+```bash
+dux-edit import-dms-notes --dry-run   # list what would be imported
+dux-edit import-dms-notes
+```
+
+Scratch notes become drafts, file tabs open as tabs, and settings are merged. DMS files are never changed. The import is also in **Settings → Files → Import**.
+
+## Files on Disk
+
+| Path | What |
+| --- | --- |
+| `~/.config/dux/edit/settings.json` | Settings |
+| `~/.config/dux/edit/custom_dictionary.txt` | Words added to the spellcheck dictionary, one per line |
+| `~/.config/dux/edit/plugins/` | Plugins |
+| `~/.local/state/dux/edit/session.json` | Open tabs (never their text) |
+| `~/.local/state/dux/edit/swap/` | Drafts and unsaved changes |
+
+`XDG_CONFIG_HOME` and `XDG_STATE_HOME` are honored.

@@ -224,7 +224,7 @@ dms ipc call sessions switchTo testuser2
 dms ipc call sessions activate 4
 ```
 
-:::note
+:::note[Existing sessions only]
 This only switches between sessions that *already exist* on the current seat. Creating a brand-new session for a user who isn't logged in needs a multi-session greeter (greetd-flexiserver / GDM / LightDM); the picker's empty state offers a Log out fallback to reach the greeter.
 :::
 
@@ -360,6 +360,16 @@ Wallpaper management with support for global and per-monitor configurations.
 | `nextFor <screen>` | Cycle to next wallpaper | monitor name |
 | `prevFor <screen>` | Cycle to previous wallpaper | monitor name |
 
+#### Folder Functions
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `folders` | List wallpaper folders, one per line (hidden ones marked `(hidden)`) | - |
+| `folderAdd <path>` | Add a wallpaper folder (shows up once it has been checked) | absolute path to folder |
+| `folderRemove <path>` | Remove a wallpaper folder | path to folder |
+| `folderHide <path>` | Hide a folder's wallpapers | path to folder |
+| `folderShow <path>` | Show a hidden folder's wallpapers again | path to folder |
+
 **Examples:**
 ```bash
 # Global wallpaper mode
@@ -370,6 +380,10 @@ dms ipc call wallpaper next
 dms ipc call wallpaper setFor DP-2 /path/to/image1.jpg
 dms ipc call wallpaper setFor eDP-1 /path/to/image2.jpg
 dms ipc call wallpaper nextFor eDP-1
+
+# Wallpaper folders
+dms ipc call wallpaper folderAdd ~/Pictures/Wallpapers
+dms ipc call wallpaper folders
 
 # Clear and return to global mode
 dms ipc call wallpaper clear
@@ -475,7 +489,7 @@ Island activity surface. Requires a bar instance using the Island layout and ena
 | `toggle <activity>` | Collapse if expanded; otherwise expand into the activity | activity id |
 | `show <activity>` | Switch the compact face without expanding | activity id |
 | `close` | Collapse back to the compact face | - |
-| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when Default Opens is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
+| `cycle` | Cycle activities (`home` → `media` when available → `launcher` when **Opens** is Island → `controlcenter` → `wallpaper` → `weather` when enabled → `notificationcenter`) | - |
 | `status` | JSON snapshot of the island on the focused screen | - |
 | `notifications` | Toggle the notification center as an island activity | - |
 | `openOn` / `toggleOn` / `showOn` / `closeOn` / `cycleOn` / `statusOn` / `notificationsOn` | Same actions on a named monitor | activity (where required) + screen name |
@@ -484,7 +498,7 @@ Island activity surface. Requires a bar instance using the Island layout and ena
 | `moveOn <screen> <x> <y>` | Same on a named monitor | screen name, x, y |
 | `center` / `centerOn <screen>` | Recenter a free island, useful to recover one parked off a disconnected display | screen name (for `centerOn`) |
 
-**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
+**Activities:** `home` (clock), `media`, `launcher`, `controlcenter` (`control-center`, `cc`), `wallpaper`, `weather`, `notificationcenter` (`notifications`, `notification-center`, `nc`), `clipboard`, `powermenu` (`power-menu`). Unrecognized ids open `home`. `media` needs an active session; `weather` needs weather enabled. A screen name with no island returns `DANK_ISLAND_UNAVAILABLE` rather than falling back to another display.
 
 **Free placement:** With Float on, Settings → Bar → General → Placement offers **Edge** (floats along its edge) or **Anywhere** (a draggable island you can park at any point on the display). `move` / `center` only apply to an Anywhere island and return `DANK_ISLAND_NOT_FREE` otherwise. `status` reports `free` plus the anchor `x` / `y` for free islands.
 
@@ -493,8 +507,10 @@ When an Island or a Dot is the sole top chrome on the focused display, or an isl
 - `control-center` `open` / `toggle` / `hide` / `status`
 - `notifications` `open` / `toggle` / `close` (the notification modal is used if the island does not own the screen)
 - `dash` `open` / `toggle` with `overview` (or no tab), `media`, `wallpaper`, or `weather`, and `dash close` while those activities are open
+- `clipboard` `open` / `toggle` / `close`
+- `powermenu` `open` / `toggle` / `close`
 
-`spotlight` and `launcher` open the island launcher when **Launcher → Default Opens** is Island, and fall back to Spotlight if the focused screen has no island. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
+`spotlight` and `launcher` open the island launcher when **Launcher → Default action → Opens** is Island, and fall back to Spotlight if the focused screen has no island. In connected Frame mode, **Opens** does not offer Spotlight, and a saved Spotlight style opens the Full launcher. An island or dot that owns shared shortcuts also uses the island launcher, regardless of the default launcher style; see [shared shortcut routing](#dot).
 
 **Examples:**
 ```bash
@@ -505,6 +521,7 @@ dms ipc call island open controlcenter
 dms ipc call island open wallpaper
 dms ipc call island open weather
 dms ipc call island open notifications
+dms ipc call island open powermenu
 dms ipc call island show home
 dms ipc call island toggleOn media DP-1
 dms ipc call island cycle
@@ -513,6 +530,49 @@ dms ipc call island status
 dms ipc call island move 1600 900
 dms ipc call island centerOn DP-1
 dms ipc call island openInstance controlcenter DP-1 default
+```
+
+### islandActivity
+
+Live activities from scripts and other programs: progress, timers, recording state and similar status shown in the island. Activities are data only (no QML, no shell commands) and use the same payload as [plugin activities](./plugin-development.mdx#island-live-activities). An island or dot shows them when **Live activities → Plugin activities** is on in its settings (Settings → Bar with the island selected, or Settings → Dot). The registry lives in the shell and clears on restart.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `publish <source> <id> <json>` | Add or replace an activity. Pass `-` instead of the JSON to read it from stdin | source, id, JSON payload or `-` |
+| `remove <source> <id>` | End one activity | source, id |
+| `clear <source>` | End every activity from a source | source |
+| `open <source> <id>` | Expand the activity on every island showing it | source, id |
+| `invoke <source> <id> <action>` | Trigger one of the activity's actions, as if its button was clicked | source, id, action id |
+| `pollActions <source>` | JSON array of `{source, id, action}` events since the last poll, then clears them (the shell keeps the last 64) | source |
+| `list` | JSON array of every published activity | - |
+| `status` | JSON array with one entry per island: screen, bar id, whether activities and notifications are enabled, the showing preview and the queue | - |
+| `availability` | JSON with `islandPresent`, `activitiesAvailable`, `notificationsAvailable` and per-screen hosts | - |
+| `availabilityOn <screen>` | The same for one output | screen name |
+| `canPresentSource <source> <screen>` | `true` if an island on that screen shows activities and does not hide this source | source, screen name |
+
+Sources and ids are 1–64 letters, digits, `_`, `.`, `:` or `-`. Replies are `ISLAND_ACTIVITY_PUBLISHED`, `ISLAND_ACTIVITY_REMOVED`, `ISLAND_ACTIVITY_CLEARED`, `ISLAND_ACTIVITY_OPENED`, `ISLAND_ACTIVITY_ACTION_INVOKED`, or `ISLAND_ACTIVITY_INVALID`, `ISLAND_ACTIVITY_NOT_FOUND` and `ISLAND_ACTIVITY_ACTION_INVALID` on failure. An invalid payload, a payload over 64 KiB or a full registry (64 activities) returns `ISLAND_ACTIVITY_INVALID`.
+
+**Payload:** see [payload fields](./plugin-development.mdx#payload-fields). A `persistent` activity published over IPC without a `ttl` expires after 8 hours; publish it again to renew it, and `remove` it when your program is done. `invoke` only accepts an action that exists on the activity and is enabled and not pending. External programs read button presses with `pollActions`.
+
+**Reading from stdin:** with `-` as the last argument, `dms ipc call islandActivity publish <source> <id> -` reads one complete JSON payload from stdin, up to 64 KiB. It is one publish, not a stream of updates. Run without piped input, it stops with `no JSON payload piped to stdin`.
+
+**Examples:**
+```bash
+dms ipc call islandActivity availability
+dms ipc call islandActivity canPresentSource recorder DP-1
+dms ipc call islandActivity publish recorder status '{"title":"Recording","icon":"fiber_manual_record","persistent":true,"category":"status","actions":[{"id":"stop","label":"Stop","role":"destructive"}]}'
+dms ipc call islandActivity publish recorder status '{"title":"Recording","subtitle":"00:12","icon":"fiber_manual_record","persistent":true,"category":"status"}'
+dms ipc call islandActivity publish build result '{"title":"Build failed","severity":"error","priorityClass":"high","duration":4000}'
+dms ipc call islandActivity open recorder status
+dms ipc call islandActivity pollActions recorder
+dms ipc call islandActivity remove recorder status
+dms ipc call islandActivity clear recorder
+dms ipc call islandActivity list
+dms ipc call islandActivity status
+
+# Payload from stdin
+printf '%s\n' '{"title":"Build complete","icon":"check_circle","duration":3000}' | dms ipc call islandActivity publish build result -
+dms ipc call islandActivity publish calendar event - < event.json
 ```
 
 ### dot
@@ -654,14 +714,16 @@ dms ipc call widget reset weather
 
 These targets control various modal windows and overlays.
 
-### spotlight
+### launcher {/* #spotlight */}
 
 Application launcher modal with search capabilities.
 
-:::note
-`spotlight` and `launcher` are synonymous — both targets call the same launcher modal for backwards compatibility.
+**Default keybind:** `Super + Space` (calls `spotlight toggle`)
 
-When **Launcher → Default Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
+:::note[launcher and spotlight]
+`launcher` and `spotlight` are synonymous — both targets call the same launcher modal. `spotlight` is kept for backwards compatibility, and the default keybinds still use it, so existing binds keep working.
+
+When **Launcher → Default action → Opens** is set to Island, these calls open the island launcher on the focused screen (Spotlight is used if that screen has no Island). Direct control is `island open launcher`.
 :::
 
 | Function | Description | Parameters |
@@ -676,11 +738,14 @@ When **Launcher → Default Opens** is set to Island, these calls open the islan
 
 **Examples:**
 ```bash
+dms ipc call launcher toggle
+dms ipc call launcher openQuery browser
+dms ipc call launcher toggleQuery "!"
+dms ipc call launcher openWith apps
+dms ipc call launcher toggleWith files
+
+# Same calls through the spotlight alias
 dms ipc call spotlight toggle
-dms ipc call spotlight openQuery browser
-dms ipc call spotlight toggleQuery "!"
-dms ipc call spotlight openWith apps
-dms ipc call spotlight toggleWith files
 ```
 
 ### spotlight-bar
@@ -715,11 +780,13 @@ dms ipc call spotlight-bar toggleWith files
 All these modals support `open`, `close`, and `toggle` functions:
 
 - **clipboard** - Clipboard history manager
-- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
+- **notifications** - Notification center (also supports `clearAll`, `dismiss`, `invokeLast`, `dismissAllPopups`, `toggleDoNotDisturb`, `getDoNotDisturb`, `enableDoNotDisturbIndefinitely`, `enableDoNotDisturbUntilTomorrowMorning`, and `enableDoNotDisturbUntil <timestampMs>`)
 - **processlist** - System process list and performance monitor (also supports `focusOrToggle`)
 - **powermenu** - Power menu for system actions
 - **control-center** - Quick settings (network, bluetooth, audio, etc.)
-- **notepad** - Quick notepad/scratchpad
+- **notepad** - Quick notepad (for parking windows, see [`scratchpad`](#scratchpad))
+
+`invokeLast` runs the default action of the newest notification and dismisses it, like clicking its popup. It falls back to the first action and returns `NOTIFICATION_INVOKE_NO_ACTION` when there is nothing to run.
 
 When an Island is the sole top chrome on the focused display (or an island or dot there owns shared shortcuts), `control-center` and `notifications` open island activities instead of their popouts. The notification modal still opens if the island does not own the screen.
 
@@ -729,6 +796,7 @@ dms ipc call clipboard toggle
 dms ipc call notifications open
 dms ipc call notifications clearAll
 dms ipc call notifications dismiss
+dms ipc call notifications invokeLast
 dms ipc call notifications dismissAllPopups
 dms ipc call notifications toggleDoNotDisturb
 dms ipc call notifications getDoNotDisturb
@@ -1028,6 +1096,72 @@ dms ipc call workspace-rename open
 
 **Note:** Returns an error if running on an unsupported compositor.
 
+### scratchpad
+
+**Niri and Hyprland only**
+
+Park windows out of sight and bring them back with a key. Pads have names; `""` is the default pad. The name argument is required, so pass `""` rather than leaving it out.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `toggle <name>` | Show or park the pad's windows | pad name (`""` for the default) |
+| `move <name>` | Park the focused window in the pad. niri floats it first | pad name (`""` for the default) |
+| `restore` | Take the focused window out of its scratchpad for good | - |
+
+On niri, if any window shown from the pad is on the current workspace, `toggle` parks every window shown from that pad, including ones on other workspaces and monitors. Otherwise it brings every window of the pad to the current workspace and focuses the last one. Run on the parking workspace itself, it switches back to the previous workspace and returns `SCRATCHPAD_HIDDEN`. On Hyprland, `toggle` toggles the special workspace `special` (default pad) or `special:<name>`.
+
+Windows parked with `move` come back floating. A window dragged onto the parking workspace by hand comes back as it was, so a tiled window stays tiled.
+
+On niri, `restore` brings a parked window to your current workspace, or to the nearest regular workspace if you are on the parking workspace. A window that `toggle` has shown stays where it is and is simply no longer part of the pad.
+
+**Examples:**
+```bash
+dms ipc call scratchpad toggle ""
+dms ipc call scratchpad move ""
+dms ipc call scratchpad restore
+
+# Named pad
+dms ipc call scratchpad move music
+dms ipc call scratchpad toggle music
+```
+
+The stock niri binds:
+
+```kdl
+Mod+S hotkey-overlay-title="Scratchpad" { spawn "dms" "ipc" "call" "scratchpad" "toggle" ""; }
+Mod+Shift+S hotkey-overlay-title="Scratchpad: Move Window" { spawn "dms" "ipc" "call" "scratchpad" "move" ""; }
+Mod+Ctrl+S hotkey-overlay-title="Scratchpad: Restore Window" { spawn "dms" "ipc" "call" "scratchpad" "restore"; }
+```
+
+The stock Hyprland binds use Hyprland's own dispatchers: `SUPER+S` toggles the `special` workspace and `SUPER+SHIFT+S` moves the focused window to it. There is no stock restore bind on Hyprland.
+
+| Status | Meaning |
+| --- | --- |
+| `SCRATCHPAD_SHOWN` | niri: the pad's windows were brought to the current workspace |
+| `SCRATCHPAD_HIDDEN` | niri: the pad's windows were parked |
+| `SCRATCHPAD_EMPTY` | niri: the pad has no windows |
+| `SCRATCHPAD_TOGGLED` | Hyprland: the special workspace was toggled |
+| `SCRATCHPAD_MOVED` | The focused window was parked |
+| `SCRATCHPAD_MOVE_FAILED` | niri only: `move` or `toggle` found no empty workspace to turn into the pad (for example, you are on the monitor's last, empty workspace) |
+| `SCRATCHPAD_RESTORED` | The focused window left its scratchpad |
+| `SCRATCHPAD_NO_FOCUSED_WINDOW` | No window has focus |
+| `SCRATCHPAD_WINDOW_NOT_IN_SCRATCHPAD` | The focused window is not in a scratchpad |
+| `SCRATCHPAD_UNSUPPORTED_COMPOSITOR` | Compositor is not niri or Hyprland |
+
+#### How it works on niri
+
+niri has no way to hide or minimize a window, so DMS parks windows on a workspace named `scratchpad` (named pads use `scratchpad:<name>`). DMS creates it at the bottom of the current monitor when needed. It removes the workspace once it is empty: after `toggle` shows its windows, after `restore` takes its last window, or when `toggle` finds it empty. If you close a parked window, the empty workspace stays until the next `toggle` of that pad. Windows slide in and out with niri's own window-movement animation.
+
+- DMS hides these workspaces from its bar, island and workspace scroll. niri's own overview, its Alt-Tab and `focus-workspace` up, down or by number still reach them while windows are parked.
+- Turn on **Show scratchpads** in the workspace switcher's options to get one pill per pad that holds windows. It lights while the pad's windows are shown; click it to toggle the pad.
+- Clicking a parked window in the dock, taskbar or launcher brings it to the current workspace instead of jumping to the parking workspace.
+- A window shown on another monitor moves without animation.
+- If the shell restarts, DMS forgets which pad a shown window came from. Run `move` on it again.
+
+:::warning[Don't declare the scratchpad workspace]
+Do not declare `workspace "scratchpad"` in your niri config. Config workspaces sit at index 1 and shift every `focus-workspace N` bind.
+:::
+
 ### outputs
 
 Monitor output profile management for switching between display configurations.
@@ -1131,6 +1265,8 @@ Manage plugins at runtime - useful for development and troubleshooting.
 | `reload <pluginId>` | Hot-reload a plugin without restarting | plugin ID |
 | `enable <pluginId>` | Enable a disabled plugin | plugin ID |
 | `disable <pluginId>` | Disable a loaded plugin | plugin ID |
+| `disableAll` | Disable all loaded plugins and snapshot them for restore | - |
+| `restore` | Re-enable plugins from the `disableAll` snapshot | - |
 
 **Examples:**
 ```bash
@@ -1146,6 +1282,10 @@ dms ipc call plugins reload myPlugin
 # Toggle plugins on/off
 dms ipc call plugins enable myPlugin
 dms ipc call plugins disable myPlugin
+
+# Disable all active plugins and restore them later
+dms ipc call plugins disableAll
+dms ipc call plugins restore
 ```
 
 ### systemupdater

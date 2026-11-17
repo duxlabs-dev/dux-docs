@@ -27,7 +27,7 @@ niri uses the KDL configuration format. Dux Modular Shell integrates seamlessly 
 DMS will automatically apply key binds, gaps, window radius, and colors if you include the following files in your niri config. You can customize gaps, border radius, and window radius in **Settings → Compositor**.
 
 
-```kdl
+```kdl title="~/.config/niri/config.kdl"
 // Add to the end of ~/.config/niri/config.kdl
 include optional=true "dms/colors.kdl"
 include optional=true "dms/layout.kdl"
@@ -277,7 +277,7 @@ hyprctl configerrors
 
 DMS applies colors, displays, layout, cursor, input, keybinds and window rules through the fragments above. `dms setup` adds these lines for you; if you maintain `hyprland.lua` by hand, keep them at the end in this order. You can customize gaps, borders, and effects in **Settings → System & integrations → Hyprland**.
 
-```lua
+```lua title="~/.config/hypr/hyprland.lua"
 -- Add to the end of ~/.config/hypr/hyprland.lua
 require("dms.colors")
 require("dms.outputs")
@@ -289,7 +289,7 @@ require("dms.binds-user")
 require("dms.windowrules")
 ```
 
-:::tip
+:::tip[Create the include files first]
 Be sure that all files exist before including them in the Hyprland configuration.
 ```bash
 mkdir -p ~/.config/hypr/dms
@@ -506,6 +506,8 @@ These Hyprland rows live on other Settings pages and are hidden unless the runni
 | **Tablet input** | Input → Mouse & touchpad → Tablet | 0.57+ | Turns drawing tablet input on or off (`input:tablet:enabled`), written to `dms/input.lua` |
 | **Warp on display change** | Wallpaper & colors → Cursor | 0.57+ | Same as workspace change, Off, On, or Force (`cursor:warp_on_monitor_change`), written to `dms/cursor.lua` |
 
+**Focus follows mouse** (Input → Mouse & touchpad → Mouse) sets `input:follow_mouse` in `dms/input.lua`: On writes `1`, Off writes `0`. Until you use the toggle, DMS shows the mode your own config sets and writes nothing, and resetting the setting removes the override again, so a mode `2` or `3` from your config comes back. The toggle needs an active Lua config and the `dms/input.lua` include; if the include is missing, use **Setup** in the First Time Setup banner. Hyprland's `input:float_switch_override_focus` can still move focus between tiled and floating windows while `follow_mouse` is `0`, and DMS leaves it alone. On niri the same toggle writes `focus-follows-mouse` to the DMS input include, and on mangowm `sloppy_focus`.
+
 ## mangowm Configuration {/* #mangowc-configuration */}
 
 [mangowm](https://github.com/DreamMaoMao/mangowc) is a dynamic tiling Wayland compositor based on dwl (wlroots). Configuration lives at `~/.config/mango/config.conf` or `~/.config/mango/config.toml`. mangowm loads `config.conf` when it exists, otherwise `config.toml`, and DMS works with either.
@@ -532,7 +534,7 @@ To convert an older config, run the `migrate-config-keys.sh` attached to [mangow
 
 The fragments are `.conf` files whichever main config you use; mangowm reads each file in its own format. If you maintain your main config by hand, source every fragment and make sure the files exist. A **First Time Setup** banner on the matching Settings page adds a missing `source` line for you.
 
-```conf
+```conf title="~/.config/mango/config.conf"
 # Add to the end of ~/.config/mango/config.conf
 source=./dms/colors.conf
 source=./dms/layout.conf
@@ -550,7 +552,7 @@ touch ~/.config/mango/dms/{colors,layout,cursor,input,outputs,windowrules,binds}
 
 With `config.toml`, source them from a `[global]` table:
 
-```toml
+```toml title="~/.config/mango/config.toml"
 # Add to the end of ~/.config/mango/config.toml
 [global]
 source = [
@@ -768,7 +770,7 @@ For other compositors, you need to:
 2. **Configure keybindings** using the IPC commands from the [Keybinds & IPC](keybinds-ipc) guide
 
 3. **Set environment variables** in `~/.config/environment.d/90-dms.conf` (for systemd users) or your compositor config:
-   ```ini
+   ```ini title="~/.config/environment.d/90-dms.conf"
    QT_QPA_PLATFORM=wayland
    ```
    You can also use `systemctl --user edit dms` and add `Environment=QT_QPA_PLATFORM=wayland` under `[Service]`. This only affects DMS and apps it launches, whereas `90-dms.conf` applies to all user sessions.
@@ -777,7 +779,7 @@ For other compositors, you need to:
 
 Add to `~/.config/sway/config`:
 
-```conf
+```conf title="~/.config/sway/config"
 # DMS Keybindings
 bindsym $mod+space exec dms ipc call spotlight toggle
 bindsym $mod+v exec dms ipc call clipboard toggle

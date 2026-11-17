@@ -353,7 +353,15 @@ Settings you put in that file yourself are preserved. DMS only manages `theme.co
 
 :::warning[Arch: Qt5 plugin path]
 
-The AUR package installs the Qt5 plugin to `/usr/lib/qt5/plugins/platformthemes/`, but Arch's Qt5 plugin root is `/usr/lib/qt/plugins` with no `5`. Qt5 applications will not find it and fall back to an unthemed palette, while Qt6 applications look correct. Run `dms doctor` to check, and either symlink the plugin into the right directory or add the packaged path to `QT_PLUGIN_PATH`.
+Older versions of these docs recommended symlinking the Qt5 plugin into `/usr/lib/qt/plugins`, as a workaround for a bug in the AUR package. The package installed the plugin to `/usr/lib/qt5/plugins`, where Qt5 applications could not find it. This is fixed in `qtengine` 0.2.3-3, which installs to the correct directory, so the workaround is no longer needed.
+
+The leftover symlinks conflict with the fixed package, and pacman stops the upgrade with a `conflicting files` error. If they were created, remove them before upgrading:
+
+```sh
+sudo rm /usr/lib/qt/plugins/platformthemes/libqt5engine-plugin.so /usr/lib/qt/plugins/styles/libqt5engine-style.so
+```
+
+Run `dms doctor` afterwards to check that the plugin is found.
 
 :::
 

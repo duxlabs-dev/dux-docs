@@ -100,11 +100,16 @@ In a `dms dmenu` list with multi-select, `Shift+Enter` toggles the highlighted e
 | --- | --- |
 | Move between tiles and their toggle buttons | `Tab`, `Shift+Tab` |
 | Activate the focused tile or button | `Enter`, `Space` |
+| Previous or next page | `Ctrl+PgUp`, `Ctrl+PgDn` |
 | Enter edit mode | `F2`, `Ctrl+E` |
 | Undo an edit | `Ctrl+Z` |
 | Close a picker or sheet, go back from a page, leave edit mode, then close | `Escape` |
 
 A tile with details opens them; its icon button toggles it.
+
+In edit mode, the widget list sits beside the Control Center. Click a widget, or press `Enter` on it, to add it. Drag tiles to move them, and drop one on the list to remove it. **Settings → Interface style → Control Center → Edit layout** (`controlCenterEditLayout`) chooses **Docked** (default) or **Sheet**, which opens the list over the Control Center instead.
+
+The grid can have several pages. Use the dots under the grid, or `Ctrl+PgUp`/`Ctrl+PgDn`, to switch pages.
 
 ## Dash
 
@@ -240,7 +245,7 @@ The lock screen's power menu uses the [Power Menu](#power-menu) keys for the act
 | --- | --- |
 | Collapse the island | `Escape` |
 
-The launcher inside the island uses the [launcher keys](#launcher).
+Clicking the island, one of its groups or a live activity gives it the keyboard. Opening it by hover does not, until you click inside. Its dash faces use the [dash keys](#dash) and share the focused overview card with the dash. The launcher inside the island uses the [launcher keys](#launcher).
 
 ## Workspace Overview
 
@@ -253,7 +258,7 @@ On niri:
 | Search apps | type a letter |
 | Close the overview | `Enter`, `Escape` |
 
-The DMS niri binds open the overview with `Mod+O` or `Mod+Tab`; on the next niri release, tapping `Mod` on its own also toggles it. See [Version-dependent binds](compositors#version-dependent-binds).
+The DMS niri binds open the overview with `Mod+O` or `Mod+Tab`; on the next niri release, tapping `Mod` on its own also toggles it. See [Next niri release](compositors#next-niri-release).
 
 On Hyprland, `Left` and `Right` switch workspaces on the current monitor and `Escape` closes the overview.
 

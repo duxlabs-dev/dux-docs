@@ -8,7 +8,7 @@ COPY patches ./patches
 RUN npm ci
 
 FROM node:22-alpine AS builder
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat git
 WORKDIR /app
 
 # Copy dependencies from deps stage
@@ -16,6 +16,11 @@ COPY --from=deps /app/node_modules ./node_modules
 
 # Copy source files
 COPY . .
+
+# Fetch full git history (shallow clones break "Last updated" dates)
+RUN if [ "$(git rev-parse --is-shallow-repository 2>/dev/null)" = "true" ]; then \
+      git fetch --unshallow --quiet https://github.com/duxlabs-dev/dux-docs.git || true; \
+    fi
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
@@ -26,7 +31,8 @@ FROM node:22-alpine AS production-node
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-RUN npm install -g serve
+RUN npm install -g serve@14.2.7 && \
+    node -e "const fs=require('fs'),f=process.argv[1]+'/serve/node_modules/serve-handler/src/index.js',a='stats = await handlers.lstat(absolutePath);',s=fs.readFileSync(f,'utf8');if(!s.includes(a))process.exit(1);fs.writeFileSync(f,s.replace(a,a+' if (stats.isDirectory()) stats = null;'))" "$(npm root -g)"
 
 COPY --from=builder /app/build ./build
 

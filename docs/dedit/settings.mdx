@@ -1,0 +1,87 @@
+---
+title: Settings
+description: What each Dux Edit setting does and where it lives
+sidebar_position: 5
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██╔════╝██╔══██╗██║╚══██╔══╝
+██║  ██║██║   ██║ ╚███╔╝      █████╗  ██║  ██║██║   ██║   
+██║  ██║██║   ██║ ██╔██╗      ██╔══╝  ██║  ██║██║   ██║   
+██████╔╝╚██████╔╝██╔╝ ██╗     ███████╗██████╔╝██║   ██║   
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚══════╝╚═════╝ ╚═╝   ╚═╝   `}
+  hideTitle={true}
+/>
+
+# Settings
+
+Open Settings with `Ctrl+,` or from the window menu. Settings are stored in `~/.config/dux/edit/settings.json` and apply at once. The key for each row is listed so you can set it from a script.
+
+Colors follow the theme: Dux Edit uses Dux Modular Shell colors when the shell publishes them, and a preset otherwise.
+
+## Appearance
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Mode | `viewMode` | `advanced` or `simple`. Simple hides the status details, line numbers and a lone tab |
+| Theme | `themeMode` | **Follow System** (`auto`, from the desktop portal), `light` or `dark` |
+| Colors | `colorSource` | **Dux Shell** (`auto`) uses shell colors when published, **Preset** (`preset`) always uses the preset |
+| Preset | `presetTheme` | `purple`, `blue`, `green`, `orange`, `red`, `cyan`, `pink`, `amber`, `coral` or `monochrome`. Also used when shell colors are not available |
+| Language | `language` | Empty follows the system language |
+
+## Editor
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Monospace Font | `useMonospace` | Use a monospace font instead of the theme's regular one |
+| Font Family | `fontFamily` | Empty follows the theme's font for the chosen kind |
+| Font Size | `fontSize` | 8 to 48, default 14. Zoom with `Ctrl++` and `Ctrl+-` |
+| Line Numbers | `showLineNumbers` | Show the gutter |
+| Highlight Current Line | `highlightCurrentLine` | Band behind the cursor line |
+| Wrap Lines | `wrapMode` | `auto` wraps prose and Markdown and leaves code unwrapped, `on` or `off` |
+| Tab Width | `tabWidth` | 1 to 8, default 4. `.editorconfig` and Vim modelines override it per file |
+| Insert Spaces | `insertSpaces` | The Tab key inserts spaces instead of a tab |
+| Markdown Preview | `markdownPreviewMode` | How a Markdown document opens: `off`, `split` (side by side) or `full` (preview only) |
+
+## Files
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Autosave | `autoSave` | Save files two seconds after the last edit |
+| Restore Session | `restoreSession` | Reopen the last tabs on start. Unsaved work is always kept |
+| Closing the Window | `closeBehavior` | `quit` quits Dux Edit, `background` keeps it running with no editors loaded |
+| DMS Notes | | Import the tabs and settings of the DMS notepad. Same as `dux-edit import-dms-notes` |
+
+## Highlighting
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Syntax Highlighting | `highlightEnabled` | Turn highlighting on or off |
+| Custom Colors | `syntaxColors` | Per-role colors (`#rrggbb`) applied over the theme-derived palette. Roles: text, keyword, type, constant, function, tag, attribute, preprocessor, variable, string, escape sequence, regular expression, number, operator, punctuation, comment, heading, emphasis, strong emphasis, inserted line, deleted line, error, link and inline code. **Reset All** drops every custom color |
+
+Highlighting is exact up to 2 MiB, 50,000 lines and 10,000-character lines. Above that, a document opens without highlighting. The language is detected from the file, and can be overridden from the status bar.
+
+## Spellcheck
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Check Spelling | `spellcheckEnabled` | Needs `hunspell` and a dictionary for the language |
+| Language | `spellcheckLanguage` | `auto` follows the locale, or an installed dictionary code |
+| Check String Literals | `spellcheckStrings` | Also check text inside quotes in code |
+
+Words added from the spelling menu go to `~/.config/dux/edit/custom_dictionary.txt`.
+
+## Plugins
+
+| Setting | Key | What it does |
+| --- | --- | --- |
+| Enable | `enabledPlugins` | Plugin id to `true`. Enabling loads the plugin at once and disabling destroys it |
+
+**Rescan** looks for newly installed plugins. See [Plugins](plugins).
+
+## Keyboard Shortcuts
+
+A searchable list of every shortcut, plugin commands included. See [Keyboard](keyboard).

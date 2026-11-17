@@ -24,7 +24,7 @@ Dux Files ships a flake with a package, a NixOS module and a home-manager module
 
 Add the Dux Files flake to your `flake.nix`:
 
-```nix
+```nix title="flake.nix"
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -122,7 +122,7 @@ programs.dux-files = {
 };
 ```
 
-:::warning
+:::warning[Settings become read-only]
 
 A managed settings file is read-only, so changes made in the app's Settings page do not persist across rebuilds. Leave `settings` empty if you prefer to configure Dux Files from its UI.
 

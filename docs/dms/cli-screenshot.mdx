@@ -32,7 +32,7 @@ dms screenshot --no-file
 
 Press **Escape** to cancel region selection at any time.
 
-When a file is saved, the clipboard holds the file as well as the image, so terminals paste its path and file managers paste the file.
+The clipboard holds only the image. Add `--clipboard-file` to copy the saved file as well, so terminals paste its path and file managers paste the file. Apps that prefer text then paste the path instead of the image.
 
 ## Capture Modes
 
@@ -81,6 +81,7 @@ dms screenshot -f jpg -q 85
 | `--interval` | | Scroll mode capture interval in ms, 30-1000 (default: 45) |
 | `--no-clipboard` | | Don't copy to clipboard |
 | `--no-file` | | Don't save to file |
+| `--clipboard-file` | | Copy the saved file (path, URI and image) instead of only the image |
 | `--no-notify` | | Don't show notification |
 | `--config` | `-c` | Custom DMS config directory path |
 | `--help` | `-h` | Show help |
@@ -98,6 +99,9 @@ dms screenshot --no-clipboard
 
 # Clipboard only, no file
 dms screenshot --no-file
+
+# Copy the saved file, so terminals paste its path
+dms screenshot --clipboard-file
 ```
 
 ### Full Screen Capture
