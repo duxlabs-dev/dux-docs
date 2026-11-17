@@ -21,14 +21,14 @@ The `dms dank16` command generates a 16 color terminal palette from a single inp
 
 ## Overview
 
-Dank16 fills the 16 ANSI slots directly. It is not base16: there is no base00-base0F monochrome ramp, and the bright slots 9-15 are genuinely brighter rather than repeats of their normal counterparts. If you are looking for something to feed a base16 template, this is not it.
+Dank16 fills the 16 ANSI slots directly. It is not base16; there is no base00-base0F monochrome ramp and the bright slots 9-15 are genuinely brighter rather than repeats of their normal counterparts. If you are looking for something to feed a base16 template, this is not it.
 
 What it does:
-- fills all 16 ANSI slots from one color
-- dark and light variants, with separate contrast targets for each
-- two contrast algorithms, Delta Phi Star (default) or WCAG
-- terminal configs, JSON, and the variant JSON that matugen templates consume
-- custom background, so the palette is built against the surface it will actually sit on
+- Fills all 16 ANSI slots from one color
+- Dark and light variants, with separate contrast targets for each
+- Two contrast algorithms, Delta Phi Star (default) or WCAG
+- Terminal configs, JSON, and the variant JSON that matugen templates consume
+- Custom background, so the palette is built against the surface it will actually sit on
 
 <ThemedImage
   alt="Dank16 color palette example showing 16 ANSI colors"
@@ -41,7 +41,7 @@ What it does:
 
 ## Quick Start
 
-Generate a dark theme palette:
+To generate a dark theme palette:
 
 ```bash
 dms dank16 "#8b5cf6"
@@ -67,7 +67,7 @@ palette = 14=#cdb7ff
 palette = 15=#f9f7ff
 ```
 
-Generate a light theme palette:
+To generate a light theme palette:
 
 ```bash
 dms dank16 "#8b5cf6" --light

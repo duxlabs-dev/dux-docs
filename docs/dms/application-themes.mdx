@@ -18,11 +18,11 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
   hideTitle={true}
 />
 
-Dux Modular Shell automatically generates theme files for native applications when matugen is enabled. These files are created on wallpaper changes and theme switches.
+Dux Modular Shell automatically generates theme files for native applications when Matugen is enabled. These files are created on wallpaper changes and theme switches.
 
 ## Source Color
 
-**Source Color** picks which color in the wallpaper seeds the palette matugen builds around.
+**Source Color** picks which color in the wallpaper Matugen uses to generate the theme. The default is Dominant.
 
 | Value | What it does | matugen flag |
 |---|---|---|
@@ -68,7 +68,7 @@ For detailed instructions on setting environment variables, see [Advanced Config
 
 ## Custom Matugen Templates
 
-You can add your own matugen templates to theme additional applications. Templates must use absolute paths and be defined under the `[config]` section. DMS will execute these templates alongside its built-in templates.
+You can add your own Matugen templates to theme additional applications. Templates must use absolute paths and be defined under the `[config]` section. DMS will execute these templates alongside its built-in templates.
 
 See the [matugen wiki](https://github.com/InioX/matugen/wiki/Configuration) for full configuration and templating options.
 
@@ -144,7 +144,7 @@ color15  {{dank16.color15.default.hex}}
 
 #### Migration
 
-Update custom matugen templates from the old format:
+Update custom Matugen templates from the old format:
 
 ```diff
 - {{dank16.color0.hex}}
@@ -159,7 +159,7 @@ Update custom matugen templates from the old format:
 
 ## Generated Files
 
-When matugen is enabled, these files are regenerated on every theme change, unless their template is turned off under **Matugen templates**:
+When Matugen is enabled, these files are regenerated on every theme change, unless their template is turned off under **Matugen templates**:
 
 - `~/.config/gtk-3.0/dank-colors.css`
 - `~/.config/gtk-4.0/dank-colors.css`
