@@ -340,15 +340,16 @@ Settings are stored at `$XDG_CONFIG_HOME/dms/clsettings.json` (defaults to `~/.c
 
 For programmatic access, the clipboard manager exposes JSON-RPC methods over the DMS IPC socket.
 
-| Method                   | Params                                           | Description             |
-|--------------------------|--------------------------------------------------|-------------------------|
-| `clipboard.getHistory`   | none                                             | Get all history entries |
-| `clipboard.getEntry`     | `{id: uint64}`                                   | Get entry by ID         |
-| `clipboard.deleteEntry`  | `{id: uint64}`                                   | Delete entry by ID      |
-| `clipboard.clearHistory` | none                                             | Clear all history       |
-| `clipboard.search`       | `{query?, limit?, offset?, mimeType?, isImage?}` | Search history          |
-| `clipboard.getConfig`    | none                                             | Get current config      |
-| `clipboard.setConfig`    | config fields                                    | Update config           |
+| Method                      | Params                                           | Description                   |
+|-----------------------------|--------------------------------------------------|-------------------------------|
+| `clipboard.getHistory`      | none                                             | Get all history entries       |
+| `clipboard.getEntry`        | `{id: uint64}`                                   | Get entry by ID               |
+| `clipboard.exportEntryFile` | `{id: uint64}`                                   | Export entry as file/URI list |
+| `clipboard.deleteEntry`     | `{id: uint64}`                                   | Delete entry by ID            |
+| `clipboard.clearHistory`    | none                                             | Clear all history             |
+| `clipboard.search`          | `{query?, limit?, offset?, mimeType?, isImage?}` | Search history                |
+| `clipboard.getConfig`       | none                                             | Get current config            |
+| `clipboard.setConfig`       | config fields                                    | Update config                 |
 
 **Example IPC call**:
 ```bash
