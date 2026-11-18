@@ -1373,6 +1373,28 @@ dms ipc call desktopWidget toggleSyncPosition dw_1234567890_abc123
 - Click-through mode allows mouse clicks to pass through the widget to windows below
 - Position sync keeps the widget at the same relative position across multiple monitors
 
+### annotate
+
+Draw on top of the live desktop, for pointing things out during a screen share or recording. The marks stay up until the overlay is closed.
+
+| Function | Description |
+| --- | --- |
+| `toggle` | Open the overlay on the focused screen, or close it and discard the marks |
+| `passthrough` | Toggle click-through: the marks stay visible while the pointer and keyboard go to the windows beneath |
+
+**Examples:**
+```bash
+dms ipc call annotate toggle
+dms ipc call annotate passthrough
+```
+
+**Notes:**
+- The toolbar at the bottom of the screen has the same tools as `dms screenshot draw`, plus clear all, click-through and close
+- **Escape** closes the overlay while drawing; undo and redo use the usual shortcuts
+- In click-through the keyboard belongs to your windows, so close with `toggle` or the toolbar
+- The overlay holds the keyboard while drawing, so bind `passthrough` to a key or use its toolbar button to get back to your windows
+- A monitor share includes the marks; a single-window share does not
+
 ### toast
 
 Display toast notifications for user feedback and scripted alerts.

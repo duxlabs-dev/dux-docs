@@ -45,6 +45,7 @@ The clipboard holds only the image. Add `--clipboard-file` to copy the saved fil
 | `window` | `dms screenshot window` | Capture the focused window (Hyprland, Mango, niri) |
 | `last` | `dms screenshot last` | Capture the last selected region |
 | `scroll` | `dms screenshot scroll` | Select a region, then scroll to capture a stitched tall image |
+| `draw` | `dms screenshot draw` | Freeze the screen, select a region and draw on it before capturing |
 
 ### List Available Outputs
 
@@ -86,7 +87,7 @@ dms screenshot -f jpg -q 85
 | `--config` | `-c` | Custom DMS config directory path |
 | `--help` | `-h` | Show help |
 
-The defaults above can be changed in **Settings → System & integrations → Screenshot**: save folder, format, JPEG quality, clipboard, notification, cursor, region confirmation, shortcut hints and scroll capture interval. A flag passed on the command line overrides the setting for that capture, so a keybind like `dms screenshot --no-file` stays clipboard only. Scripts follow the settings too: pass `--format` for a fixed `--stdout` format, and `--no-file=false` when `--json` must report a saved path.
+The defaults above can be changed in **Settings → System & integrations → Screenshot**: save folder, format, JPEG quality, clipboard, notification, cursor, region confirmation, annotation, shortcut hints and scroll capture interval. A flag passed on the command line overrides the setting for that capture, so a keybind like `dms screenshot --no-file` stays clipboard only. Scripts follow the settings too: pass `--format` for a fixed `--stdout` format, and `--no-file=false` when `--json` must report a saved path.
 
 ## Examples
 
@@ -140,6 +141,24 @@ dms screenshot scroll --interval 250
 Select a region, then scroll the content beneath with the mouse wheel or touchpad. Frames are stitched into one tall image continuously while you scroll — revisited content is never duplicated, and scrolling up past the starting point extends the image upward. Finish with the on-screen **done** button or **Enter**; cancel with **cancel** or **Escape**.
 
 Content jumped past faster than capture can follow is skipped rather than stitched incorrectly. The cursor is never included in frames, and rotated outputs are not supported. On Hyprland the keyboard stays with the application during capture, so keyboard scrolling (Page Down, arrow keys) works there too.
+
+### Draw on Capture
+
+```bash
+# Freeze the screen, select a region, annotate it, then press Enter
+dms screenshot draw
+
+# Annotate and copy without saving a file
+dms screenshot draw --no-file
+```
+
+Every output is frozen, then you drag out a region on one of them. Resize it with its handles or move it with the grip on its edge. A toolbar beside the region has select, pen, highlighter, arrow, rectangle, text and eraser tools, colors, stroke size, undo and redo. The mouse wheel also changes stroke size, and holding **Shift** snaps lines to 15° steps and keeps rectangles square. The select tool moves and resizes a mark, and changes its color or size.
+
+**Enter** finishes with the usual file, clipboard and notification settings and flags. **Ctrl+C** copies only, **Ctrl+S** saves only, and **Escape** cancels.
+
+`draw` needs the running shell and falls back to the plain region selector without it. The region stays on one output, and `--stdout`, `--json` and `--geometry` are not supported.
+
+To draw on plain region captures too, turn on **Annotate region captures** in the Screenshot settings or pass `--annotate`: `dms screenshot` and `dms screenshot region` then open `draw` instead of the region selector. `--annotate=false` skips it for one capture, and captures with `--stdout`, `--json` or `--geometry` always use the region selector.
 
 ### Repeat Last Capture
 
