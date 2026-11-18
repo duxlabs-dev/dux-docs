@@ -27,9 +27,9 @@ mkdir -p ~/repos && cd ~/repos
 git clone --recurse-submodules https://github.com/duxlabs-dev/dux-shell.git
 cd dux-shell/quickshell
 
-# Generate QML language server config
-touch .qmlls.ini
-dms qs -p .  # Press Ctrl+C after it starts
+# Generate QML language server config (run again after a reboot)
+dms qs tooling -p .
+# With an older dux-qt-base that lacks `tooling`: rm -f .qmlls.ini && touch .qmlls.ini && dms qs -p .  (Ctrl+C after it starts)
 
 # Create your plugins here
 mkdir -p dms-plugins/MyPlugin
