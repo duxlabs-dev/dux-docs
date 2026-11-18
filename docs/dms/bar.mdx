@@ -1,0 +1,43 @@
+---
+title: Bar
+description: Configure bar scroll wheel actions, per-widget scroll overrides and empty-bar click actions
+sidebar_position: 6
+---
+
+# Bar
+
+Each bar has its own interaction settings under **Settings → Bar → General**.
+
+## Scroll wheel
+
+**Scroll wheel** (on by default) sets what scrolling over the bar does on each axis:
+
+- **Vertical** (default **Workspace**) and **Horizontal (Shift + scroll)** (default **Focus window**) offer **None**, **Workspace**, **Focus window** (on compositors that support stepping window focus), **Volume** and **Brightness** (when a brightness device is available).
+- **Volume step** (`1%`–`25%`) sets how much each mouse wheel notch changes the default audio output volume. This is the shared system wheel step, so widgets that scroll volume use the same step.
+- **Brightness step** (`1%`–`25%`, default `5%`) is saved per bar. Scrolling brightness on a bar (or on its **Battery** or **Control Center** widget) adjusts the brightness devices pinned to that bar's screen, or that screen's matching/default device when nothing is pinned; see [Pinned Devices](./cli-brightness#pinned-devices).
+- **Extend to screen edge** (on by default) includes the outer gap between the bar and the screen edge in the scroll area. Hidden on Island bars and while **Frame** is on.
+- **Scroll on empty strip** (on by default) appears on docked Island bars and lets empty strip space beside the island and its satellite widgets trigger bar scroll. In **Overlay** placement it stays off so empty strip input passes through to windows.
+
+## Widget scroll
+
+Widgets that handle wheel input take priority over the bar's scroll action while the pointer is over them. The **Widget scroll** section inside the **Scroll wheel** card lists the scrollable widgets currently enabled on the selected bar (**Workspace switcher**, **Running apps**, **Media**, **Battery** when brightness is available, and **Control Center**) and shows what each one does.
+
+Turn a widget's toggle off here — or turn off **Scroll wheel** in that widget's own settings under **Settings → Bar → Widgets** — so scrolling over it uses the bar's scroll action instead. Clicking a widget row opens its settings.
+
+**Media** starts with its scroll action set to **Nothing** (off) by default, so scrolling over it uses the bar's scroll action until you enable it.
+
+If a widget only handles vertical scrolling, **Shift + scroll** (horizontal) over that widget still passes through to the bar's horizontal scroll action.
+
+## Click actions
+
+**Click actions** sets what **Middle click** and **Right click** do on empty bar space (not shown on Island bars):
+
+- **None** (default for **Middle click**)
+- **Toggle Mute**
+- **Toggle Control Center**
+- **Toggle Launcher**
+- **Close Active Window**
+- **Toggle Settings**
+- **Edit widgets** (default for **Right click**)
+
+When either button is set to **Toggle Control Center**, **Follow mouse** opens the Control Center at the cursor instead of anchored to its bar widget.
