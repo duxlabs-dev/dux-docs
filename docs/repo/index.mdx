@@ -38,10 +38,10 @@ Dux Modular Shell is now available on more distributions than ever before!
 - [**Niri-git**](https://github.com/niri-wm/niri): Development build of niri
 
 ### Core Framework
-- [**dux-qt-base**](https://github.com/duxlabs-dev/dux-qt-base): Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). `dms`, `dfiles`, `dcal`, and `dms-greeter` load it and run their UI in their own process, so they no longer need a `quickshell` package or a `qs` executable
+- [**dux-qt-base**](https://github.com/duxlabs-dev/dux-qt-base): Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). `dms`, `dfiles`, `dedit`, `dcal`, and `dms-greeter` load it and run their UI in their own process, so they no longer need a `quickshell` package or a `qs` executable
 - [**dux-qt-base-git**](https://github.com/duxlabs-dev/dux-qt-base): Development build of dux-qt-base
 
-The DMS, Dux Files, Dux Calendar, and Dux Greeter packages pull dux-qt-base in automatically, so you normally never install it by hand. Its package name depends on the distribution:
+The DMS, Dux Files, Dux Edit, Dux Calendar, and Dux Greeter packages pull dux-qt-base in automatically, so you normally never install it by hand. Its package name depends on the distribution:
 
 | Distribution | Stable | Development |
 | --- | --- | --- |
@@ -66,6 +66,7 @@ The legacy `avengemedia` repositories (COPR `avengemedia/*`, OBS `home:AvengeMed
 - [**dsearch**](https://github.com/duxlabs-dev/dux-search): a Blazingly fast filesystem search tool by Dux Labs
 - [**Dux Calendar**](https://github.com/duxlabs-dev/dux-calendar) (`dcal`): Standalone calendar app for Local, Google, Microsoft, CalDAV, and iCloud — packages **`dcal`** and **`dcal-git`**
 - [**Dux Files**](https://github.com/duxlabs-dev/dux-files) (`dfiles`): File manager with the Dux Modular Shell look — packages **`dux-files`** and **`dux-files-git`**
+- [**Dux Edit**](https://github.com/duxlabs-dev/dux-edit) (`dedit`): Text and document editor with the Dux Modular Shell look — packages **`dux-edit`** and **`dux-edit-git`**
 - [**matugen**](https://github.com/InioX/matugen): Material Design 3 color palette generator for themes
 - [**xWayland-Satellite**](https://github.com/Supreeeme/xwayland-satellite): XWayland integration tool
 - [**xWayland-Satellite-git**](https://github.com/Supreeeme/xwayland-satellite): Development build of xWayland-Satellite
@@ -164,6 +165,7 @@ paru -S dux-shell-git dux-gop-git dux-search-git dux-calendar-git dux-greeter-gi
 | Dux Search | `dux-search-bin` (AUR) | `dux-search-git` (AUR) |
 | Dux Calendar | `dux-calendar-bin` (AUR) | `dux-calendar-git` (AUR) |
 | Dux Greeter | `dux-greeter-bin` (AUR) | `dux-greeter-git` (AUR) |
+| Dux Edit | `dux-edit-bin` (AUR) | `dux-edit-git` (AUR) |
 | dux-qt-base | `dux-qt-base` or `dux-qt-base-bin` (AUR) | `dux-qt-base-git` (AUR) |
 
 `niri` and the other compositors are available from the official Arch repositories. See the [Arch & Derivatives](../dms/installation?distro=arch#arch--derivatives) installation guide for details.
@@ -303,11 +305,11 @@ standalone packages you need:
 ```bash
 echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
 sudo xbps-install -S
-sudo xbps-install -S dux-gop dux-search dux-calendar dux-files
+sudo xbps-install -S dux-gop dux-search dux-calendar dux-files dux-edit
 ```
 
-The package names are `dux-gop`, `dux-search`, `dux-calendar`, and `dux-files`; they install
-the `dgop`, `dsearch`, `dcal`, and `dfiles` commands respectively. To install DMS itself,
+The package names are `dux-gop`, `dux-search`, `dux-calendar`, `dux-files`, and `dux-edit`; they install
+the `dgop`, `dsearch`, `dcal`, `dfiles`, and `dux-edit` commands respectively. To install DMS itself,
 also configure the separate repository in the [Void Linux DMS installation
 guide](../dms/installation?distro=void#void-linux).
 
@@ -487,7 +489,7 @@ The packaging configurations and build scripts are maintained in the official Du
 
 :::note[Official Dux Labs packages]
 
-**Official Dux Labs packages**: `dms`, `dms-cli`, `dux-gop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dux-greeter`, `dux-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
+**Official Dux Labs packages**: `dms`, `dms-cli`, `dux-gop`, `dsearch`, `dcal`, `dcal-git`, `dux-files`, `dux-files-git`, `dux-edit`, `dux-edit-git`, `dux-greeter`, `dux-greeter-git`, `dms-color-picker`, and `dms clipboard` are developed and maintained by the Dux Labs team under the MIT License. External packages in these repositories are maintained by Dux Labs, but originate from upstream projects by their respective authors, credited in the package listings. They are considered unofficial Dux Labs packages unless stated otherwise by the project authors.
 Packages retain their upstream licenses: Niri (GPL-3.0), Quickshell and dux-qt-base (LGPL-3.0), Matugen (GPL-2.0), Cliphist (GPL-3.0).
 
 :::

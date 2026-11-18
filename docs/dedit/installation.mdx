@@ -5,6 +5,8 @@ sidebar_position: 2
 ---
 
 import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 <Hero
   asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
@@ -32,6 +34,159 @@ Optional:
 | `hunspell` and a dictionary | `hunspell` | spellcheck |
 | `polkit` | `pkexec` | saving root-owned files as administrator |
 | `xdg-desktop-portal` | | the open and save dialogs |
+
+## Distribution Packages
+
+Each Dux repository ships two packages: `dux-edit` follows tagged releases, and `dux-edit-git` builds from upstream `master`. They conflict, so install one. Both pull in dux-qt-base automatically, and on most distributions they also recommend polkit and hunspell with an English dictionary.
+
+### Arch Linux
+
+
+```bash
+paru -S dux-edit-bin        # or dux-edit-git for the latest development build
+```
+
+
+### Fedora & CentOS
+
+
+```bash
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-edit        # or dux-edit-git for the latest development build
+```
+
+
+### Debian
+
+Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
+
+
+<Tabs groupId="debian-release">
+<TabItem value="trixie" label="Debian 13 (Trixie)" default>
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="testing" label="Debian Testing">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="sid" label="Debian Sid">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+</Tabs>
+
+
+### Ubuntu
+
+Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
+
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo apt update
+sudo apt install dux-edit        # or dux-edit-git for the latest development build
+```
+
+
+### openSUSE
+
+Dux Edit is available through the Open Build Service (OBS) for openSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+
+
+<Tabs groupId="opensuse-distro">
+<TabItem value="tumbleweed" label="Tumbleweed" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="leap16" label="Leap 16">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="leap161" label="Leap 16.1">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+<TabItem value="slowroll" label="Slowroll">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-edit        # or dux-edit-git for the latest development build
+```
+
+</TabItem>
+</Tabs>
+
+
+### Void Linux
+
+Void carries only the stable `dux-edit` package.
+
+
+```bash
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -Su
+sudo xbps-install -S dux-edit
+```
+
+
+On the first sync, `xbps-install` shows the Dux Labs signing key fingerprint and asks you to trust it.
+
+Distribution packages install `dux-edit` and the `dedit` alias to `/usr/bin`, plus the desktop entry, icon, AppStream metadata, polkit policy and shell completions.
+
+## Release Binary
+
+Each tagged release publishes `linux-amd64` and `linux-arm64` binaries with the UI embedded, plus a tarball of shell completions, on the [GitHub releases page](https://github.com/duxlabs-dev/dux-edit/releases).
+
+
+```bash
+curl -fsSLO https://github.com/duxlabs-dev/dux-edit/releases/latest/download/dux-edit-linux-amd64.tar.gz
+tar -xzf dux-edit-linux-amd64.tar.gz
+sudo install -Dm755 dux-edit-linux-amd64 /usr/local/bin/dux-edit
+```
+
+
+The release binary does not embed dux-qt-base, so install it first (see [Requirements](#requirements)). The desktop entry and polkit policy come from a distribution package or `make install`.
 
 ## Build from Source
 
