@@ -5,6 +5,7 @@ sidebar_position: 1
 ---
 
 import Hero from '@site/src/components/Hero';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 <Hero
   asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ███████╗██████╗ ██╗████████╗
@@ -41,6 +42,15 @@ offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
 Dux Edit is a free, open-source text and document editor for Linux. It opens any text file without a project around it: notes, config files, scripts, Markdown. It sits between a scratchpad and an IDE, shares the look and feel of [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell), and follows its theme automatically. It takes over from the DMS notepad. `dux-edit` is the command name, and `dedit` is a short alias.
 
 Built with [dux-qt-base](https://github.com/duxlabs-dev/dux-qt-base) and [Go](https://go.dev/). The core is pure Go with no cgo.
+
+<figure style={{ textAlign: 'center' }}>
+  <img
+    src={useBaseUrl('/img/dedit.png')}
+    alt="Dux Edit editing a Go file with syntax highlighting, four open tabs and the status bar"
+    style={{ maxWidth: '640px', width: '100%', borderRadius: '12px' }}
+  />
+  <figcaption>Dux Edit editing a Go file.</figcaption>
+</figure>
 
 ## Features
 
