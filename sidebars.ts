@@ -60,6 +60,7 @@ const sidebars: SidebarsConfig = {
         'dms/autostart',
         'dms/network-speed-monitor',
         'dms/system-monitor',
+        'dms/battery',
         'dms/reboot-to-another-os',
         'dms/config-profiles',
         {

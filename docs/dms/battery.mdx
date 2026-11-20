@@ -1,0 +1,60 @@
+---
+title: Battery
+description: Style the battery bar widget, choose which devices it shows and arrange the battery popout
+sidebar_position: 6.6
+---
+
+# Battery
+
+The battery widget shows the system battery and, if wanted, the batteries of connected peripherals. Its options, including the popout's, are under **Settings → Bar → Bar widgets** (click the battery widget).
+
+## Bar widget
+
+| Option | Choices |
+| --- | --- |
+| **Color** | **Theme**, **Low and charging** (default: red when low, green while charging, accent color while plugged in) or **Level** |
+| **Separator** | **Gap** (default), **Line**, **Dot** or **Separate** (each entry gets its own background) |
+
+**Low threshold** opens the alerts in **Settings → Power & battery → Battery**, where the threshold used by **Only when low** is set.
+
+### Entries
+
+**Entries** is an ordered list of the batteries the widget shows: drag to reorder, switch an entry off to hide it. The system battery is in the list too. On a desktop without a battery it is shown as a power icon. Saved devices that are not connected stay in the list as **Not connected** until removed with **Remove**.
+
+Peripherals like mice, keyboards or headsets are not shown by default. Switch one on in the list to add it to the bar. A device that reports 0% is shown as unknown and never counts as low.
+
+For a peripheral, pick any of **Icon**, **Percentage** and **Only when low**. The last one shows the entry only at or below the low threshold.
+
+The system battery has these options:
+
+- **Only when low** (same as above)
+- **Show percentage** (on by default), and **Only on battery** to hide it while plugged in
+- **Show remaining time**, and **Only on battery** for the same
+- **Show charge rate** and **Show discharge rate** show the power in watts
+- **Battery style**: **Icon** (default), **Solid** or **Circle**
+- **Direction**: **Horizontal** or **Vertical**
+
+With a charge limit set in **Settings → Power & battery → Battery**, the remaining time while charging is the time until the limit is reached, here and everywhere else it is shown.
+
+## Popout
+
+The **Popout** card sets the look of the popout:
+
+| Option | Choices |
+| --- | --- |
+| **Color** | **Primary** (default), **Theme**, **Low and charging** or **Level** |
+| **Style** | **Compact** (default: the level beside the status, without a card), **Line**, **Ring** or **Card** |
+| **Badge** | **Shape** (default) or **Ring** (a ring showing the level), for **Line** and **Card** |
+| **Wavy** | Animates the level indicator while charging (on by default) |
+
+While charging toward a charge limit, the popout shows **Charging to** with the limit and the time until it is reached, and the part of the level indicator past the limit is shaded. This does not apply when **Scale battery level to charge limit** is on.
+
+The popout has three sections, each with its own card: **Overview** (the battery), **Power profile** and **Devices**. **Show** switches a section off. The popout's spacing follows **Interface density** in **Settings → Interface style**. The gear in the popout opens the battery settings and the pen opens these widget options.
+
+| Section | Options |
+| --- | --- |
+| **Overview** | **Layout**: **Grid**, **Compact** (default), **Chips** or **List**. **Details**: any of **Health**, **Temperature**, **Capacity** and **Power** (all but **Temperature** by default) |
+| **Power profile** | **Style**: **Circle**, **Segments**, **Buttons** (default) or **Slider**. **Placement**: **Card** (default, its own card) or **Overview** (inside the overview card, not available with the **Compact** style) |
+| **Devices** | **Layout**: same choices as the overview, plus **Bars** (default: rows filled to the battery level) |
+
+The **Devices** section appears once a peripheral with a battery is connected. If the last one disconnects while the popout is open, it shows **No devices** until the popout closes. When the **Overview** section is off or there is no battery, the connected device with the lowest known charge takes its place at the top.
