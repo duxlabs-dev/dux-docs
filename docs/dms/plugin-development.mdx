@@ -2597,6 +2597,98 @@ Then move it to the top of the provider list. Changing the first provider refres
 2. **Leave out what you do not have** - `null` or a missing field is filled from the next provider, a made-up value wins over them
 3. **Answer in time** - Keep your own request timeouts well under 15 seconds, and under 3 if you want to fill in for a provider above you
 
+## Icon Folder Recipes
+
+A plugin can teach DMS how to recolor the folders of an icon theme. The plugin is data only. A recipe says which icons carry the theme's folder color and which role each color plays. DMS runs nothing from the plugin.
+
+:::note[Requires DMS 2.2]
+
+Icon folder recipes are new in 2.2. Declare `"requires_dms": ">=2.2.0"`.
+
+:::
+
+### How Users See Them
+
+- The plugin has to be enabled under Settings → Plugins. There is no other switch.
+- When the user picks a theme your recipe matches under Settings → Appearance → Icons, **Match folder colors to theme** becomes available for it.
+- With that toggle on, DMS writes a small overlay theme that holds only the recolored icons and inherits everything else from the installed theme. The installed theme is never changed.
+- Themes DMS already supports (Papirus, Breeze, Adwaita, Tela, Colloid) keep their built-in recipe. A plugin cannot replace it.
+
+### Manifest
+
+```json
+{
+  "id": "mintFolders",
+  "name": "Mint-Y folder colors",
+  "description": "Folder colors for the Mint-Y icon themes",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "type": "iconFolders",
+  "requires_dms": ">=2.2.0",
+  "iconFolders": [
+    {
+      "themes": ["Mint-Y", "Mint-Y-*"],
+      "icons": ["folder", "folder-*", "user-*"],
+      "colors": { "#8bb158": "front", "#6f9a3c": "back", "#3d5a1e": "glyph" }
+    }
+  ]
+}
+```
+
+A plugin with only an `iconFolders` block needs no QML. The block also works next to `component` or `components`. `iconFolders` is a list, so one plugin can cover several themes.
+
+| Key | |
+|-----|---|
+| `themes` | Required. Theme directory names the recipe is for. `*`, `?` and `[...]` are wildcards. A pattern must start with a plain character, so `Mint-Y-*` is fine and `*-dark` is not. |
+| `icons` | Icon names, without extension, that are recolored under their own name. Same wildcards and the same rule for the first character. |
+| `stock` | Icons that are the theme's own color variant, such as Papirus' `folder-blue`. They are recolored and shown only through the names that link to them (`folder` → `folder-blue`). |
+| `palette` | The stock variant's name (`folder-blue`) when the theme also ships every folder in other colors. Those other sets are left out of the overlay. |
+| `colors` | Required. A color of the theme, as lowercase `#rrggbb`, and its role: `front`, `back` or `glyph`. A list gives one role per occurrence of the color in a file, with the last one repeating. |
+
+The roles map to the theme colors like this:
+
+| Role | Part of the folder | Becomes |
+|------|--------------------|---------|
+| `front` | The folder body | `primary` |
+| `back` | The darker plate behind it | A darker tone of `primary` |
+| `glyph` | The symbol drawn on it | `on_primary` |
+
+### Rules
+
+- Give at least one of `icons` and `stock`, and map at least one color to `front`.
+- Only SVG icons in the theme's Places, MimeTypes and Status directories are read. A file is recolored only when it contains a `front` color, so an icon that merely shares a detail color with the folders is left alone.
+- Symbolic icons (`-symbolic`) are skipped. Toolkits paint those themselves.
+- Colors in the files match in any letter case. Colors written another way (`rgb()`, three-digit hex, a named color, a stylesheet class) are not matched.
+- A recipe with an unknown key, a bad pattern, a bad color, an unknown role or more than 256 entries is skipped and the reason is logged. The plugin's other recipes still load.
+- With several plugins matching the same theme, a plugin in `~/.config/dms/plugins` comes before a system one.
+- Enabling, disabling or editing the plugin takes effect within a few seconds. No restart is needed.
+
+### Finding the Colors
+
+Open the theme's `places/folder.svg` in a text editor, or the file it links to, and note the hex values of the body, the back plate and the symbol. Check a few other folders (`folder-documents`, `user-home`) and the small sizes too, since a theme may use other colors there.
+
+### Testing a Recipe
+
+Ask DMS whether it can recolor the theme. Nothing is written, and a recipe that was skipped is printed with the reason:
+
+```bash
+dms matugen icon-folders --icon-theme Mint-Y --probe
+```
+
+```json
+{"supported":true,"code":"supported","reason":""}
+```
+
+| `code` | Meaning |
+|--------|---------|
+| `supported` | A recipe matches and at least one icon takes the color. |
+| `unsupported-pack` | No recipe matches the theme name. Check that the plugin is enabled and that `themes` matches the directory name. |
+| `no-colored-folders` | A recipe matches, but no icon it names contains a `front` color. |
+| `not-found` | No theme of that name with an `index.theme` is installed. |
+| `unreadable` | The theme could not be read. |
+
+Then pick the theme under Settings → Appearance → Icons and switch **Match folder colors to theme** on.
+
 ## Island Live Activities
 
 A plugin can show live activities in the island: a recording indicator, a timer, a download, a build result. An activity is a short preview that takes over the island for a few seconds, a small persistent slot beside the island's own content, or both. Scripts publish the same data through the [`islandActivity` IPC target](./keybinds-ipc.mdx#islandactivity).
@@ -3347,7 +3439,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 }
 ```
 
-`components` replaces `component` for [composite plugins](#composite-plugins) that expose more than one surface. Provide one or the other. `dash` labels the dash surfaces and declares their options, see [Dash Options](#dash-options). `lyrics` adds a [lyrics provider](#lyrics-providers), `weather` a [weather provider](#weather-providers). A plugin with only `lyrics` or `weather` needs no `component`.
+`components` replaces `component` for [composite plugins](#composite-plugins) that expose more than one surface. Provide one or the other. `dash` labels the dash surfaces and declares their options, see [Dash Options](#dash-options). `lyrics` adds a [lyrics provider](#lyrics-providers), `weather` a [weather provider](#weather-providers), `iconFolders` a list of [icon folder recipes](#icon-folder-recipes). A plugin with only `lyrics`, `weather` or `iconFolders` needs no `component`.
 
 ### Plugin Types
 
@@ -3359,6 +3451,7 @@ Lookups only use the lyrics providers the user enabled in Settings. With none en
 - `"dashCard"` - Dash overview card (requires DMS &ge; 2.0.0)
 - `"lyrics"` - [Lyrics provider](#lyrics-providers) with no QML (requires DMS &ge; 2.0.0)
 - `"weather"` - [Weather provider](#weather-providers) with no QML (requires DMS &ge; 2.1.1)
+- `"iconFolders"` - [Icon folder recipes](#icon-folder-recipes) with no QML (requires DMS &ge; 2.2.0)
 - `"composite"` - Multiple surfaces in one plugin (use with `components`; requires DMS &ge; 1.5.0)
 
 ### Permissions
