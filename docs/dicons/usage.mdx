@@ -1,0 +1,84 @@
+---
+title: Usage
+description: Dux Icons commands, options, badge shapes and how the build works
+sidebar_position: 3
+---
+
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ██╗ ██████╗ ██████╗ ███╗   ██╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██║██╔════╝██╔═══██╗████╗  ██║██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      ██║██║     ██║   ██║██╔██╗ ██║███████╗
+██║  ██║██║   ██║ ██╔██╗      ██║██║     ██║   ██║██║╚██╗██║╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║╚██████╗╚██████╔╝██║ ╚████║███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Dux Icons Usage
+
+## Commands
+
+```bash
+dux-icons --from-dms              # colors from the running DMS theme
+dux-icons --from-dms --mode light # use the light scheme
+dux-icons --from-dms --mono       # app icons in your colors
+dux-icons --from-dms --shape squircle --gradient
+dux-icons --palette colors.json   # colors from a file
+dux-icons --out DIR --name NAME   # build somewhere else, under another name
+```
+
+From a checkout without installing, `python3 scripts/build.py` takes the same options.
+
+## Options
+
+| Option | Does |
+| --- | --- |
+| `--from-dms` | Read colors from DMS |
+| `--mode dark\|light` | Which scheme to read, default follows DMS |
+| `--badge HEX` | Badge and folder front color |
+| `--glyph HEX` | Color of marks drawn on the badge |
+| `--back HEX` | Folder back color, default is a darker `--badge` |
+| `--mono`, `--no-mono` | Paint app icons in tones of your colors, or keep their own |
+| `--shape NAME` | Badge shape: `circle`, `squircle`, `rounded`, `square`, `hexagon`, `cookie` or `clover` |
+| `--gradient`, `--no-gradient` | Shade the badge from lighter at the top to darker at the bottom, or keep it flat |
+| `--palette FILE` | JSON file with `badge` and `glyph` |
+| `--out DIR` | Where to write the theme |
+| `--name NAME` | Theme name written to `index.theme` |
+| `-v` | List every icon that was skipped, with the reason |
+
+The build only writes to a directory it created itself, and refuses a symlink or a folder with other files in it.
+
+## How It Works
+
+Vector icons are placed into the badge as vectors. Bitmap icons are embedded, so the result is always a single self-contained SVG. An icon that cannot be placed cleanly is skipped and falls back to `hicolor`. The build prints how many were skipped and why, and `-v` lists them.
+
+`src/recipe.json` controls the build:
+
+| Key | Does |
+| --- | --- |
+| `template` | The default badge shape, a file in `src/templates/` |
+| `shapes` | Layout changes a shape needs, such as more padding inside a hexagon |
+| `gradient` | `true` shades the badge |
+| `vendorThemes` | Installed icon themes searched, in order, for an `Icon=` name the app did not install itself |
+| `mono` | `false` keeps app colors, `true` paints them in tones between `@glyph` and `@back` |
+| `monoContrast` | How hard `mono` pushes tones apart, `1` leaves them as they are |
+| `tokens` | The Material roles behind `@badge`, `@glyph` and optionally `@back` |
+| `layout` | How far content sits inside the badge |
+| `overrides` | Layout changes for icons matching a name pattern |
+| `inherits` | The themes used for anything Dux Icons does not provide |
+
+## Drawing an Icon
+
+Own icons live in `src/own/<context>/<name>.svg`.
+
+- Draw on a `0 0 24 24` viewBox, without the badge.
+- Use only the tokens `@glyph`, `@badge` and `@back` as colors.
+- If several icon names share the picture, list them in `src/aliases.json` instead of copying the file.
+
+## Development
+
+```bash
+python3 -m unittest
+```

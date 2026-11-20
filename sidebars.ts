@@ -349,6 +349,20 @@ const sidebars: SidebarsConfig = {
         'dedit/ipc',
       ],
     },
+    {
+      type: 'category',
+      label: 'Dux Icons',
+      collapsed: true,
+      items: [
+        {
+          type: 'doc',
+          id: 'dicons/index',
+          label: 'Overview',
+        },
+        'dicons/installation',
+        'dicons/usage',
+      ],
+    },
     'contributing',
     {
       type: 'doc',

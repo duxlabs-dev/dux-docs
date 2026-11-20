@@ -1,0 +1,218 @@
+---
+title: Installation
+description: Install Dux Icons and use it with or without Dux Modular Shell
+sidebar_position: 2
+---
+
+import Hero from '@site/src/components/Hero';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ██╗ ██████╗ ██████╗ ███╗   ██╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██║██╔════╝██╔═══██╗████╗  ██║██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      ██║██║     ██║   ██║██╔██╗ ██║███████╗
+██║  ██║██║   ██║ ██╔██╗      ██║██║     ██║   ██║██║╚██╗██║╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║╚██████╗╚██████╔╝██║ ╚████║███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝`}
+  hideTitle={true}
+/>
+
+# Dux Icons Installation
+
+Dux Icons installs a single `dux-icons` command. Install it from the [Dux repositories](../repo/) or from source. Nothing else is needed, and the build itself never needs root.
+
+## Requirements
+
+- Python 3.9 or newer
+- Monochrome mode and clipping of oversized artwork need Qt 6.7 or newer in Qt apps
+
+## Distribution Packages
+
+Dux Icons ships one package, `dux-icons`, which follows tagged releases. There is no `-git` build. It is a plain Python script, so the package is architecture independent and needs only `python3` and `hicolor-icon-theme`.
+
+### Arch Linux
+
+
+```bash
+paru -S dux-icons
+```
+
+
+### Fedora & CentOS
+
+
+```bash
+sudo dnf copr enable duxlabs/dux-repo
+sudo dnf install dux-icons
+```
+
+
+### Debian
+
+Packages are published on OBS for **Debian 13 (Trixie)**, **Debian Testing**, and **Debian Sid**.
+
+
+<Tabs groupId="debian-release">
+<TabItem value="trixie" label="Debian 13 (Trixie)" default>
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_13/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_13/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-icons
+```
+
+</TabItem>
+<TabItem value="testing" label="Debian Testing">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Testing/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Testing/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-icons
+```
+
+</TabItem>
+<TabItem value="sid" label="Debian Sid">
+
+```bash
+curl -fsSL https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/Debian_Unstable/Release.key | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg
+echo "deb [signed-by=/etc/apt/keyrings/home-duxlabs-dev-dux-repo.gpg] https://download.opensuse.org/repositories/home:/duxlabs-dev:/dux-repo/Debian_Unstable/ /" | \
+  sudo tee /etc/apt/sources.list.d/home-duxlabs-dev-dux-repo.list
+sudo apt update
+sudo apt install dux-icons
+```
+
+</TabItem>
+</Tabs>
+
+
+### Ubuntu
+
+Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
+
+
+```bash
+sudo add-apt-repository ppa:duxlabs/dux-repo
+sudo apt update
+sudo apt install dux-icons
+```
+
+
+### openSUSE
+
+Dux Icons is available through the Open Build Service (OBS) for openSUSE Tumbleweed, Leap 16/16.1, and Slowroll.
+
+
+<Tabs groupId="opensuse-distro">
+<TabItem value="tumbleweed" label="Tumbleweed" default>
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Tumbleweed/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-icons
+```
+
+</TabItem>
+<TabItem value="leap16" label="Leap 16">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.0/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-icons
+```
+
+</TabItem>
+<TabItem value="leap161" label="Leap 16.1">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/16.1/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-icons
+```
+
+</TabItem>
+<TabItem value="slowroll" label="Slowroll">
+
+```bash
+sudo zypper addrepo https://download.opensuse.org/repositories/home:duxlabs-dev:dux-repo/openSUSE_Slowroll/home:duxlabs-dev:dux-repo.repo
+sudo zypper refresh
+sudo zypper install dux-icons
+```
+
+</TabItem>
+</Tabs>
+
+
+### Void Linux
+
+Void carries the stable `dux-icons` package.
+
+
+```bash
+echo "repository=https://void.duxlabs.dev/dux-repo/current" | sudo tee /etc/xbps.d/dux.conf
+sudo xbps-install -Su
+sudo xbps-install -S dux-icons
+```
+
+
+On the first sync, `xbps-install` shows the Dux Labs signing key fingerprint and asks you to trust it.
+
+Distribution packages install the `dux-icons` command to `/usr/bin`, and its data to `/usr/share/dux-icons`.
+
+The package only installs the generator. Pick **Dux Icons** in DMS (see [With DMS](#with-dms)), or run `dux-icons` yourself (see [Without DMS](#without-dms)).
+
+## Build from Source
+
+```bash
+git clone https://github.com/duxlabs-dev/dux-icons.git
+cd dux-icons
+make install
+```
+
+This installs the `dux-icons` command into `~/.local/bin`, and its data into `~/.local/share/dux-icons`. Make sure `~/.local/bin` is on your `PATH`. Set `PREFIX` to install somewhere else, and `DESTDIR` to stage. `make uninstall` removes both.
+
+For development, `make link` links the command to your checkout instead of copying it.
+
+## With DMS
+
+DMS runs `dux-icons` when the command is on your `PATH`. Pick **Dux Icons** under **Settings → Appearance → Icons**. DMS builds the theme, and rebuilds it:
+
+- on every wallpaper or theme change
+- when an app is installed or removed
+- when the shell starts
+
+The same card has three options:
+
+| Option | Does |
+| --- | --- |
+| **Icon shape** | Picks the badge outline |
+| **Themed app icons** | Paints app icons in tones of your colors in place of their own |
+| **Shaded icons** | Fills the badges with a soft gradient |
+
+From a terminal:
+
+```bash
+dms ipc call settings set iconThemeDark dux-icons
+dms ipc call settings set iconMonoApps true
+dms ipc call settings set iconShape squircle
+dms ipc call settings set iconGradient true
+```
+
+See [Icon Theming](../dms/icon-theming) for the rest of the icon settings in DMS.
+
+## Without DMS
+
+Give it the two colors:
+
+```bash
+dux-icons --badge '#9ecaff' --glyph '#003258'
+```
+
+This builds the theme into `~/.local/share/icons/dux-icons`. Desktops list it as **Dux Icons** in their icon theme setting. Run it again after installing or removing apps.
