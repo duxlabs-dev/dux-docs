@@ -319,6 +319,8 @@ hl.env("QT_QPA_PLATFORMTHEME_QT6", "qt6ct")
 
 This links the generated matugen color files to qt5ct/qt6ct configurations.
 
+Outside Plasma it also sets the color scheme KDE apps such as Dolphin use, by writing `ColorScheme=DankMatugen` under `[UiSettings]` in `~/.config/kdeglobals`. KDE apps read it when they start, so reopen them. To go back to Breeze, remove that line.
+
 ### Option 3: qtengine
 
 [qtengine](https://github.com/kossLAN/qtengine) is a single platform theme plugin that serves both Qt5 and Qt6, so it needs neither the qt5ct/qt6ct split nor `qt6ct-kde`.

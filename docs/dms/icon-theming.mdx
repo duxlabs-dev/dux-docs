@@ -28,7 +28,9 @@ Qt6 applications, including Dux Modular Shell, look for icon themes based on you
 - **qt6ct**: Reads from qt6ct configuration (`~/.config/qt6ct/qt6ct.conf`)
 - **kde**: Reads from KDE Plasma settings (`~/.config/kdeglobals`)
 
-DMS leaves these files alone until you pick a theme under **Settings → Appearance → Icons**. Picking one writes it to GTK, qt5ct and qt6ct, and saves the theme it replaced to `~/.config/gtk-3.0/icon-theme.dms-backup`. Choosing **System Default** puts that saved theme back, unless another tool changed the icon theme in the meantime.
+DMS leaves these files alone until you pick a theme under **Settings → Appearance → Icons**. Picking one writes it to GTK, qt5ct, qt6ct and KDE's `kdeglobals`, and saves the theme it replaced to `~/.config/gtk-3.0/icon-theme.dms-backup`. Choosing **System Default** puts that saved theme back, unless another tool changed the icon theme in the meantime.
+
+KDE apps such as Dolphin read the icon theme once, when they start. Reopen them to see a new theme or new folder colors.
 
 ### Environment Variable Override
 
@@ -97,6 +99,25 @@ With Dux Icons picked, the card has three options in place of the folder toggle:
 | **Icon shape** | The badge outline: circle, squircle, rounded square, square, hexagon, cookie or clover |
 | **Themed app icons** | Paints app icons in tones of your colors in place of their own |
 | **Shaded icons** | Fills each badge with a soft gradient |
+
+## Cursor Themes
+
+The **Cursor** card under **Settings → Appearance** has its own **Manage themes** list. Each cursor theme is shown with its pointer.
+
+- **Install a theme** takes an archive or a folder, in the same formats as an icon theme. Every folder with a `cursors` folder is installed into `~/.local/share/icons`. Nothing from the archive is run.
+- A theme of the same name is replaced only after you confirm.
+- The delete button removes a theme from `~/.local/share/icons`. System themes have no delete button. The cursor in use, or one it inherits from, cannot be removed.
+- A pack that holds both icons and cursors is one folder, so removing it from either list removes both.
+
+From a terminal:
+
+```bash
+dms cursor-theme install ~/Downloads/Bibata-Modern-Classic.tar.xz
+dms cursor-theme install --replace ~/Downloads/Bibata-Modern-Classic.tar.xz
+dms cursor-theme remove Bibata-Modern-Classic
+```
+
+`remove` takes `--in-use <theme>` the same way `dms icon-theme remove` does. `dms icon-theme list` also lists the installed cursor themes.
 
 ## GTK Platform Theme (gtk3)
 
