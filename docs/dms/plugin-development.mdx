@@ -2314,7 +2314,7 @@ The dash opens with the keyboard silently inside the tab (`restoreFocus()`), so 
 - Ctrl+PgDown and Ctrl+PgUp switch tabs from anywhere.
 - Tab, Ctrl+Tab and F6 step aside while the tab sets `blocksTabNavigation`.
 - On the overview, the arrows move between cards when the focused card does not use them, as do Alt+Arrows or Alt+H/J/K/L; Alt+Tab / Alt+Shift+Tab cycle them. Non-clickable cards without a `focusTarget` are skipped. Alt+Arrow toward the tab bar from the edge card steps back out.
-- Escape leaves edit mode, then steps out of the controls, then leaves a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
+- Escape discards the edits and leaves edit mode, then steps out of the controls, then leaves a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
 
 ### Opening the Dash From Other Surfaces
 
