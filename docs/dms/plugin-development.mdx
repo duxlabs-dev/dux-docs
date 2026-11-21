@@ -207,7 +207,7 @@ Most bar and dock widgets display an icon, optional text, and standard pointer i
 | `pillWheelAction` | `function(wheelEvent)` | Handler invoked on mouse wheel scroll over the pill |
 | `pillDropAction` | `function(drop)` | Enables a `DropArea` with drag-over scale feedback and invokes the callback on drop |
 
-When your pill needs custom graphics (such as a color swatch, progress bar, or multi-button strip), define `horizontalBarPill` and optionally `verticalBarPill` (if `verticalBarPill` is omitted, `PluginComponent` falls back to `horizontalBarPill`). The input hooks (`pillRightClickAction`, `pillMiddleClickAction`, `pillWheelAction`) still work on the outer pill without needing a custom `MouseArea`:
+When your pill needs custom graphics (such as a color swatch, progress bar, or multi-button strip), define `horizontalBarPill` and `verticalBarPill` (or set `verticalBarPill: horizontalBarPill` when a single component adapts via `root.isVertical`). The input hooks (`pillRightClickAction`, `pillMiddleClickAction`, `pillWheelAction`) still work on the outer pill without needing a custom `MouseArea`:
 
 ```qml showLineNumbers
 import QtQuick
@@ -3194,7 +3194,9 @@ See `PLUGINS/QuickNotesExample/` in the DMS repo for a complete launcher plugin 
 - `surfaceLive` - `true` when the bar/dock is visible and the monitor is awake
 - `interactionActive` - `true` when the plugin popout or inline dock expansion is open
 - `variants` - Variant instances
-- `closePopout()` / `closePopoutImmediately()` / `runAfterPopoutClosed(action)` - Helpers to close the popout or inline dock expansion (with `closePopoutImmediately()` and `runAfterPopoutClosed()` skipping the close animation for screen capture tools)
+- `closePopout()` - Closes the plugin popout or inline dock expansion with the standard close animation
+- `closePopoutImmediately()` - Closes the plugin popout or inline dock expansion immediately, skipping the close animation
+- `runAfterPopoutClosed(action)` - Closes the popout immediately and runs `action` on the next event-loop tick (`Qt.callLater`), ideal for screen capture tools
 
 Use `iconSize` for consistent icon sizing that adapts to bar orientation and user preferences:
 
