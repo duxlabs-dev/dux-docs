@@ -52,7 +52,7 @@ requires it too, so Fedora installs `NetworkManager-openconnect` and Debian inst
 `networking.networkmanager.plugins` rather than to your system packages.
 
 The `openconnect` command is packaged separately, under that name on every distribution,
-and is a different thing from the plugin. Fortinet profiles that authenticate with a password
+and is a different thing from the plugin. OpenConnect profiles that authenticate with a password
 need both, because DMS runs that login through the command. Browser login needs only the
 plugin, since DMS performs the login itself.
 
@@ -179,6 +179,21 @@ browser window and then captures the resulting cookie. Install both `gp-saml-gui
 the `openconnect` command: openconnect turns that cookie into the one NetworkManager
 uses for the tunnel.
 
+## Other VPN types
+
+Profiles for other plugins can't be created in DMS. Set them up in nm-connection-editor,
+then connect from DMS. DMS only asks for the secrets a profile is set not to save, like a
+one-time code.
+
+OpenConnect profiles on other protocols, such as Cisco AnyConnect or Pulse, sign in with
+the username and password saved on the profile, or ask for them when connecting. If the
+server wants more, like a second factor, the plugin's own login window opens instead.
+
+Other plugins, such as vpnc, L2TP or strongSwan, ask for the secrets they need when
+connecting. Plugins that can only sign in through their own window, like the
+GlobalProtect-openconnect client, open that window. Both use the plugin's login dialog,
+which Debian, Ubuntu and Fedora ship separately, in the plugin package with a `-gnome` suffix.
+
 ## Troubleshooting
 
 ### The import failed
@@ -186,6 +201,20 @@ uses for the tunnel.
 The format needs a plugin you do not have. `openfortivpn` configs and any other
 OpenConnect profile need the [openconnect plugin](#plugins-and-packages); the rest need
 the plugin named in the import table.
+
+### The connection fails with "Not saved"
+
+The profile leaves its secrets to NetworkManager, which happens with profiles created by
+`nmcli` without secret flags. Save the secrets on the profile, or have DMS ask for them on
+every connect by setting each secret's flags to `2`, either in nm-connection-editor or
+with `nmcli`. The flag key is the secret's name followed by `-flags`:
+
+```bash
+# L2TP, PPTP, strongSwan
+nmcli connection modify <profile> +vpn.data "password-flags=2"
+# vpnc
+nmcli connection modify <profile> +vpn.data "Xauth password-flags=2, IPSec secret-flags=2"
+```
 
 ### No browser opened
 
