@@ -58,7 +58,6 @@ const sidebars: SidebarsConfig = {
         'dms/lock-screen-authentication',
         'dms/vpn',
         'dms/autostart',
-        'dms/network-speed-monitor',
         'dms/system-monitor',
         'dms/reboot-to-another-os',
         'dms/config-profiles',
