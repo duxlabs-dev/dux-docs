@@ -407,6 +407,42 @@ dms ipc call profile setImage /path/to/avatar.png
 dms ipc call profile clearImage
 ```
 
+### config-profile
+
+[Config profiles](./config-profiles): switch, save and manage them. A `<profile>` is a profile id or its exact name;
+when two profiles share a name, use the id. The first call creates a **Default** profile if there are none.
+
+| Function | Description | Parameters |
+| --- | --- | --- |
+| `list` | List profiles, one per line as the id and the name separated by a tab | - |
+| `current` | Get the active profile as id and name, empty when none is active | - |
+| `apply <profile>` | Switch to a profile | profile id or name |
+| `next` | Switch to the next profile | - |
+| `prev` | Switch to the previous profile | - |
+| `save <profile>` | Save the current settings into a profile | profile id or name |
+| `create <name>` | Create a profile from the current settings with all groups and sync on | profile name |
+| `rename <profile> <name>` | Rename a profile | profile id or name, new name |
+| `remove <profile>` | Delete a profile; the active one is refused | profile id or name |
+
+**Examples:**
+```bash
+dms ipc call config-profile list
+dms ipc call config-profile apply Work
+dms ipc call config-profile apply "Work & Gaming"
+dms ipc call config-profile next
+dms ipc call config-profile prev
+dms ipc call config-profile save Work
+dms ipc call config-profile create Work
+dms ipc call config-profile rename Work "Work 2"
+dms ipc call config-profile remove "Work 2"
+```
+
+**Notes:**
+- Names with spaces or special characters go in double quotes
+- `next` and `prev` follow the order of the profiles page and wrap around; with only one profile they return an error
+- Everything except `list` and `current` returns `SUCCESS: <message>` or `ERROR: <reason>`; `create` includes the new id, and `remove` deletes the files in the background, with a toast when it's done
+- Returns `ERROR: Profiles are not loaded yet` while the shell is still reading them; try again a moment later
+
 ## Appearance Controls
 
 ### theme
