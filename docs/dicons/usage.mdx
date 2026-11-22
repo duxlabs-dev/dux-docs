@@ -1,6 +1,6 @@
 ---
 title: Usage
-description: Dux Icons commands, options, badge shapes and how the build works
+description: Dux Icons commands, options, tile shapes and how the build works
 sidebar_position: 3
 ---
 
@@ -23,8 +23,9 @@ import Hero from '@site/src/components/Hero';
 ```bash
 dux-icons --from-dms              # colors from the running DMS theme
 dux-icons --from-dms --mode light # use the light scheme
-dux-icons --from-dms --mono       # app icons in your colors
+dux-icons --from-dms --app-style themed
 dux-icons --from-dms --shape squircle --gradient
+dux-icons --from-dms --files-style color
 dux-icons --palette colors.json   # colors from a file
 dux-icons --out DIR --name NAME   # build somewhere else, under another name
 ```
@@ -37,35 +38,86 @@ From a checkout without installing, `python3 scripts/build.py` takes the same op
 | --- | --- |
 | `--from-dms` | Read colors from DMS |
 | `--mode dark\|light` | Which scheme to read, default follows DMS |
-| `--badge HEX` | Badge and folder front color |
-| `--glyph HEX` | Color of marks drawn on the badge |
-| `--back HEX` | Folder back color, default is a darker `--badge` |
-| `--mono`, `--no-mono` | Paint app icons in tones of your colors, or keep their own |
-| `--shape NAME` | Badge shape: `circle`, `squircle`, `rounded`, `square`, `hexagon`, `cookie` or `clover` |
-| `--gradient`, `--no-gradient` | Shade the badge from lighter at the top to darker at the bottom, or keep it flat |
-| `--palette FILE` | JSON file with `badge` and `glyph` |
+| `--tile HEX` | Tile and folder front color |
+| `--glyph HEX` | Color of marks drawn on the tile |
+| `--back HEX` | Folder back color, default is a darker `--tile` |
+| `--app-style NAME` | How app icons are drawn: `color` keeps each app's own icon, `tinted` repaints it in tones between its tile and glyph colors, `themed` and `monochrome` draw each app as a one-color glyph on its tile |
+| `--shape NAME` | Tile shape: `circle`, `squircle`, `rounded`, `square`, `hexagon`, `cookie` or `clover` |
+| `--gradient`, `--no-gradient` | Shade the tile from lighter at the top to darker at the bottom, or keep it flat |
+| `--files-style NAME` | `standard` puts files and folders on the tile like every other icon. `color` draws colored folders and gives each file type its own color |
+| `--tiles FILE` | JSON file that gives app icons their own tile colors, see [Tiles File](#tiles-file) |
+| `--own-tone L` | Lightness 0 to 100 for the art of the Dux Labs apps |
+| `--palette FILE` | JSON file with `tile` and `glyph` |
 | `--out DIR` | Where to write the theme |
 | `--name NAME` | Theme name written to `index.theme` |
+| `--fingerprint` | Print a digest of what the build reads besides its options, then exit without building, see [Fingerprint](#fingerprint) |
 | `-v` | List every icon that was skipped, with the reason |
+
+`--badge` still works as the old name of `--tile`, and `--mono` and `--no-mono` as `--app-style tinted` and `--app-style color`.
 
 The build only writes to a directory it created itself, and refuses a symlink or a folder with other files in it.
 
+### Fingerprint
+
+`--fingerprint` covers the generator and its `src` folder, the desktop entries, the MIME database, the icon folders the build searches, the file of every app's icon, and the symbolic icons Themed and Monochrome would draw each app from. A file edited in place or reached through a changed symlink counts as a change. Options and the files they name are not part of it: colors, `--palette`, `--tiles` and the cut-outs it lists, and the DMS colors `--from-dms` reads. Compare those yourself. DMS does, and skips a rebuild only when both match.
+
+### Themed and Monochrome
+
+In `themed` and `monochrome`, each app's glyph comes from the first of these that it has:
+
+1. A glyph Dux Icons draws itself, such as those of the Dux apps
+2. The symbolic icon the app ships
+3. A symbolic icon for the app in an installed icon theme, such as Papirus
+4. The app's own SVG icon in one color, with the solid background shape behind its logo removed
+5. A cut-out of the app's logo, from a tiles file
+6. The app's SVG icon in one color. Where it mixes light and dark parts, the smaller side is cut out so the tile shows through
+7. As a last resort, such as for a bitmap icon without a cut-out, the app's icon in two tones of its tile, as in Tinted
+
+The two styles differ only in their colors. DMS gives Themed a tile in your theme color and Monochrome a near-gray one. On its own, `dux-icons` uses `--tile` and `--glyph` for both, so pass gray colors for a monochrome look.
+
+### Tiles File
+
+`--tiles` takes a JSON object with up to three keys:
+
+```json
+{
+  "apps": {
+    "org.gnome.Nautilus": { "tile": "#cfe5ff", "glyph": "#00325a" },
+    "firefox": { "tile": "#ffdbc8", "ring": "#e66000" },
+    "org.gnome.Calculator": { "tile": "#1f578a", "glyph": "#e5efff", "bare": "#9ecaff" }
+  },
+  "shell": { "tile": "#e3e1ec" },
+  "dux": { "tile": "#d6e3ff", "tint": "#3a5ba9" }
+}
+```
+
+| Key | Does |
+| --- | --- |
+| `apps` | A tile for each installed app, by its icon name |
+| `shell` | The tile of the DMS built-in app icons. In `themed` and `monochrome`, also the tile of every app `apps` leaves out |
+| `dux` | The tile of the installed Dux Labs apps. `tint` recolors their art toward that hue, default is the tile color. Their art is drawn light, so in `color` a light tile, this one or `--tile`, turns deep in the same hue |
+
+Each tile needs `tile`. `glyph` defaults to `--glyph` and `back` to a darker `tile`. `ring` draws a thin line of that color just inside the tile edge. `reach`, above 0, grows the icon up to twice its size to fill the tile. `cutout` is a PNG of the app's mark in white, used by `themed` and `monochrome`. `bare` is the glyph color of the app's copy without a tile, also only in `themed` and `monochrome`, default is `--tile`. DMS writes this file itself for **Tile color** and the Themed and Monochrome styles.
+
 ## How It Works
 
-Vector icons are placed into the badge as vectors. Bitmap icons are embedded, so the result is always a single self-contained SVG. An icon that cannot be placed cleanly is skipped and falls back to `hicolor`. The build prints how many were skipped and why, and `-v` lists them.
+Vector icons are placed into the tile as vectors. Bitmap icons are embedded, so the result is always a single self-contained SVG. An icon that cannot be placed cleanly is skipped and falls back to `hicolor`. The build prints how many were skipped and why, and `-v` lists them. App icons are also written without the tile to `bare/apps/`. Off the tile they keep their glyph readable on a panel instead: in `color` each app keeps its own colors, while the DMS built-in icons are drawn in `--tile` and the Dux apps recolored to its hue. In `tinted` the tones run between `--glyph` and `--tile`. In `themed` and `monochrome` the glyph takes the tile's `bare` color, else `--tile`. The theme index does not list that folder, so only DMS uses it.
+
+The build remembers where it found each app's icon in `$XDG_CACHE_HOME/dux-icons/lookups.json`, and searches again only when the apps or the installed icon themes change. Deleting the file is always safe.
 
 `src/recipe.json` controls the build:
 
 | Key | Does |
 | --- | --- |
-| `template` | The default badge shape, a file in `src/templates/` |
+| `template` | The default tile shape, a file in `src/templates/` |
 | `shapes` | Layout changes a shape needs, such as more padding inside a hexagon |
-| `gradient` | `true` shades the badge |
+| `gradient` | `true` shades the tile |
+| `appStyle` | The default `--app-style` |
+| `filesStyle` | The default `--files-style` |
 | `vendorThemes` | Installed icon themes searched, in order, for an `Icon=` name the app did not install itself |
-| `mono` | `false` keeps app colors, `true` paints them in tones between `@glyph` and `@back` |
-| `monoContrast` | How hard `mono` pushes tones apart, `1` leaves them as they are |
-| `tokens` | The Material roles behind `@badge`, `@glyph` and optionally `@back` |
-| `layout` | How far content sits inside the badge |
+| `monoContrast` | How hard a tinted app icon's tones are pushed apart, `1` leaves them as they are |
+| `tokens` | The Material roles behind `@tile`, `@glyph` and optionally `@back` |
+| `layout` | How far content sits inside the tile |
 | `overrides` | Layout changes for icons matching a name pattern |
 | `inherits` | The themes used for anything Dux Icons does not provide |
 
@@ -73,8 +125,8 @@ Vector icons are placed into the badge as vectors. Bitmap icons are embedded, so
 
 Own icons live in `src/own/<context>/<name>.svg`.
 
-- Draw on a `0 0 24 24` viewBox, without the badge.
-- Use only the tokens `@glyph`, `@badge` and `@back` as colors.
+- Draw on a `0 0 24 24` viewBox, without the tile.
+- Use only the tokens `@glyph`, `@tile` and `@back` as colors.
 - If several icon names share the picture, list them in `src/aliases.json` instead of copying the file.
 
 ## Development

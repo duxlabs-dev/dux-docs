@@ -90,15 +90,47 @@ The installed theme is never modified. DMS writes a small theme named `<Theme>-d
 
 ### Dux Icons
 
-[Dux Icons](../dicons/) is an icon theme generated from your colors. It frames each app's own icon on a badge and draws folders and file types itself. It shows up in the **Theme** dropdown once the `dux-icons` command is installed. DMS rebuilds it on every wallpaper or theme change and when an app is installed or removed.
+[Dux Icons](../dicons/) is an icon theme generated from your colors. It sets each app's own icon on a tile and draws folders and file types itself. It shows up in the **Theme** dropdown once the `dux-icons` command is installed. DMS rebuilds it on every wallpaper or theme change and when an app is installed or removed. When none of the colors, options, apps or installed icons changed, the rebuild is skipped.
 
-With Dux Icons picked, the card has three options in place of the folder toggle:
+The bar's running apps, focused app and apps dock, and notifications, show each app icon without its tile, since the tile is too small to read at that size. The dock, launcher and control center keep it. In Themed and Monochrome, those tile-free glyphs are light in dark mode and dark in light mode, in your theme hue or near-gray, whatever **Tile tone** is set to. Launcher folders take the same shape as the app tiles.
+
+With Dux Icons picked, the card shows these options in place of the folder toggle. Some only appear with the option they depend on.
 
 | Option | Does |
 |--------|------|
-| **Icon shape** | The badge outline: circle, squircle, rounded square, square, hexagon, cookie or clover |
-| **Themed app icons** | Paints app icons in tones of your colors in place of their own |
-| **Shaded icons** | Fills each badge with a soft gradient |
+| **Icon shape** | The tile outline: circle, squircle (default), rounded square, square, hexagon, cookie or clover |
+| **App icon style** | **Color** keeps each app's own icon. **Tinted** repaints each app's icon in two tones of its tile. **Themed** (default) draws every app as a one-color glyph on a tile in your theme color. **Monochrome** does the same on a near-gray tile, and launcher folders turn gray to match |
+| **Shaded icons** | Fills each tile with a soft gradient |
+| **Tile color** | Color and Tinted only. **Theme** gives every tile your theme color. **App color** takes each tile's color from its app's icon. **Edge Match** (default) takes the color of the icon's own background and grows the icon to fill the tile. **Ring** draws a ring in the app's color on a neutral tile. In Tinted, Edge Match works like App color |
+| **App color** | With App color, Edge Match or Ring. **Most common** (default) takes the color that covers most of the icon. **Best match** picks it the way your theme color is picked from the wallpaper |
+| **Tile style** | With App color, and with Edge Match in Tinted. **Tonal** is a soft tone of the app's color, **Vivid** the color as strong as in the icon, **Muted** a near-gray tint |
+| **Tile tone** | How light the tiles are, from 0 to 100. Off follows your theme |
+| **Files & folders** | **Color** (default) draws colored folders and a color for each file type, like Papirus. **Standard** puts them on the theme tile like every other icon |
+| **Dux app tone** | Color style only. How light the art of the Dux Labs apps is. Their tile stays deep in its own hue, also in dark mode, so the light art reads |
+
+In Themed and Monochrome, each app's glyph comes from the first of these that it has:
+
+1. A glyph Dux Icons draws itself, such as those of the Dux apps
+2. The symbolic icon the app ships
+3. A symbolic icon for the app in an installed icon theme, such as Papirus
+4. The app's own SVG icon in one color, with the solid background shape behind its logo removed
+5. A cut-out of the app's logo, which DMS makes from bitmap logos
+6. The app's SVG icon in one color. Where it mixes light and dark parts, the smaller side is cut out so the tile shows through
+7. As a last resort, such as for a bitmap icon without a cut-out, the app's icon in two tones of its tile, as in Tinted
+
+From a terminal, each option is a setting:
+
+```bash
+dms ipc call settings set iconShape squircle
+dms ipc call settings set iconAppStyle themed           # color, tinted, themed or monochrome
+dms ipc call settings set iconGradient true
+dms ipc call settings set iconTileColor app             # theme, app, edge or ring
+dms ipc call settings set iconColorSource score         # score (Best match) or common
+dms ipc call settings set iconTileStyle content         # tonal, content (Vivid) or neutral (Muted)
+dms ipc call settings set iconTileTone 60               # 0-100, -1 follows the theme
+dms ipc call settings set iconFileStyle standard        # standard or color
+dms ipc call settings set iconOwnTone 70                # 40-98, -1 keeps the art as drawn
+```
 
 ## Cursor Themes
 
