@@ -31,8 +31,8 @@ The system battery has these options:
 - **Show percentage** (on by default), and **Only on battery** to hide it while plugged in
 - **Show remaining time**, and **Only on battery** for the same
 - **Show charge rate** and **Show discharge rate** show the power in watts
-- **Battery style**: **Icon** (default), **Solid** or **Circle**
-- **Direction**: **Horizontal** or **Vertical**
+- **Battery style**: **Icon**, **Solid** (default) or **Circle**
+- **Direction**: **Horizontal** (default) or **Vertical**
 
 With a charge limit set in **Settings → Power & battery → Battery**, the remaining time while charging is the time until the limit is reached, here and everywhere else it is shown.
 
@@ -42,20 +42,21 @@ The **Popout** card sets the look of the whole popout:
 
 | Option | Choices |
 | --- | --- |
-| **Color** | **Primary** (default), **Theme**, **Low and charging** or **Level** |
+| **Color** | **Primary**, **Theme**, **Low and charging** (default) or **Level** |
 | **Interface density** | **Inherit** (default: follows **Interface density** in **Settings → Interface style**), **Spacious**, **Comfortable**, **Compact** or **Dense** |
-| **Cards** | **Separate** (default: the level, power profile and details each have their own card) or **Combined** (all three share one card) |
+| **Cards** | **Separate** (the level, power profile and details each have their own card) or **Combined** (default: all three share one card) |
 | **Wavy when charging** | Animates the level indicators while charging (on by default) |
 
 While charging toward a charge limit, the popout shows **Charging to** with the limit and the time until it is reached, and the part of the level indicator past the limit is shaded. This does not apply when **Scale battery level to charge limit** is on.
 
-The popout always shows the battery on top, then the power profile with the battery details below it, then the devices. Each part has its own card (with the Chips layout the details sit in the power profile card) unless **Cards** is set to **Combined**, and **Show** switches it off. The gear in the popout opens the battery settings and the pen opens these widget options.
+The popout always shows the battery on top, then the power profile with the statistics below it, then the devices. Each part has its own card (with the Chips layout the statistics sit in the power profile card) unless **Cards** is set to **Combined**, and **Show** switches it off. The gear in the popout opens the battery settings and the pen opens these widget options.
 
 | Section | Options |
 | --- | --- |
-| **Overview** | **Style**: **Compact** (default: the level beside the status, without a card), **Line**, **Ring** or **Card**. **Badge**: **Shape** (default) or **Ring** (a ring showing the level), for **Line** and **Card**. **Layout**: **Grid**, **Compact** (default), **Chips** or **List**. **Details**: any of **Health**, **Temperature**, **Capacity** and **Power** (all but **Temperature** by default) |
-| **Power profile** | **Style**: **Circle**, **Segments**, **Buttons** (default) or **Slider** |
-| **Devices** | **Layout**: same choices as the overview, plus **Bars** (default: rows filled to the battery level) |
+| **Overview** | **Style**: **Compact** (the level beside the status, without a card), **Line**, **Ring** (default) or **Card**. **Badge**: **Shape** (default) or **Ring** (a ring showing the level), for **Line** and **Card**. |
+| **Statistics** | **Show** (on by default) switches the statistics off completely. **Layout**: **Grid**, **Compact** (default), **Chips** or **List**. **Details**: any of **Health**, **Temperature**, **Capacity** and **Power** (all but **Temperature** by default) |
+| **Power profile** | **Style**: **Circle**, **Segments**, **Buttons** or **Slider** (default) |
+| **Devices** | **Layout**: same choices as the statistics, plus **Bars** (default: rows filled to the battery level) |
 
 At **Compact** and **Dense** density, **Line** looks the same as **Compact** and is not offered, and **Badge** only shows where a badge is drawn. **Temperature** is only offered when the battery reports one.
 
