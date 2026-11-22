@@ -422,6 +422,7 @@ when two profiles share a name, use the id. The first call creates a **Default**
 | `save <profile>` | Save the current settings into a profile | profile id or name |
 | `create <name>` | Create a profile from the current settings with all groups and sync on | profile name |
 | `rename <profile> <name>` | Rename a profile | profile id or name, new name |
+| `move <profile> <position>` | Move a profile to a position in the order, counting from 1 | profile id or name, position |
 | `remove <profile>` | Delete a profile; the active one is refused | profile id or name |
 
 **Examples:**
@@ -434,12 +435,14 @@ dms ipc call config-profile prev
 dms ipc call config-profile save Work
 dms ipc call config-profile create Work
 dms ipc call config-profile rename Work "Work 2"
+dms ipc call config-profile move Work 1
 dms ipc call config-profile remove "Work 2"
 ```
 
 **Notes:**
 - Names with spaces or special characters go in double quotes
-- `next` and `prev` follow the order of the profiles page and wrap around; with only one profile they return an error
+- `list`, `next` and `prev` follow the order of the profiles page, and `next` and `prev` wrap around; with only one profile they return an error
+- A `move` position below 1 moves the profile to the first place, and any position past the last moves it to the end
 - Everything except `list` and `current` returns `SUCCESS: <message>` or `ERROR: <reason>`; `create` includes the new id, and `remove` deletes the files in the background, with a toast when it's done
 - Returns `ERROR: Profiles are not loaded yet` while the shell is still reading them; try again a moment later
 
