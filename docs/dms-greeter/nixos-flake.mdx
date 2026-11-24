@@ -116,6 +116,29 @@ programs.dms-greeter = {
 
 The greeter no longer uses a Quickshell package. The old `quickshell.package` option is removed; evaluation fails with a message pointing to `duxQtBase.package`.
 
+## Binary Cache
+
+Builds of every commit on `master` and the `stable-*` branches are published to `nix-cache.duxlabs.dev` for `x86_64-linux` and `aarch64-linux`. Add the cache to your NixOS configuration:
+
+```nix
+nix.settings = {
+  extra-substituters = [ "https://nix-cache.duxlabs.dev" ];
+  extra-trusted-public-keys = [ "dux-1:lrBykuzHKu9F6WsCbK83C9/uOrfqUY1kflRZtrUcMF0=" ];
+};
+```
+
+On other systems, add the same two settings to `/etc/nix/nix.conf`.
+
+The settings apply after a rebuild, so rebuild once with them before enabling Dux Greeter.
+
+The cached builds use the nixpkgs revision pinned by the flake. The module builds Dux Greeter with your nixpkgs, so the cache only applies when both are on the same revision. To always use the cached build, remove `inputs.nixpkgs.follows` from the flake input and set the package:
+
+```nix
+programs.dms-greeter.package = inputs.dux-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
+```
+
+The package then uses the flake's nixpkgs for its dependencies instead of yours.
+
 ## Rebuilding
 
 After making configuration changes, don't forget to rebuild your configuration:
