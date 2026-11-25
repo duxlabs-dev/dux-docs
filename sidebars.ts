@@ -86,6 +86,7 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'dms/bar',
+        'dms/dock',
         'dms/island',
         'dms/keybinds-ipc',
         'dms/keyboard-navigation',
