@@ -75,8 +75,8 @@ programs.dux-files = {
   package = inputs.dfiles.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
   # Override the dux-qt-base runtime library built into the package (optional,
-  # needs a dux-qt-base flake input; defaults to pkgs.dux-qt-base from an
-  # overlay, else the one Dux Files pins)
+  # needs a dux-qt-base flake input that follows your nixpkgs; defaults to
+  # the one Dux Files pins, built against your nixpkgs)
   duxQtBase.package = inputs.dux-qt-base.packages.${pkgs.stdenv.hostPlatform.system}.dux-qt-base;
 
   # Keep a resident instance so windows open fast and the portal answers at once
@@ -98,7 +98,7 @@ programs.dux-files = {
 | Option | Default | What it does |
 | --- | --- | --- |
 | `package` | the flake package, built against `duxQtBase.package` | The Dux Files package to install |
-| `duxQtBase.package` | `pkgs.dux-qt-base` if an overlay provides it, otherwise the flake's `dux-qt-base` input | The dux-qt-base library embedded in the default `package` to run the UI |
+| `duxQtBase.package` | the flake's `dux-qt-base` input, built against your nixpkgs | The dux-qt-base library embedded in the default `package` to run the UI |
 | `systemd.enable` | `false` | Installs and enables the `dfiles` user service |
 | `systemd.target` | `graphical-session.target` | The target the service follows. The home-manager module defaults it to `wayland.systemd.target` |
 | `systemd.restartIfChanged` | `true` | Restart the service when the package changes (NixOS module) |
@@ -134,7 +134,9 @@ A managed settings file is read-only, so changes made in the app's Settings page
 
 ## Binary Cache
 
-Builds of every commit on `master` and the `stable-*` branches are published to `nix-cache.duxlabs.dev` for `x86_64-linux` and `aarch64-linux`. Add the cache to your NixOS configuration:
+dux-qt-base, the Quickshell runtime built into Dux Files, takes a while to build from source. CI publishes `x86_64-linux` and `aarch64-linux` builds of every commit on `master` to `nix-cache.duxlabs.dev`, built against the latest `nixos-unstable` and `nixos-26.05` channel commits. Releases up to 2.1 use Quickshell from nixpkgs and don't need the cache.
+
+Add the cache to your NixOS configuration:
 
 ```nix
 nix.settings = {
@@ -147,13 +149,9 @@ On other systems, add the same two settings to `/etc/nix/nix.conf`.
 
 The settings apply after a rebuild, so rebuild once with them before enabling Dux Files.
 
-The cached builds use the nixpkgs revision pinned by the flake. The module builds Dux Files with your nixpkgs, so the cache only applies when both are on the same revision. To always use the cached build, remove `inputs.nixpkgs.follows` from the flake input and set the package:
+The cache has builds for the channel commits CI saw, so it applies when your `nixpkgs` input is on `nixos-unstable` or `nixos-26.05` and the flake follows it, as in the inputs above. A new channel commit reaches the cache within a few hours of the channel moving. Other nixpkgs commits, and overlays that change Qt or its dependencies, build from source.
 
-```nix
-programs.dux-files.package = inputs.dfiles.packages.${pkgs.stdenv.hostPlatform.system}.default;
-```
-
-The package then uses the flake's nixpkgs for its dependencies instead of yours.
+Keep `inputs.nixpkgs.follows` on the flake input. A build against a different nixpkgs than your system mixes two versions of Qt and the graphics libraries in one session, which can crash.
 
 ## Rebuilding
 

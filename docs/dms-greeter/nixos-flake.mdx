@@ -108,8 +108,8 @@ programs.dms-greeter = {
   };
 
   # Custom dux-qt-base runtime library, built into dms-greeter (optional,
-  # needs a dux-qt-base flake input; defaults to pkgs.dux-qt-base from an
-  # overlay, else the one dux-greeter pins)
+  # needs a dux-qt-base flake input that follows your nixpkgs; defaults to
+  # the one dux-greeter pins, built against your nixpkgs)
   duxQtBase.package = inputs.dux-qt-base.packages.${pkgs.stdenv.hostPlatform.system}.dux-qt-base;
 };
 ```
@@ -118,7 +118,9 @@ The greeter no longer uses a Quickshell package. The old `quickshell.package` op
 
 ## Binary Cache
 
-Builds of every commit on `master` and the `stable-*` branches are published to `nix-cache.duxlabs.dev` for `x86_64-linux` and `aarch64-linux`. Add the cache to your NixOS configuration:
+dux-qt-base, the Quickshell runtime built into Dux Greeter, takes a while to build from source. CI publishes `x86_64-linux` and `aarch64-linux` builds of every commit on `master` to `nix-cache.duxlabs.dev`, built against the latest `nixos-unstable` and `nixos-26.05` channel commits. Releases up to 2.1 use Quickshell from nixpkgs and don't need the cache.
+
+Add the cache to your NixOS configuration:
 
 ```nix
 nix.settings = {
@@ -127,17 +129,11 @@ nix.settings = {
 };
 ```
 
-On other systems, add the same two settings to `/etc/nix/nix.conf`.
-
 The settings apply after a rebuild, so rebuild once with them before enabling Dux Greeter.
 
-The cached builds use the nixpkgs revision pinned by the flake. The module builds Dux Greeter with your nixpkgs, so the cache only applies when both are on the same revision. To always use the cached build, remove `inputs.nixpkgs.follows` from the flake input and set the package:
+The cache has builds for the channel commits CI saw, so it applies when your `nixpkgs` input is on `nixos-unstable` or `nixos-26.05` and the flake follows it, as in the inputs above. A new channel commit reaches the cache within a few hours of the channel moving. Other nixpkgs commits, and overlays that change Qt or its dependencies, build from source.
 
-```nix
-programs.dms-greeter.package = inputs.dux-greeter.packages.${pkgs.stdenv.hostPlatform.system}.default;
-```
-
-The package then uses the flake's nixpkgs for its dependencies instead of yours.
+Keep `inputs.nixpkgs.follows` on the flake input. A build against a different nixpkgs than your system mixes two versions of Qt and the graphics libraries in one session, which can crash.
 
 ## Rebuilding
 

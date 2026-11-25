@@ -234,7 +234,7 @@ programs.dank-material-shell = {
 
 :::info[Quickshell runtime]
 
-The Dux Modular Shell flake builds `dms` against dux-qt-base, Dux's fork of Quickshell built as a shared library, and embeds it in the `dms` package. No `quickshell` package is needed. By default the flake uses `pkgs.dux-qt-base` when an overlay provides it, otherwise its own `dux-qt-base` input. No additional configuration is needed.
+The Dux Modular Shell flake builds `dms` against dux-qt-base, Dux's fork of Quickshell built as a shared library, and embeds it in the `dms` package. No `quickshell` package is needed. By default the flake builds the `dux-qt-base` it pins against your nixpkgs. No additional configuration is needed.
 
 :::
 
@@ -421,7 +421,9 @@ For a complete list of available options, check the module files in the Dux Modu
 
 ## Binary Cache
 
-Builds of every commit on `master` and the `stable-*` branches are published to `nix-cache.duxlabs.dev` for `x86_64-linux` and `aarch64-linux`. Add the cache to your NixOS configuration:
+dux-qt-base, the Quickshell runtime built into Dux Modular Shell, takes a while to build from source. CI publishes `x86_64-linux` and `aarch64-linux` builds of every commit on `master` to `nix-cache.duxlabs.dev`, built against the latest `nixos-unstable` and `nixos-26.05` channel commits. Releases up to 2.1 use Quickshell from nixpkgs and don't need the cache.
+
+Add the cache to your NixOS configuration:
 
 ```nix
 nix.settings = {
@@ -434,13 +436,9 @@ On other systems, add the same two settings to `/etc/nix/nix.conf`.
 
 The settings apply after a rebuild, so rebuild once with them before enabling Dux Modular Shell.
 
-The cached builds use the nixpkgs revision pinned by the flake. The module builds Dux Modular Shell with your nixpkgs, so the cache only applies when both are on the same revision. To always use the cached build, remove `inputs.nixpkgs.follows` from the flake input and set the package:
+The cache has builds for the channel commits CI saw, so it applies when your `nixpkgs` input is on `nixos-unstable` or `nixos-26.05` and the flake follows it, as in the inputs above. A new channel commit reaches the cache within a few hours of the channel moving. Other nixpkgs commits, and overlays that change Qt or its dependencies, build from source.
 
-```nix
-programs.dank-material-shell.package = inputs.dms.packages.${pkgs.stdenv.hostPlatform.system}.default;
-```
-
-The package then uses the flake's nixpkgs for its dependencies instead of yours.
+Keep `inputs.nixpkgs.follows` on the flake input. A build against a different nixpkgs than your system mixes two versions of Qt and the graphics libraries in one session, which can crash.
 
 ## Rebuilding
 
