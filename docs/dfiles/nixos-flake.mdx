@@ -108,11 +108,11 @@ programs.dux-files = {
 
 The old `quickshell.package` option is removed; evaluation fails with a message pointing to `duxQtBase.package`.
 
-See [Open and save dialogs](desktop-integration#open-and-save-dialogs) for what the portal backend does and which apps use it.
+See [Open and save dialogs](./desktop-integration.mdx#open-and-save-dialogs) for what the portal backend does and which apps use it.
 
 ### UI Settings (home-manager)
 
-The home-manager module can write the UI settings file for you. Keys match the [Settings](settings) page and land in `~/.config/dfiles/ui-settings.json`:
+The home-manager module can write the UI settings file for you. Keys match the [Settings](./settings.mdx) page and land in `~/.config/dfiles/ui-settings.json`:
 
 ```nix
 programs.dux-files = {
@@ -186,5 +186,5 @@ systemctl --user restart xdg-desktop-portal.service
 
 ## Next Steps
 
-- [Usage](usage) - Learn the CLI commands
-- [Settings](settings) - Every key the `settings` option accepts
+- [Usage](./usage.mdx) - Learn the CLI commands
+- [Settings](./settings.mdx) - Every key the `settings` option accepts

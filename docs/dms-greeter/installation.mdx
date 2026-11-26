@@ -343,8 +343,8 @@ This will automatically install `greetd` via Portage, configure permissions, and
 :::tip
 
 NixOS has dedicated documentation with two installation methods:
-- [Native nixpkgs installation](./nixos) - **Recommended** for NixOS 26.05+
-- [Flake-based installation](./nixos-flake) - Use for quicker updates
+- [Native nixpkgs installation](./nixos.mdx) - **Recommended** for NixOS 26.05+
+- [Flake-based installation](./nixos-flake.mdx) - Use for quicker updates
 
 :::
 
@@ -507,7 +507,7 @@ Enabling `dms-greeter` will replace your current display manager.
 
 ### Manual installation (no package)
 
-Prefer your distro package when available (see the sections above). If your distro has no `dux-greeter` package, install `greetd` and dux-qt-base, the Dux build of Quickshell that runs the UI (`dux-qt-base`, or `libdux-qt-base0` on openSUSE, Debian and Ubuntu; see the [Dux repository](../repo/#core-framework)), then grab the prebuilt binary from the latest release. The greeter refuses to start without dux-qt-base, and the release binary does not embed it:
+Prefer your distro package when available (see the sections above). If your distro has no `dux-greeter` package, install `greetd` and dux-qt-base, the Dux build of Quickshell that runs the UI (`dux-qt-base`, or `libdux-qt-base0` on openSUSE, Debian and Ubuntu; see the [Dux repository](../repo/index.mdx#core-framework)), then grab the prebuilt binary from the latest release. The greeter refuses to start without dux-qt-base, and the release binary does not embed it:
 
 ```bash
 curl -fsSL https://github.com/duxlabs-dev/dux-greeter/releases/latest/download/dms-greeter-linux-amd64.tar.gz | tar -xz
@@ -595,13 +595,13 @@ After running `dms-greeter sync`, you will need to log out and log back in for g
 
 :::tip[Multi-user systems]
 
-One **main admin** runs `dms-greeter sync` once for system setup. Add every other user to the `greeter` group in **Settings → Users** (greeter access toggle), or with `sudo usermod -aG greeter <username>`. Each of those accounts should then run **`dms-greeter sync --profile`** after logging out and back in - not full sync. See [Configuration → Multi-user systems](./configuration#multi-user-systems).
+One **main admin** runs `dms-greeter sync` once for system setup. Add every other user to the `greeter` group in **Settings → Users** (greeter access toggle), or with `sudo usermod -aG greeter <username>`. Each of those accounts should then run **`dms-greeter sync --profile`** after logging out and back in - not full sync. See [Configuration → Multi-user systems](./configuration.mdx#multi-user-systems).
 
 :::
 
 :::note
 
-**NixOS users:** The `dms-greeter enable` and `dms-greeter sync` commands are not available on NixOS. Please follow the manual steps below or see the [NixOS installation guides](./nixos).
+**NixOS users:** The `dms-greeter enable` and `dms-greeter sync` commands are not available on NixOS. Please follow the manual steps below or see the [NixOS installation guides](./nixos.mdx).
 
 :::
 
@@ -613,9 +613,9 @@ You can check your greeter configuration at any time:
 dms-greeter status
 ```
 
-This verifies your greeter setup and sync status. See the [Configuration guide](./configuration#checking-sync-status) for detailed information.
+This verifies your greeter setup and sync status. See the [Configuration guide](./configuration.mdx#checking-sync-status) for detailed information.
 
-For optional fingerprint or security-key login, see [Login authentication](./configuration#login-authentication).
+For optional fingerprint or security-key login, see [Login authentication](./configuration.mdx#login-authentication).
 
 ---
 

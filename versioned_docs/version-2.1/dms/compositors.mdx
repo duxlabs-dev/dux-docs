@@ -88,7 +88,7 @@ For more about layer rules see [layer rules](./layers.mdx).
 
 #### Startup
 
-For systemd autostart setup, see the [Installation guide](./installation#niri). If you prefer not to use systemd, add DMS directly to your niri config:
+For systemd autostart setup, see the [Installation guide](./installation.mdx#niri). If you prefer not to use systemd, add DMS directly to your niri config:
 
 ```kdl
 spawn-at-startup "dms" "run"
@@ -301,7 +301,7 @@ For manual configuration recommendations, continue below.
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#hyprland). If you prefer not to use systemd, add DMS directly to your Hyprland config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#hyprland). If you prefer not to use systemd, add DMS directly to your Hyprland config:
 
 ```lua
 hl.on("hyprland.start", function()
@@ -574,7 +574,7 @@ For manual configuration recommendations, continue below.
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#mangowc). If you prefer not to use systemd, add DMS directly to your mangowm config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#mangowc). If you prefer not to use systemd, add DMS directly to your mangowm config:
 
 ```conf
 exec_once=dms run
@@ -690,7 +690,7 @@ For now, refer to the [Example for Sway](#example-for-sway) in the "Other Compos
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#sway). Otherwise, add DMS directly to your Sway config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#sway). Otherwise, add DMS directly to your Sway config:
 
 ```conf
 exec dms run
@@ -742,7 +742,7 @@ Detailed Miracle WM configuration sections are coming soon. Miracle WM configura
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#miracle-wm). Otherwise, add DMS directly to your Miracle WM config.
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#miracle-wm). Otherwise, add DMS directly to your Miracle WM config.
 
 #### DMS Keybindings
 
@@ -767,7 +767,7 @@ For other compositors, you need to:
    dms run
    ```
 
-2. **Configure keybindings** using the IPC commands from the [Keybinds & IPC](keybinds-ipc) guide
+2. **Configure keybindings** using the IPC commands from the [Keybinds & IPC](./keybinds-ipc.mdx) guide
 
 3. **Set environment variables** in `~/.config/environment.d/90-dms.conf` (for systemd users) or your compositor config:
    ```ini title="~/.config/environment.d/90-dms.conf"
@@ -810,6 +810,6 @@ Verify that:
 
 ## Next Steps
 
-- Customize your shell appearance in [Themes](application-themes)
-- Explore all available IPC commands in [Keybinds & IPC](keybinds-ipc)
-- Add functionality with [Plugins](plugins-overview)
+- Customize your shell appearance in [Themes](./application-themes.mdx)
+- Explore all available IPC commands in [Keybinds & IPC](./keybinds-ipc.mdx)
+- Add functionality with [Plugins](./plugins-overview.mdx)

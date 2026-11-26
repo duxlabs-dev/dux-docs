@@ -19,7 +19,7 @@ import Hero from '@site/src/components/Hero';
 Dux Modular Shell can be installed on NixOS either system-wide using the NixOS module or per-user using home-manager. This guide covers both flake-based installation methods.
 
 :::info[Native nixpkgs Available]
-Dux Modular Shell is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](nixos) method is recommended and doesn't require flakes.
+Dux Modular Shell is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](./nixos.mdx) method is recommended and doesn't require flakes.
 :::
 
 ## Installation Methods
@@ -161,7 +161,7 @@ Also note that this will overwrite your `~/.config/niri/config.kdl`, so your nir
 In most cases, it should work out of the box, but configuration options are available.
 
 :::tip[Generating Include Files]
-The files in `filesToInclude` are included with `optional=true`, so niri skips any that are missing, but their settings don't apply until they exist. If you're not generating them through home-manager, use [`dms setup`](cli-setup) to deploy the defaults — or generate individual files like `dms setup binds`, `dms setup colors`, etc.
+The files in `filesToInclude` are included with `optional=true`, so niri skips any that are missing, but their settings don't apply until they exist. If you're not generating them through home-manager, use [`dms setup`](./cli-setup.mdx) to deploy the defaults — or generate individual files like `dms setup binds`, `dms setup colors`, etc.
 
 `dms/animations.kdl` is written by a full `dms setup` and by the [Animations](./compositors.mdx#compositor-animations) page. Until it has content, your niri-flake animations or niri's defaults apply.
 :::
@@ -466,10 +466,10 @@ Each feature has its own dependency set. If a feature isn't working, ensure the 
 
 ### Custom keybindings conflict with niri defaults
 
-If `niri.enableKeybinds = true` conflicts with your existing niri configuration, you can disable it and manually configure keybindings using the examples in the [Keybinds & IPC](keybinds-ipc) guide.
+If `niri.enableKeybinds = true` conflicts with your existing niri configuration, you can disable it and manually configure keybindings using the examples in the [Keybinds & IPC](./keybinds-ipc.mdx) guide.
 
 ## Next Steps
 
-- Configure your preferences via [Themes](application-themes)
-- Set up compositor keybindings in [Keybinds & IPC](keybinds-ipc)
-- Extend functionality with [Plugins](plugins-overview)
+- Configure your preferences via [Themes](./application-themes.mdx)
+- Set up compositor keybindings in [Keybinds & IPC](./keybinds-ipc.mdx)
+- Extend functionality with [Plugins](./plugins-overview.mdx)
