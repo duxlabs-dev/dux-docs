@@ -387,6 +387,16 @@ Doctor also warns (**Greeter session**) when `/etc/greetd/config.toml` still sta
 
 Checks that the settings portal answers. Chromium, Electron and libadwaita apps follow light and dark mode through it. The portal is D-Bus activated and needs `graphical-session.target`; without systemd, or on a compositor that never starts that target, start the portal backend and `xdg-desktop-portal` from your compositor config.
 
+### Global shortcuts
+
+In a niri session, doctor checks that apps can register global shortcuts through the portal. It warns when:
+
+- `xdg-desktop-portal-gnome not found`: niri routes the GlobalShortcuts portal to it. Install xdg-desktop-portal-gnome.
+- `niri lacks GrabAccelerators`: niri 26.04 and older lack the accelerator methods the portal needs. Update niri past 26.04.
+- `No shortcuts provider`: start the DMS shell, which provides the shortcut prompts, or install gnome-control-center.
+
+It reports OK with `Provided by DMS`, and Info when gnome-control-center or another process provides the prompts instead of DMS.
+
 ---
 
 ## Environment Variables

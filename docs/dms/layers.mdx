@@ -250,13 +250,6 @@ layer-rule {
     block-out-from "screencast"
 }
 
-// Keep notification popups out of screencasts
-layer-rule {
-    match namespace="^dms:notification-popup$"
-
-    block-out-from "screencast"
-}
-
 // Match all DMS layers with a regex
 layer-rule {
     match namespace=r#"^dms:.*"#
@@ -264,6 +257,8 @@ layer-rule {
     // Apply rules to all DMS components
 }
 ```
+
+Notification popups need no rule of your own: **Settings → Notifications → Hide popups from screen shares** (on by default) adds one to `dms/layout.kdl`. See [Next niri release](./compositors.mdx#next-niri-release).
 
 #### Shadow Settings
 

@@ -289,7 +289,7 @@ The cheatsheet output includes conflict detection showing which binds are overri
 | `press { }` `release { }` | `--release-action <action>` | Action run on release; requires `--trigger both` |
 | pass-through | `--pass-through` | Also send the key to the focused window. Keyboard binds only. Release-only binds already pass through, so `--pass-through=false` stops that. Next niri release |
 
-`--trigger`, `--release-action` and `--pass-through` only work with the niri provider. In **Settings → Input → Keyboard shortcuts** the same options are the **Release** and **Non-consuming** toggles. The editor shows a press-and-release bind's release action, but only the CLI sets it.
+`--trigger`, `--release-action` and `--pass-through` only work with the niri provider. In **Settings → Input → Keyboard shortcuts** the same options are the **Release** and **Non-consuming** toggles. On niri 26.04 the editor hides both and doesn't record a lone modifier as a key. The editor shows a press-and-release bind's release action, but only the CLI sets it.
 
 #### Action Formats
 
@@ -299,6 +299,9 @@ dms keybinds set niri "Mod+F" "fullscreen"
 
 # Action with argument
 dms keybinds set niri "Mod+1" "focus-workspace 1"
+
+# Quoted number: the workspace named "3", not index 3
+dms keybinds set niri "Mod+3" 'focus-workspace "3"'
 
 # Spawn with simple command
 dms keybinds set niri "Mod+T" "spawn kitty"
