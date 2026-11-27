@@ -443,6 +443,7 @@ dms ipc call config-profile toggle
 - Names with spaces or special characters go in double quotes
 - `next` and `prev` follow the order of the profiles page and wrap around; with only one profile they return an error
 - Everything except `list` and `current` returns `SUCCESS: <message>` or `ERROR: <reason>`; `create` includes the new id, and `remove` deletes the files in the background, with a toast when it's done
+- `apply`, `next` and `prev` reply `SUCCESS: Switching to <name>` while the switch is still running
 - Returns `ERROR: Profiles are not loaded yet` while the shell is still reading them; try again a moment later
 
 ## Appearance Controls
