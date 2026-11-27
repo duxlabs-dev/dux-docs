@@ -68,10 +68,10 @@ If using systemd, remove any `dms run` / `spawn "dms" "run"` lines from your com
 niri has proper systemd session integration. You can make DMS only start under niri (not Plasma, GNOME, etc.):
 
 ```bash
-systemctl --user add-wants niri.service dms
+dms systemd enable --compositor niri
 ```
 
-This ties the dms service to niri's session, so it won't start under other desktop environments.
+This runs `systemctl --user add-wants niri.service dms`, which ties the dms service to niri's session, so it won't start under other desktop environments.
 
 #### Other Compositors
 

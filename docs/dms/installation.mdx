@@ -775,7 +775,7 @@ Install optional components for full functionality using your distribution's pac
 After completing installation:
 
 1. **Generate compositor config** (niri, Hyprland, mangowm): Run `dms setup` to create a starter configuration with DMS keybinds and autostart. Other compositors (sway, labwc, Miracle WM) are supported but require manual configuration.
-2. Enable the systemd service (recommended) or add `dms run` to your compositor config
+2. Start DMS with your compositor: run `dms systemd enable --compositor niri` (or `hyprland`, `mango`), or add `dms run` to your compositor config. `dms setup` with systemd already does this. See [Systemd Integration](#systemd-integration-recommended)
 3. Configure your compositor keybinds - see the [Keybinds & IPC](./keybinds-ipc.mdx) guide
 4. Customize appearance via [Themes](./application-themes.mdx)
 5. Extend functionality with [Plugins](./plugins-overview.mdx)
