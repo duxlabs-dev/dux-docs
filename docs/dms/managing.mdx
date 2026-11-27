@@ -24,7 +24,7 @@ DMS can run as a systemd user service or be launched manually. The `dms` CLI han
 
 :::tip[Dux Installer Users]
 
-If you installed via the [Dux Installer](../duxinstall), DMS is configured as a systemd service by default. The installer runs `systemctl --user enable --now dms` during setup. You don't need to add `dms run` to your compositor config.
+If you installed via the [Dux Installer](../duxinstall.mdx), DMS is configured as a systemd service by default. The installer runs `systemctl --user enable --now dms` during setup. You don't need to add `dms run` to your compositor config.
 
 :::
 
@@ -302,7 +302,7 @@ dms restart
 
 ### Manual Installations
 
-For source builds or [non-packaged](installation) distro installer setups:
+For source builds or [non-packaged](./installation.mdx) distro installer setups:
 
 ```bash
 dms update
@@ -369,15 +369,15 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 
 **DMS won't start:**
 - Check logs: `journalctl --user -u dms -n 50` (systemd) or run `dms run` in a terminal
-- Verify the dux-qt-base runtime is found: `dms doctor` (see the [Quickshell](./cli-doctor#quickshell) row)
+- Verify the dux-qt-base runtime is found: `dms doctor` (see the [Quickshell](./cli-doctor.mdx#quickshell) row)
 - Kill stuck processes: `dms kill`
 
 **Slow startup:**
 - The first start after an update rebuilds the startup cache, later starts are faster
-- If every start is slow, turn the cache off to compare: see [Startup Cache](./advanced-configuration#startup-cache)
+- If every start is slow, turn the cache off to compare: see [Startup Cache](./advanced-configuration.mdx#startup-cache)
 
 **Rendering glitches or high GPU memory use:**
-- Turn render control off to compare: see [Render Control](./advanced-configuration#render-control)
+- Turn render control off to compare: see [Render Control](./advanced-configuration.mdx#render-control)
 - Check the log for `Render control is unavailable`, which means DMS already fell back to Qt's rendering
 
 **Settings not applying:**

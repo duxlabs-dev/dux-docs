@@ -3,7 +3,7 @@ title: Migrate repositories
 description: Move DMS package repositories from the legacy avengemedia owner to duxlabs with dms migrate dux
 ---
 
-`dms migrate dux` moves the package-manager repositories for DMS from the legacy `avengemedia` owner to `duxlabs`. Only the repository changes. The package renames (`dgop` to `dux-gop` and the others) exist only in the `duxlabs` repositories and happen on the next upgrade after the move (on Debian and openSUSE the command switches them itself); see [Renamed packages](../repo).
+`dms migrate dux` moves the package-manager repositories for DMS from the legacy `avengemedia` owner to `duxlabs`. Only the repository changes. The package renames (`dgop` to `dux-gop` and the others) exist only in the `duxlabs` repositories and happen on the next upgrade after the move (on Debian and openSUSE the command switches them itself); see [Renamed packages](../repo/index.mdx).
 
 ## Usage
 
@@ -102,4 +102,4 @@ The `zypper install` line switches each package you installed from a legacy proj
 
 - **Arch, NixOS, Gentoo:** nothing to migrate.
 
-[`dms doctor`](./cli-doctor#package-repos) shows whether any legacy repositories are left.
+[`dms doctor`](./cli-doctor.mdx#package-repos) shows whether any legacy repositories are left.

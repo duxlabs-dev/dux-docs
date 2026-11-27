@@ -18,7 +18,7 @@ import Hero from '@site/src/components/Hero';
 
 # Plugins
 
-A Dux Edit plugin is a folder with a `plugin.json` manifest and QML files. It uses the same manifest format, storage calls and settings controls as [DMS plugins](../dms/plugin-development), with one new surface: `editor`. DMS plugins written for the bar, control center, desktop, dashboard or launcher do not load here.
+A Dux Edit plugin is a folder with a `plugin.json` manifest and QML files. It uses the same manifest format, storage calls and settings controls as [DMS plugins](../dms/plugin-development.mdx), with one new surface: `editor`. DMS plugins written for the bar, control center, desktop, dashboard or launcher do not load here.
 
 :::warning[Plugins run with your privileges]
 A plugin is arbitrary QML that runs with your user's privileges. Manifest permissions are advisory, not a sandbox. Only install plugins you trust. Plugins get no way to save with administrator rights.
@@ -41,7 +41,7 @@ Keep anything that must outlive this in `pluginService`: data and state saved th
 
 ## Manifest
 
-Same format as a [DMS plugin manifest](../dms/plugin-development#2-create-manifest), with the `editor` surface:
+Same format as a [DMS plugin manifest](../dms/plugin-development.mdx#2-create-manifest), with the `editor` surface:
 
 ```json title="plugin.json"
 {
@@ -100,7 +100,7 @@ Change any of them at runtime and the window picks the change up.
 | `loadPluginState(pluginId, key, default)`, `savePluginState(pluginId, key, value)`, `removePluginStateKey(pluginId, key)`, `clearPluginState(pluginId)` | `~/.local/state/dux/edit/plugins/<id>_state.json` |
 | `getPluginPath(pluginId)` | The plugin's folder |
 
-Signals: `pluginDataChanged(pluginId)`, `pluginStateChanged(pluginId)`. Values must be JSON. Writes are batched and only happen when a value changes. Never store document text: settings and state files are not private. The [DMS guide](../dms/plugin-development#plugin-state) explains when to use data and when to use state.
+Signals: `pluginDataChanged(pluginId)`, `pluginStateChanged(pluginId)`. Values must be JSON. Writes are batched and only happen when a value changes. Never store document text: settings and state files are not private. The [DMS guide](../dms/plugin-development.mdx#plugin-state) explains when to use data and when to use state.
 
 ### `editor`
 

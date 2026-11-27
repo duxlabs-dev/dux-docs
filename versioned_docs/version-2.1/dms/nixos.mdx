@@ -209,7 +209,7 @@ programs.dms-shell = {
 
 ## Compositor Config Files
 
-The NixOS module installs DMS but doesn't generate compositor-specific config files (keybinds, colors, layout, etc.). Use [`dms setup`](cli-setup) to deploy the defaults for your compositor, or generate individual configs:
+The NixOS module installs DMS but doesn't generate compositor-specific config files (keybinds, colors, layout, etc.). Use [`dms setup`](./cli-setup.mdx) to deploy the defaults for your compositor, or generate individual configs:
 
 ```bash
 # Deploy all defaults
@@ -221,7 +221,7 @@ dms setup colors
 dms setup layout
 ```
 
-See the [Setup CLI reference](cli-setup) for the full list of subcommands.
+See the [Setup CLI reference](./cli-setup.mdx) for the full list of subcommands.
 
 ## Lock Screen Authentication (PAM)
 
@@ -236,7 +236,7 @@ security.pam.services."dankshell-u2f".text = ''
 '';
 ```
 
-DMS uses `/etc/pam.d/dankshell-u2f` automatically when present. Restart DMS after the rebuild that first adds it, register your key in `~/.config/Yubico/u2f_keys` (via `pamu2fcfg`), then enable **Security key authentication** in Settings → Lock Screen. See [Lock Screen Authentication](lock-screen-authentication) for how the OR/AND factor modes work.
+DMS uses `/etc/pam.d/dankshell-u2f` automatically when present. Restart DMS after the rebuild that first adds it, register your key in `~/.config/Yubico/u2f_keys` (via `pamu2fcfg`), then enable **Security key authentication** in Settings → Lock Screen. See [Lock Screen Authentication](./lock-screen-authentication.mdx) for how the OR/AND factor modes work.
 
 :::tip[DMS Flake Module]
 If you use the NixOS module from the DMS flake, a single option declares the same service for you:
@@ -279,6 +279,6 @@ Each feature has its own dependency set. If a feature isn't working, ensure the 
 
 ## Next Steps
 
-- Configure your preferences via [Themes](application-themes)
-- Set up compositor keybindings in [Keybinds & IPC](keybinds-ipc)
-- Extend functionality with [Plugins](plugins-overview)
+- Configure your preferences via [Themes](./application-themes.mdx)
+- Set up compositor keybindings in [Keybinds & IPC](./keybinds-ipc.mdx)
+- Extend functionality with [Plugins](./plugins-overview.mdx)

@@ -102,7 +102,7 @@ Terms must all match the name or path. `*` and `?` make a term a glob.
 | `--scope folder\|home\|everywhere` | Where to look. `everywhere` is home plus mounted local drives (default `folder`) |
 | `--type <kind>` | Only `documents`, `images`, `video`, `audio`, `archives` or `folders` (repeatable) |
 | `--fuzzy` | Also accept terms whose letters appear in order |
-| `--contents` | Match indexed file contents (needs a running [Dux Search](../dsearch/)) |
+| `--contents` | Match indexed file contents (needs a running [Dux Search](../dsearch/index.mdx)) |
 | `--hidden` | Descend into and report hidden entries |
 | `--include-ignored` | Walk heavy folders, gitignored entries and your excluded folders too |
 | `--cross-device` | Follow into other filesystems |
@@ -119,7 +119,7 @@ dfiles portal install     # make dfiles the portal file chooser for this user
 dfiles portal uninstall   # restore the previous portal file chooser
 ```
 
-See [Open and save dialogs](desktop-integration#open-and-save-dialogs) for what this changes.
+See [Open and save dialogs](./desktop-integration.mdx#open-and-save-dialogs) for what this changes.
 
 ## IPC
 
@@ -129,7 +129,7 @@ dfiles ipc ui.toggle
 dfiles ipc files.list path=/home/me sort=mtime desc=true
 ```
 
-See [IPC](ipc) for the method reference.
+See [IPC](./ipc.mdx) for the method reference.
 
 ## JSON Output
 
@@ -141,5 +141,5 @@ dfiles version --json
 
 ## Next Steps
 
-- [Desktop Integration](desktop-integration) - FileManager1, the portal, and URIs
-- [Keyboard](keyboard) - Every shortcut
+- [Desktop Integration](./desktop-integration.mdx) - FileManager1, the portal, and URIs
+- [Keyboard](./keyboard.mdx) - Every shortcut
