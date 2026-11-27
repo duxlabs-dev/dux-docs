@@ -64,6 +64,19 @@ desktop arranged first. The bar's **Take screenshot** button captures the screen
 The **Profiles** widget can be added in the Control Center editor. Its tile switches to the next profile, and its
 detail view lists all profiles.
 
+## Picker
+
+The picker shows the profiles with their preview images. It opens with `dms ipc call config-profile toggle`, for
+example on a keybind. The arrow keys or the mouse wheel select a profile, Enter or a click switches to it, and Escape
+closes the picker. The **Behavior** card on the Manage profiles page sets the look with **Profile picker**, and its
+**Shortcut** row shows the bound key and opens the Keybinds page.
+
+| View | Look |
+|------|------|
+| Carousel | Cards in a row, centered on the screen |
+| Grid | Cards in a grid, centered on the screen |
+| Dashboard | The dashboard's Profiles tab, or the island when it handles the dashboard (the option then reads Island), or the carousel on a screen with neither a bar nor an island. Settings → Dashboard → Tabs can also show the tab in the tab row; it is off by default |
+
 ## Keybinds and scripts
 
 The [`config-profile` IPC target](./keybinds-ipc.mdx#config-profile) switches, saves, creates, renames and deletes profiles,
