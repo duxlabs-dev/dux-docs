@@ -78,7 +78,7 @@ Use `--ignore` (or the **Ignored packages** list in the shell's System Updater s
 | Flatpak | Only the remaining refs are passed to `flatpak update` explicitly |
 | Homebrew | Only the remaining packages are passed to `brew upgrade` explicitly |
 
-Package names entered in the shell settings are validated as letters, digits, and `@._+:-`. CLI values are passed as command arguments where possible; backends that require shell command construction discard unsafe names.
+Package names entered in the shell settings are validated as letters, digits, and `@._+:/-`. CLI values are passed as command arguments where possible; backends that require shell command construction discard unsafe names.
 
 ## Interactive vs scripted runs
 
@@ -92,7 +92,7 @@ If standard input is **not** a TTY (for example in CI or a pipe), DMS **refuses*
 
 ## Relationship to the DMS server
 
-When the compositor-side server is running, it exposes IPC such as `sysupdate.getState`, `sysupdate.refresh`, `sysupdate.upgrade`, and `sysupdate.setInterval` so the shell UI can show update status and coordinate upgrades. The **`dms system update`** CLI is a separate entry point aimed at terminals and scripts; **`--interval`** is the bridge that adjusts the server’s polling schedule while it is online.
+When the compositor-side server is running, it exposes IPC such as `sysupdate.getState`, `sysupdate.refresh`, `sysupdate.upgrade`, `sysupdate.setInterval`, and `sysupdate.setExcluded` so the shell UI can show update status and coordinate upgrades. The **`dms system update`** CLI is a separate entry point aimed at terminals and scripts; **`--interval`** is the bridge that adjusts the server’s polling schedule while it is online.
 
 `sysupdate.upgrade` accepts these optional params, mirroring the CLI flags:
 
@@ -107,3 +107,5 @@ When the compositor-side server is running, it exposes IPC such as `sysupdate.ge
 | `customCommand` | string | Run a custom command in a terminal instead of the built-in upgrade flow. |
 
 When using the built-in updater, the shell populates `ignored` from the **Ignored packages** list in System Updater settings, so those packages are also skipped by `Update All`. Custom update commands control their own exclusions.
+
+The **Include Flatpak updates** and **Include Homebrew updates** settings stop the server from checking that overlay at all, not only from upgrading it. The shell sends the turned-off overlays with `sysupdate.setExcluded` (`{"excluded": ["flatpak", "homebrew"]}`) and with each `sysupdate.refresh` as an optional `excluded` param. An overlay that is not installed is never checked, and its setting is hidden.
