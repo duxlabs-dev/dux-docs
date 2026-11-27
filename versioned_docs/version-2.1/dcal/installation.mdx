@@ -24,7 +24,7 @@ Dux Calendar installs a single `dcal` binary, the Quickshell UI config, and a de
 
 ## Requirements
 
-- [Quickshell](https://quickshell.org) (`qs`) — `quickshell-git` or `quickshell` from the [Dux repository](../repo/)
+- [Quickshell](https://quickshell.org) (`qs`) — `quickshell-git` or `quickshell` from the [Dux repository](../repo/index.mdx)
 - Qt 6 declarative, including `Qt.labs.platform` for the tray icon
 - Go 1.25+ (build from source only; the packaged binary is pure Go with no CGO)
 
@@ -43,7 +43,7 @@ flatpak run com.danklinux.dankcalendar
 
 :::note
 
-Notifications and credentials use XDG desktop portals. To sync [Dux Modular Shell](../dms/overview) theme colors from the host, grant read access to the cache:
+Notifications and credentials use XDG desktop portals. To sync [Dux Modular Shell](../dms/overview.mdx) theme colors from the host, grant read access to the cache:
 
 ```bash
 flatpak override --user \
@@ -292,5 +292,5 @@ dcal
 
 ## Next Steps
 
-- [Accounts](accounts) - Connect your calendars
-- [Usage](usage) - Learn the CLI commands
+- [Accounts](./accounts.mdx) - Connect your calendars
+- [Usage](./usage.mdx) - Learn the CLI commands

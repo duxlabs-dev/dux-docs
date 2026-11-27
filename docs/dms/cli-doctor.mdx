@@ -63,7 +63,7 @@ DMS CLI is the backend and command-line interface for DMS. Its version should ma
 
 Quickshell is the framework DMS is built on. DMS runs it from **dux-qt-base**, Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). The `dms` binary loads the library itself and runs the UI in its own process, so no `quickshell` package or `qs` binary is needed. This check reports the version of that runtime; `dms doctor --verbose` also shows which library file is in use.
 
-**Not installed** means `dms` found no `libdux-qt-base.so.0`, and `dms run` will not start without it. Running the UI on upstream Quickshell with `dms run --qs-child` is unsupported, and the doctor still reports dux-qt-base as missing. See [UI runtime](./cli-process-management#ui-runtime).
+**Not installed** means `dms` found no `libdux-qt-base.so.0`, and `dms run` will not start without it. Running the UI on upstream Quickshell with `dms run --qs-child` is unsupported, and the doctor still reports dux-qt-base as missing. See [UI runtime](./cli-process-management.mdx#ui-runtime).
 
 `dms` uses the first runtime it finds:
 
@@ -120,7 +120,7 @@ Checks whether the DMS package repositories on this system still point at the le
 
 | Status | Message | Meaning |
 |--------|---------|---------|
-| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate). |
+| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate.mdx). |
 | 🟢 OK | `Current` | All DMS repositories come from `duxlabs` (`home:duxlabs-dev` on OBS). |
 | ⚪ Info | `No DMS package repositories` | No DMS package repositories are configured, so there is nothing to check. |
 
@@ -277,7 +277,7 @@ Required for dynamic GTK3 theming: DMS copies the theme (light and dark variants
 
 Debian, Ubuntu, and openSUSE do not package it; extract an [upstream release](https://github.com/lassekongo83/adw-gtk3/releases) into `~/.local/share/themes` instead — DMS uses it from there directly.
 
-See [Application Themes](application-themes#gtk-applications) for details.
+See [Application Themes](./application-themes.mdx#gtk-applications) for details.
 
 ### Network
 
@@ -285,22 +285,22 @@ Detected backends: NetworkManager, iwd, systemd-networkd, iwd+systemd-networkd.
 
 DMS supports different network stacks, NetworkManager is recommended for the vast majority of use cases as its also compatible with Gnome, KDE, etc. This is purely for integration within the shell itself (such as conencting to networks, viewing network status, etc.)
 
-- NetworkManager : all features supported (Wifi, Ethernet, VPN)
+- NetworkManager : all features supported (Wifi, Ethernet, VPN, and the [connection editor](./network.mdx))
 - iwd : Wifi only, no Ethernet or VPN support
 - systemd-networkd : Ethernet only, no Wifi or VPN support
 - iwd+systemd-networkd : Wifi and Ethernet supported, no VPN support
 
 ### dux-search
 
-Checks for the `dsearch` command, used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
+Checks for the `dsearch` command, used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/index.mdx) for more information.
 
 ### dux-calendar
 
-Checks for the `dcal` calendar app. See [Dux Calendar documentation](../dcal/) for more information.
+Checks for the `dcal` calendar app. See [Dux Calendar documentation](../dcal/index.mdx) for more information.
 
 ### dux-files
 
-Checks for the `dfiles` file manager (the **File manager** row). See [Dux Files documentation](../dfiles/) for more information.
+Checks for the `dfiles` file manager (the **File manager** row). See [Dux Files documentation](../dfiles/index.mdx) for more information.
 
 ### logind
 
@@ -375,11 +375,11 @@ systemctl --user start hyprland-session.target
 systemctl --user status graphical-session.target dms
 ```
 
-See [Installation](installation#compositor-specific-systemd-setup) for the equivalent setup on Sway, mangowm, and Miracle WM.
+See [Installation](./installation.mdx#compositor-specific-systemd-setup) for the equivalent setup on Sway, mangowm, and Miracle WM.
 
 ### greetd
 
-Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/index.mdx) for more information.)
 
 Doctor also warns (**Greeter session**) when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua. On Arch it warns (**Greeter package**) when a retired `greetd-dms-greeter` package is still installed; switch to the `dux-greeter` package.
 

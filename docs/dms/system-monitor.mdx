@@ -17,7 +17,7 @@ import Hero from '@site/src/components/Hero';
 />
 
 The system monitor opens with `dms ipc call processlist focusOrToggle` (bound to <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Delete</kbd> and
-<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>M</kbd> in the default keybinds). Its data comes from [dgop](../dgop/), so it needs dgop installed.
+<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>M</kbd> in the default keybinds). Its data comes from [dgop](../dgop/index.mdx), so it needs dgop installed.
 
 | Page | Shows |
 |------|-------|
@@ -95,7 +95,7 @@ warns that this usually ends the session and offers a restart instead.
 
 **Pause** freezes a process and everything it started until **Resume**, which can save power while a game sits idle. Paused rows are dimmed and show a pause icon. Session processes and DMS itself can't be paused. Pausing a single program inside a terminal hands the terminal back to the shell, the same as pressing Ctrl+Z.
 
-**Priority** sets the nice value of a process and all its threads, from **Highest** (-20) to **Lowest** (19). On a merged row it applies to every process in the row. The expanded row shows the current level, and the optional **Priority** column sorts by it. Raising the priority or changing another user's process needs authentication, or [Unlock](#unlock).
+**Priority** sets the nice value of a process and all its threads, from **Maximum** (-19) to **Lowest** (19). **Highest** (-12) is about what compositors usually get; **Maximum** is marked with a warning, since it ranks a process above the compositor and the shell and can make the desktop stutter. On a merged row it applies to every process in the row. The expanded row shows the current level, and the optional **Priority** column sorts by it. Raising the priority or changing another user's process needs authentication, or [Unlock](#unlock).
 
 ## Unlock
 

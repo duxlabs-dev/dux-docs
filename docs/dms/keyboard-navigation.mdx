@@ -18,7 +18,7 @@ import Hero from '@site/src/components/Hero';
 
 # Keyboard Navigation
 
-Every DMS surface can be driven from the keyboard. This page lists the keys that work once a surface is open. The shortcuts that open them belong to your compositor; see [Compositor Setup](compositors) and [Keybinds & IPC](keybinds-ipc).
+Every DMS surface can be driven from the keyboard. This page lists the keys that work once a surface is open. The shortcuts that open them belong to your compositor; see [Compositor Setup](./compositors.mdx) and [Keybinds & IPC](./keybinds-ipc.mdx).
 
 A few keys mean the same thing almost everywhere:
 
@@ -103,7 +103,7 @@ In a `dms dmenu` list with multi-select, `Shift+Enter` toggles the highlighted e
 | Previous or next page | `Ctrl+PgUp`, `Ctrl+PgDn` |
 | Enter edit mode | `F2`, `Ctrl+E` |
 | Undo an edit | `Ctrl+Z` |
-| Close a picker or sheet, go back from a page, leave edit mode, then close | `Escape` |
+| Close a picker or sheet, go back from a page, discard the edits and leave edit mode, then close | `Escape` |
 
 A tile with details opens them; its icon button toggles it.
 
@@ -123,6 +123,8 @@ On the current tab:
 | Use the tab's own keys | arrow keys, `Space` and the tab's shortcuts |
 | Step into the controls | `F6`, `Ctrl+Tab`, or an arrow key the tab does not use |
 | Edit the layout | `F2`, `Ctrl+E` |
+| Undo an edit | `Ctrl+Z` in edit mode |
+| Discard the edits and leave edit mode | `Escape` in edit mode |
 | Close the dash | `Escape` |
 
 In the controls:
@@ -258,7 +260,7 @@ On niri:
 | Search apps | type a letter |
 | Close the overview | `Enter`, `Escape` |
 
-The DMS niri binds open the overview with `Mod+O` or `Mod+Tab`; on the next niri release, tapping `Mod` on its own also toggles it. See [Next niri release](compositors#next-niri-release).
+The DMS niri binds open the overview with `Mod+O` or `Mod+Tab`; on the next niri release, tapping `Mod` on its own also toggles it. See [Next niri release](./compositors.mdx#next-niri-release).
 
 On Hyprland, `Left` and `Right` switch workspaces on the current monitor and `Escape` closes the overview.
 
