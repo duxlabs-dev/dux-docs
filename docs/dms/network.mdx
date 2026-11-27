@@ -33,14 +33,14 @@ adapter's options in Control Center. Each profile can be connected or disconnect
 list, **Duplicate** copies it under a new name, and **Forget** deletes it. **Connect** is hidden
 when the computer has no adapter for the profile's type.
 
-**Add** asks for a **Type** (Ethernet, Wi-Fi, Cellular, or VPN) and, for VPN, the kind of VPN
-(WireGuard, OpenVPN, or any installed plugin). Changing the type keeps the name. **Import**
-adds a VPN profile from a file, as in [VPN](./vpn.mdx#importing-a-profile). The hotspot has its own
-group. Its row opens the [Hotspot](#hotspot) page when an adapter can host a hotspot, and
-otherwise stays listed with **Forget**.
+**Add** creates an Ethernet, Wi-Fi, or WireGuard profile, picked with **Type**. Changing the
+type keeps the name. **Import** adds a VPN profile from a file, as in
+[VPN](./vpn.mdx#importing-a-profile). The hotspot has its own group. Its row opens the
+[Hotspot](#hotspot) page when an adapter can host a hotspot, and otherwise stays listed with
+**Forget**.
 
-Every network page ends with an **All connections** card that opens this list, and the Network
-overview has **Manage all connections** at the bottom.
+The Ethernet, Wi-Fi, VPN, and Cellular pages end with an **All connections** card that opens
+this list, and the Network overview has **Manage all connections** at the bottom.
 
 A profile that NetworkManager keeps only in memory is marked as temporary and gets a
 **Save permanently** button that writes it to disk. Saving any other edit leaves the profile
@@ -94,7 +94,7 @@ Enterprise opens the 802.1X form:
 | Authentication | PEAP, TTLS, TLS, or PWD. PEAP and TTLS also ask for an inner authentication method and an optional anonymous identity. |
 | Save password | Turned off, the password is asked for on every connect. |
 | CA certificate | File, Use system certificates, or None. System certificates require a server name. None shows a warning: without a CA certificate the server isn't verified, and a fake network can capture the password. |
-| Server | The name on the server's certificate. Exact must match it in full; Suffix also accepts any subdomain. |
+| Server, Match type | The name on the server's certificate. Exact must match it in full; Suffix also accepts any subdomain. |
 | Client certificate, Private key | TLS only. A private key password is only needed for an encrypted key. |
 | Advanced | PEAP version, Allow TLS 1.0 and 1.1, Disable TLS 1.3, and OpenSSL ciphers, for servers that fail with the defaults. |
 
@@ -111,30 +111,12 @@ Certificates are stored in the profile, and NetworkManager keeps its own copy ne
 moving or deleting the downloaded file doesn't break the connection. Passpoint-only files are
 not supported.
 
-## Mobile broadband
+## VPN plugins, cellular, and Bluetooth
 
-| Setting | Notes |
-| --- | --- |
-| APN | Empty lets NetworkManager pick the APN for the network the modem registers on. |
-| Allow roaming | Turned off, the connection doesn't start while roaming. |
-| PIN | Left empty on a saved profile, the stored PIN is kept. |
-| Network ID | The operator's MCC-MNC code, which locks the profile to that operator. |
-
-The collapsed **PPP** section holds the options below:
-
-| Option | Effect |
-| --- | --- |
-| Authentication | EAP, PAP, CHAP, MSCHAP, and MSCHAPv2. A method turned off is refused. |
-| Use MPPE encryption | Requires encryption. Require 128-bit encryption and Stateful MPPE only apply with it. |
-| BSD, Deflate, TCP header compression | On by default. |
-| Send PPP echo packets | Checks the link every 30 seconds and drops it after 5 missed replies. |
-| MTU, MRU | Empty uses the default. |
-
-## Bluetooth
-
-Bluetooth PAN and DUN profiles appear under Other and can be edited, but not created, here.
-The device address and type are read-only. DUN profiles also get the mobile broadband and PPP
-sections.
+VPN plugin, cellular, and Bluetooth profiles show only the General, IPv4, and IPv6 settings, and
+can't be created here. Their own settings, such as the APN or the plugin's options, are edited in
+`nm-connection-editor` or `nmtui`, which the **Advanced** row opens when one of them is installed.
+Bluetooth PAN and DUN profiles are listed under Other.
 
 ## Hotspot
 
@@ -142,12 +124,9 @@ sections.
 page sets the name, **Security** (Open, WPA2, or
 WPA3), the band, then a channel for that band, **Hidden**, and the **IP address**
 of the shared network as an address with a prefix from `/8` to `/30` (empty uses
-NetworkManager's default, `10.42.x.1/24`). WPA3 only starts when the adapter supports it. The
-page owns the hotspot profile. While a
-hotspot with a password is running, **Show QR Code** displays a code that joins it, and
+NetworkManager's default, `10.42.x.1/24`). WPA3 only starts when the adapter supports it.
+While a hotspot with a password is running, **Show QR Code** displays a code that joins it, and
 [`dms qr wifi`](./cli-qr.mdx#wifi-qr-codes) works for it as well.
-
-**Settings → Network → Wi-Fi** is hidden when the computer has no Wi-Fi adapter.
 
 ## Connectivity checking and captive portals
 
@@ -160,8 +139,7 @@ portals aren't detected.
 
 ## Behavior notes
 
-- Disconnecting Ethernet no longer blocks the device. Only the disconnected profile stays down
-  until it's connected again, so another profile on the same device can still autoconnect.
+- **Settings → Network → Wi-Fi** is hidden when the computer has no Wi-Fi adapter.
 - **Preference** in **Settings → Network → Status** only sets route metrics: 100 for the
   preferred type and 300 for the others. Metrics the user set are left alone, and **Auto**
   restores NetworkManager's defaults.
