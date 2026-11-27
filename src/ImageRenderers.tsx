@@ -140,7 +140,6 @@ function titleCard(category: string, title: string): ReturnType<ImageRenderer> {
           height: '100%',
           padding: '60px',
           position: 'relative',
-          zIndex: 1,
         }}
       >
         <img
@@ -276,7 +275,6 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
             height: '100%',
             padding: '60px',
             position: 'relative',
-            zIndex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -385,7 +383,6 @@ export const pages: ImageRenderer<PagesPageData> = (data) => {
           height: '100%',
           padding: '60px',
           position: 'relative',
-          zIndex: 1,
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
@@ -759,7 +756,6 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
             width: '100%',
             height: '100%',
             position: 'relative',
-            zIndex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -894,7 +890,6 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
             width: '100%',
             height: '100%',
             position: 'relative',
-            zIndex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -1029,7 +1024,6 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
             width: '100%',
             height: '100%',
             position: 'relative',
-            zIndex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -1172,7 +1166,6 @@ export const blog: ImageRenderer<BlogPageData> = (data) => {
             width: '100%',
             height: '100%',
             position: 'relative',
-            zIndex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}

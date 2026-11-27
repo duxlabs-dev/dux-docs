@@ -24,7 +24,7 @@ Dux Files installs a single `dfiles` binary with the Quickshell UI embedded, a d
 
 ## Requirements
 
-- [Quickshell](https://quickshell.org) (`qs`): `quickshell-git` or `quickshell` from the [Dux repository](../repo/)
+- dux-qt-base, Dux's build of [Quickshell](https://quickshell.org) that runs the UI: `dux-qt-base` on Arch, Fedora and Void, `libdux-qt-base0` on openSUSE, Debian, Ubuntu and PikaOS, from the [Dux repository](../repo/index.mdx#core-framework). Distribution packages pull it in automatically, and `dfiles run` refuses to start without it. No `quickshell` package or `qs` executable is needed. `dfiles run --qs-child` (or `DFILES_QS_CHILD=1`) runs the UI on upstream `qs` instead, which is unsupported
 - Go 1.27+ (build from source only; the binary is pure Go with no cgo)
 
 Optional, picked up from `PATH` when the daemon starts:
@@ -45,7 +45,7 @@ Choose the installation method that best fits your system. Dux Files is not on F
 
 ### Distribution Packages
 
-Each Dux repository ships two packages: `dux-files` follows tagged releases, and `dux-files-git` builds from upstream `master`. They conflict, so install one.
+Each Dux repository ships two packages: `dux-files` follows tagged releases, and `dux-files-git` builds from upstream `master`. They will conflict if you have both installed, so install one.
 
 ### Fedora & CentOS
 
@@ -221,15 +221,19 @@ make
 sudo make install
 ```
 
+`make` uses the installed dux-qt-base library. `make QTBASE=1` instead builds it from the `dux-qt-base` submodule (needs CMake, Ninja and the Qt 6 development packages) and embeds it in `dfiles`.
+
 This installs:
 
 - `dfiles` binary to `/usr/local/bin` (UI embedded)
 - Desktop entry, icon and metainfo
 - Polkit policy for the administrator retry
 - `FileManager1` D-Bus activation file
-- Portal file chooser backend files, not preferred until you ask (see [Open and save dialogs](desktop-integration#open-and-save-dialogs))
+- Portal file chooser backend files, not preferred until you ask (see [Open and save dialogs](./desktop-integration.mdx#open-and-save-dialogs))
 
 Override the prefix with `PREFIX=/usr sudo make install`. `make install-systemd` adds the user unit, `make uninstall-dbus` removes the activation file.
+
+The build uses the installed dux-qt-base. To build it from the `dux-qt-base` submodule and embed it in `dfiles` instead, run `make QTBASE=1`.
 
 ### Release Binary
 
@@ -241,11 +245,11 @@ tar -xzf dfiles-linux-amd64.tar.gz
 sudo install -Dm755 dfiles-linux-amd64 /usr/local/bin/dfiles
 ```
 
-The binary alone gives you the app and the CLI. The desktop entry, D-Bus activation, polkit policy and portal files come from `make install` in a source checkout.
+The release binary does not embed dux-qt-base, so install the library first (see [Requirements](#requirements)). The binary alone gives you the app and the CLI. The desktop entry, D-Bus activation, polkit policy and portal files come from `make install` in a source checkout.
 
 ### NixOS and home-manager
 
-The repository is a flake with a package, a NixOS module and a home-manager module. See [NixOS Installation](nixos-flake).
+The repository is a flake with a package, a NixOS module and a home-manager module. See [NixOS Installation](./nixos-flake.mdx).
 
 ### Flatpak
 
@@ -275,7 +279,7 @@ To open folders here from other apps:
 xdg-mime default dev.duxlabs.files.desktop inode/directory
 ```
 
-The installer does not run this. Reveal-in-file-manager requests from browsers and other apps go through `org.freedesktop.FileManager1` instead, which Dux Files owns while it runs. See [Desktop Integration](desktop-integration).
+The installer does not run this. Reveal-in-file-manager requests from browsers and other apps go through `org.freedesktop.FileManager1` instead, which Dux Files owns while it runs. See [Desktop Integration](./desktop-integration.mdx).
 
 ## Verification
 
@@ -289,5 +293,5 @@ dfiles
 
 ## Next Steps
 
-- [Usage](usage) - Learn the CLI commands
-- [Desktop Integration](desktop-integration) - Serve open and save dialogs for every app
+- [Usage](./usage.mdx) - Learn the CLI commands
+- [Desktop Integration](./desktop-integration.mdx) - Serve open and save dialogs for every app

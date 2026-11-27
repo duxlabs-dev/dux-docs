@@ -30,7 +30,7 @@ The compositor is the one you are logged into. Outside a session, or to pick ano
 
 This is deliberately not `systemctl --user enable dms`. That ties the service to `graphical-session.target`, which every desktop starts, so DMS would also launch when you log into GNOME or Plasma on the same user.
 
-`dms setup` with systemd and the [Dux Installer](../duxinstall) run the same step, so you only need this command when the link went missing or you switch compositors. `dms doctor` reports `Nothing starts dms.service with <unit>` when the running compositor does not want the service.
+`dms setup` with systemd and the [Dux Installer](../duxinstall.mdx) run the same step, so you only need this command when the link went missing or you switch compositors. `dms doctor` reports `Nothing starts dms.service with <unit>` when the running compositor does not want the service.
 
 ## disable
 
@@ -38,7 +38,7 @@ Removes the `dms.service` wants link from all three compositor units and reloads
 
 ## status
 
-```
+```text
 dms.service: enabled, active
 Starts with: niri.service, hyprland-session.target
 ```

@@ -6,7 +6,9 @@ import path from 'path';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
-// Custom Dank Purple Prism Theme
+// Custom Dank Purple Prism themes. Token hues are split so keys, values, types
+// and keywords read differently; every token is >= 4.5:1 on its code background.
+// Light code bg is deliberately off the page bg (#f8f7fb) so blocks have a surface.
 const dankPurple: PrismTheme = {
   plain: {
     color: '#e4e4e7',
@@ -15,76 +17,59 @@ const dankPurple: PrismTheme = {
   styles: [
     {
       types: ['comment', 'prolog', 'doctype', 'cdata'],
-      style: {
-        color: '#7c7c99',
-        fontStyle: 'italic',
-      },
+      style: {color: '#a09cb8', fontStyle: 'italic'},
     },
     {
-      types: ['punctuation'],
-      style: {
-        color: '#c0c0d0',
-      },
+      types: ['punctuation', 'operator'],
+      style: {color: '#bdb9d2'},
     },
     {
       types: ['namespace'],
-      style: {
-        opacity: 0.7,
-      },
+      style: {color: '#4fd9c0'},
     },
     {
-      types: ['property', 'tag', 'constant', 'symbol', 'deleted'],
-      style: {
-        color: '#f78c6c',
-      },
+      types: ['keyword', 'atrule'],
+      style: {color: '#c99bff'},
     },
     {
-      types: ['boolean', 'number'],
-      style: {
-        color: '#f78c6c',
-      },
+      types: ['function'],
+      style: {color: '#a3adff'},
     },
     {
-      types: ['selector', 'attr-name', 'string', 'char', 'builtin', 'inserted'],
-      style: {
-        color: '#c3e88d',
-      },
+      types: ['property', 'attr-name'],
+      style: {color: '#6fc3ff'},
     },
     {
-      types: ['operator', 'entity', 'url', 'variable'],
-      style: {
-        color: '#89ddff',
-      },
+      types: ['string', 'char', 'attr-value', 'inserted'],
+      style: {color: '#a6e38c'},
     },
     {
-      types: ['atrule', 'attr-value', 'keyword'],
-      style: {
-        color: '#c792ea',
-      },
+      types: ['number', 'boolean', 'constant', 'symbol'],
+      style: {color: '#ffc86b'},
     },
     {
-      types: ['function', 'class-name'],
-      style: {
-        color: '#82aaff',
-      },
+      types: ['tag', 'deleted'],
+      style: {color: '#ff8aa3'},
+    },
+    {
+      types: ['class-name', 'builtin', 'selector'],
+      style: {color: '#4fd9c0'},
+    },
+    {
+      types: ['variable', 'entity', 'url'],
+      style: {color: '#86d9ee'},
     },
     {
       types: ['regex', 'important'],
-      style: {
-        color: '#f07178',
-      },
+      style: {color: '#ff9d72'},
     },
     {
       types: ['important', 'bold'],
-      style: {
-        fontWeight: 'bold',
-      },
+      style: {fontWeight: 'bold'},
     },
     {
       types: ['italic'],
-      style: {
-        fontStyle: 'italic',
-      },
+      style: {fontStyle: 'italic'},
     },
   ],
 };
@@ -92,81 +77,64 @@ const dankPurple: PrismTheme = {
 const dankPurpleLight: PrismTheme = {
   plain: {
     color: '#2e2a3d',
-    backgroundColor: '#f8f7fb',
+    backgroundColor: '#ece6f4',
   },
   styles: [
     {
       types: ['comment', 'prolog', 'doctype', 'cdata'],
-      style: {
-        color: '#6e7c93',
-        fontStyle: 'italic',
-      },
+      style: {color: '#5d5873', fontStyle: 'italic'},
     },
     {
-      types: ['punctuation'],
-      style: {
-        color: '#5a5a77',
-      },
+      types: ['punctuation', 'operator'],
+      style: {color: '#4c4763'},
     },
     {
       types: ['namespace'],
-      style: {
-        opacity: 0.7,
-      },
+      style: {color: '#066f63'},
     },
     {
-      types: ['property', 'tag', 'constant', 'symbol', 'deleted'],
-      style: {
-        color: '#d65d0e',
-      },
+      types: ['keyword', 'atrule'],
+      style: {color: '#6f3fcf'},
     },
     {
-      types: ['boolean', 'number'],
-      style: {
-        color: '#d65d0e',
-      },
+      types: ['function'],
+      style: {color: '#3f4fd0'},
     },
     {
-      types: ['selector', 'attr-name', 'string', 'char', 'builtin', 'inserted'],
-      style: {
-        color: '#427b58',
-      },
+      types: ['property', 'attr-name'],
+      style: {color: '#0a5ca8'},
     },
     {
-      types: ['operator', 'entity', 'url', 'variable'],
-      style: {
-        color: '#076678',
-      },
+      types: ['string', 'char', 'attr-value', 'inserted'],
+      style: {color: '#25703a'},
     },
     {
-      types: ['atrule', 'attr-value', 'keyword'],
-      style: {
-        color: '#8f3f71',
-      },
+      types: ['number', 'boolean', 'constant', 'symbol'],
+      style: {color: '#8a4b00'},
     },
     {
-      types: ['function', 'class-name'],
-      style: {
-        color: '#0969da',
-      },
+      types: ['tag', 'deleted'],
+      style: {color: '#b01f4a'},
+    },
+    {
+      types: ['class-name', 'builtin', 'selector'],
+      style: {color: '#066f63'},
+    },
+    {
+      types: ['variable', 'entity', 'url'],
+      style: {color: '#006b86'},
     },
     {
       types: ['regex', 'important'],
-      style: {
-        color: '#cc241d',
-      },
+      style: {color: '#ad3f0a'},
     },
     {
       types: ['important', 'bold'],
-      style: {
-        fontWeight: 'bold',
-      },
+      style: {fontWeight: 'bold'},
     },
     {
       types: ['italic'],
-      style: {
-        fontStyle: 'italic',
-      },
+      style: {fontStyle: 'italic'},
     },
   ],
 };
@@ -263,6 +231,49 @@ const config: Config = {
         content: 'summary_large_image',
       },
     },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'twitter:site',
+        content: '@DuxLabsDev',
+      },
+    },
+    // Mastodon: profile link verification and link-preview author attribution
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'me',
+        href: 'https://mastodon.social/@DuxLabs',
+      },
+    },
+    {
+      tagName: 'meta',
+      attributes: {
+        name: 'fediverse:creator',
+        content: '@DuxLabs@mastodon.social',
+      },
+    },
+    // Organization structured data linking the official profiles
+    {
+      tagName: 'script',
+      attributes: {
+        type: 'application/ld+json',
+      },
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Dux Labs',
+        url: 'https://duxlabs.dev',
+        logo: 'https://duxlabs.dev/img/dux-logo.png',
+        sameAs: [
+          'https://github.com/duxlabs-dev',
+          'https://x.com/DuxLabsDev',
+          'https://mastodon.social/@DuxLabs',
+          'https://www.reddit.com/r/duxlabs',
+          'https://discord.gg/ppWTpKmPgT',
+        ],
+      }),
+    },
   ],
 
   // Set the production url of your site here
@@ -293,6 +304,8 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/duxlabs-dev/dux-docs/tree/master',
+          // Needs git history at build time; see Dockerfile (git must be installed).
+          showLastUpdateTime: true,
           lastVersion: '2.1',
           versions: {
             current: {
@@ -549,7 +562,9 @@ const config: Config = {
     prism: {
       theme: dankPurpleLight,
       darkTheme: dankPurple,
-      additionalLanguages: ['bash', 'json', 'yaml', 'toml', 'rust', 'python', 'javascript', 'typescript', 'qml', 'nix'],
+      // Prism components only. kdl/conf/pam/cron have none: they are registered by
+      // src/theme/prism-include-languages.ts (conf aliases ini).
+      additionalLanguages: ['bash', 'shell-session', 'json', 'yaml', 'toml', 'ini', 'properties', 'lua', 'diff', 'rust', 'python', 'javascript', 'typescript', 'qml', 'nix'],
     },
   },
 };

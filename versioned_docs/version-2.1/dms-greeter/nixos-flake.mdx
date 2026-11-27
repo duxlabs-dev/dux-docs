@@ -19,7 +19,7 @@ import Hero from '@site/src/components/Hero';
 Dux Greeter can be installed on NixOS using the NixOS module. This guide covers the flake-based installation method.
 
 :::info[Native NixOS module Available]
-Dux Greeter is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](nixos) method is recommended and doesn't require flakes.
+Dux Greeter is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](./nixos.mdx) method is recommended and doesn't require flakes.
 Use the Flake option if you want quicker updates.
 
 :::
@@ -30,7 +30,7 @@ Use the Flake option if you want quicker updates.
 
 Add the required flake inputs to your `flake.nix` if you haven't yet:
 
-```nix
+```nix title="flake.nix"
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -53,7 +53,7 @@ imports = [
 ];
 ```
 
-:::note
+:::note[NixOS module only]
 
 Dux Greeter is only available as a NixOS module (not as a home-manager module), since it needs to run at the system level for login management.
 
@@ -70,13 +70,13 @@ programs.dms-greeter = {
 };
 ```
 
-:::info
+:::info[Configure in NixOS, not home-manager]
 
 Unlike Dux Modular Shell which can be installed via either the NixOS module or home-manager module, Dux Greeter must be configured in your NixOS system configuration (not in home-manager).
 
 :::
 
-:::warning
+:::note[Compositors come from NixOS config]
 
 Compositors must be installed via NixOS configuration to appear in Dux Greeter, not via home-manager.
 

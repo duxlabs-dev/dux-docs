@@ -1,5 +1,6 @@
 import React, {type ComponentType, type SVGProps} from 'react';
 import DefaultNavbarItem from '@theme-original/NavbarItem/DefaultNavbarItem';
+import {useVersions} from '@docusaurus/plugin-content-docs/client';
 import type {Props} from '@theme/NavbarItem/DefaultNavbarItem';
 import {AutoStories, Campaign, DownloadForOffline, Extension, Wallpaper} from 'material-symbols/rounded';
 import {
@@ -21,7 +22,15 @@ const destinations: Record<string, [Icon, Icon]> = {
 };
 
 export default function ExpressiveNavbarItem(props: Props) {
-  if (props.isDropdownItem || props.className?.includes('navbar-version-dropdown')) return <DefaultNavbarItem {...props} />;
+  const versions = useVersions(undefined);
+  if (props.isDropdownItem) {
+    // Tagged here rather than in the version labels, which the dropdown button also shows.
+    const version = versions.find((v) => v.label === props.label);
+    const tag = version?.name === 'current' ? 'Next' : version?.isLast ? 'Stable' : '';
+    if (!tag) return <DefaultNavbarItem {...props} />;
+    return <DefaultNavbarItem {...props} label={<>{props.label}<span className="navbar-version-tag">{tag}</span></>} />;
+  }
+  if (props.className?.includes('navbar-version-dropdown')) return <DefaultNavbarItem {...props} />;
   const destination = props.to || props.href;
   const icons = typeof destination === 'string' ? destinations[destination] : undefined;
   if (!icons) return <DefaultNavbarItem {...props} />;

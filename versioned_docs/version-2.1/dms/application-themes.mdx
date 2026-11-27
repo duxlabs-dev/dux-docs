@@ -60,7 +60,7 @@ Set it at **Settings → Theme & Colors → Source Color**.
 
 Set the environment variable `DMS_DISABLE_MATUGEN` to `1` or `true` before launching to disable theme generation entirely.
 
-:::tip
+:::tip[Setting environment variables]
 
 For detailed instructions on setting environment variables, see [Advanced Configuration - Setting Environment Variables](/docs/dms/advanced-configuration#setting-environment-variables).
 
@@ -74,7 +74,7 @@ See the [matugen wiki](https://github.com/InioX/matugen/wiki/Configuration) for 
 
 Create or edit `~/.config/matugen/config.toml`:
 
-```toml
+```toml title="~/.config/matugen/config.toml"
 [config]
 
 [templates.mytemplate]
@@ -94,7 +94,7 @@ Your templates have access to all standard [matugen color keywords](https://inio
 
 dank16 colors use a variant structure matching the material color system:
 
-```
+```text
 {{dank16.color0.default.hex}}
 {{dank16.color0.dark.hex}}
 {{dank16.color0.light.hex}}
@@ -114,7 +114,7 @@ Terminal templates should use `.default` variants. The **Terminals - Always use 
 
 Here's an example kitty template using both matugen colors and dank16:
 
-```
+```text
 cursor                {{colors.on_surface.default.hex}}
 cursor_text_color     {{colors.on_surface_variant.default.hex}}
 
@@ -218,7 +218,7 @@ Qt theming offers three approaches: basic GTK passthrough, dedicated Qt control 
 
 If you installed via the Dux Installer or manage DMS with systemd, set environment variables in `~/.config/environment.d/90-dms.conf`. For example, to switch to qt6ct:
 
-```ini
+```ini title="~/.config/environment.d/90-dms.conf"
 QT_QPA_PLATFORMTHEME=qt6ct
 ```
 
@@ -266,7 +266,7 @@ sudo dnf install qt6ct
 **Configure Environment:**
 
 If you manage DMS with systemd (including Dux Installer users), edit `~/.config/environment.d/90-dms.conf`:
-```ini
+```ini title="~/.config/environment.d/90-dms.conf"
 QT_QPA_PLATFORMTHEME=qt6ct
 ```
 
@@ -340,7 +340,7 @@ paru -S qtengine
 One value covers both toolkits, so no `QT_QPA_PLATFORMTHEME_QT6` is needed.
 
 If you manage DMS with systemd (including Dux Installer users), edit `~/.config/environment.d/90-dms.conf`:
-```ini
+```ini title="~/.config/environment.d/90-dms.conf"
 QT_QPA_PLATFORMTHEME=qtengine
 ```
 
@@ -423,7 +423,7 @@ Set the color scheme to **Dank Shell (matugen)** in qt6ct's Appearance tab under
 
 Create `~/.config/dolphinrc`:
 
-```ini
+```ini title="~/.config/dolphinrc"
 [UiSettings]
 ColorScheme=DankMatugen
 ```
@@ -510,7 +510,7 @@ do
 done
 ```
 
-:::note
+:::note[Enable userChrome in Zen]
 Theming must be enabled in Zen browser for changes to userChrome.css to take effect! Open `about:config` and enable `toolkit.legacyUserProfileCustomizations.stylesheets`. Restart your browser.
 :::
 
@@ -572,7 +572,7 @@ vim.cmd.colorscheme("dms")
 
 Those that use LazyVim may instead prefer to override and set their colorscheme similar to what is shown in the official [LazyVim documentation](https://www.lazyvim.org/plugins/colorscheme):
 
-```lua
+```lua title="~/.config/nvim/lua/plugins/colorscheme.lua"
 -- ~/.config/nvim/lua/plugins/colorscheme.lua
 
 return {
@@ -604,7 +604,7 @@ echo "include dank-tabs.conf" >> ~/.config/kitty/kitty.conf
 echo "include dank-theme.conf" >> ~/.config/kitty/kitty.conf
 ```
 
-:::tip
+:::tip[Stale kitty theme files]
 
 If you have customized the kitty theme, kitty may save `dark-theme.auto.conf`, `light-theme.auto.conf`, `no-preference-theme.auto.conf` in the configuration directory (usually `~/.config/kitty`). Please delete them to make the theme take effect.
 
@@ -614,7 +614,7 @@ If you have customized the kitty theme, kitty may save `dark-theme.auto.conf`, `
 
 foot requires absolute paths in its configuration, edit `~/.config/foot/foot.ini` to add the include:
 
-```ini
+```ini title="~/.config/foot/foot.ini"
 [main]
 include=/home/<USERNAME>/.config/foot/dank-colors.ini
 ```

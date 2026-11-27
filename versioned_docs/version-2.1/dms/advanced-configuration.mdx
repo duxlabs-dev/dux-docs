@@ -78,7 +78,7 @@ If you manually edit the settings, use:
 ~/.config/dms/settings.json
 ```
 or
-```
+```text
 ~/.config/dms/config.d/*.json
 ```
 
@@ -258,7 +258,7 @@ DMS_IPP_PASSWORD=secret dms run
 
 If you manage DMS with systemd (including Dux Installer users), set environment variables in `~/.config/environment.d/90-dms.conf`:
 
-```ini
+```ini title="~/.config/environment.d/90-dms.conf"
 TERMINAL=ghostty
 DMS_DISABLE_MATUGEN=1
 DMS_DANKBAR_LAYER=overlay

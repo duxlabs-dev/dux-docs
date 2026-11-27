@@ -19,7 +19,7 @@ import Hero from '@site/src/components/Hero';
 Dux Search can be installed on NixOS using home-manager with flakes. This guide covers the flake-based installation method for per-user installation.
 
 :::info[Native nixpkgs Available]
-Dux Search is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](nixos) method is recommended and doesn't require flakes.
+Dux Search is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](./nixos.mdx) method is recommended and doesn't require flakes.
 :::
 
 ## Installation
@@ -28,7 +28,7 @@ Dux Search is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, th
 
 First, add the Dux Search flake to your `flake.nix`:
 
-```nix
+```nix title="flake.nix"
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -123,7 +123,7 @@ programs.dsearch = {
 };
 ```
 
-The configuration follows the TOML format and will be written to `~/.config/dsearch/config.toml`. The structure directly maps to the TOML configuration - see the [Configuration](configuration) guide for all available options.
+The configuration follows the TOML format and will be written to `~/.config/dsearch/config.toml`. The structure directly maps to the TOML configuration - see the [Configuration](./configuration.mdx) guide for all available options.
 
 ### Systemd Service
 
@@ -277,6 +277,6 @@ programs.dsearch = {
 
 ## Next Steps
 
-- Learn more about [Configuration](configuration) options
-- Explore [Usage](usage) guide for CLI and API usage
-- Check out [Dux Modular Shell integration](../dms/overview)
+- Learn more about [Configuration](./configuration.mdx) options
+- Explore [Usage](./usage.mdx) guide for CLI and API usage
+- Check out [Dux Modular Shell integration](../dms/overview.mdx)

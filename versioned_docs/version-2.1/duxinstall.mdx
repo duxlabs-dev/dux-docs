@@ -56,7 +56,7 @@ On an image-based host (Fedora Atomic, bootc) headless mode never installs packa
 | `--dux-greeter` | | Install the greeter (its binary is `dms-greeter`). |
 | `--dux-search` | | Install dsearch and enable its user indexing service. |
 | `--dux-calendar` | | Install dcal. |
-| `--dux-files` | | Install dfiles, the [Dux Files](./dfiles/) file manager. Its user service is not enabled; D-Bus starts it on demand. |
+| `--dux-files` | | Install dfiles, the [Dux Files](./dfiles/index.mdx) file manager. Its user service is not enabled; D-Bus starts it on demand. |
 | `--include-deps <name,...>` | | Enable optional deps that are off by default (e.g. `dux-greeter`). |
 | `--exclude-deps <name,...>` | | Skip specific deps. |
 | `--replace-configs <name,...>` | | Replace only the listed configs: `niri`, `hyprland`, `mango`, `ghostty`, `kitty`, `alacritty`. |
@@ -125,7 +125,7 @@ The installer is tested on Workstation Edition but should work fine on any Fedor
 
 **Supported:** Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, Zirconium, and other rpm-ostree or bootc images based on Fedora
 
-The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation#fedora-atomic--bootc-images).
+The installer never runs a package command or asks for a password here. It checks what the image already has, prints the `rpm-ostree install` commands for anything missing, and stops. After you layer the packages and reboot, run it again: it resumes with your earlier choices and deploys the configuration into your home directory. Stable/git switches print `rpm-ostree install <new> --uninstall <old>` the same way. The greeter is not set up by the installer on images; it prints `dms-greeter install --yes` to run afterwards. Details and the manual commands are in [Installation](./dms/installation.mdx?distro=fedora#fedora-atomic--bootc-images).
 
 ### Enterprise Linux 10
 
@@ -139,13 +139,13 @@ Hyprland, mango and miracle-wm are not supported on EL and are not planned. A co
 
 **Supported:** Ubuntu 26.04 LTS+ (Resolute Raccoon)
 
-Packages come from the [Dux Labs PPA](./repo#ubuntu) (`ppa:duxlabs/dux-repo`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
+Packages come from the [Dux Labs PPA](./repo/index.mdx#ubuntu) (`ppa:duxlabs/dux-repo`). Hyprland and hyprland-guiutils come from `ppa:cppiber/hyprland`.
 
 ### Debian
 
 **Supported:** Debian 13+ (Trixie), Debian Testing, Debian Sid
 
-Packages come from the [Dux OBS repository](./repo#debian). **niri only** - Debian doesn't have Hyprland packages yet.
+Packages come from the [Dux OBS repository](./repo/index.mdx#debian). **niri only** - Debian doesn't have Hyprland packages yet.
 
 ### PikaOS
 
@@ -157,7 +157,7 @@ PikaOS also ships `pika-shell-profile-dank`, its own DMS session profile applied
 
 ### openSUSE Tumbleweed
 
-Good package availability out of the box. niri, hyprland, hyprland-guiutils, ghostty, and most tools are in standard repos. Additional packages come from the [Dux Labs OBS repository](./repo#opensuse).
+Good package availability out of the box. niri, hyprland, hyprland-guiutils, ghostty, and most tools are in standard repos. Additional packages come from the [Dux Labs OBS repository](./repo/index.mdx#opensuse).
 
 ### Gentoo
 
@@ -193,21 +193,28 @@ Gentoo requires a **systemd** installation. OpenRC is not supported.
 | xwayland-satellite | Manual | For niri X11 app support |
 | Dux Modular Shell | Manual | Git clone to `~/.config/quickshell/dms` |
 
-**Global USE Flags:**
-`dbus udev alsa policykit jpeg png webp gif tiff svg brotli gdbm accessibility gtk qt6 egl gbm`
+**Global USE flags:**
 
-**Package-Specific USE Flags:**
-- `sys-apps/xdg-desktop-portal-gtk`: wayland X
-- `gui-wm/niri`: dbus screencast
-- `gui-wm/hyprland`: X
-- `dev-qt/qtbase`: wayland opengl vulkan widgets
-- `dev-qt/qtdeclarative`: opengl vulkan
-- `media-libs/mesa`: opengl vulkan
-- `gui-apps/quickshell`: crash-handler jemalloc sockets wayland layer-shell session-lock toplevel-management screencopy X pipewire tray mpris pam policykit upower notifications hyprland i3 bluetooth
+```conf title="/etc/portage/make.conf"
+USE="dbus udev alsa policykit jpeg png webp gif tiff svg brotli gdbm accessibility gtk qt6 egl gbm"
+```
+
+**Package-specific USE flags:**
+
+```text title="/etc/portage/package.use/danklinux"
+sys-apps/xdg-desktop-portal-gtk wayland X
+gui-wm/niri                     dbus screencast
+gui-wm/hyprland                 X
+dev-qt/qtbase                   wayland opengl vulkan widgets
+dev-qt/qtdeclarative            opengl vulkan
+media-libs/mesa                 opengl vulkan
+gui-apps/quickshell             crash-handler jemalloc sockets wayland layer-shell session-lock toplevel-management screencopy X pipewire tray mpris pam policykit upower notifications hyprland i3 bluetooth
+```
+
 
 ## What About Manual Building?
 
-Most distros now have pre-built packages via the [Dux Repository](./repo). The installer handles any remaining builds automatically:
+Most distros now have pre-built packages via the [Dux Repository](./repo/index.mdx). The installer handles any remaining builds automatically:
 
 - **Gentoo** - Still builds most packages from source via Portage (see above).
 
@@ -234,7 +241,7 @@ dms ipc <command>
 
 :::tip
 
-See [Managing Your Installation](./dms/managing) for details on switching between systemd and manual startup, environment variable configuration, and more.
+See [Managing Your Installation](./dms/managing.mdx) for details on switching between systemd and manual startup, environment variable configuration, and more.
 
 :::
 
@@ -248,7 +255,7 @@ You can also run `systemctl --user edit dms` and add `Environment=VAR=Value` lin
 
 Any `dms` CLI command that needs root - `duxinstall`, `dms-greeter sync`, `dms-greeter install`, and the like - will prompt when both `sudo` and `run0` are detected:
 
-```
+```text
 Multiple privilege escalation tools detected:
   [1] sudo
   [2] run0

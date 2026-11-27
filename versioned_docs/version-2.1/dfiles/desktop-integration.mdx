@@ -26,7 +26,7 @@ Dux Files never takes the name from another file manager. It waits in the queue 
 
 `make install` and the distribution packages also install `dev.duxlabs.files.FileManager1.service`, so a call can start Dux Files when nothing owns the name. An instance started that way serves the call whatever the setting says, and quits if it never opens a window (for example when the call named a missing file).
 
-:::note
+:::note[Competing activation files]
 
 Nautilus, Dolphin, Thunar and Nemo ship activation files for the same name. `dbus-daemon(1)` gives the first service directory precedence (the default `PREFIX=/usr/local` puts ours ahead of `/usr/share`) and calls the choice arbitrary inside one directory. If another file manager keeps winning, remove its activation file or install Dux Files under a prefix that sorts first.
 
@@ -71,7 +71,7 @@ The UI and the CLI ask before doing that, because the restart cancels file dialo
 
 ### How it starts
 
-The portal activates the backend on demand through the activation file. Without the systemd user unit that means one hidden start of Dux Files whenever xdg-desktop-portal starts (it quits again after 30 s with nothing to show) and a cold start for the first dialog. With the unit, the resident instance answers at once. See [Running at Login](installation#running-at-login).
+The portal activates the backend on demand through the activation file. Without the systemd user unit that means one hidden start of Dux Files whenever xdg-desktop-portal starts (it quits again after 30 s with nothing to show) and a cold start for the first dialog. With the unit, the resident instance answers at once. See [Running at Login](./installation.mdx#running-at-login).
 
 ### Floating the dialog
 
@@ -86,7 +86,7 @@ window-rule {
 
 ### Packaging and Nix
 
-Packagers install `dfiles.portal` under `share/xdg-desktop-portal/portals/` and the service file under `share/dbus-1/services/` with the binary path substituted, and do not ship a `portals.conf` that prefers it. On NixOS and home-manager, `programs.dux-files.portal.enable` registers the backend and `portal.preferred` writes the preference. See [NixOS Installation](nixos-flake).
+Packagers install `dfiles.portal` under `share/xdg-desktop-portal/portals/` and the service file under `share/dbus-1/services/` with the binary path substituted, and do not ship a `portals.conf` that prefers it. On NixOS and home-manager, `programs.dux-files.portal.enable` registers the backend and `portal.preferred` writes the preference. See [NixOS Installation](./nixos-flake.mdx).
 
 The Flatpak cannot register the backend: Flatpak exports no `share/xdg-desktop-portal` files.
 
@@ -96,9 +96,9 @@ The systemd user unit starts Dux Files with `--keep-running`, so the close butto
 
 ## Theme
 
-Dux Files follows [Dux Modular Shell](../dms/overview)'s colors when **Settings → Appearance → Color source** is **Auto** and Dux Modular Shell runs. Pick **Preset** for a bundled palette or **Custom** for your own theme file. Light and dark follow the desktop portal's color scheme setting.
+Dux Files follows [Dux Modular Shell](../dms/overview.mdx)'s colors when **Settings → Appearance → Color source** is **Auto** and Dux Modular Shell runs. Pick **Preset** for a bundled palette or **Custom** for your own theme file. Light and dark follow the desktop portal's color scheme setting.
 
 ## Next Steps
 
-- [Keyboard](keyboard) - Every shortcut
-- [IPC](ipc) - Drive Dux Files from keybinds and scripts
+- [Keyboard](./keyboard.mdx) - Every shortcut
+- [IPC](./ipc.mdx) - Drive Dux Files from keybinds and scripts

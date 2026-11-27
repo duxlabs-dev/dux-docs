@@ -1,0 +1,113 @@
+---
+title: Dux Icons
+description: icon theme for Linux that follows your Material colors, built for Dux Modular Shell
+sidebar_position: 1
+image: img/dux-icons-hero.png
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import Hero from '@site/src/components/Hero';
+
+<Hero
+  asciiArt={`██████╗ ██╗   ██╗██╗  ██╗     ██╗ ██████╗ ██████╗ ███╗   ██╗███████╗
+██╔══██╗██║   ██║╚██╗██╔╝     ██║██╔════╝██╔═══██╗████╗  ██║██╔════╝
+██║  ██║██║   ██║ ╚███╔╝      ██║██║     ██║   ██║██╔██╗ ██║███████╗
+██║  ██║██║   ██║ ██╔██╗      ██║██║     ██║   ██║██║╚██╗██║╚════██║
+██████╔╝╚██████╔╝██╔╝ ██╗     ██║╚██████╗╚██████╔╝██║ ╚████║███████║
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝`}
+  hideTitle={false}
+/>
+
+import Head from '@docusaurus/Head';
+
+<Head>
+<title>Dux Icons, icon theme for Linux that follows your colors</title>
+<meta property="og:title" content="Dux Icons" />
+<meta property="og:site_name" content="Dux Icons" />
+<meta name="application-name" content="Dux Icons" />
+<meta name="description" content="Dux Icons is a free, open-source generated icon theme for Linux. It sets each app's own icon on a Material tile, draws folders and file types, and repaints everything from your current Material colors." />
+<script type="application/ld+json">{JSON.stringify({
+'@context': 'https://schema.org',
+'@type': 'SoftwareApplication',
+name: 'Dux Icons',
+operatingSystem: 'Linux',
+applicationCategory: 'UtilitiesApplication',
+url: 'https://duxlabs.dev/docs/dicons/',
+description: 'Dux Icons is a free, open-source generated icon theme for Linux. It puts each app\'s own icon on a Material tile, draws folders and file types itself, and paints all of it from your current Material colors.',
+offers: {'@type': 'Offer', price: '0', priceCurrency: 'USD'},
+})}</script>
+</Head>
+
+# Dux Icons
+
+Dux Icons is a generated icon theme that follows your colors. It puts each app's own icon on a Material tile, draws folders and file types itself, and paints all of it from your current Material colors. Change the wallpaper and the icons change with it.
+
+It is built for [Dux Modular Shell](https://github.com/duxlabs-dev/dux-shell), and works on any freedesktop desktop.
+
+<figure style={{ textAlign: 'center' }}>
+  <ThemedImage
+    alt="Dux Icons banner: the Dux logo and title beside three grouped rows on squircle tiles — Edge Match app icons, the four Dux apps (Files, Calendar, Edit, Connect), and theme-colored folders and file types"
+    sources={{
+      light: useBaseUrl('/img/dux-icons-hero-light.png'),
+      dark: useBaseUrl('/img/dux-icons-hero.png'),
+    }}
+    style={{ maxWidth: '720px', width: '100%', borderRadius: '12px' }}
+  />
+  <figcaption>App icons with Edge Match, the four Dux apps, and Dux Icons folders and file types.</figcaption>
+</figure>
+
+It is a generator, not a hand-drawn app set. Your apps keep the artwork their authors shipped, and Dux Icons supplies the frame and the color.
+
+## Features
+
+- **Your Apps, One Shape**: Every installed app with a `.desktop` entry gets its own icon framed on the same tile. Nothing is redrawn, so a new app looks right the day you install it.
+- **Follows Your Theme**: Tiles, folders and file types take Material `primary` and `on_primary`. With DMS they repaint on every wallpaper or theme change. Without DMS you pass the colors yourself.
+- **Folders and File Types**: Folders, the home and XDG user folders, trash, network places and the common file types are drawn for the theme. They sit on the tile like your apps, or come as full-color folders with each file type in its own color.
+- **Tiles in Each App's Color**: With DMS, a tile can take its color from the app's icon, match the background the icon is drawn on so the logo fills the tile, or ring a neutral tile in the app's color.
+- **Seven Tile Shapes**: Circle, squircle, rounded, square, hexagon, cookie and clover, flat or with a soft gradient.
+- **Four App Icon Styles**: Keep each app's own colors (Color), repaint them in two tones of the tile (Tinted), or draw every app as a one-color glyph on a tile in your theme color (Themed) or in near-gray (Monochrome). Glyphs come from the app's own symbolic icon where it ships one, a symbolic icon from an installed theme such as Papirus, or a cut-out of the app's logo.
+- **A Normal Icon Theme**: The output is a standard freedesktop theme of scalable SVGs. GTK, Qt and KDE apps can all use it, and any name it does not provide falls back to `hicolor`.
+- **Safe Builds**: Each run replaces the previous theme in one step, so nothing is ever half written. The build only writes to a directory it created itself.
+
+<figure style={{ textAlign: 'center' }}>
+  <ThemedImage
+    alt="The same six apps in each app style: Color (Edge Match), Tinted, Themed and Monochrome, then in Color on ring tiles"
+    sources={{
+      light: useBaseUrl('/img/dicons-styles-light.png'),
+      dark: useBaseUrl('/img/dicons-styles.png'),
+    }}
+    style={{ maxWidth: '720px', width: '100%', borderRadius: '12px' }}
+  />
+  <figcaption>The four app icon styles, and Color on ring tiles.</figcaption>
+</figure>
+
+<figure style={{ textAlign: 'center' }}>
+  <ThemedImage
+    alt="Dux Icons folder, settings and file type icons in the seven tile shapes, each row in a different wallpaper color, the last three rows shaded"
+    sources={{
+      light: useBaseUrl('/img/dicons-shapes-light.png'),
+      dark: useBaseUrl('/img/dicons-shapes.png'),
+    }}
+    style={{ maxWidth: '720px', width: '100%', borderRadius: '12px' }}
+  />
+  <figcaption>The seven tile shapes, each in the colors of a different wallpaper.</figcaption>
+</figure>
+
+## Documentation
+
+- [Installation](./installation.mdx) - Install the `dux-icons` command, with or without DMS
+- [Usage](./usage.mdx) - Commands, options, tile shapes and how the build works
+
+To match the folders of other icon themes (Papirus, Breeze, Adwaita, Tela, Colloid) to your colors, see [Icon Theming](../dms/icon-theming.mdx) in the DMS docs. That is a DMS feature and does not need Dux Icons.
+
+## Contributing
+
+Dux Icons is open source and welcomes contributions:
+
+- **Source Code**: [GitHub Repository](https://github.com/duxlabs-dev/dux-icons)
+- **Issues**: Report bugs and request features on GitHub
+
+## License
+
+Dux Icons is released under the MIT License. See the [LICENSE](https://github.com/duxlabs-dev/dux-icons/blob/master/LICENSE) file for details. Type marks on folders and file types are adapted from [Material Symbols](https://github.com/google/material-design-icons), Apache-2.0.

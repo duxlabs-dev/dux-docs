@@ -20,7 +20,7 @@ The `dms setup` command generates default configuration files for your composito
 Running `dms setup` with no arguments deploys all defaults at once. You can also deploy individual configs one at a time.
 
 :::note[Image-based systems]
-`dms setup` works unchanged on Fedora Atomic, bootc, and other image-based systems because it only writes to your home directory. On those hosts the [Dux Installer](../duxinstall) runs this same config deployment once the packages have been layered and the system rebooted. See [Fedora Atomic & bootc images](./installation#fedora-atomic--bootc-images).
+`dms setup` works unchanged on Fedora Atomic, bootc, and other image-based systems because it only writes to your home directory. On those hosts the [Dux Installer](../duxinstall.mdx) runs this same config deployment once the packages have been layered and the system rebooted. See [Fedora Atomic & bootc images](./installation.mdx?distro=fedora#fedora-atomic--bootc-images).
 :::
 
 ## Quick Start
@@ -71,7 +71,7 @@ If you installed DMS from packages (not through the interactive installer), run 
 
 When `dms setup` finds your own keybinds (a non-empty `dms/binds.kdl` on niri; a non-empty `dms/binds.conf` or bind lines in `config.conf` on mangowm), it asks before deploying:
 
-```
+```text
   1) Keep my binds as they are
   2) Start from the DMS stock binds
 ```
@@ -116,8 +116,8 @@ dms setup colors
 dms setup layout
 ```
 
-The niri home-manager module's `niri.includes` option references these same files under `~/.config/niri/dms/`. See the [niri integration docs](nixos-flake#config-includes) for the full list of included files.
+The niri home-manager module's `niri.includes` option references these same files under `~/.config/niri/dms/`. See the [niri integration docs](./nixos-flake.mdx#config-includes) for the full list of included files.
 
-:::info
+:::info[Safe to re-run]
 The individual subcommands are safe to run at any time — they skip files that already have content, except Hyprland's DMS-owned `binds.lua`, which `dms setup binds` always refreshes. To force a reset, delete or empty the file first, then run the subcommand again.
 :::

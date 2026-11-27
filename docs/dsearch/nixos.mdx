@@ -76,7 +76,7 @@ You can use the package from the Dux Search flake while still using the native N
 
 First, add the flake input to your `flake.nix`:
 
-```nix
+```nix title="flake.nix"
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -98,14 +98,14 @@ programs.dsearch = {
 };
 ```
 
-:::warning
+:::warning[Flake package differences]
 
 When using the flake package with the native nixpkgs module, some dependencies may not be automatically enabled by default, and certain configurations might be missing. You may need to manually install optional dependencies or adjust feature toggles to match your needs.
 
 :::
 
-:::tip
-For per-user installation with more flexibility, consider using the [home-manager flake installation](nixos-flake) method instead.
+:::tip[Per-user installs]
+For per-user installation with more flexibility, consider using the [home-manager flake installation](./nixos-flake.mdx) method instead.
 :::
 
 ## Rebuilding
@@ -139,6 +139,6 @@ programs.dsearch.enable = true;
 
 ## Next Steps
 
-- Learn more about [Configuration](configuration) options
-- Explore [Usage](usage) guide for CLI and API usage
-- Check out [Dux Modular Shell integration](../dms/overview)
+- Learn more about [Configuration](./configuration.mdx) options
+- Explore [Usage](./usage.mdx) guide for CLI and API usage
+- Check out [Dux Modular Shell integration](../dms/overview.mdx)

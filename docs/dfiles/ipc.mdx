@@ -18,7 +18,7 @@ import Hero from '@site/src/components/Hero';
 
 # IPC
 
-The dfiles daemon exposes every operation the UI uses over a unix socket. Invoke a method and pass params as `key=value` pairs:
+The dfiles daemon exposes every operation the UI uses over a Unix socket. Invoke a method and pass params as `key=value` pairs:
 
 ```bash
 dfiles ipc ui.toggle
@@ -96,6 +96,7 @@ Operations run as jobs. Each takes an optional `scope`, the undo stack key, one 
 | `files.op.cancel` | `jobId*` |
 | `files.op.jobs` | Running, queued and recently finished jobs |
 | `files.op.dropAction` | `paths*`, `dest*`: what a plain drag would do |
+| `files.op.portalTransfer` | `paths*`: register local paths with the desktop FileTransfer portal and return the transfer key |
 | `files.op.undo`, `files.op.redo` | `scope` |
 | `files.op.forget` | `scope`: drop a closed window's history |
 
@@ -120,7 +121,7 @@ Operations run as jobs. Each takes an optional `scope`, the undo stack key, one 
 | `search.start` | `root*`, `query` (space-separated terms; `*` and `?` make a glob), `scope` (`folder\|home\|everywhere`), `includeHidden`, `includeIgnored`, `fuzzy`, `contents` (needs Dux Search), `direct`, `crossDevice`, `types` (`documents\|images\|video\|audio\|archives\|folders`), `modifiedAfterMs`, `minSize`, `maxSize`, `limit` (at most 10000): results stream on `search:<searchId>` |
 | `search.cancel` | `searchId*` |
 
-A running [Dux Search](../dsearch/) answers when its index covers the search (names only, no gitignore). Otherwise a live walk honours gitignore and matches terms against the path too.
+A running [Dux Search](../dsearch/index.mdx) answers when its index covers the search (names only, no gitignore). Otherwise a live walk honours gitignore and matches terms against the path too.
 
 ## Bookmarks
 
@@ -183,6 +184,7 @@ A running [Dux Search](../dsearch/) answers when its index covers the search (na
 | `system.fileManager.get`, `system.fileManager.set` | `enabled*` on set: own or release `org.freedesktop.FileManager1`; another owner is never replaced |
 | `system.openUri` | `uri*` |
 | `system.portal.get`, `system.portal.install`, `system.portal.uninstall`, `system.portal.restart` | The portal file chooser state and the three actions behind `dfiles portal` |
+| `system.setWallpaper` | `path*`, `screen`: set DMS desktop wallpaper (`setFor` fallback when per-monitor mode is enabled) |
 
 ## Live Updates
 
@@ -196,5 +198,5 @@ Subscribe to push events instead of polling:
 
 ## Next Steps
 
-- [Usage](usage) - The CLI wrappers around these methods
-- [Keyboard](keyboard) - What the window binds by default
+- [Usage](./usage.mdx) - The CLI wrappers around these methods
+- [Keyboard](./keyboard.mdx) - What the window binds by default

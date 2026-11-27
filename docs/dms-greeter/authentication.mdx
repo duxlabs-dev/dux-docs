@@ -29,7 +29,7 @@ NixOS, or your own PAM files. The next greeter sync then removes the managed
 block and stops writing `/etc/pam.d/greetd`; the factor toggles are disabled
 because the system PAM configuration decides what the greeter offers.
 
-:::caution
+:::warning[Keep a fallback login]
 
 Keep a root terminal or another login method available while changing PAM.
 An invalid greetd stack can prevent graphical login.
@@ -105,6 +105,6 @@ sudo rm /etc/pam.d/greetd
 dms-greeter sync
 ```
 
-See [Dux Greeter configuration](./configuration) for the rest of the greeter
-setup, and [Lock Screen authentication](../dms/lock-screen-authentication)
+See [Dux Greeter configuration](./configuration.mdx) for the rest of the greeter
+setup, and [Lock Screen authentication](../dms/lock-screen-authentication.mdx)
 for the separate in-session lock policy.

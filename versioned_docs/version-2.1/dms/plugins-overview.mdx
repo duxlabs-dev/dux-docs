@@ -27,7 +27,7 @@ Plugins are installed to `~/.config/dms/plugins/`. Each plugin is a directory co
 **Registry source:** [github.com/duxlabs-dev/dux-plugin-registry](https://github.com/duxlabs-dev/dux-plugin-registry)
 **Example plugins:** [github.com/duxlabs-dev/dux-shell/tree/master/quickshell/PLUGINS](https://github.com/duxlabs-dev/dux-shell/tree/master/quickshell/PLUGINS)
 
-The [plugin directory](https://duxlabs.dev/plugins) ranks plugins by community 👍 upvotes. Each plugin has a tracking issue in the registry you can upvote and discuss — see [Contributing to the Registry](../contributing-registry#plugin-feedback--ranking).
+The [plugin directory](https://duxlabs.dev/plugins) ranks plugins by community 👍 upvotes. Each plugin has a tracking issue in the registry you can upvote and discuss — see [Contributing to the Registry](../contributing-registry.mdx#plugin-feedback--ranking).
 
 ## Plugin Types
 
@@ -97,7 +97,7 @@ Widgets that render directly on the desktop background layer using Wayland's wlr
 - Resizing with minimum size constraints
 - Multi-monitor support with independent positions per screen
 - Position/size persistence across sessions
-- Reusable on the lock screen with separate instances and geometry (see [Lock Screen](plugin-development#lock-screen))
+- Reusable on the lock screen with separate instances and geometry (see [Lock Screen](./plugin-development.mdx#lock-screen))
 
 **Example use cases:** Desktop clock, system monitor, weather widget, sticky notes
 
@@ -130,7 +130,7 @@ A lyrics source for the media player. The plugin ships a program that DMS runs w
 
 **Example use cases:** A lyrics site or a local player's API
 
-> Lyrics providers require DMS &ge; 2.0.0. See [Lyrics Providers](plugin-development#lyrics-providers) in the development guide.
+> Lyrics providers require DMS &ge; 2.0.0. See [Lyrics Providers](./plugin-development.mdx#lyrics-providers) in the development guide.
 
 ### 9. Composite Plugin (`type: "composite"`)
 
@@ -143,7 +143,7 @@ A single plugin that provides several of the above surfaces at once — for exam
 
 **Example use cases:** A monitor daemon that also shows a bar pill and a desktop tile; an integration that exposes both a launcher and a background watcher; a timer with a bar pill, a dash tab and an overview card
 
-> Composite plugins require DMS &ge; 1.5.0. See the [development guide](plugin-development#composite-plugins) for details.
+> Composite plugins require DMS &ge; 1.5.0. See the [development guide](./plugin-development.mdx#composite-plugins) for details.
 
 ## Installation
 
@@ -261,7 +261,7 @@ A registry can provide only plugins, only themes, or both. See [dms-plugin-regis
 
 An administrator can turn off every registry, the official one included, with the `disable_registries` key in `/etc/dms/cli-policy.json`:
 
-```json
+```json title="/etc/dms/cli-policy.json"
 {
   "policy_version": 1,
   "disable_registries": true
@@ -278,7 +278,7 @@ With the key set, DMS never clones or pulls a registry. Installed plugins and th
 
 An administrator can stop DMS's own interfaces from ending or weakening a lock with these keys in `/etc/dms/cli-policy.json`. Each key is off unless set to `true`:
 
-```json
+```json title="/etc/dms/cli-policy.json"
 {
   "policy_version": 1,
   "disable_lock_ipc_unlock": true,
@@ -375,7 +375,7 @@ Third-party plugins submitted to the registry at [plugins.duxlabs.dev](https://p
 
 ## Development
 
-See [Plugin Development](plugin-development) for the complete development guide including:
+See [Plugin Development](./plugin-development.mdx) for the complete development guide including:
 
 - Plugin manifest structure (`plugin.json`)
 - Component architecture
@@ -391,7 +391,7 @@ See [Plugin Development](plugin-development) for the complete development guide 
 
 Plugins carry their own translations — a `translations/` directory in the plugin repo with one JSON file per locale. DMS picks the file matching your locale automatically and updates live when you switch languages in Settings → Locale. Nothing to configure as a user; if the plugin ships your language, you get it.
 
-For plugin authors: see [Translations](plugin-development#translations) in the development guide for the file format and the `I18n.trFor` API. Registry plugins can also [apply for central translation](../contributing-registry#plugin-translations) through the same POEditor project that translates DMS itself.
+For plugin authors: see [Translations](./plugin-development.mdx#translations) in the development guide for the file format and the `I18n.trFor` API. Registry plugins can also [apply for central translation](../contributing-registry.mdx#plugin-translations) through the same POEditor project that translates DMS itself.
 
 ## Example Plugins
 
@@ -434,5 +434,5 @@ To add your plugin to the registry:
 ## Next Steps
 
 - Browse available plugins at [plugins.duxlabs.dev](https://plugins.duxlabs.dev)
-- Learn plugin development in [Plugin Development](plugin-development)
+- Learn plugin development in [Plugin Development](./plugin-development.mdx)
 - Review example code in the [PLUGINS directory](https://github.com/duxlabs-dev/dux-shell/tree/master/quickshell/PLUGINS)

@@ -254,7 +254,7 @@ dms keybinds remove niri "Mod+T"
 
 Include the DMS binds files in your Niri config:
 
-```kdl
+```kdl title="~/.config/niri/config.kdl"
 // ~/.config/niri/config.kdl
 
 // DMS keybind overrides
@@ -332,12 +332,12 @@ You can create custom cheatsheets for any application by adding JSON files to th
 The framework follows XDG Base Directory standards:
 
 **Default location** (when no XDG vars set):
-```
+```text
 ~/.config/dms/cheatsheets/
 ```
 
 **With XDG_CONFIG_HOME set**:
-```
+```text
 $XDG_CONFIG_HOME/dms/cheatsheets/
 ```
 
@@ -411,7 +411,7 @@ Create a file named after your application (e.g., `vim.json`, `tmux.json`):
 
 File: `~/.config/dms/cheatsheets/tmux.json`
 
-```json
+```json title="~/.config/dms/cheatsheets/tmux.json"
 {
   "title": "tmux Keybinds",
   "provider": "tmux",
@@ -488,7 +488,7 @@ dms keybinds list
 ```
 
 **Example output**:
-```
+```text
 Available providers:
   - hyprland
   - mangowc

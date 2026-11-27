@@ -24,7 +24,7 @@ DMS can run as a systemd user service or be launched manually. The `dms` CLI han
 
 :::tip[Dux Installer Users]
 
-If you installed via the [Dux Installer](../duxinstall), DMS is configured as a systemd service by default. The installer runs `systemctl --user enable --now dms` during setup. You don't need to add `dms run` to your compositor config.
+If you installed via the [Dux Installer](../duxinstall.mdx), DMS is configured as a systemd service by default. The installer runs `systemctl --user enable --now dms` during setup. You don't need to add `dms run` to your compositor config.
 
 :::
 
@@ -57,7 +57,7 @@ systemctl --user stop dms
 systemctl --user disable dms
 ```
 
-:::warning
+:::warning[Don't run DMS twice]
 
 If using systemd, remove any `dms run` / `spawn "dms" "run"` lines from your compositor config to avoid running DMS twice.
 
@@ -155,7 +155,7 @@ dms run -c ~/path/to/quickshell
 DMS_SHELL_DIR=~/path/to/quickshell dms run
 ```
 
-:::note
+:::warning[Config discovery changed]
 
 Configs at `~/.config/quickshell/dms` or in system XDG paths are no longer discovered automatically. Point at them explicitly with `-c` or `DMS_SHELL_DIR`.
 
@@ -194,7 +194,7 @@ cat ~/.config/environment.d/90-dms.conf
 If you didn't use the installer, set environment variables in your compositor config:
 
 **niri** (`~/.config/niri/config.kdl`):
-```kdl
+```kdl title="~/.config/niri/config.kdl"
 environment {
   QT_QPA_PLATFORM "wayland"
   QT_QPA_PLATFORMTHEME "gtk3"
@@ -203,14 +203,14 @@ environment {
 ```
 
 **Hyprland** (`~/.config/hypr/hyprland.lua`):
-```lua
+```lua title="~/.config/hypr/hyprland.lua"
 hl.env("QT_QPA_PLATFORM", "wayland")
 hl.env("QT_QPA_PLATFORMTHEME", "gtk3")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 ```
 
 Or create `~/.config/environment.d/90-dms.conf`:
-```ini
+```ini title="~/.config/environment.d/90-dms.conf"
 QT_QPA_PLATFORM=wayland
 QT_QPA_PLATFORMTHEME=gtk3
 ELECTRON_OZONE_PLATFORM_HINT=auto
@@ -302,13 +302,13 @@ dms restart
 
 ### Manual Installations
 
-For source builds or [non-packaged](installation) distro installer setups:
+For source builds or [non-packaged](./installation.mdx) distro installer setups:
 
 ```bash
 dms update
 ```
 
-For manually compiled dependencies (quickshell, niri, etc.), use the interactive TUI:
+For manually compiled dependencies (dux-qt-base, niri, etc.), use the interactive TUI:
 
 ```bash
 dms
@@ -369,8 +369,16 @@ rm -r ~/.config/dms ~/.local/state/dms ~/.cache/dms
 
 **DMS won't start:**
 - Check logs: `journalctl --user -u dms -n 50` (systemd) or run `dms run` in a terminal
-- Verify quickshell is installed: `which qs`
+- Verify the dux-qt-base runtime is found: `dms doctor` (see the [Quickshell](./cli-doctor.mdx#quickshell) row)
 - Kill stuck processes: `dms kill`
+
+**Slow startup:**
+- The first start after an update rebuilds the startup cache, later starts are faster
+- If every start is slow, turn the cache off to compare: see [Startup Cache](./advanced-configuration.mdx#startup-cache)
+
+**Rendering glitches or high GPU memory use:**
+- Turn render control off to compare: see [Render Control](./advanced-configuration.mdx#render-control)
+- Check the log for `Render control is unavailable`, which means DMS already fell back to Qt's rendering
 
 **Settings not applying:**
 - Backup and remove `~/.config/dms/settings.json` and drop-in files under `~/.config/dms/config.d/*.json` (if you have any).

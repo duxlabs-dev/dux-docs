@@ -20,9 +20,9 @@ DMS manages VPN connections through NetworkManager. Profiles are ordinary Networ
 connections, so anything you import in DMS also works from `nmcli`, GNOME, or KDE, and
 anything those tools created shows up in DMS.
 
-:::note
+:::note[NetworkManager required]
 VPN requires the NetworkManager backend. `iwd` and `systemd-networkd` have no VPN support.
-See [System Diagnostics](cli-doctor#network) for what each backend covers.
+See [System Diagnostics](./cli-doctor.mdx#network) for what each backend covers.
 :::
 
 Profiles are listed in two places, both of which can connect, disconnect, import, and
@@ -165,7 +165,7 @@ first connect.
 Approving a certificate adds to that list rather than replacing it, which keeps gateways
 that answer from more than one node working.
 
-:::warning
+:::note[Certificate approval]
 Certificate approval is only remembered when the connection was started from DMS.
 Started from `nmcli`, a desktop applet, or autoconnect, the approval applies to that one
 connection and the prompt returns next time.

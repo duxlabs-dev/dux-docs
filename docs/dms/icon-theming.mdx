@@ -28,7 +28,9 @@ Qt6 applications, including Dux Modular Shell, look for icon themes based on you
 - **qt6ct**: Reads from qt6ct configuration (`~/.config/qt6ct/qt6ct.conf`)
 - **kde**: Reads from KDE Plasma settings (`~/.config/kdeglobals`)
 
-DMS leaves these files alone until you pick a theme under **Settings → Wallpaper & colors → Icons**. Picking one writes it to GTK, qt5ct and qt6ct, and saves the theme it replaced to `~/.config/gtk-3.0/icon-theme.dms-backup`. Choosing **System Default** puts that saved theme back, unless another tool changed the icon theme in the meantime.
+DMS leaves these files alone until you pick a theme under **Settings → Appearance → Icons**. Picking one writes it to GTK, qt5ct, qt6ct and KDE's `kdeglobals`, and saves the theme it replaced to `~/.config/gtk-3.0/icon-theme.dms-backup`. Choosing **System Default** puts that saved theme back, unless another tool changed the icon theme in the meantime.
+
+KDE apps such as Dolphin read the icon theme once, when they start. Reopen them to see a new theme or new folder colors.
 
 ### Environment Variable Override
 
@@ -40,6 +42,115 @@ export QS_ICON_THEME=Papirus-Dark
 
 This takes precedence over platform theme settings and is useful for testing or when you want DMS to use a different icon theme than your other Qt applications.
 
+## Icon Themes in DMS Settings
+
+The **Icons** card under **Settings → Appearance** picks the icon theme, installs and removes themes, and can match a theme's folders to your colors.
+
+### Picking a Theme
+
+The **Theme** dropdown lists every installed theme with one of its icons. **Separate light and dark themes** gives light and dark mode a theme each.
+
+**Manage themes** expands to the full list. Each theme shows a strip of its own icons (folders, file types, a few apps, the trash), so you can compare themes before picking one.
+
+### Installing and Removing Themes
+
+Under **Manage themes**, **Install a theme** takes an archive or a folder:
+
+- **Archive** accepts `.tar.gz`, `.tar.xz`, `.tar.zst`, `.tar` and `.zip`. A `.tar.xz` archive needs the `xz` command.
+- **Folder** accepts a theme folder, or a folder that holds several themes.
+- Every folder with an `index.theme` is installed into `~/.local/share/icons`. Nothing from the archive is run, and no file is written outside the theme folders.
+- A theme of the same name is replaced only after you confirm.
+
+The delete button removes a theme from `~/.local/share/icons`. System themes under `/usr/share/icons` belong to your package manager and have no delete button. A theme that is in use, or that the theme in use inherits from, cannot be removed.
+
+The same actions are available from a terminal. Each prints one line of JSON:
+
+```bash
+dms icon-theme list
+dms icon-theme install ~/Downloads/Tela.tar.xz
+dms icon-theme install --replace ~/Downloads/Tela.tar.xz
+dms icon-theme remove Tela
+```
+
+`remove` does not know which theme your desktop uses. Pass `--in-use <theme>` for each theme that has to keep working, and the removal is refused if one of them inherits from the theme.
+
+### Matching Folder Colors
+
+**Match folder colors to theme** paints the picked theme's folders in your primary color and repaints them on every wallpaper or theme change. The rest of the theme is untouched.
+
+DMS does this for:
+
+- **Papirus**: `Papirus`, `Papirus-Dark`, `Papirus-Light` and the `ePapirus` themes
+- **Breeze**: `breeze` and `breeze-dark`
+- **Adwaita**
+- **Tela**: the standard theme, its color variants and their light and dark forms
+- **Colloid**: the standard theme, its color variants and schemes
+
+The installed theme is never modified. DMS writes a small theme named `<Theme>-dms-<id>` into `~/.local/share/icons` that holds only the recolored folders and inherits everything else, and removes it when you switch the toggle off or pick another theme. For any other theme the toggle is disabled and says why. A plugin can add support for one, see [Icon Folder Recipes](./plugin-development.mdx#icon-folder-recipes).
+
+### Dux Icons
+
+[Dux Icons](../dicons/index.mdx) is an icon theme generated from your colors. It sets each app's own icon on a tile and draws folders and file types itself. It shows up in the **Theme** dropdown once the `dux-icons` command is installed. DMS rebuilds it on every wallpaper or theme change and when an app is installed or removed. When none of the colors, options, apps or installed icons changed, the rebuild is skipped.
+
+The bar's running apps, focused app and apps dock, and notifications, show each app icon without its tile, since the tile is too small to read at that size. The dock, launcher and control center keep it. In Themed and Monochrome, those tile-free glyphs are light in dark mode and dark in light mode, in your theme hue or near-gray, whatever **Tile tone** is set to. Launcher folders take the same shape as the app tiles.
+
+With Dux Icons picked, the card shows these options in place of the folder toggle. Some only appear with the option they depend on.
+
+| Option | Does |
+|--------|------|
+| **Icon shape** | The tile outline: circle, squircle (default), rounded square, square, hexagon, cookie or clover |
+| **App icon style** | **Color** keeps each app's own icon. **Tinted** repaints each app's icon in two tones of its tile. **Themed** (default) draws every app as a one-color glyph on a tile in your theme color. **Monochrome** does the same on a near-gray tile, and launcher folders turn gray to match |
+| **Shaded icons** | Fills each tile with a soft gradient |
+| **Tile color** | Color and Tinted only. **Theme** gives every tile your theme color. **App color** takes each tile's color from its app's icon. **Edge Match** (default) takes the color of the icon's own background and grows the icon to fill the tile. **Ring** draws a ring in the app's color on a neutral tile. In Tinted, Edge Match works like App color |
+| **App color** | With App color, Edge Match or Ring. **Most common** (default) takes the color that covers most of the icon. **Best match** picks it the way your theme color is picked from the wallpaper |
+| **Tile style** | With App color, and with Edge Match in Tinted. **Tonal** is a soft tone of the app's color, **Vivid** the color as strong as in the icon, **Muted** a near-gray tint |
+| **Tile tone** | How light the tiles are, from 0 to 100. Off follows your theme |
+| **Files & folders** | **Color** (default) draws colored folders and a color for each file type, like Papirus. **Standard** puts them on the theme tile like every other icon |
+| **Dux app tone** | Color style only. How light the art of the Dux Labs apps is. Their tile stays deep in its own hue, also in dark mode, so the light art reads |
+
+In Themed and Monochrome, each app's glyph comes from the first of these that it has:
+
+1. A glyph Dux Icons draws itself, such as those of the Dux apps
+2. The symbolic icon the app ships
+3. A symbolic icon for the app in an installed icon theme, such as Papirus
+4. The app's own SVG icon in one color, with the solid background shape behind its logo removed
+5. A cut-out of the app's logo, which DMS makes from bitmap logos
+6. The app's SVG icon in one color. Where it mixes light and dark parts, the smaller side is cut out so the tile shows through
+7. As a last resort, such as for a bitmap icon without a cut-out, the app's icon in two tones of its tile, as in Tinted
+
+From a terminal, each option is a setting:
+
+```bash
+dms ipc call settings set iconShape squircle
+dms ipc call settings set iconAppStyle themed           # color, tinted, themed or monochrome
+dms ipc call settings set iconGradient true
+dms ipc call settings set iconTileColor app             # theme, app, edge or ring
+dms ipc call settings set iconColorSource score         # score (Best match) or common
+dms ipc call settings set iconTileStyle content         # tonal, content (Vivid) or neutral (Muted)
+dms ipc call settings set iconTileTone 60               # 0-100, -1 follows the theme
+dms ipc call settings set iconFileStyle standard        # standard or color
+dms ipc call settings set iconOwnTone 70                # 40-98, -1 keeps the art as drawn
+```
+
+## Cursor Themes
+
+The **Cursor** card under **Settings → Appearance** has its own **Manage themes** list. Each cursor theme is shown with its pointer.
+
+- **Install a theme** takes an archive or a folder, in the same formats as an icon theme. Every folder with a `cursors` folder is installed into `~/.local/share/icons`. Nothing from the archive is run.
+- A theme of the same name is replaced only after you confirm.
+- The delete button removes a theme from `~/.local/share/icons`. System themes have no delete button. The cursor in use, or one it inherits from, cannot be removed.
+- A pack that holds both icons and cursors is one folder, so removing it from either list removes both.
+
+From a terminal:
+
+```bash
+dms cursor-theme install ~/Downloads/Bibata-Modern-Classic.tar.xz
+dms cursor-theme install --replace ~/Downloads/Bibata-Modern-Classic.tar.xz
+dms cursor-theme remove Bibata-Modern-Classic
+```
+
+`remove` takes `--in-use <theme>` the same way `dms icon-theme remove` does. `dms icon-theme list` also lists the installed cursor themes.
+
 ## GTK Platform Theme (gtk3)
 
 If you're using the GTK passthrough method for Qt theming, icon themes are controlled via GTK settings.
@@ -48,7 +159,7 @@ If you're using the GTK passthrough method for Qt theming, icon themes are contr
 
 Edit `~/.config/gtk-3.0/settings.ini`:
 
-```ini
+```ini title="~/.config/gtk-3.0/settings.ini"
 [Settings]
 gtk-icon-theme-name=Papirus-Dark
 ```
@@ -88,7 +199,7 @@ When using qt6ct for dedicated Qt control, icon themes are managed through the q
 
 Edit `~/.config/qt6ct/qt6ct.conf`:
 
-```ini
+```ini title="~/.config/qt6ct/qt6ct.conf"
 [Appearance]
 icon_theme=Papirus-Dark
 ```
@@ -101,7 +212,7 @@ If you're using KDE Plasma or the KDE platform theme, icon themes are managed th
 
 Edit `~/.config/kdeglobals`:
 
-```ini
+```ini title="~/.config/kdeglobals"
 [Icons]
 Theme=Papirus-Dark
 ```
@@ -126,7 +237,7 @@ sudo dnf install adwaita-icon-theme
 
 ### Per-user Installation
 
-Download icon themes and extract to `~/.local/share/icons/`:
+**Settings → Appearance → Icons → Manage themes** installs a downloaded archive for you, see [Installing and Removing Themes](#installing-and-removing-themes). By hand, extract the theme to `~/.local/share/icons/`:
 
 ```bash
 # Example: Installing from a downloaded archive
@@ -161,7 +272,7 @@ The Dux Installer only sets `QT_QPA_PLATFORMTHEME=gtk3` for non-systemd sessions
 
 :::
 
-:::note
+:::note[Expose the variable to DMS]
 
 This variable must be exposed to the `dms` process. Set it in the compositor config, a custom environment.d file, or via `systemctl --user edit dms` (only affects DMS and apps it launches).
 

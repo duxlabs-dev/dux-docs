@@ -19,7 +19,7 @@ import Hero from '@site/src/components/Hero';
 
 ## Custom Compositor Configuration
 
-:::tip
+:::tip[Per-greeter display settings]
 
 Custom compositor configurations allow you to configure displays (resolution, refresh rate, position, etc.) specifically for the greeter.
 
@@ -51,7 +51,7 @@ Custom compositor configurations allow you to configure displays (resolution, re
   ```
 
 2. Update the command in `/etc/greetd/config.toml to use this configuration
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   #...existing configuration
   command = "dms-greeter --command niri -C /etc/greetd/niri.kdl"
   #...existing configuration
@@ -77,7 +77,7 @@ Hyprland 0.55 or newer is required, and the `-C` config must be Lua. A hyprlang 
   ```
 
 2. Update the command in `/etc/greetd/config.toml to use this configuration
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   #...existing configuration
   command = "dms-greeter --command hyprland -C /etc/greetd/hypr.lua"
   #...existing configuration
@@ -97,7 +97,7 @@ Hyprland 0.55 or newer is required, and the `-C` config must be Lua. A hyprlang 
   ```
 
 2. Update the command in `/etc/greetd/config.toml to use this configuration
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   #...existing configuration
   command = "dms-greeter --command sway -C /etc/greetd/sway"
   #...existing configuration
@@ -115,7 +115,7 @@ Hyprland 0.55 or newer is required, and the `-C` config must be Lua. A hyprlang 
   ```
 
 2. Update the command in `/etc/greetd/config.toml to use this configuration
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   #...existing configuration
   command = "dms-greeter --command mango -C /etc/greetd/mango.conf"
   #...existing configuration
@@ -133,7 +133,7 @@ Hyprland 0.55 or newer is required, and the `-C` config must be Lua. A hyprlang 
   ```
 
 2. Update the command in `/etc/greetd/config.toml to use this configuration
-  ```toml
+  ```toml title="/etc/greetd/config.toml"
   #...existing configuration
   command = "dms-greeter --command miracle-wm -C /etc/greetd/miracle-wm.yaml"
   #...existing configuration
@@ -149,7 +149,7 @@ You can automatically sync the system greeter with the logged in user's wallpape
 
 You can use `dms-greeter sync` to automatically set up theme syncing. This command is available anywhere the `dux-greeter` package is installed.
 
-:::note
+:::note[NixOS: manual sync]
 
 **NixOS users:** The `dms-greeter sync` command is not available on NixOS. Please follow the manual sync steps below.
 
@@ -166,7 +166,7 @@ This will:
 - Create symlinks to sync settings, wallpapers, and color themes
 - Link your per-user theme slot at `/var/cache/dms-greeter/users/<username>/` to your live DMS state (for the multi-account picker)
 
-:::note
+:::note[Log out after syncing]
 
 After running `dms-greeter sync`, you will need to log out and log back in for group membership changes to take effect. After logging back in, your greeter will automatically reflect your current DMS theme, wallpaper, and settings.
 
@@ -192,7 +192,7 @@ Full `dms-greeter sync` only adds **the user running the command** to the `greet
 
 **GUI (recommended):** In DMS, open **Settings → Users**. Use the greeter access toggle (login icon) on each account, or enable **Allow greeter login access** when creating a user. DMS runs `usermod -aG` for granting administrator access to the user.
 
-:::note
+:::note[Re-login after group changes]
 
 After you add someone to the greeter group, they must **log out and back in** before group membership applies, then run `dms-greeter sync --profile` on their account.
 
@@ -299,7 +299,7 @@ If you prefer to set up syncing manually:
   sudo ln -sf ~/.cache/dms/dms-colors.json /var/cache/dms-greeter/colors.json
   ```
 
-:::note
+:::note[Re-login after group changes]
 
 You will have to logout or reboot for group change to take effect.
 
@@ -307,12 +307,12 @@ You will have to logout or reboot for group change to take effect.
 
 ## Login authentication
 
-:::tip
+:::tip[Authentication guides]
 
 For the complete setup and policy-owner guide, see
-[Dux Greeter authentication](./authentication). Lock-screen factors are
+[Dux Greeter authentication](./authentication.mdx). Lock-screen factors are
 configured separately in
-[Lock Screen authentication](../dms/lock-screen-authentication).
+[Lock Screen authentication](../dms/lock-screen-authentication.mdx).
 
 :::
 
@@ -400,7 +400,7 @@ offers.
 
 The lock screen has separate primary and security-key PAM sources, plus a
 choice between DMS-managed factors and system-PAM policy. See
-[Lock Screen authentication](../dms/lock-screen-authentication)
+[Lock Screen authentication](../dms/lock-screen-authentication.mdx)
 for the complete setup.
 
 ### Inspecting PAM services
@@ -454,7 +454,7 @@ This command is available for all users and will check:
 
 ### Example Output
 
-```
+```text
 === DMS Greeter Status ===
 
 Group Membership:
@@ -547,7 +547,7 @@ Auto-login skips the greeter password after boot - similar to the auto-login opt
 - **Signing out** returns you to the normal greeter, where a password is required.
 - Your **lock screen** is unaffected - unlocking always requires your password.
 
-:::warning
+:::warning[Auto-login reduces physical security]
 
 Auto-login reduces physical security: anyone who powers on or reboots the machine reaches your session without a password. Only enable it on machines you physically trust, ideally with full-disk encryption.
 
@@ -671,7 +671,7 @@ The `settings.json` file controls the greeter's appearance and behavior. Here's 
 
 `/var/cache/dms-greeter/settings.json`:
 
-```json
+```json title="/var/cache/dms-greeter/settings.json"
 {
   "use24HourClock": true,
   "showSeconds": false,
@@ -741,7 +741,7 @@ The `session.json` file controls wallpaper settings.
 
 `/var/cache/dms-greeter/session.json`:
 
-```json
+```json title="/var/cache/dms-greeter/session.json"
 {
   "wallpaperPath": "/usr/share/backgrounds/default.jpg",
   "wallpaperFillMode": "PreserveAspectCrop",

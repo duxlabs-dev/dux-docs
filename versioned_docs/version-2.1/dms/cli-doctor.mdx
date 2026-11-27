@@ -108,7 +108,7 @@ Checks whether the DMS package repositories on this system still point at the le
 
 | Status | Message | Meaning |
 |--------|---------|---------|
-| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate). |
+| 🟡 Warning | `Legacy repositories, run: dms migrate dux` | One or more COPR, PPA or OBS repositories still come from `avengemedia` (`home:AvengeMedia` on OBS). Run [`dms migrate dux`](./cli-migrate.mdx). |
 | 🟢 OK | `Current` | All DMS repositories come from `duxlabs` (`home:duxlabs-dev` on OBS). |
 | ⚪ Info | `No DMS package repositories` | No DMS package repositories are configured, so there is nothing to check. |
 
@@ -131,7 +131,6 @@ All wayland compositors that implement the [layer shell protocol](https://waylan
 | River | `river` | `river -version` |
 | Wayfire | `wayfire` | `wayfire --version` |
 | Scroll | `scroll` | `scroll --version` |
-| Aqueous | `aqueous` | `aqueous -version` |
 | Umbriel | `umbriel` | `umbriel --version` |
 
 ### Hyprland Lua config
@@ -274,7 +273,7 @@ Required for dynamic GTK3 theming: DMS copies the theme (light and dark variants
 
 Debian, Ubuntu, and openSUSE do not package it; extract an [upstream release](https://github.com/lassekongo83/adw-gtk3/releases) into `~/.local/share/themes` instead — DMS uses it from there directly.
 
-See [Application Themes](application-themes#gtk-applications) for details.
+See [Application Themes](./application-themes.mdx#gtk-applications) for details.
 
 ### Network
 
@@ -289,15 +288,15 @@ DMS supports different network stacks, NetworkManager is recommended for the vas
 
 ### dux-search
 
-Checks for the `dsearch` command, used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/) for more information.
+Checks for the `dsearch` command, used for indexed filesystem search in the launcher. Use `/` to initiate a fs search. See [Dux Search documentation](../dsearch/index.mdx) for more information.
 
 ### dux-calendar
 
-Checks for the `dcal` calendar app. See [Dux Calendar documentation](../dcal/) for more information.
+Checks for the `dcal` calendar app. See [Dux Calendar documentation](../dcal/index.mdx) for more information.
 
 ### dux-files
 
-Checks for the `dfiles` file manager (the **File manager** row). See [Dux Files documentation](../dfiles/) for more information.
+Checks for the `dfiles` file manager (the **File manager** row). See [Dux Files documentation](../dfiles/index.mdx) for more information.
 
 ### logind
 
@@ -372,11 +371,11 @@ systemctl --user start hyprland-session.target
 systemctl --user status graphical-session.target dms
 ```
 
-See [Installation](installation#compositor-specific-systemd-setup) for the equivalent setup on Sway, mangowm, and Miracle WM.
+See [Installation](./installation.mdx#compositor-specific-systemd-setup) for the equivalent setup on Sway, mangowm, and Miracle WM.
 
 ### greetd
 
-Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/) for more information.)
+Required for the Dux Greeter. (See [Dux Greeter documentation](../dms-greeter/index.mdx) for more information.)
 
 Doctor also warns (**Greeter session**) when `/etc/greetd/config.toml` still starts a `dms-greeter` wrapper from before 1.6, or passes `-C` a Hyprland config that isn't Lua. On Arch it warns (**Greeter package**) when a retired `greetd-dms-greeter` package is still installed; switch to the `dux-greeter` package.
 
@@ -453,7 +452,7 @@ After changing it, re-login to apply the changes.
 To verify without re-login, force a cache rebuild:`XDG_MENU_PREFIX=plasma- kbuildsycoca6 --noincremental`.
 :::
 
-:::note
+:::note[kde-cli-tools required]
 `kde-cli-tools` (which provides `keditfiletype`) must also be installed, as Dolphin's "Open with…" dialog depends on it. Plasma sessions already export this variable automatically, so this only applies to non-Plasma compositors.
 :::
 

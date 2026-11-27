@@ -36,6 +36,11 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Installation - NixOS',
           collapsed: true,
+          link: {
+            type: 'generated-index',
+            slug: '/dms/installation-nixos',
+            description: 'Install DMS on NixOS with the system module or a flake.',
+          },
           items: [
             {
               type: 'doc',
@@ -57,6 +62,7 @@ const sidebars: SidebarsConfig = {
         'dms/network-speed-monitor',
         'dms/system-monitor',
         'dms/reboot-to-another-os',
+        'dms/config-profiles',
         {
           type: 'doc',
           id: 'dms/managing',
@@ -69,18 +75,30 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Themes',
           collapsed: false,
+          link: {
+            type: 'generated-index',
+            slug: '/dms/themes',
+            description: 'Theme DMS, your apps and your icons, or build a custom color scheme.',
+          },
           items: [
             'dms/application-themes',
             'dms/icon-theming',
             'dms/custom-themes',
           ],
         },
+        'dms/bar',
+        'dms/island',
         'dms/keybinds-ipc',
         'dms/keyboard-navigation',
         {
           type: 'category',
           label: 'CLI',
           collapsed: false,
+          link: {
+            type: 'generated-index',
+            slug: '/dms/cli',
+            description: 'Command-line reference for dms: setup, updates, colors, clipboard, screenshots and more.',
+          },
           items: [
             'dms/cli-setup',
             'dms/cli-doctor',
@@ -149,6 +167,11 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Plugins',
           collapsed: false,
+          link: {
+            type: 'generated-index',
+            slug: '/dms/plugins',
+            description: 'How DMS plugins work, and how to build your own.',
+          },
           items: [
             'dms/plugins-overview',
             'dms/plugin-development',
@@ -184,6 +207,11 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Installation - NixOS',
           collapsed: true,
+          link: {
+            type: 'generated-index',
+            slug: '/dms-greeter/installation-nixos',
+            description: 'Install Dux Greeter on NixOS with the system module or a flake.',
+          },
           items: [
             {
               type: 'doc',
@@ -231,6 +259,11 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Installation - NixOS',
           collapsed: true,
+          link: {
+            type: 'generated-index',
+            slug: '/dsearch/installation-nixos',
+            description: 'Install Dux Search on NixOS with home-manager or the system module.',
+          },
           items: [
             {
               type: 'doc',
@@ -280,6 +313,11 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'Installation - NixOS',
           collapsed: true,
+          link: {
+            type: 'generated-index',
+            slug: '/dfiles/installation-nixos',
+            description: 'Install Dux Files on NixOS with a flake.',
+          },
           items: [
             {
               type: 'doc',
@@ -293,6 +331,38 @@ const sidebars: SidebarsConfig = {
         'dfiles/keyboard',
         'dfiles/settings',
         'dfiles/ipc',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Dux Edit',
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          id: 'dedit/index',
+          label: 'Overview',
+        },
+        'dedit/installation',
+        'dedit/usage',
+        'dedit/keyboard',
+        'dedit/settings',
+        'dedit/plugins',
+        'dedit/ipc',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Dux Icons',
+      collapsed: true,
+      items: [
+        {
+          type: 'doc',
+          id: 'dicons/index',
+          label: 'Overview',
+        },
+        'dicons/installation',
+        'dicons/usage',
       ],
     },
     'contributing',

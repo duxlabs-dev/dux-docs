@@ -21,7 +21,7 @@ DMS edits NetworkManager's own connection profiles, so a change made in DMS also
 
 :::note
 The connection editor requires the NetworkManager backend. `iwd` and `systemd-networkd` keep
-their existing pages. See [System Diagnostics](cli-doctor#network) for what each backend covers.
+their existing pages. See [System Diagnostics](./cli-doctor.mdx#network) for what each backend covers.
 :::
 
 ## Connections
@@ -35,7 +35,7 @@ when the computer has no adapter for the profile's type.
 
 **Add** asks for a **Type** (Ethernet, Wi-Fi, Cellular, or VPN) and, for VPN, the kind of VPN
 (WireGuard, OpenVPN, or any installed plugin). Changing the type keeps the name. **Import**
-adds a VPN profile from a file, as in [VPN](vpn#importing-a-profile). The hotspot has its own
+adds a VPN profile from a file, as in [VPN](./vpn.mdx#importing-a-profile). The hotspot has its own
 group. Its row opens the [Hotspot](#hotspot) page when an adapter can host a hotspot, and
 otherwise stays listed with **Forget**.
 
@@ -145,7 +145,7 @@ of the shared network as an address with a prefix from `/8` to `/30` (empty uses
 NetworkManager's default, `10.42.x.1/24`). WPA3 only starts when the adapter supports it. The
 page owns the hotspot profile. While a
 hotspot with a password is running, **Show QR Code** displays a code that joins it, and
-[`dms qr wifi`](cli-qr#wifi-qr-codes) works for it as well.
+[`dms qr wifi`](./cli-qr.mdx#wifi-qr-codes) works for it as well.
 
 **Settings → Network → Wi-Fi** is hidden when the computer has no Wi-Fi adapter.
 
