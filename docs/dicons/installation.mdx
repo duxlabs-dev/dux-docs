@@ -20,12 +20,12 @@ import TabItem from '@theme/TabItem';
 
 # Dux Icons Installation
 
-Dux Icons installs a single `dux-icons` command. Install it from the [Dux repositories](../repo/) or from source. Nothing else is needed, and the build itself never needs root.
+Dux Icons installs a single `dux-icons` command. Install it from the [Dux repositories](../repo/index.mdx) or from source. Nothing else is needed, and the build itself never needs root.
 
 ## Requirements
 
 - Python 3.9 or newer
-- Monochrome mode and clipping of oversized artwork need Qt 6.7 or newer in Qt apps
+- Tinted, Themed and Monochrome app icons and clipping of oversized artwork need Qt 6.7 or newer in Qt apps
 
 ## Distribution Packages
 
@@ -188,31 +188,35 @@ DMS runs `dux-icons` when the command is on your `PATH`. Pick **Dux Icons** unde
 - when an app is installed or removed
 - when the shell starts
 
-The same card has three options:
+A rebuild is skipped when nothing it reads has changed.
+
+The same card picks the look:
 
 | Option | Does |
 | --- | --- |
-| **Icon shape** | Picks the badge outline |
-| **Themed app icons** | Paints app icons in tones of your colors in place of their own |
-| **Shaded icons** | Fills the badges with a soft gradient |
+| **Icon shape** | Picks the tile outline, squircle by default |
+| **App icon style** | **Color** keeps each app's own icon, **Tinted** repaints it in two tones of its tile, **Themed** (the default) and **Monochrome** draw every app as a one-color glyph on a theme-colored or near-gray tile |
+| **Shaded icons** | Fills the tiles with a soft gradient |
+| **Tile color** | With Color or Tinted, where each tile's color comes from: your theme, the app's icon, the icon's own background (**Edge Match**, the default) or a ring in the app's color |
+| **Files & folders** | **Color** draws colored folders and file types, **Standard** puts them on the theme tile |
 
 From a terminal:
 
 ```bash
 dms ipc call settings set iconThemeDark dux-icons
-dms ipc call settings set iconMonoApps true
+dms ipc call settings set iconAppStyle themed
 dms ipc call settings set iconShape squircle
 dms ipc call settings set iconGradient true
 ```
 
-See [Icon Theming](../dms/icon-theming) for the rest of the icon settings in DMS.
+See [Dux Icons in Icon Theming](../dms/icon-theming.mdx#dux-icons) for every option and its setting name.
 
 ## Without DMS
 
 Give it the two colors:
 
 ```bash
-dux-icons --badge '#9ecaff' --glyph '#003258'
+dux-icons --tile '#9ecaff' --glyph '#003258'
 ```
 
 This builds the theme into `~/.local/share/icons/dux-icons`. Desktops list it as **Dux Icons** in their icon theme setting. Run it again after installing or removing apps.

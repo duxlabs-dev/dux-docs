@@ -19,7 +19,7 @@ import Hero from '@site/src/components/Hero';
 Dux Modular Shell can be installed on NixOS either system-wide using the NixOS module or per-user using home-manager. This guide covers both flake-based installation methods.
 
 :::info[Native nixpkgs Available]
-Dux Modular Shell is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](nixos) method is recommended and doesn't require flakes.
+Dux Modular Shell is available in nixpkgs stable (26.05). If you're on NixOS 26.05+, the [Installation - NixOS](./nixos.mdx) method is recommended and doesn't require flakes.
 :::
 
 ## Installation Methods
@@ -161,7 +161,7 @@ Also note that this will overwrite your `~/.config/niri/config.kdl`, so your nir
 In most cases, it should work out of the box, but configuration options are available.
 
 :::tip[Generating Include Files]
-The files in `filesToInclude` are included with `optional=true`, so niri skips any that are missing, but their settings don't apply until they exist. If you're not generating them through home-manager, use [`dms setup`](cli-setup) to deploy the defaults — or generate individual files like `dms setup binds`, `dms setup colors`, etc.
+The files in `filesToInclude` are included with `optional=true`, so niri skips any that are missing, but their settings don't apply until they exist. If you're not generating them through home-manager, use [`dms setup`](./cli-setup.mdx) to deploy the defaults — or generate individual files like `dms setup binds`, `dms setup colors`, etc.
 
 `dms/animations.kdl` is written by a full `dms setup` and by the [Animations](./compositors.mdx#compositor-animations) page. Until it has content, your niri-flake animations or niri's defaults apply.
 :::
@@ -234,7 +234,7 @@ programs.dank-material-shell = {
 
 :::info[Quickshell runtime]
 
-The Dux Modular Shell flake builds `dms` against dux-qt-base, Dux's fork of Quickshell built as a shared library, and embeds it in the `dms` package. No `quickshell` package is needed. By default the flake uses `pkgs.dux-qt-base` when an overlay provides it, otherwise its own `dux-qt-base` input. No additional configuration is needed.
+The Dux Modular Shell flake builds `dms` against dux-qt-base, Dux's fork of Quickshell built as a shared library, and embeds it in the `dms` package. No `quickshell` package is needed. By default the flake builds the `dux-qt-base` it pins against your nixpkgs. No additional configuration is needed.
 
 :::
 
@@ -419,6 +419,27 @@ For a complete list of available options, check the module files in the Dux Modu
 - **niri module**: `distro/nix/niri.nix`
 - **Common options**: `distro/nix/options.nix`
 
+## Binary Cache
+
+dux-qt-base, the Quickshell runtime built into Dux Modular Shell, takes a while to build from source. CI publishes `x86_64-linux` and `aarch64-linux` builds of every commit on `master` to `nix-cache.duxlabs.dev`, built against the latest `nixos-unstable` and `nixos-26.05` channel commits. Releases up to 2.1 use Quickshell from nixpkgs and don't need the cache.
+
+Add the cache to your NixOS configuration:
+
+```nix
+nix.settings = {
+  extra-substituters = [ "https://nix-cache.duxlabs.dev" ];
+  extra-trusted-public-keys = [ "dux-1:lrBykuzHKu9F6WsCbK83C9/uOrfqUY1kflRZtrUcMF0=" ];
+};
+```
+
+On other systems, add the same two settings to `/etc/nix/nix.conf`.
+
+The settings apply after a rebuild, so rebuild once with them before enabling Dux Modular Shell.
+
+The cache has builds for the channel commits CI saw, so it applies when your `nixpkgs` input is on `nixos-unstable` or `nixos-26.05` and the flake follows it, as in the inputs above. A new channel commit reaches the cache within a few hours of the channel moving. Other nixpkgs commits, and overlays that change Qt or its dependencies, build from source.
+
+Keep `inputs.nixpkgs.follows` on the flake input. A build against a different nixpkgs than your system mixes two versions of Qt and the graphics libraries in one session, which can crash.
+
 ## Rebuilding
 
 After making configuration changes, rebuild your system:
@@ -445,10 +466,10 @@ Each feature has its own dependency set. If a feature isn't working, ensure the 
 
 ### Custom keybindings conflict with niri defaults
 
-If `niri.enableKeybinds = true` conflicts with your existing niri configuration, you can disable it and manually configure keybindings using the examples in the [Keybinds & IPC](keybinds-ipc) guide.
+If `niri.enableKeybinds = true` conflicts with your existing niri configuration, you can disable it and manually configure keybindings using the examples in the [Keybinds & IPC](./keybinds-ipc.mdx) guide.
 
 ## Next Steps
 
-- Configure your preferences via [Themes](application-themes)
-- Set up compositor keybindings in [Keybinds & IPC](keybinds-ipc)
-- Extend functionality with [Plugins](plugins-overview)
+- Configure your preferences via [Themes](./application-themes.mdx)
+- Set up compositor keybindings in [Keybinds & IPC](./keybinds-ipc.mdx)
+- Extend functionality with [Plugins](./plugins-overview.mdx)

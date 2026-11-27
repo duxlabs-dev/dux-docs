@@ -255,7 +255,7 @@ hl.bind("SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd("dms ipc call brightnes
 
 ### Pinned Devices
 
-When there is more than one brightness device, the brightness page in the Control Center has a pin button on each device. Pins belong to the screen the Control Center is open on, and decide what that screen's brightness controls change: the Control Center slider, scrolling on the bar's Control Center button, and `dms ipc call brightness set|increment|decrement` without a device while that screen has focus.
+When there is more than one brightness device, the brightness page in the Control Center has a pin button on each device. Pins belong to the screen the Control Center is open on, and decide what that screen's brightness controls change: the Control Center slider, scrolling on the bar (when its [scroll action](./bar#scroll-wheel) is **Brightness**) or on its **Control Center** or **Battery** widget, and `dms ipc call brightness set|increment|decrement` without a device while that screen has focus.
 
 Pin more than one device to move them together, for example a laptop panel and two external monitors. The most recently pinned device leads. The others follow at the same position within their own brightness range, so the first change brings them all to the same relative level. The on-screen display slider after a change and the Dank Island brightness control move the same devices.
 
