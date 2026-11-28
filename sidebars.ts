@@ -91,6 +91,7 @@ const sidebars: SidebarsConfig = {
         'dms/island',
         'dms/keybinds-ipc',
         'dms/keyboard-navigation',
+        'dms/notifications',
         {
           type: 'category',
           label: 'CLI',

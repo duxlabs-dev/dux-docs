@@ -1,0 +1,77 @@
+---
+title: Notifications
+description: Block, mute and clear notifications from the popup and the notification center, and manage the per-app rules behind those buttons
+sidebar_position: 5.5
+---
+
+# Notifications
+
+Popups and the notification center carry buttons that mute or block an app without opening Settings. Block and Mute write notification rules, and **Settings → Notifications → Rules** lists and edits them. To send notifications from a script, see [Notifications (CLI)](./cli-notify).
+
+## Popups
+
+Hover a popup to show the buttons in its header, left to right:
+
+| Button | What it does |
+| --- | --- |
+| **Block** | Drops this app's notifications from now on. Click it once to arm it, then click again within 3 seconds to confirm. |
+| **Mute** | Opens the [mute menu](#mute-menu). |
+| **Clear** (broom) | Closes the popup and removes the notification from the notification center and history. |
+| **Close** | Closes the popup. The notification stays in the notification center and in history. |
+
+Blocking or muting also closes the popup.
+
+A popup without action buttons keeps a short empty row at the bottom, so popups have the same height whether or not they have actions.
+
+## Notification Center
+
+Each notification in the center has **Block**, **Mute** and **Close**. **Close** has the tooltip "Close (keep in history)": it removes the notification from the Current tab and keeps it in history. The buttons act on the app that sent the notification. For a collapsed group, **Close** closes the whole group. Blocking or muting also closes the notification, or the whole group from a collapsed group or an expanded group's header.
+
+An expanded group shows **Block**, **Mute** and **Close all** in its header. **Close all** closes every notification in the group.
+
+On the History tab, each entry has only **Clear** (broom, tooltip "Clear from history"), which deletes that entry. There is no Block, Mute or Close there.
+
+Right-click a popup or a notification in the center for **Set notification rules**, which opens **Settings → Notifications → Rules** with a new rule for that app, and **Copy**, which copies the summary and body to the clipboard. Keys for the center are listed in [Keyboard Navigation](./keyboard-navigation#notification-center).
+
+## Mute Menu
+
+The **Mute** button opens a menu with two sections.
+
+**Mute Popups** hides popups from the app. Its notifications still arrive in the notification center and history.
+
+| Entry | Effect |
+| --- | --- |
+| For 1 hour | Mutes the app for one hour |
+| For 4 hours | Mutes the app for four hours |
+| Forever | Mutes the app until you unmute it |
+| Custom… | Shows **Min**, **H** and **D** fields; the values add up. **OK** or `Enter` applies them |
+
+A timed mute removes itself when it expires. While an app is muted from this menu, the section shows **Unmute popups for** the app instead.
+
+**Do not disturb** holds one entry, **Allow** the app **during Do Not Disturb**. It lets the app's popups through while Do Not Disturb is on. After you use it, the entry reads **Stop allowing** the app **during Do Not Disturb**.
+
+When the state comes from a rule you wrote in the rule editor, the menu shows **Set by a notification rule** instead. Click it to open the rules page and change the rule there.
+
+## Notification Rules
+
+Open **Settings → Notifications → Rules**. The **Notification rules** card lists your rules; **Add rule** at the bottom creates one. A rule matches on app name, desktop entry, summary or body.
+
+A rule's **Action** is one of:
+
+| Action | Effect |
+| --- | --- |
+| Default | No change |
+| Mute Popups | No popup; the notification still goes to the center and history |
+| Block | The notification is dropped entirely |
+| Popup Only | Shown as a popup, kept out of the center and history |
+| No History | Shown normally, kept out of history |
+
+**Urgency** can stay at Default or be set to Low, Normal or Critical Priority. **Allow in Do Not Disturb** lets matching notifications through while Do Not Disturb is on. For how urgency and Do Not Disturb interact, see [Notifications (CLI)](./cli-notify#appearance). A rule can also set an **Island summary**; see [Island](./island#live-activities).
+
+Rules are checked from the top down. The first matching rule sets the action, urgency and island summary. Mute and **Allow in Do Not Disturb** apply from any matching rule.
+
+### Muted and Blocked Apps
+
+The **Muted apps** and **Blocked apps** cards list the simple per-app rules the header buttons create: an exact app match, no extra conditions and default urgency. **Unmute** and **Unblock** remove the entry.
+
+**Block** puts its rule at the top of the list, so no other rule shadows it.
