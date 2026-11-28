@@ -17,8 +17,8 @@ import Hero from '@site/src/components/Hero';
 />
 
 A config profile is a saved copy of the DMS settings with a configurable scope. Profiles are under **Settings → Wallpaper & colors**. Clicking a profile switches to it, and
-its right-click menu has Apply, Partial apply, Edit and Delete. **Manage profiles** opens the full page with New profile
-and Import.
+its right-click menu has Apply, Partial apply, Edit and Delete. The active profile also has Reset to when applied.
+**Manage profiles** opens the full page with New profile and Import.
 
 Opening **Manage profiles** for the first time creates a **Default** profile from the current settings, makes it
 active and keeps it in sync. Until then the Profiles card only shows the Manage profiles link.
@@ -54,6 +54,19 @@ With **Sync changes to this profile** on, changes made while the profile is acti
 Sync is the default for new profiles. **Update from current settings** saves the current settings into any profile on
 demand, including ones that aren't active.
 
+## Order
+
+Profiles can be dragged to a new place in the grid, or moved with Ctrl+Left and Ctrl+Right on a focused card
+(Ctrl+Up and Ctrl+Down when a narrow window shows the grid as one column). The order is used for next and previous
+profile, the profile picker, the Control Center widget and `dms profile list`. New and imported profiles are added at
+the end.
+
+## Reset to when applied
+
+**Reset to when applied** restores the settings in the active profile's groups to the values they had when it was
+applied. It is only enabled when the current settings differ. With sync on, the restored values are saved into the
+profile too.
+
 ## Partial apply
 
 **Compare** on the edit page (or **Partial apply** in the right-click menu) lists every group where the profile differs
@@ -85,7 +98,7 @@ closes the picker. The **Behavior** card on the Manage profiles page sets the lo
 
 ## Keybinds and scripts
 
-The [`config-profile` IPC target](./keybinds-ipc.mdx#config-profile) switches, saves, creates, renames and deletes profiles,
+The [`config-profile` IPC target](./keybinds-ipc.mdx#config-profile) switches, saves, creates, renames, moves and deletes profiles,
 for example `dms ipc call config-profile next` on a keybind.
 
 ## Export and import
