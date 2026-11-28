@@ -28,7 +28,7 @@
     "@docusaurus/theme-mermaid": "^3.10.2",
     "@easyops-cn/docusaurus-search-local": "^0.55.2",
     "@mdx-js/react": "^3.1.1",
-    "@tailwindcss/postcss": "^4.3.3",
+    "@tailwindcss/postcss": "^4.3.5",
     "clsx": "^2.1.1",
     "material-shapes-ts": "^0.3.0",
     "material-symbols": "npm:@nine-thirty-five/material-symbols-react@^2.5.0",
