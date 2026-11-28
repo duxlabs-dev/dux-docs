@@ -30,8 +30,8 @@ Processes of the same program are merged into one row that shows their total. **
 of the memory it uses, so shared libraries aren't counted once per process. A drive's **Wear** is the share of its
 rated write endurance used up.
 
-A GPU is only read once **GPU Monitoring** is on in its Performance pane (a GPU temperature bar widget turns it on
-too). Until then a sleeping GPU is not woken up, and its per-process use and sensor readings stay empty.
+A GPU is only read once **GPU Monitoring** is on in its Performance pane, or while a System Monitor widget or card
+shows it. Until then a sleeping GPU is not woken up, and its per-process use and sensor readings stay empty.
 
 ## Desktop widget and dashboard card
 
@@ -43,11 +43,39 @@ on the dashboard. A card is added in the dashboard's edit mode and set up from i
 |--------|--------|
 | Tiles | Icon, Meter, Ring, Graph |
 | List | Rows, Tiles |
-| Bars | Brackets, Tiles |
+| Bars | Tiles, Brackets |
 | Graphs | |
 
 **Graph** on a device adds a trend of its main value. The CPU, Memory, Disk, Network and old System Monitor cards turn
 into System Monitor cards with the same size, place and tone.
+
+## Bar widget
+
+The **System Monitor** bar widget (**Settings → Bar widgets → System Monitor**) shows a list of entries, one per CPU,
+memory, GPU, drive or network interface, or all drives or interfaces together. For each entry the shown values can be
+selected (for a drive also the mount whose space it shows), and each entry opens its own popout.
+
+| Option | Choices |
+|--------|---------|
+| Style | Icon, Meter, Ring, Graph |
+| Label | Icon, Name, Both, None |
+| Separator | Gap, Line, Dot, Separate (one pill per entry) |
+| Popout | Compact, Processes, Device, Overview |
+
+| Popout | Shows |
+|--------|-------|
+| Compact | The entry's values and chart |
+| Processes | The process list, with tiles on top that pick what it is sorted by |
+| Device | A tab per listed device with its details and top processes |
+| Overview | Every listed device as a row, the entry's device expanded |
+
+Network entries have two more options. **Compact mode** shows whole numbers and moves to the next unit before a fourth
+digit, so `1023 KB/s` shows as `1 MB/s`. **Hide when idle** removes the entry from the bar while download and upload
+are both under 1 KB/s. It uses the measured speed, so at 900 B/s the entry stays hidden even though compact mode would
+show `1 KB/s`.
+
+The CPU, memory, disk, temperature and network speed bar widgets turn into System Monitor widgets that show the same
+values and open the process list.
 
 ## Ending and restarting processes
 
