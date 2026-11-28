@@ -58,6 +58,18 @@ const sidebars: SidebarsConfig = {
         'dms/lock-screen-authentication',
         'dms/network',
         'dms/vpn',
+        {
+          type: 'category',
+          label: 'Security & Privacy',
+          collapsed: false,
+          items: [
+            {
+              type: 'doc',
+              id: 'dms/outbound-connections',
+              label: 'Outgoing Connections Inventory',
+            },
+          ],
+        },
         'dms/autostart',
         'dms/network-speed-monitor',
         'dms/system-monitor',
