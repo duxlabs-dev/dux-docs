@@ -107,7 +107,7 @@ In a `dms dmenu` list with multi-select, `Shift+Enter` toggles the highlighted e
 
 A tile with details opens them; its icon button toggles it.
 
-In edit mode, the widget list sits beside the Control Center. Click a widget, or press `Enter` on it, to add it. Drag tiles to move them, and drop one on the list to remove it. **Settings → Interface style → Control Center → Edit layout** (`controlCenterEditLayout`) chooses **Docked** (default) or **Sheet**, which opens the list over the Control Center instead.
+In edit mode, the widget list sits beside the Control Center. Click a widget, or press `Enter` on it, to add it. Drag tiles to move them, and drop one on the list to remove it. **Settings → Interface style → Surfaces → Edit layout** (`controlCenterEditLayout`) covers the Control Center and the dash, and chooses **Docked** (default) or **Sheet**, which opens the list over the Control Center or dash instead.
 
 The grid can have several pages. Use the dots under the grid, or `Ctrl+PgUp`/`Ctrl+PgDn`, to switch pages.
 
@@ -124,8 +124,10 @@ On the current tab:
 | Step into the controls | `F6`, `Ctrl+Tab`, or an arrow key the tab does not use |
 | Edit the layout | `F2`, `Ctrl+E` |
 | Undo an edit | `Ctrl+Z` in edit mode |
-| Discard the edits and leave edit mode | `Escape` in edit mode |
+| Close a card's options or the popover, then discard the edits and leave edit mode | `Escape` in edit mode |
 | Close the dash | `Escape` |
+
+With the **Docked** edit layout, the panel sits beside the dash in edit mode and shows the widgets to add (click one, or drag it onto the dash) and the options of the selected card or page. Click or right-click a card, or press `Enter` on it, to open its options, and use the back arrow to return to the list. The tabs stay available, so pages can be switched while editing. When there is no room beside the dash, the panel opens as a popover instead and the tabs are hidden.
 
 In the controls:
 

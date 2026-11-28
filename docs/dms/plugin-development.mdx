@@ -2108,7 +2108,7 @@ Each option has a `key`, a `text` label, a `type` and a default `def`:
 
 - `toggle` takes an optional `description`. `number` takes `min`, `max`, `step` and `unit`.
 - `text`, `description` and choice texts go through your plugin's [translations](#translations).
-- The rows show up in the options sheet (Options in the tab's three-dot menu, or the tune button on a card in edit mode) and under Settings → Dashboard.
+- The rows show up in the options sheet or, with the docked edit layout, in the edit panel (Options in the tab's three-dot menu, or the tune button or a click on a card in edit mode) and under Settings → Dashboard.
 - Read values as `options.<key>` in both the tab and the card. Bindings update when the user changes a value.
 - `widgets` is reserved for the widget grid below.
 
@@ -2220,7 +2220,7 @@ definitions: [
 ]
 ```
 
-- In edit mode a widget with options shows an options button that opens them in a sheet.
+- In edit mode a widget with options shows an options button that opens them in a sheet, or in the edit panel when it is docked.
 - Every placed widget stores its own values. The widget reads them from `widgetOptions` by key, for example `widgetOptions.tone`.
 - `DashRegistry.toneOption(def)` is the shared Tone choice: `""` for the surface, `"primary"`, `"secondary"` or `"tertiary"`.
 - `id`, `w`, `h`, `col` and `row` are reserved keys.
