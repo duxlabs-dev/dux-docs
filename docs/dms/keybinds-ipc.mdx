@@ -1378,12 +1378,13 @@ Control desktop widget instances (clocks, system monitors, etc.).
 | Function | Description | Parameters |
 | --- | --- | --- |
 | `list` | List all widget instances with ID, type, name, and status | - |
-| `status <instanceId>` | Get widget status (enabled, overlay, clickThrough, etc.) | instance ID |
+| `status <instanceId>` | Get widget status (enabled, layer, overlay, clickThrough, etc.) | instance ID |
 | `enable <instanceId>` | Enable the widget | instance ID |
 | `disable <instanceId>` | Disable the widget | instance ID |
 | `toggleEnabled <instanceId>` | Toggle widget enabled/disabled | instance ID |
 | `toggleOverlay <instanceId>` | Toggle show on overlay layer | instance ID |
 | `setOverlay <instanceId> <bool>` | Set overlay visibility | instance ID, true/false |
+| `setLayer <instanceId> <layer>` | Set widget surface layer | instance ID, background/bottom/overlay |
 | `toggleClickThrough <instanceId>` | Toggle click-through mode | instance ID |
 | `setClickThrough <instanceId> <bool>` | Set click-through mode | instance ID, true/false |
 | `toggleSyncPosition <instanceId>` | Toggle position sync across screens | instance ID |
@@ -1405,10 +1406,15 @@ dms ipc call desktopWidget setClickThrough dw_1234567890_abc123 true
 
 # Toggle position sync
 dms ipc call desktopWidget toggleSyncPosition dw_1234567890_abc123
+
+# Set widget surface layer (background, bottom, or overlay)
+dms ipc call desktopWidget setLayer dw_1234567890_abc123 background
 ```
 
 **Notes:**
 - Use `list` to discover widget instance IDs
+- Widgets default to bottom and can be set to background, bottom, or overlay via Behavior → Layers or setLayer (wallpaper aliases to background)
+- On niri with Blur on overview enabled, background-layer widgets fade out during overview (unless Show on overview is set) to avoid clipped edge blur against the blurred wallpaper
 - Click-through mode allows mouse clicks to pass through the widget to windows below
 - Position sync keeps the widget at the same relative position across multiple monitors
 
