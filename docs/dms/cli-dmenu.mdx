@@ -73,6 +73,14 @@ The index syntax used by `--active`/`--urgent` takes comma-separated indices and
 
 > **NOTE**: `--password` does not automatically disable history. If handling sensitive data such as a password, it is advised you use *both* flags, as well as display text for each entry which differs from the passed value.
 
+### Frequency Ranking
+
+| Flag | Description |
+|------|-------------|
+| `--freq-key` | Track selection frequency for this invocation, scoped to this key, and sort results accordingly (default: no frequency tracking) |
+
+With `--freq-key <key>`, accepting a row (or, with `--multi-select`, each accepted row) bumps a per-item usage count stored under `<key>`, and unfiltered results are ordered by that count instead of input order. Invocations that pass the same key share one ranking, so a wrapper script can scope frequency tracking per use case (e.g. `--freq-key emoji-picker` vs. `--freq-key clipboard-history`) without one picker's usage skewing another's. Frequency data is kept only while the launcher's history setting is enabled (the same setting `--disable-history` overrides per-invocation), and lives in `$XDG_STATE_HOME/dms/dmenufreq.json` alongside the rest of the launcher's state.
+
 ### Reading stdin
 
 | Flag | Description |
@@ -135,6 +143,16 @@ echo "exit: $?"
 | `--size` | Override the popup size preset: `1`-`4`, matching the Appearance settings size buttons (default: the shell's own launcher size setting) |
 | `--icon` | Show a Material Symbols icon next to the prompt badge (default: none) |
 
+## Multi-line Row Text
+
+When you pass a custom `--sep`, items can include embedded newlines. The second line becomes a subtitle, and any additional lines are not displayed but remain searchable (and, unlike the `meta` metadata field, are included in the output when selected).
+
+```bash
+# Row text here has 4 lines; the picker shows "line one" / "line two",
+# but searching "four" still finds the row, and accepting it prints all 4 lines.
+printf 'line one\nline two\nline three\nline four' | dms dmenu --sep '|||'
+```
+
 ## Per-Row Metadata Protocol
 
 Each line of input can carry metadata past a NUL byte (`\0`), as `key\x1fvalue` fields separated by the unit separator (`\x1f`). Everything before the NUL is the row's displayed/matched text.
@@ -149,7 +167,7 @@ Supported fields:
 |-------|------|--------|
 | `icon` | string | Icon shown next to the row |
 | `display` | string | Alternate text to render (matching still uses the row's main text) |
-| `meta` | string | Secondary/subtitle text shown under the row |
+| `meta` | string | Extra text matched against the search query; not displayed |
 | `info` | string | Opaque value printed after the row's text when accepted, if `--print-info` is set |
 | `nonselectable` | bool | Row can't be picked (e.g. a section divider) |
 | `urgent` | bool | Marks the row urgent, same styling as `--urgent` |
