@@ -22,11 +22,11 @@ anything those tools created shows up in DMS.
 
 :::note[NetworkManager required]
 VPN requires the NetworkManager backend. `iwd` and `systemd-networkd` have no VPN support.
-See [System Diagnostics](cli-doctor#network) for what each backend covers.
+See [System Diagnostics](./cli-doctor.mdx#network) for what each backend covers.
 :::
 
-Profiles are listed in two places, both of which can connect, disconnect, import, and
-delete:
+Profiles are listed in two places, both of which can connect, disconnect, edit, import, and
+delete. In both, selecting a profile connects it:
 
 - **Control Center → VPN**
 - **Settings → Network → VPN**
@@ -52,7 +52,7 @@ requires it too, so Fedora installs `NetworkManager-openconnect` and Debian inst
 `networking.networkmanager.plugins` rather than to your system packages.
 
 The `openconnect` command is packaged separately, under that name on every distribution,
-and is a different thing from the plugin. Fortinet profiles that authenticate with a password
+and is a different thing from the plugin. OpenConnect profiles that authenticate with a password
 need both, because DMS runs that login through the command. Browser login needs only the
 plugin, since DMS performs the login itself.
 
@@ -81,6 +81,11 @@ Two things people reasonably expect to import but cannot. A `.nmconnection` keyf
 not an import format; copy it into `/etc/NetworkManager/system-connections` instead, with
 `root` ownership and mode `600`. GlobalProtect has no config file to import, so those
 profiles are created in NetworkManager directly.
+
+A WireGuard file whose name isn't a valid interface name (longer than 15 characters, or with
+other characters) still imports. The interface name is made from it by dropping the invalid
+characters and shortening it (`wg0` if nothing is left), and the profile is still named after
+the file.
 
 ### `openfortivpn` configs
 
@@ -113,6 +118,29 @@ How the file authenticates decides what kind of profile you get:
 
 A password moves out of the plain-text config and into NetworkManager's own storage,
 which is where the rest of your saved connection secrets already live.
+
+## Editing profiles
+
+**Edit** on a profile opens it in the [connection editor](./network.mdx). **Add** in
+**Settings → Network → VPN** creates a WireGuard profile.
+
+### WireGuard
+
+A new profile starts with a generated key pair, the first free interface name (`wg0`, `wg1`,
+and so on), IPv4 set to Manual, and IPv6 set to Ignore. **Generate** replaces the key pair,
+and the public key is shown with a copy button. Each peer takes a public key, its allowed IPs,
+an endpoint as `host:port`, and optionally a pre-shared key and a persistent keepalive.
+
+**Export** in the profile's General section saves it as a `wg-quick` config with mode `600`,
+since the file contains the private key. Plugin profiles are exported through
+`nmcli connection export`, in the plugin's own format.
+
+### Plugin profiles
+
+The editor covers the General and IP settings of plugin profiles. The plugin's own options are
+edited in `nm-connection-editor` or `nmtui`, which the **Advanced** row opens when one of them
+is installed. The username and password are still entered in the profile's
+expanded row in the VPN list.
 
 ## Fortinet gateways
 
@@ -179,6 +207,50 @@ browser window and then captures the resulting cookie. Install both `gp-saml-gui
 the `openconnect` command: openconnect turns that cookie into the one NetworkManager
 uses for the tunnel.
 
+## Other VPN types
+
+Profiles for other plugins can't be created in DMS. Set them up in nm-connection-editor,
+then connect from DMS. DMS only asks for the secrets a profile is set not to save, like a
+one-time code.
+
+OpenConnect profiles on other protocols, such as Cisco AnyConnect or Pulse, sign in with
+the username and password saved on the profile, or ask for them when connecting. If the
+server wants more, like a second factor, the plugin's own login window opens instead.
+
+Other plugins, such as vpnc, L2TP or strongSwan, ask for the secrets they need when
+connecting. Plugins that can only sign in through their own window, like the
+GlobalProtect-openconnect client, open that window. Both use the plugin's login dialog,
+which Debian, Ubuntu and Fedora ship separately, in the plugin package with a `-gnome` suffix.
+
+## Tailscale
+
+**Settings → Network → Tailscale** appears while the Tailscale daemon is running. It talks to
+the daemon directly, not through NetworkManager, and each setting matches a `tailscale set`
+flag:
+
+| Setting | Flag |
+| --- | --- |
+| Exit node | `--exit-node` |
+| Allow LAN access | `--exit-node-allow-lan-access` |
+| Run as exit node | `--advertise-exit-node` |
+| Use Tailscale subnets | `--accept-routes` |
+| Use Tailscale DNS settings | `--accept-dns` |
+| Allow incoming connections | `--shields-up`, inverted |
+| Run Tailscale SSH server | `--ssh` |
+| Hostname | `--hostname` |
+| Subnet routes | `--advertise-routes` |
+
+**Status** turns Tailscale on or off, with the tailnet name below it. The exit node list marks the node Tailscale suggests as recommended.
+
+The accounts are listed on the page. Click one to switch to it. **Log out** is on the current account, and **Remove** forgets an account on this device. **Log in** appears when the current account's session expired.
+
+**Add account** opens its own page with a **Server** field. Leave it empty for tailscale.com, or enter the address of a self-hosted server such as headscale. It asks for the administrator password once. Going back or **Cancel** before the login finishes switches back to the previous account.
+
+Changing settings requires the user to be Tailscale's operator. Until they are, the page shows
+the command that grants it (`sudo tailscale set --operator=$USER`) and, when `pkexec` is
+available, a **Grant permission** button that runs the same command after asking for the
+administrator password.
+
 ## Troubleshooting
 
 ### The import failed
@@ -186,6 +258,20 @@ uses for the tunnel.
 The format needs a plugin you do not have. `openfortivpn` configs and any other
 OpenConnect profile need the [openconnect plugin](#plugins-and-packages); the rest need
 the plugin named in the import table.
+
+### The connection fails with "Not saved"
+
+The profile leaves its secrets to NetworkManager, which happens with profiles created by
+`nmcli` without secret flags. Save the secrets on the profile, or have DMS ask for them on
+every connect by setting each secret's flags to `2`, either in nm-connection-editor or
+with `nmcli`. The flag key is the secret's name followed by `-flags`:
+
+```bash
+# L2TP, PPTP, strongSwan
+nmcli connection modify <profile> +vpn.data "password-flags=2"
+# vpnc
+nmcli connection modify <profile> +vpn.data "Xauth password-flags=2, IPSec secret-flags=2"
+```
 
 ### No browser opened
 

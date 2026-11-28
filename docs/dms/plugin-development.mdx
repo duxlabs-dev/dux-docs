@@ -120,10 +120,6 @@ Save this as `MyWidget.qml`:
 
 ```qml title="MyWidget.qml" showLineNumbers
 import QtQuick
-import qs.Common
-import qs.Services
-import qs.Widgets
-import qs.DCommon.Widgets
 import qs.Modules.Plugins
 
 PluginComponent {
@@ -131,47 +127,13 @@ PluginComponent {
 
     property string displayText: pluginData.displayText || "Hello"
 
-    horizontalBarPill: Component {
-        Row {
-            spacing: Theme.spacingS
-
-            DIcon {
-                name: "widgets"
-                size: Theme.iconSize
-                color: Theme.primary
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            StyledText {
-                text: root.displayText
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.surfaceText
-                anchors.verticalCenter: parent.verticalCenter
-            }
-        }
-    }
-
-    verticalBarPill: Component {
-        Column {
-            spacing: Theme.spacingXS
-
-            DIcon {
-                name: "widgets"
-                size: Theme.iconSize
-                color: Theme.primary
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            StyledText {
-                text: root.displayText
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.surfaceText
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-        }
-    }
+    pillIcon: "widgets"
+    pillText: root.displayText
+    pillActive: true
 }
 ```
+
+`PluginComponent` renders a built-in bar and dock pill from `pillIcon` and `pillText` that automatically switches between horizontal and vertical layouts and scales with the bar or dock thickness. For custom pill content, define `horizontalBarPill` (and optionally `verticalBarPill`) as shown under [Bar Widget](#bar-widget).
 
 ### 4. Create Settings Component
 
@@ -229,7 +191,23 @@ Widget plugins show up in the bar, in docks, or in the Control Center. They use 
 
 ### Bar Widget
 
-Here's a real color display widget:
+Most bar and dock widgets display an icon, optional text, and standard pointer interactions. Use the declarative `pill*` properties on `PluginComponent` so the shell handles orientation, dynamic sizing (`root.iconSize` and `root.textSize`), hover ripples, and dock layout automatically:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `pillIcon` | `string` | Material icon name shown in the pill |
+| `pillText` | `string` | Optional label or badge text shown next to (or below on vertical bars) the icon |
+| `pillActive` | `bool` | Tints the default icon and text with `Theme.primary` when `true` |
+| `pillIconColor` | `color` | Overrides the icon color (defaults to `pillActive ? Theme.primary : Theme.surfaceText`) |
+| `pillTextColor` | `color` | Overrides the text color (defaults to `pillActive ? Theme.primary : Theme.widgetTextColor`) |
+| `pillSpinning` | `bool` | Continuously rotates the icon while `true` and `surfaceLive` is active |
+| `pillClickAction` | `function` | Overrides the default left-click popout trigger |
+| `pillRightClickAction` | `function` | Handler invoked on right-click |
+| `pillMiddleClickAction` | `function` | Handler invoked on middle-click |
+| `pillWheelAction` | `function(wheelEvent)` | Handler invoked on mouse wheel scroll over the pill |
+| `pillDropAction` | `function(drop)` | Enables a `DropArea` with drag-over scale feedback and invokes the callback on drop |
+
+When your pill needs custom graphics (such as a color swatch, progress bar, or multi-button strip), define `horizontalBarPill` and `verticalBarPill` (or set `verticalBarPill: horizontalBarPill` when a single component adapts via `root.isVertical`). The input hooks (`pillRightClickAction`, `pillMiddleClickAction`, `pillWheelAction`) still work on the outer pill without needing a custom `MouseArea`:
 
 ```qml showLineNumbers
 import QtQuick
@@ -495,7 +473,7 @@ Replace the demo devices and handlers with your backend. Use your manifest's plu
 
 Docks run the same widget plugins as the bar. Users add them from the dock's edit mode or Settings → Dock → Apps & widgets. Your `PluginComponent` needs no extra code, but keep a few things in mind:
 
-- Define both `horizontalBarPill` and `verticalBarPill`. Docks sit on any edge.
+- Use `pillIcon` / `pillText` for standard icon/text pills, or define `horizontalBarPill` (and `verticalBarPill` if vertical layout differs). Docks sit on any edge.
 - Size icons with `root.iconSize` and text with `root.textSize`. Both follow the host's thickness, scale and maximize options, so the pill matches the bar or dock it sits in.
 - Gate timers and animations on `surfaceLive`. It goes false while the bar or dock is hidden.
 - Don't assume a single instance. The same widget can sit on several bars and docks, and `widgetInstanceId` tells them apart.
@@ -524,13 +502,7 @@ import qs.Modules.Plugins
 
 PluginComponent {
     id: root
-    horizontalBarPill: Component {
-        DIcon {
-            name: "sticky_note_2"
-            size: root.iconSize
-        }
-    }
-    verticalBarPill: horizontalBarPill
+    pillIcon: "sticky_note_2"
     attachedContent: Component {
         Column {
             spacing: Theme.spacingM
@@ -2314,7 +2286,7 @@ The dash opens with the keyboard silently inside the tab (`restoreFocus()`), so 
 - Ctrl+PgDown and Ctrl+PgUp switch tabs from anywhere.
 - Tab, Ctrl+Tab and F6 step aside while the tab sets `blocksTabNavigation`.
 - On the overview, the arrows move between cards when the focused card does not use them, as do Alt+Arrows or Alt+H/J/K/L; Alt+Tab / Alt+Shift+Tab cycle them. Non-clickable cards without a `focusTarget` are skipped. Alt+Arrow toward the tab bar from the edge card steps back out.
-- Escape leaves edit mode, then steps out of the controls, then leaves a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
+- Escape discards the edits and leaves edit mode, then steps out of the controls, then leaves a detail page, then closes the dash. Consume it in `handleKeyEvent` to close your own overlay first.
 
 ### Opening the Dash From Other Surfaces
 
@@ -3215,8 +3187,16 @@ See `PLUGINS/QuickNotesExample/` in the DMS repo for a complete launcher plugin 
 - `parentScreen` - Screen reference
 - `widgetThickness` - Widget height/width
 - `barThickness` - Bar height/width
-- `iconSize` - Recommended icon size for the current bar context
+- `iconSize` - Recommended icon size for the current bar or dock context
+- `textSize` - Recommended text pixel size for the current bar or dock context
+- `isVertical` - Whether the current bar or dock is vertical
+- `surfaceContext` - Host surface metadata (`kind`, `isVertical`, `thickness`, `live`, `inlineExpansion`)
+- `surfaceLive` - `true` when the bar/dock is visible and the monitor is awake
+- `interactionActive` - `true` when the plugin popout or inline dock expansion is open
 - `variants` - Variant instances
+- `closePopout()` - Closes the plugin popout or inline dock expansion with the standard close animation
+- `closePopoutImmediately()` - Closes the plugin popout or inline dock expansion immediately, skipping the close animation
+- `runAfterPopoutClosed(action)` - Closes the popout immediately and runs `action` on the next event-loop tick (`Qt.callLater`), ideal for screen capture tools
 
 Use `iconSize` for consistent icon sizing that adapts to bar orientation and user preferences:
 
@@ -3247,7 +3227,7 @@ ToastService.showError("Title", "Error message")
 ### Copying to Clipboard
 
 ```qml
-Quickshell.execDetached(["sh", "-c", "echo -n 'text' | wl-copy"])
+DMSService.sendRequest("clipboard.copy", { text: "text" }, response => {})
 ```
 
 ### Timers

@@ -81,7 +81,7 @@ For more about layer rules see [layer rules](./layers.mdx).
 
 #### Startup
 
-For systemd autostart setup, see the [Installation guide](./installation#niri). If you prefer not to use systemd, add DMS directly to your niri config:
+For systemd autostart setup, see the [Installation guide](./installation.mdx#niri). If you prefer not to use systemd, add DMS directly to your niri config:
 
 ```kdl
 spawn-at-startup "dms" "run"
@@ -101,7 +101,7 @@ environment {
 
 #### DMS Keybindings
 
-For the full list of available IPC commands see [IPC](./keybinds-ipc.mdx). These are a few of the stock binds `dms setup binds` writes to `dms/binds.kdl`; the stock file also closes windows with `Alt+F4` as well as `Mod+Q`.
+For the full list of available IPC commands see [IPC](./keybinds-ipc.mdx). These are a few of the stock binds `dms setup binds` writes to `dms/binds.kdl`; the stock file also closes windows with `Alt+F4` as well as `Mod+Q`, moves the current workspace to another monitor with `Mod+Shift+Alt` plus an arrow key or `H`/`J`/`K`/`L`, and picks what a screen share of niri's **Dynamic Cast Target** shows: `Mod+Alt+M` the focused monitor, `Mod+Alt+W` the focused window, `Mod+Alt+C` an empty stream.
 
 ```kdl
 binds {
@@ -153,6 +153,9 @@ binds {
     }
     XF86AudioMute allow-when-locked=true {
         spawn "dms" "ipc" "call" "audio" "mute";
+    }
+    XF86AudioStop allow-when-locked=true {
+        spawn "dms" "ipc" "call" "mpris" "stop";
     }
 
     // Brightness Controls
@@ -221,15 +224,23 @@ DMS can manage this rule itself via **Settings → Interface style → Floating 
 
 Rules you edit in **Settings → Window rules** are checked with `niri validate` before `dms/windowrules.kdl` is replaced, so a rule niri rejects leaves the old file in place.
 
+### Tablet input
+
+The **Tablet** card in **Settings → Input → Mouse & touchpad** sets **Map to output** and **Left-handed** for drawing tablets. While any tablet option is set, DMS writes the whole `tablet {}` section to `dms/input.kdl`, and it replaces the `tablet` section in your own config because niri doesn't merge that section across includes. Set tablet options in one place or the other.
+
 ### Next niri release
 
-Some settings use niri syntax newer than 26.04. DMS shows them only when the installed niri accepts them:
+Some settings use niri syntax newer than 26.04. DMS shows them only when the running niri accepts them, and writes 26.04 syntax otherwise:
 
-- **Settings → Window rules**: **VRR Fullscreen Only**, **On activation** (Focus, Ignore or Mark urgent) and **Pinch sensitivity**.
-- **Settings → Input → Mouse & touchpad**: touchpad **Pinch sensitivity**.
-- **Settings → Displays → Configuration**: **Max bits per channel** per output.
+- **Settings → Window rules**: **VRR Fullscreen Only**, **On activation** (Focus, Ignore or Mark urgent), **Pinch sensitivity**, and **Hide instead of black out** under **Block out**, which leaves the window out of captures entirely; captures then show whatever is underneath it. **Output** takes a comma-separated list such as `DP-1, DP-2`, and the window opens on the first one connected; on 26.04 it takes one output.
+- **Settings → Input → Mouse & touchpad**: touchpad **Pinch sensitivity**, **Monitors only** under **Focus follows mouse** (focus moves between monitors, not between windows), and **Map to focused window** on the **Tablet** card.
+- **Settings → Displays → Configuration**: **Max bits per channel** and **VR headset (DRM lease)** per output. The lease toggle hands the output to VR apps instead of using it as a desktop display; niri already does this for headsets it detects, so turn it on only when yours isn't.
+- **Settings → System & integrations → niri → Layout overrides**: **Transparent fullscreen backdrop**, so a see-through fullscreen window shows what's behind it instead of black.
+- **Settings → Input → Keyboard shortcuts**: the **Release** and **Non-consuming** bind options, binds on a lone modifier such as `Mod`, and the newer niri actions, such as **Set Fullscreen** and **Focus Previous Window (Same Workspace)**.
 
-**Settings → Input → Keyboard shortcuts** always offers the **Release** and **Non-consuming** bind options and binds on a lone modifier such as `Mod`. Every save runs `niri validate` on the new `dms/binds.kdl`, so a bind the installed niri rejects fails to save with niri's error and the previous file stays.
+**Settings → Notifications → Do not disturb → Hide popups from screen shares** (niri only, on by default) writes a layer rule for `dms:notification-popup` to `dms/layout.kdl`. Popups stay on your screen; newer niri leaves them out of screen shares and recordings, while 26.04 blacks them out instead. A hand-written rule for that namespace is no longer needed.
+
+Every keybind save runs `niri validate` on the new `dms/binds.kdl`, so a bind the installed niri rejects fails to save with niri's error and the previous file stays.
 
 ## Hyprland Configuration
 
@@ -308,7 +319,7 @@ For manual configuration recommendations, continue below.
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#hyprland). If you prefer not to use systemd, add DMS directly to your Hyprland config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#hyprland). If you prefer not to use systemd, add DMS directly to your Hyprland config:
 
 ```lua
 hl.on("hyprland.start", function()
@@ -584,7 +595,7 @@ For manual configuration recommendations, continue below.
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#mangowc). If you prefer not to use systemd, add DMS directly to your mangowm config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#mangowc). If you prefer not to use systemd, add DMS directly to your mangowm config:
 
 ```conf
 exec_once=dms run
@@ -718,7 +729,7 @@ For now, refer to the [Example for Sway](#example-for-sway) in the "Other Compos
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#sway). Otherwise, add DMS directly to your Sway config:
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#sway). Otherwise, add DMS directly to your Sway config:
 
 ```conf
 exec dms run
@@ -770,7 +781,7 @@ Detailed Miracle WM configuration sections are coming soon. Miracle WM configura
 
 #### Startup
 
-For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation#miracle-wm). Otherwise, add DMS directly to your Miracle WM config.
+For systemd autostart setup (recommended if you have multiple desktop environments), see the [Installation guide](./installation.mdx#miracle-wm). Otherwise, add DMS directly to your Miracle WM config.
 
 #### DMS Keybindings
 
@@ -795,7 +806,7 @@ For other compositors, you need to:
    dms run
    ```
 
-2. **Configure keybindings** using the IPC commands from the [Keybinds & IPC](keybinds-ipc) guide
+2. **Configure keybindings** using the IPC commands from the [Keybinds & IPC](./keybinds-ipc.mdx) guide
 
 3. **Set environment variables** in `~/.config/environment.d/90-dms.conf` (for systemd users) or your compositor config:
    ```ini title="~/.config/environment.d/90-dms.conf"
@@ -838,6 +849,6 @@ Verify that:
 
 ## Next Steps
 
-- Customize your shell appearance in [Themes](application-themes)
-- Explore all available IPC commands in [Keybinds & IPC](keybinds-ipc)
-- Add functionality with [Plugins](plugins-overview)
+- Customize your shell appearance in [Themes](./application-themes.mdx)
+- Explore all available IPC commands in [Keybinds & IPC](./keybinds-ipc.mdx)
+- Add functionality with [Plugins](./plugins-overview.mdx)

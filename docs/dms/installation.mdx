@@ -31,7 +31,7 @@ This guide covers installation of Dux Modular Shell across different Linux distr
 - [**niri**](https://github.com/niri-wm/niri) (optional) - DMS Team's choice of Wayland compositor
 - [**qt6-multimedia**](https://github.com/qt/qtmultimedia) (optional) - System sound feedback
 
-For pre-built packages on Fedora, Debian, Ubuntu, and OpenSUSE, see the [Dux Repository](../repo) page.
+For pre-built packages on Fedora, Debian, Ubuntu, and OpenSUSE, see the [Dux Repository](../repo/index.mdx) page.
 
 :::note
 
@@ -82,7 +82,7 @@ On Enterprise Linux, enable EPEL first (`sudo dnf install epel-release`, or the 
 
 :::note[Existing installs]
 
-The COPR repositories moved from `avengemedia` to `duxlabs`: `duxlabs/dms`, `duxlabs/dms-git` and `duxlabs/dux-repo` (formerly `avengemedia/danklinux`). If you installed from the `avengemedia` COPRs, run [`dms migrate dux`](./cli-migrate) to switch.
+The COPR repositories moved from `avengemedia` to `duxlabs`: `duxlabs/dms`, `duxlabs/dms-git` and `duxlabs/dux-repo` (formerly `avengemedia/danklinux`). If you installed from the `avengemedia` COPRs, run [`dms migrate dux`](./cli-migrate.mdx) to switch.
 
 :::
 
@@ -108,7 +108,7 @@ The COPR repositories also provide companion packages such as `dux-qt-base`, `du
 
 ##### Fedora Atomic & bootc images
 
-Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, and other rpm-ostree or bootc images don't take `dnf install`. Packages are layered onto the image with `rpm-ostree` and become active after a reboot. The [Dux Installer](../duxinstall) detects these hosts and runs in two passes; it never installs packages or asks for a password on an image.
+Silverblue, Kinoite, Sericea, Onyx, Bazzite, Bluefin, Aurora, and other rpm-ostree or bootc images don't take `dnf install`. Packages are layered onto the image with `rpm-ostree` and become active after a reboot. The [Dux Installer](../duxinstall.mdx) detects these hosts and runs in two passes; it never installs packages or asks for a password on an image.
 
 1. Run `duxinstall`, pick your compositor and terminal. The **Packages To Layer** screen prints the exact `rpm-ostree` commands for your selection.
 2. Run those commands and reboot.
@@ -125,13 +125,13 @@ sudo rpm-ostree install dms niri ghostty matugen xwayland-satellite
 systemctl reboot
 ```
 
-Then run [`dms setup`](./cli-setup) to deploy the configs. Nothing is written outside your home directory.
+Then run [`dms setup`](./cli-setup.mdx) to deploy the configs. Nothing is written outside your home directory.
 
 Update with `sudo rpm-ostree upgrade` (or `dms system update`), which upgrades the image and the layered packages together; `dms update` refuses to run on image-based systems. Uninstall with `sudo rpm-ostree uninstall dms`.
 
 [Zirconium](https://github.com/zirconium-dev/zirconium/) is a ready-made bootc image with Dux Modular Shell preinstalled: `sudo bootc switch ghcr.io/zirconium-dev/zirconium:latest`.
 
-For the greeter on these images, see [Immutable and image-based systems](../dms-greeter/installation#immutable-and-image-based-systems).
+For the greeter on these images, see [Immutable and image-based systems](../dms-greeter/installation.mdx#immutable-and-image-based-systems).
 
 </TabItem>
 <TabItem value="debian" label="Debian & Ubuntu">
@@ -148,7 +148,7 @@ DMS no longer needs a **quickshell** package: `dms` pulls in `libdux-qt-base0`, 
 
 :::note[Existing installs]
 
-The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate) to switch.
+The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate.mdx) to switch.
 
 :::
 
@@ -289,7 +289,7 @@ Ubuntu 26.04 LTS+ (Resolute Raccoon) is supported via Launchpad PPA.
 
 :::note[Existing installs]
 
-The PPAs moved from `avengemedia` to `duxlabs`: `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git` and `ppa:duxlabs/dux-repo` (formerly `ppa:avengemedia/danklinux`). If you added the `avengemedia` PPAs, run [`dms migrate dux`](./cli-migrate) to switch.
+The PPAs moved from `avengemedia` to `duxlabs`: `ppa:duxlabs/dms`, `ppa:duxlabs/dms-git` and `ppa:duxlabs/dux-repo` (formerly `ppa:avengemedia/danklinux`). If you added the `avengemedia` PPAs, run [`dms migrate dux`](./cli-migrate.mdx) to switch.
 
 :::
 
@@ -318,7 +318,7 @@ sudo apt install dms-git
 
 :::tip
 
-Visit the [Dux Repository](../repo) page for OBS and PPA links and more information about available packages.\
+Visit the [Dux Repository](../repo/index.mdx) page for OBS and PPA links and more information about available packages.\
 Add **niri** or **niri-git** to your system to get the best experience.
 
 :::
@@ -343,7 +343,7 @@ Dux Modular Shell is available through the Open Build Service (OBS) for OpenSUSE
 
 :::note[Existing installs]
 
-The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate) to switch.
+The OBS repositories moved from `home:AvengeMedia` to `home:duxlabs-dev`: `home:duxlabs-dev:dms`, `home:duxlabs-dev:dms-git` and `home:duxlabs-dev:dux-repo` (formerly `home:AvengeMedia:danklinux`). If you added the `home:AvengeMedia` repositories, run [`dms migrate dux`](./cli-migrate.mdx) to switch.
 
 :::
 
@@ -525,8 +525,8 @@ sudo emerge --ask dux-desktop/dux-shell
 :::tip
 
 NixOS has dedicated documentation with two installation methods:
-- [Native nixpkgs installation](./nixos) - **Recommended** for NixOS 26.05+
-- [Flake-based installation](./nixos-flake) - Use for home-manager, per-user installs, or quicker updates
+- [Native nixpkgs installation](./nixos.mdx) - **Recommended** for NixOS 26.05+
+- [Flake-based installation](./nixos-flake.mdx) - Use for home-manager, per-user installs, or quicker updates
 
 :::
 
@@ -560,7 +560,7 @@ Install DMS from our R2-backed XBPS repositories or build it from source.
 
 :::note[Existing installs]
 
-The XBPS repositories moved to `void.duxlabs.dev`, and `danklinux/current` is now `dux-repo/current`. If you configured `void.danklinux.com`, run [`dms migrate dux`](./cli-migrate) to switch.
+The XBPS repositories moved to `void.duxlabs.dev`, and `danklinux/current` is now `dux-repo/current`. If you configured `void.danklinux.com`, run [`dms migrate dux`](./cli-migrate.mdx) to switch.
 
 :::
 
@@ -680,7 +680,7 @@ This guide doesn't cover compositor installation. You need a compatible Wayland 
 
 ###### dux-qt-base
 
-DMS runs its UI on [dux-qt-base](https://github.com/duxlabs-dev/dux-qt-base), Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). A `quickshell` package or `qs` binary is not needed. Install `dux-qt-base` from the [Dux Repository](../repo/) if it offers a package for your distribution.
+DMS runs its UI on [dux-qt-base](https://github.com/duxlabs-dev/dux-qt-base), Dux's fork of Quickshell built as a shared library (`libdux-qt-base.so.0`). A `quickshell` package or `qs` binary is not needed. Install `dux-qt-base` from the [Dux Repository](../repo/index.mdx) if it offers a package for your distribution.
 
 Otherwise, build it from source in [step 3](#3-compile--install-the-dms-backend), either embedded in the `dms` binary or as a system library. See `dux-qt-base/BUILD.md` in the DMS repository for its build dependencies.
 
@@ -775,18 +775,18 @@ Install optional components for full functionality using your distribution's pac
 After completing installation:
 
 1. **Generate compositor config** (niri, Hyprland, mangowm): Run `dms setup` to create a starter configuration with DMS keybinds and autostart. Other compositors (sway, labwc, Miracle WM) are supported but require manual configuration.
-2. Enable the systemd service (recommended) or add `dms run` to your compositor config
-3. Configure your compositor keybinds - see the [Keybinds & IPC](keybinds-ipc) guide
-4. Customize appearance via [Themes](application-themes)
-5. Extend functionality with [Plugins](plugins-overview)
+2. Start DMS with your compositor: run `dms systemd enable --compositor niri` (or `hyprland`, `mango`), or add `dms run` to your compositor config. `dms setup` with systemd already does this. See [Systemd Integration](#systemd-integration-recommended)
+3. Configure your compositor keybinds - see the [Keybinds & IPC](./keybinds-ipc.mdx) guide
+4. Customize appearance via [Themes](./application-themes.mdx)
+5. Extend functionality with [Plugins](./plugins-overview.mdx)
 
-See [Managing Your Installation](managing) for detailed guidance on service management, environment variables, and updates.
+See [Managing Your Installation](./managing.mdx) for detailed guidance on service management, environment variables, and updates.
 
 ### Systemd Integration (Recommended)
 
 :::tip[Dux Installer Users]
 
-If you used the [Dux Installer](../duxinstall) or `dms setup` with systemd, this is already configured. Both bind `dms.service` to your compositor's session unit.
+If you used the [Dux Installer](../duxinstall.mdx) or `dms setup` with systemd, this is already configured. Both bind `dms.service` to your compositor's session unit.
 
 :::
 

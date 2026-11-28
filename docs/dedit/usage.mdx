@@ -43,7 +43,7 @@ dux-edit --new-instance           # a separate app instead of tabs in the runnin
 | `dux-edit [file...]` | Show the window or open files as tabs |
 | `dux-edit run` | Run the app. `-d` runs it in the background |
 | `dux-edit kill` | Quit the running app |
-| `dux-edit ipc <method> [key=value...]` | Call an [IPC](ipc) method |
+| `dux-edit ipc <method> [key=value...]` | Call an [IPC](./ipc.mdx) method |
 | `dux-edit import-dms-notes` | Copy DMS notepad tabs and settings. `--dry-run` lists what would be imported |
 | `dux-edit version` | Print version information |
 | `dux-edit completion` | Shell completion, including IPC method and param names |
@@ -66,7 +66,7 @@ When a file is not writable, Dux Edit offers to save as administrator through po
 
 ## Running in the Background
 
-Set **Closing the Window** to **Keeps It Running in the Background** in [Settings](settings#files) and closing the window leaves the app resident. A hidden window holds no editors and the core holds no documents, so what stays is two idle processes. Plugins are destroyed on hide and created again on show.
+Set **Closing the Window** to **Keeps It Running in the Background** in [Settings](./settings.mdx#files) and closing the window leaves the app resident. A hidden window holds no editors and the core holds no documents, so what stays is two idle processes. Plugins are destroyed on hide and created again on show.
 
 ## Importing DMS Notes
 

@@ -1,0 +1,17 @@
+---
+title: Dock
+description: Lay out dock widgets with filling spacers and a centered group
+sidebar_position: 6
+---
+
+# Dock
+
+Each dock has its own list of apps and widgets under **Settings → Dock → Apps & widgets**.
+
+## Spacers
+
+A spacer adds empty space between dock items. Click its row to show its options: **Size** (`0`–`1000` px, default `20`) and, when the dock uses the **Taskbar** style, **Fill**.
+
+A spacer with **Fill** on takes up all remaining free space on the dock, and its **Size** becomes **Minimum size**, the least space it keeps. Without a centered group, several filling spacers share the free space equally. One filling spacer before the system tray, for example, keeps the tray at the far end of the dock.
+
+Once the dock has a filling spacer, every other row gets a **Center** button. It centers that row's group, meaning everything between the filling spacers around it, or between one spacer and the dock edge. The filling spacers on each side of the group then share the free space on their side, so a layout with items on the left, apps in the middle and the tray on the right keeps the apps centered whatever the width of either side. A centered widget that has nothing to show at the moment, like media with nothing playing, keeps its spot in the middle.
