@@ -12,7 +12,7 @@ The battery widget shows the system battery and, if wanted, the batteries of con
 
 | Option | Choices |
 | --- | --- |
-| **Color** | **Theme**, **Low and charging** (default: red when low, green while charging, accent color while plugged in) or **Level** |
+| **Color** | **Primary** (accent color, red when low, green while charging), **Theme** (plain widget colors), **Low and charging** (default: like **Primary**, but in the widget color unless plugged in) or **Level** |
 | **Separator** | **Gap** (default), **Line**, **Dot** or **Separate** (each entry gets its own background) |
 
 **Low threshold** opens the alerts in **Settings → Power & battery → Battery**, where the threshold used by **Only when low** is set.
@@ -42,22 +42,20 @@ The **Popout** card sets the look of the whole popout:
 
 | Option | Choices |
 | --- | --- |
-| **Color** | **Primary**, **Theme**, **Low and charging** (default) or **Level** |
-| **Interface density** | **Inherit** (default: follows **Interface density** in **Settings → Interface style**), **Spacious**, **Comfortable**, **Compact** or **Dense** |
-| **Cards** | **Separate** (the level, power profile and details each have their own card) or **Combined** (default: all three share one card) |
-| **Wavy when charging** | Animates the level indicators while charging (on by default) |
+| **Color** | Same choices as the bar widget, **Primary** by default |
+| **Interface density** | **Spacious** (default) or **Compact**. Both get a little tighter when **Interface density** in **Settings → Interface style** is **Compact** or **Dense**. |
 
 While charging toward a charge limit, the popout shows **Charging to** with the limit and the time until it is reached, and the part of the level indicator past the limit is shaded. This does not apply when **Scale battery level to charge limit** is on.
 
-The popout always shows the battery on top, then the power profile with the statistics below it, then the devices. Each part has its own card (with the Chips layout the statistics sit in the power profile card) unless **Cards** is set to **Combined**, and **Show** switches it off. The gear in the popout opens the battery settings and the pen opens these widget options.
+The popout shows the battery, the power profile and the statistics together in one card, with the devices below it. **Show** switches a part off, and the level indicators are wavy while charging. The gear in the popout opens the battery settings and the pen opens these widget options.
 
 | Section | Options |
 | --- | --- |
-| **Overview** | **Style**: **Compact** (the level beside the status, without a card), **Line**, **Ring** (default) or **Card**. **Badge**: **Shape** (default) or **Ring** (a ring showing the level), for **Line** and **Card**. |
+| **Overview** | **Style**: **Line**, **Ring** (default) or **Card**. At **Compact** density, **Ring** sits beside the status and **Line** shows the level beside the status without a card. |
 | **Statistics** | **Show** (on by default) switches the statistics off completely. **Layout**: **Grid**, **Compact** (default), **Chips** or **List**. **Details**: any of **Health**, **Temperature**, **Capacity** and **Power** (all but **Temperature** by default) |
 | **Power profile** | **Style**: **Circle**, **Segments**, **Buttons** or **Slider** (default) |
 | **Devices** | **Layout**: same choices as the statistics, plus **Bars** (default: rows filled to the battery level) |
 
-At **Compact** and **Dense** density, **Line** looks the same as **Compact** and is not offered, and **Badge** only shows where a badge is drawn. **Temperature** is only offered when the battery reports one.
+**Temperature** is only offered when the battery reports one.
 
 The **Devices** section appears once a peripheral with a battery is connected. If the last one disconnects while the popout is open, it shows **No devices** until the popout closes. When the **Overview** section is off or there is no battery, the connected device with the lowest known charge takes its place at the top.
